@@ -1,4 +1,5 @@
-﻿namespace FFCmd.FFMpegInterop;
+﻿
+namespace FFCmd.FFMpegInterop;
 
 internal sealed class FFMpegCommandBuilder
 {
@@ -7,6 +8,8 @@ internal sealed class FFMpegCommandBuilder
         InputFile = int.MinValue,
         IgnoreVideo = 0,
         CompressionLevel = 1,
+        AudioCodec = 2,
+        AudioBitrate = 3,
         OutputFile = int.MaxValue
     }
 
@@ -17,13 +20,15 @@ internal sealed class FFMpegCommandBuilder
         { CliSegment.InputFile, "-i \"{0}\"" },
         { CliSegment.OutputFile, "\"{0}\"" },
         { CliSegment.IgnoreVideo, "-vn" },
-        { CliSegment.CompressionLevel, "-compression_level {0}" }
+        { CliSegment.CompressionLevel, "-compression_level {0}" },
+        { CliSegment.AudioBitrate, "-b:a {0}" },
+        { CliSegment.AudioCodec, "-c:a {0}" },
     };
 
     private void SetArgument(CliSegment segment, object? value)
     {
         _data[segment] = value == null
-            ? _segmentFormats[segment] 
+            ? _segmentFormats[segment]
             : string.Format(_segmentFormats[segment], value);
     }
 
@@ -41,6 +46,18 @@ internal sealed class FFMpegCommandBuilder
     public FFMpegCommandBuilder IgnoreVideo()
     {
         SetArgument(CliSegment.IgnoreVideo, string.Empty);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithAudioBitrate(string bitrate)
+    {
+        SetArgument(CliSegment.AudioBitrate, bitrate);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithAudioCodec(string codecName)
+    {
+        SetArgument(CliSegment.AudioCodec, codecName);
         return this;
     }
 
