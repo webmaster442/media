@@ -11,13 +11,13 @@ internal class BaseFFMpegSettings : CommandSettings
 {
     [Description("Input file")]
     [CommandArgument(0, "<input>")]
-    [FileExistsValidation]
+    [FileExists]
     [Required]
     public string InputFile { get; init; }
 
     [Description("Output file")]
     [CommandArgument(1, "<output>")]
-    [OutputFileHasExtensionValidation]
+    [OutputFileHasExtension]
     [Required]
     public string OutputFile { get; init; }
 

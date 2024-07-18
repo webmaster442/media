@@ -5,6 +5,8 @@ internal sealed class FFMpegCommandBuilder
     private enum CliSegment
     {
         InputFile = int.MinValue,
+        IgnoreVideo = 0,
+        CompressionLevel = 1,
         OutputFile = int.MaxValue
     }
 
@@ -13,12 +15,16 @@ internal sealed class FFMpegCommandBuilder
     private readonly Dictionary<CliSegment, string> _segmentFormats = new()
     {
         { CliSegment.InputFile, "-i \"{0}\"" },
-        { CliSegment.OutputFile, "\"{0}\"" }
+        { CliSegment.OutputFile, "\"{0}\"" },
+        { CliSegment.IgnoreVideo, "-vn" },
+        { CliSegment.CompressionLevel, "-compression_level {0}" }
     };
 
-    private void SetArgument(CliSegment segment, string value)
+    private void SetArgument(CliSegment segment, object? value)
     {
-        _data[segment] = string.Format(_segmentFormats[segment], value);
+        _data[segment] = value == null
+            ? _segmentFormats[segment] 
+            : string.Format(_segmentFormats[segment], value);
     }
 
     public FFMpegCommandBuilder()
@@ -29,6 +35,18 @@ internal sealed class FFMpegCommandBuilder
     public FFMpegCommandBuilder WithInputFile(string inputFile)
     {
         SetArgument(CliSegment.InputFile, inputFile);
+        return this;
+    }
+
+    public FFMpegCommandBuilder IgnoreVideo()
+    {
+        SetArgument(CliSegment.IgnoreVideo, string.Empty);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithCompressionLevel(int compressionLevel)
+    {
+        SetArgument(CliSegment.CompressionLevel, compressionLevel);
         return this;
     }
 
