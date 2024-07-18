@@ -1,2 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using FFCmd.Commands;
+
+using Spectre.Console.Cli;
+
+var app = new CommandApp();
+app.Configure(config =>
+{
+    config.AddCommand<ConvertFlac>("convert-to-flac");
+});
+
+app.Run(args);
