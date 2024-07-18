@@ -1,10 +1,14 @@
 ﻿using FFCmd.Commands;
 
+using JKToolKit.Spectre.AutoCompletion.Completion;
+using JKToolKit.Spectre.AutoCompletion.Integrations;
+
 using Spectre.Console.Cli;
 
 var app = new CommandApp();
 app.Configure(config =>
 {
+    config.AddAutoCompletion(config => config.AddPowershell());
     config.AddBranch("convert", convert =>
     {
         convert.SetDescription("Convert audio/video files");
