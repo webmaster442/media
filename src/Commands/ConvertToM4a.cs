@@ -8,16 +8,16 @@ using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
 
-internal sealed class ConvertToMp3 : BaseFFMpegCommand<ConvertToMp3.Settings>
+internal sealed class ConvertToM4a : BaseFFMpegCommand<ConvertToM4a.Settings>
 {
     public class Settings : BaseFFMpegSettings
     {
-        public override string OutputExtension => ".mp3";
+        public override string OutputExtension => ".m4a";
 
         [Required]
         [Description("Audio bitrate")]
         [CommandOption("-b|--bitrate")]
-        [AllowedValues("32k", "40k", "48k", "56k", "64k", "80k", "96k", "112k", "128k", "160k", "192k", "224k", "256k", "320k")]
+        [AllowedValues("64k", "96k", "128k", "160k", "192k", "256k", "320k")]
         public string Bitrate { get; set; } = "";
     }
 
@@ -27,6 +27,7 @@ internal sealed class ConvertToMp3 : BaseFFMpegCommand<ConvertToMp3.Settings>
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
             .IgnoreVideo()
+            .WithAudioCodec("aac")
             .WithAudioBitrate(settings.Bitrate);
     }
 }

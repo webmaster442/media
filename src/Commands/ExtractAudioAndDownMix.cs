@@ -7,17 +7,16 @@ using FFCmd.Infrastructure;
 using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
-
-internal sealed class ConvertToMp3 : BaseFFMpegCommand<ConvertToMp3.Settings>
+internal class ExtractAudioStereoM4a : BaseFFMpegCommand<ExtractAudioStereoM4a.Settings>
 {
     public class Settings : BaseFFMpegSettings
     {
-        public override string OutputExtension => ".mp3";
+        public override string OutputExtension => ".m4a";
 
         [Required]
         [Description("Audio bitrate")]
         [CommandOption("-b|--bitrate")]
-        [AllowedValues("32k", "40k", "48k", "56k", "64k", "80k", "96k", "112k", "128k", "160k", "192k", "224k", "256k", "320k")]
+        [AllowedValues("64k", "96k", "128k", "160k", "192k", "256k", "320k")]
         public string Bitrate { get; set; } = "";
     }
 
@@ -27,6 +26,9 @@ internal sealed class ConvertToMp3 : BaseFFMpegCommand<ConvertToMp3.Settings>
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
             .IgnoreVideo()
-            .WithAudioBitrate(settings.Bitrate);
+            .WithAudioCodec("aac")
+            .WithAudioBitrate(settings.Bitrate)
+            .WithVolume(425)
+            .WithAudioFilter("pan=stereo|c0=0.5*c2+0.707*c0+0.707*c4+0.5*c3|c1=0.5*c2+0.707*c1+0.707*c5+0.5*c3");
     }
 }

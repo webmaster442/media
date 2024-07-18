@@ -10,6 +10,8 @@ internal sealed class FFMpegCommandBuilder
         CompressionLevel = 1,
         AudioCodec = 2,
         AudioBitrate = 3,
+        AudioVolume = 4,
+        AudioFilter = 5,
         OutputFile = int.MaxValue
     }
 
@@ -23,6 +25,8 @@ internal sealed class FFMpegCommandBuilder
         { CliSegment.CompressionLevel, "-compression_level {0}" },
         { CliSegment.AudioBitrate, "-b:a {0}" },
         { CliSegment.AudioCodec, "-c:a {0}" },
+        { CliSegment.AudioVolume, "-vol {0}" },
+        { CliSegment.AudioFilter, "-af \"{0}\"" }
     };
 
     private void SetArgument(CliSegment segment, object? value)
@@ -58,6 +62,18 @@ internal sealed class FFMpegCommandBuilder
     public FFMpegCommandBuilder WithAudioCodec(string codecName)
     {
         SetArgument(CliSegment.AudioCodec, codecName);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithVolume(int volume)
+    {
+        SetArgument(CliSegment.AudioVolume, volume);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithAudioFilter(string filterString)
+    {
+        SetArgument(CliSegment.AudioFilter, filterString);
         return this;
     }
 
