@@ -4,9 +4,9 @@
       "commandName": "WSL2",
       "distributionName": ""
     },
-    "Profile 1": {
+    "update ffmpeg": {
       "commandName": "Project",
-      "commandLineArgs": "convert-to-flac input.arg output.arg"
+      "commandLineArgs": "update ffmpeg"
     }
   }
 }

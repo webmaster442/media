@@ -17,6 +17,10 @@ app.Configure(config =>
         extract.AddCommand<ExtractAudioStereoM4a>("stereo-m4a");
         extract.AddCommand<ExtractAudioCopy>("copy");
     });
+    config.AddBranch("update", update =>
+    {
+        update.AddCommand<UpdateFFMpeg>("ffmpeg");
+    });
 });
 
 app.Run(args);
