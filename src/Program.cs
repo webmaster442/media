@@ -16,6 +16,7 @@ app.Configure(config =>
         convert.AddCommand<ConvertToFlac>("flac");
         convert.AddCommand<ConvertToM4a>("m4a");
         convert.AddCommand<ConvertToMp3>("mp3");
+        convert.AddCommand<ConvertToCdWav>("cdwav");
     });
     config.AddBranch("extract", extract =>
     {

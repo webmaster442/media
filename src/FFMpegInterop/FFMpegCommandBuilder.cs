@@ -16,7 +16,8 @@ internal sealed class FFMpegCommandBuilder
         AudioCodec = 3,
         AudioBitrate = 4,
         AudioFilter = 5,
-        VideCodec = 6,
+        AudioSampleRate = 6,
+        VideCodec = 7,
         AdditionalsBeforeOutputFile = int.MaxValue - 1,
         OutputFile = int.MaxValue
     }
@@ -38,6 +39,7 @@ internal sealed class FFMpegCommandBuilder
         { CliSegment.AudioStreamSelect, "-map 0:a:{0}" },
         { CliSegment.AdditionalsBeforeOutputFile, "{0}" },
         { CliSegment.VideCodec, "-c:v {0}" },
+        { CliSegment.AudioSampleRate, "-ar {0}" },
     };
 
     private void SetArgument(CliSegment segment, object? value)
@@ -122,6 +124,12 @@ internal sealed class FFMpegCommandBuilder
     public FFMpegCommandBuilder WithAudioStreamSelection(int streamIndex)
     {
         SetArgument(CliSegment.AudioStreamSelect, streamIndex);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithAudioSampleRate(int sampleRate)
+    {
+        SetArgument(CliSegment.AudioSampleRate, sampleRate);
         return this;
     }
 
