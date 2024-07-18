@@ -7,6 +7,7 @@ app.Configure(config =>
 {
     config.AddBranch("convert", convert =>
     {
+        convert.SetDescription("Convert audio/video files");
         convert.AddCommand<ConvertToAlac>("alac");
         convert.AddCommand<ConvertToFlac>("flac");
         convert.AddCommand<ConvertToM4a>("m4a");
@@ -14,13 +15,21 @@ app.Configure(config =>
     });
     config.AddBranch("extract", extract =>
     {
+        extract.SetDescription("Extract audio/video stream from files");
         extract.AddCommand<ExtractAudioStereoM4a>("stereo-m4a");
         extract.AddCommand<ExtractAudioCopy>("copy");
     });
     config.AddBranch("update", update =>
     {
+        update.SetDescription("Update related commands");
         update.AddCommand<UpdateFFMpeg>("ffmpeg");
     });
+    config.AddBranch("mux", mux =>
+    {
+        mux.SetDescription("mux releated commands");
+        mux.AddCommand<MuxAddAudio>("add-audio");
+    });
+
 });
 
 app.Run(args);

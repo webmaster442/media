@@ -8,7 +8,7 @@ using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
 
-internal class ExtractAudioCopy : BaseFFMpegCommand<ExtractAudioCopy.Settings>
+internal sealed class ExtractAudioCopy : BaseFFMpegCommand<ExtractAudioCopy.Settings>
 {
     public class Settings : BaseFFMpegSettings
     {

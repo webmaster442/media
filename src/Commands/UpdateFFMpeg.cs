@@ -6,7 +6,7 @@ using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
 
-internal class UpdateFFMpeg : AsyncCommand
+internal sealed class UpdateFFMpeg : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
