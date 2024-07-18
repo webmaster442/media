@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 
+using Spectre.Console;
+
 namespace FFCmd.FFMpegInterop;
 
 internal sealed class FFMpeg
@@ -39,15 +41,17 @@ internal sealed class FFMpeg
             throw new InvalidOperationException("FFMpeg not found.");
         }
 
+        var commandLine = command.BuildCommandLine();
+
+        AnsiConsole.MarkupLineInterpolated($"[green]Executing: [/]{commandLine.EscapeMarkup()}");
+
         using var process = new Process()
         {
             StartInfo = new ProcessStartInfo
             {
                 FileName = ffmpegPath,
-                Arguments = command.BuildCommandLine(),
+                Arguments = commandLine,
                 UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
             }
         };
 

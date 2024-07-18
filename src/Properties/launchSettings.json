@@ -7,6 +7,10 @@
     "update ffmpeg": {
       "commandName": "Project",
       "commandLineArgs": "update ffmpeg"
+    },
+    "Profile 1": {
+      "commandName": "Project",
+      "commandLineArgs": "extract stereo-m4a \"\\\\192.168.1.254\\Media\\Filmek\\MAD MAX - Fury Road.mkv\" -b 320k -a 1 test.m4a"
     }
   }
 }
