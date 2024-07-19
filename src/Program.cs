@@ -9,6 +9,7 @@ var app = new CommandApp();
 app.Configure(config =>
 {
     config.AddAutoCompletion(config => config.AddPowershell());
+    config.AddCommand<Info>("info").WithDescription("Get information about a media file");
     config.AddBranch("convert", convert =>
     {
         convert.SetDescription("Convert audio/video files");
