@@ -9,8 +9,7 @@
       "commandLineArgs": "update ffmpeg"
     },
     "Profile 1": {
-      "commandName": "Project",
-      "commandLineArgs": "info \"d:\\video\\Dugtad már a fejed mosógépbe-3023263.mp4\""
+      "commandName": "Project"
     }
   }
 }

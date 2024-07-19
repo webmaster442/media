@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-using FFCmd.Commands;
+﻿using FFCmd.Commands;
 using FFCmd.Infrastructure;
 
 using JKToolKit.Spectre.AutoCompletion.Completion;
@@ -14,7 +12,10 @@ Terminal.EnableUTF8Output();
 
 app.Configure(config =>
 {
+    config.SetApplicationName("FFCmd");
+    config.SetApplicationCulture(System.Globalization.CultureInfo.InvariantCulture);
     config.AddAutoCompletion(config => config.AddPowershell());
+
     config.AddCommand<Info>("info").WithDescription("Get information about a media file");
     config.AddBranch("convert", convert =>
     {
@@ -40,8 +41,8 @@ app.Configure(config =>
     {
         mux.SetDescription("mux releated commands");
         mux.AddCommand<MuxAddAudio>("add-audio");
+        mux.AddCommand<MuxAddSubtitle>("add-subtitle");
     });
-
 });
 
 app.Run(args);
