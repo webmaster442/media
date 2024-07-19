@@ -35,12 +35,12 @@ internal class Info : AsyncCommand<Info.Settings>
 
             Terminal.DisplayObject(relevantInformations);
 
-            return 0;
+            return ExitCodes.Success;
         }
         catch (Exception e)
         {
             Terminal.DisplayException(e);
-            return 1;
+            return ExitCodes.Exception;
         }
     }
 }

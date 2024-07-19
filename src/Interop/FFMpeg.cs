@@ -36,16 +36,12 @@ internal sealed class FFMpeg
         return await JsonSerializer.DeserializeAsync<DateTimeOffset>(stream);
     }
 
-    public static void StartFFMpeg(FFMpegCommandBuilder command)
+    public static void StartFFMpeg(string commandLine)
     {
         if (!TryGetInstalledPath(out string ffmpegPath))
         {
             throw new InvalidOperationException("FFMpeg not found.");
         }
-
-        var commandLine = command.BuildCommandLine();
-
-        AnsiConsole.MarkupLineInterpolated($"[green]Executing: [/]{commandLine.EscapeMarkup()}");
 
         using var process = new Process()
         {

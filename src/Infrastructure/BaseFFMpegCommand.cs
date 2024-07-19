@@ -1,6 +1,5 @@
 ﻿using FFCmd.Interop;
 
-using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace FFCmd.Infrastructure;
@@ -14,13 +13,18 @@ internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
         {
             FFMpegCommandBuilder builder = new();
             BuildCommandLine(builder, settings);
-            FFMpeg.StartFFMpeg(builder);
-            return 0;
+
+            var cmdLine = builder.BuildCommandLine();
+            Terminal.InfoText("Generated arguments:");
+            Terminal.InfoText(cmdLine);
+
+            FFMpeg.StartFFMpeg(cmdLine);
+            return ExitCodes.Success;
         }
         catch (Exception e)
         {
-            AnsiConsole.WriteException(e);
-            return -1;
+            Terminal.DisplayException(e);
+            return ExitCodes.Exception;
         }
     }
 

@@ -12,7 +12,7 @@ internal sealed class UpdateFFMpeg : AsyncCommand
     {
         try
         {
-            AnsiConsole.WriteLine("Checking for ffmpleg update...");
+            Terminal.GreenText("Checking for ffmpleg update...");
             using var client = new GithubClient();
             var releases = await client.GetReleases("BtbN", "FFmpeg-Builds");
 
@@ -58,19 +58,19 @@ internal sealed class UpdateFFMpeg : AsyncCommand
 
                 File.Delete(tempName);
 
-                AnsiConsole.MarkupLineInterpolated($"[green]FFMpeg version uptated to: {latest.PublishedAt}[/]");
+                Terminal.GreenText($"[green]FFMpeg version uptated to: {latest.PublishedAt}[/]");
             }
             else
             {
-                AnsiConsole.MarkupLine("[green]FFMpeg is up to date[/]");
+                Terminal.GreenText("[green]FFMpeg is up to date[/]");
             }
 
-            return 0;
+            return ExitCodes.Success;
         }
         catch (Exception e)
         {
             AnsiConsole.WriteException(e);
-            return -1;
+            return ExitCodes.Exception;
         }
     }
 }
