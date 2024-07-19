@@ -1,4 +1,4 @@
-﻿using FFCmd.FFMpegInterop;
+﻿using FFCmd.Interop;
 using FFCmd.Infrastructure;
 
 namespace FFCmd.Commands;

@@ -1,4 +1,4 @@
-﻿using FFCmd.FFMpegInterop;
+﻿using FFCmd.Interop;
 
 using Spectre.Console;
 using Spectre.Console.Cli;

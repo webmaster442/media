@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-using FFCmd.FFMpegInterop;
+using FFCmd.Interop;
 using FFCmd.Infrastructure;
 
 using Spectre.Console.Cli;

@@ -5,7 +5,7 @@ using FFCmd.Dto.FFProbe;
 
 using Spectre.Console;
 
-namespace FFCmd.FFMpegInterop;
+namespace FFCmd.Interop;
 
 internal sealed class FFMpeg
 {

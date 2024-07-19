@@ -1,0 +1,5 @@
+- [ ] FFProbe support
+- [ ] Cut without reencoding
+- [ ] Muxing add subtitle track
+- [ ] Self update support
+- [ ] Help command

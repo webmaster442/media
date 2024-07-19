@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-using FFCmd.FFMpegInterop;
+using FFCmd.Interop;
 using FFCmd.Infrastructure;
 
 using Spectre.Console.Cli;

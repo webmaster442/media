@@ -1,5 +1,5 @@
 ﻿
-namespace FFCmd.FFMpegInterop;
+namespace FFCmd.Interop;
 
 internal sealed class FFMpegCommandBuilder
 {
