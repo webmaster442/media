@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using Spectre.Console;
@@ -25,5 +26,10 @@ internal static class Terminal
     public static void DisplayException(Exception e)
     {
         AnsiConsole.WriteException(e);
+    }
+
+    public static void EnableUTF8Output()
+    {
+        Console.OutputEncoding = Encoding.UTF8;
     }
 }

@@ -1,4 +1,7 @@
-﻿using FFCmd.Commands;
+﻿using System.Text;
+
+using FFCmd.Commands;
+using FFCmd.Infrastructure;
 
 using JKToolKit.Spectre.AutoCompletion.Completion;
 using JKToolKit.Spectre.AutoCompletion.Integrations;
@@ -6,6 +9,9 @@ using JKToolKit.Spectre.AutoCompletion.Integrations;
 using Spectre.Console.Cli;
 
 var app = new CommandApp();
+
+Terminal.EnableUTF8Output();
+
 app.Configure(config =>
 {
     config.AddAutoCompletion(config => config.AddPowershell());
