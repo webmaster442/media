@@ -6,17 +6,18 @@ using JKToolKit.Spectre.AutoCompletion.Integrations;
 
 using Spectre.Console.Cli;
 
-var app = new CommandApp();
+var mainApp = new CommandApp();
 
 Terminal.EnableUTF8Output();
 
-app.Configure(config =>
+mainApp.Configure(config =>
 {
     config.SetApplicationName("FFCmd");
     config.SetApplicationCulture(System.Globalization.CultureInfo.InvariantCulture);
     config.AddAutoCompletion(config => config.AddPowershell());
 
     config.AddCommand<Info>("info").WithDescription("Get information about a media file");
+    config.AddCommand<Cut>("cut").WithDescription("Cut a file without reencoding");
     config.AddBranch("convert", convert =>
     {
         convert.SetDescription("Convert audio/video files");
@@ -45,4 +46,4 @@ app.Configure(config =>
     });
 });
 
-app.Run(args);
+mainApp.Run(args);

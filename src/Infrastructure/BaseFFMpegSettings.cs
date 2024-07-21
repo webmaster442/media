@@ -7,7 +7,7 @@ using Spectre.Console.Cli;
 
 namespace FFCmd.Infrastructure;
 
-internal class BaseFFMpegSettings : CommandSettings
+internal class BaseFFMpegSettings : ValidatedCommandSettings
 {
     [Description("Input file")]
     [CommandArgument(0, "<input>")]
@@ -27,14 +27,5 @@ internal class BaseFFMpegSettings : CommandSettings
     {
         InputFile = string.Empty;
         OutputFile = string.Empty;
-    }
-
-    public override Spectre.Console.ValidationResult Validate()
-    {
-        if (ObjectValidator.TryValidate(this, out string errors))
-        {
-            return Spectre.Console.ValidationResult.Success();
-        }
-        return Spectre.Console.ValidationResult.Error(errors);
     }
 }

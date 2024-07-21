@@ -23,7 +23,7 @@ internal static class Terminal
         AnsiConsole.Write(widget);
     }
 
-    public static void DisplayException(Exception e) 
+    public static void DisplayException(Exception e)
         => AnsiConsole.WriteException(e);
 
     public static void EnableUTF8Output() 
@@ -34,4 +34,7 @@ internal static class Terminal
 
     public static void InfoText(string str) 
         => AnsiConsole.MarkupLineInterpolated($"[yellow]{str.EscapeMarkup()}[/]");
+
+    internal static void RedText(string str)
+         => AnsiConsole.MarkupLineInterpolated($"[red]{str.EscapeMarkup()}[/]");
 }

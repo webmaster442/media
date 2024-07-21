@@ -1,5 +1,7 @@
 - [x] FFProbe support
-- [ ] Cut without reencoding
+- [x] Cut without reencoding
 - [x] Muxing add subtitle track
 - [ ] Self update support
 - [x] Help command
+- [ ] YTDLP support
+- [ ] Multiple file encode support

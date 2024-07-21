@@ -1,4 +1,6 @@
 ﻿
+using System.Globalization;
+
 namespace FFCmd.Interop;
 
 internal sealed class FFMpegCommandBuilder
@@ -10,14 +12,16 @@ internal sealed class FFMpegCommandBuilder
         InputFile3 = int.MinValue + 2,
         InputFile4 = int.MinValue + 3,
         InputFile5 = int.MinValue + 4,
-        IgnoreVideo = 0,
-        CompressionLevel = 1,
-        AudioStreamSelect = 2,
-        AudioCodec = 3,
-        AudioBitrate = 4,
-        AudioFilter = 5,
-        AudioSampleRate = 6,
-        VideCodec = 7,
+        StartTime = 0,
+        IgnoreVideo = 10,
+        CompressionLevel = 20,
+        AudioStreamSelect = 30,
+        Duration = 35,
+        AudioCodec = 40,
+        AudioBitrate = 50,
+        AudioFilter = 60,
+        AudioSampleRate = 70,
+        VideCodec = 80,
         AdditionalsBeforeOutputFile = int.MaxValue - 1,
         OutputFile = int.MaxValue
     }
@@ -40,13 +44,15 @@ internal sealed class FFMpegCommandBuilder
         { CliSegment.AdditionalsBeforeOutputFile, "{0}" },
         { CliSegment.VideCodec, "-c:v {0}" },
         { CliSegment.AudioSampleRate, "-ar {0}" },
+        { CliSegment.StartTime, "-ss {0}" },
+        { CliSegment.Duration, "-t {0}" }
     };
 
     private void SetArgument(CliSegment segment, object? value)
     {
         _data[segment] = value == null
             ? _segmentFormats[segment]
-            : string.Format(_segmentFormats[segment], value);
+            : string.Format(CultureInfo.InvariantCulture, _segmentFormats[segment], value);
     }
 
     public FFMpegCommandBuilder()
@@ -130,6 +136,18 @@ internal sealed class FFMpegCommandBuilder
     public FFMpegCommandBuilder WithAudioSampleRate(int sampleRate)
     {
         SetArgument(CliSegment.AudioSampleRate, sampleRate);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithStartTimeInSeconds(double seconds)
+    {
+        SetArgument(CliSegment.StartTime, seconds);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithDurationInSeconds(double seconds)
+    {
+        SetArgument(CliSegment.Duration, seconds);
         return this;
     }
 
