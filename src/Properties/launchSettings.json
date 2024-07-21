@@ -8,8 +8,9 @@
       "commandName": "Project",
       "commandLineArgs": "update ffmpeg"
     },
-    "Profile 1": {
-      "commandName": "Project"
+    "update mpv": {
+      "commandName": "Project",
+      "commandLineArgs": "update mpv"
     }
   }
 }

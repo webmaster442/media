@@ -14,9 +14,9 @@ internal sealed class UpdateFFMpeg : GithubUpdateCommand
     {
     }
 
-    protected override async Task ExtractBinariesTo(string zipFile, string targetPath, Action<long, long> reporter)
+    protected override async Task ExtractBinariesTo(string compressedFile, string targetPath, Action<long, long> reporter)
     {
-        using var zip = new ZipArchive(File.OpenRead(zipFile));
+        using var zip = new ZipArchive(File.OpenRead(compressedFile));
         ZipArchiveEntry[] binFolder = zip.Entries.Where(entry => entry.FullName.Contains("/bin/") && entry.Length > 0).ToArray();
         long total = binFolder.Sum(entry => entry.Length);
         long progress = 0;

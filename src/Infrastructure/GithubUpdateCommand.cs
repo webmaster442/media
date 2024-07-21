@@ -28,7 +28,7 @@ internal abstract class GithubUpdateCommand : AsyncCommand
     private static async Task SetInstalledVersion(string versionFileName, DateTimeOffset? publishedAt)
     {
         var versionFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, versionFileName);
-        using var stream = File.Create(versionFile);
+        await using var stream = File.Create(versionFile);
         await JsonSerializer.SerializeAsync(stream, publishedAt);
     }
 
@@ -39,7 +39,7 @@ internal abstract class GithubUpdateCommand : AsyncCommand
         {
             return null;
         }
-        using var stream = File.OpenRead(versionFile);
+        await using var stream = File.OpenRead(versionFile);
         return await JsonSerializer.DeserializeAsync<DateTimeOffset>(stream);
     }
 
@@ -57,7 +57,7 @@ internal abstract class GithubUpdateCommand : AsyncCommand
 
     protected abstract ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets);
 
-    protected abstract Task ExtractBinariesTo(string zipFile, string targetPath, Action<long, long> reporter);
+    protected abstract Task ExtractBinariesTo(string compressedFile, string targetPath, Action<long, long> reporter);
 
     public override async Task<int> ExecuteAsync(CommandContext context)
     {

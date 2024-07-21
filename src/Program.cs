@@ -37,6 +37,8 @@ mainApp.Configure(config =>
     {
         update.SetDescription("Update related commands");
         update.AddCommand<UpdateFFMpeg>("ffmpeg");
+        update.AddCommand<UpdateMpv>("mpv");
+        update.AddCommand<UpdateAll>("all");
     });
     config.AddBranch("mux", mux =>
     {
