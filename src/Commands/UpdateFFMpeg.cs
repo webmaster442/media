@@ -1,76 +1,46 @@
-﻿using FFCmd.Interop;
-using FFCmd.Infrastructure;
+﻿using System.IO.Compression;
 
-using Spectre.Console;
-using Spectre.Console.Cli;
+using FFCmd.Dto.Github;
+using FFCmd.Infrastructure;
 
 namespace FFCmd.Commands;
 
-internal sealed class UpdateFFMpeg : AsyncCommand
+internal sealed class UpdateFFMpeg : GithubUpdateCommand
 {
-    public override async Task<int> ExecuteAsync(CommandContext context)
+    public UpdateFFMpeg() : base(programName: "FFMpeg",
+                                 repoOwner: "BtbN",
+                                 repoName: "FFmpeg-Builds",
+                                 updateFileName: "ffmpeg.json")
     {
-        try
+    }
+
+    protected override async Task ExtractBinariesTo(string zipFile, string targetPath, Action<long, long> reporter)
+    {
+        using var zip = new ZipArchive(File.OpenRead(zipFile));
+        ZipArchiveEntry[] binFolder = zip.Entries.Where(entry => entry.FullName.Contains("/bin/") && entry.Length > 0).ToArray();
+        long total = binFolder.Sum(entry => entry.Length);
+        long progress = 0;
+        int read = 0;
+        byte[] buffer = new byte[16 * 1024];
+        foreach (var entry in binFolder)
         {
-            Terminal.GreenText("Checking for ffmpleg update...");
-            using var client = new GithubClient();
-            var releases = await client.GetReleases("BtbN", "FFmpeg-Builds");
-
-            var latest = releases
-                .Where(r => !r.Prerelease
-                    && !r.Draft
-                    && r.Assets.Length > 0)
-                .OrderByDescending(r => r.PublishedAt)
-                .First();
-
-            DateTimeOffset? installed = await FFMpeg.GetInstalledVersion();
-
-            if (installed == null
-                || installed < latest.PublishedAt)
+            using (Stream sourceStream = entry.Open())
             {
-                var names = latest.Assets.Select(a => a.Name);
-
-                var asset = latest.Assets
-                    .Where(a => a.Name.Contains("win64-gpl-shared.zip"))
-                    .First();
-
-                string tempName = string.Empty;
-
-                await AnsiConsole.Progress().AutoRefresh(false).StartAsync(async ctx =>
+                using (FileStream targetStream = File.Create(Path.Combine(targetPath, entry.Name)))
                 {
-                    var task1 = ctx.AddTask("Downloading ffmpeg...");
-                    tempName = await client.DownloadAsset(asset, (long position, long length) =>
+                    do
                     {
-                        task1.Value = ((double)position / length) * 100;
-                        ctx.Refresh();
-                    });
-
-                    var task2 = ctx.AddTask("Extracting ffmpeg...");
-
-                    await FFMpegExtractor.ExtractBinariesTo("a:\\ffmpeg-master-latest-win64-gpl-shared.zip", AppContext.BaseDirectory, (long pogress, long total) =>
-                    {
-                        task2.Value = ((double)pogress / total) * 100;
-                        ctx.Refresh();
-                    });
-                });
-
-                await FFMpeg.SetInstalledVersion(latest.PublishedAt);
-
-                File.Delete(tempName);
-
-                Terminal.GreenText($"[green]FFMpeg version uptated to: {latest.PublishedAt}[/]");
+                        read = await sourceStream.ReadAsync(buffer, 0, buffer.Length);
+                        await targetStream.WriteAsync(buffer, 0, read);
+                        progress += read;
+                        reporter(progress, total);
+                    }
+                    while (read > 0);
+                }
             }
-            else
-            {
-                Terminal.GreenText("[green]FFMpeg is up to date[/]");
-            }
-
-            return ExitCodes.Success;
-        }
-        catch (Exception e)
-        {
-            AnsiConsole.WriteException(e);
-            return ExitCodes.Exception;
         }
     }
+
+    protected override ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets)
+        => assets.First(a => a.Name.Contains("win64-gpl-shared.zip"));
 }
