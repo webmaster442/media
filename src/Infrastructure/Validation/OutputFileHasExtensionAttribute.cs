@@ -3,7 +3,7 @@
 namespace FFCmd.Infrastructure.Validation;
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-internal class OutputFileHasExtensionAttribute : ValidationAttribute
+internal sealed class OutputFileHasExtensionAttribute : ValidationAttribute
 {
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
