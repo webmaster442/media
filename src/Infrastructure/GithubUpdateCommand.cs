@@ -15,6 +15,8 @@ internal abstract class GithubUpdateCommand : AsyncCommand
 
     private const string VersionsFileName = "versions.json";
 
+    private readonly JsonSerializerOptions _options;
+
     protected GithubUpdateCommand(string programName,
                                   string repoOwner,
                                   string repoName)
@@ -22,6 +24,10 @@ internal abstract class GithubUpdateCommand : AsyncCommand
         _programName = programName;
         _repoOwner = repoOwner;
         _repoName = repoName;
+        _options = new JsonSerializerOptions()
+        {
+            WriteIndented = true
+        };
     }
 
     private async Task SetInstalledVersion(DateTimeOffset publishedAt)
@@ -32,14 +38,14 @@ internal abstract class GithubUpdateCommand : AsyncCommand
         {
             using (var stream = File.OpenRead(versionFile))
             {
-                versions = await JsonSerializer.DeserializeAsync<Dictionary<string, DateTimeOffset>>(stream) 
+                versions = await JsonSerializer.DeserializeAsync<Dictionary<string, DateTimeOffset>>(stream, _options)
                     ?? throw new InvalidOperationException("Versions file deserialization error");
             }
         }
         versions[_programName] = publishedAt;
         using (var stream = File.Create(versionFile))
         {
-            await JsonSerializer.SerializeAsync(stream, versions);
+            await JsonSerializer.SerializeAsync(stream, versions, _options);
         }
     }
 
@@ -51,7 +57,7 @@ internal abstract class GithubUpdateCommand : AsyncCommand
             return null;
         }
         await using var stream = File.OpenRead(versionFile);
-        var versions = await JsonSerializer.DeserializeAsync<Dictionary<string, DateTimeOffset>>(stream)
+        var versions = await JsonSerializer.DeserializeAsync<Dictionary<string, DateTimeOffset>>(stream, _options)
             ?? throw new InvalidOperationException("Versions file deserialization error");
 
         if (versions.TryGetValue(_programName, out DateTimeOffset version))
@@ -120,11 +126,11 @@ internal abstract class GithubUpdateCommand : AsyncCommand
 
                 File.Delete(tempName);
 
-                Terminal.GreenText($"FFMpeg version uptated to: {latest.PublishedAt}");
+                Terminal.GreenText($"{_programName} uptated to: {latest.PublishedAt}");
             }
             else
             {
-                Terminal.GreenText("FFMpeg is up to date");
+                Terminal.GreenText($"{_programName} is up to date");
             }
 
             return ExitCodes.Success;

@@ -23,9 +23,9 @@ internal sealed class UpdateFFMpeg : GithubUpdateCommand
         byte[] buffer = new byte[16 * 1024];
         foreach (var entry in binFolder)
         {
-            using (Stream sourceStream = entry.Open())
+            await using (Stream sourceStream = entry.Open())
             {
-                using (FileStream targetStream = File.Create(Path.Combine(targetPath, entry.Name)))
+                await using (FileStream targetStream = File.Create(Path.Combine(targetPath, entry.Name)))
                 {
                     do
                     {

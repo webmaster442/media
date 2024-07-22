@@ -8,7 +8,7 @@ internal sealed class UpdateAll : AsyncCommand
 
     public UpdateAll()
     {
-        _updateCommands = [new UpdateFFMpeg(), new UpdateMpv()];
+        _updateCommands = [new UpdateFFMpeg(), new UpdateMpv(), new UpdateYtdlp()];
     }
 
     public override async Task<int> ExecuteAsync(CommandContext context)

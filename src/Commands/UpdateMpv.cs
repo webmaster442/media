@@ -31,7 +31,7 @@ internal sealed class UpdateMpv : GithubUpdateCommand
         byte[] buffer = new byte[16 * 1024];
         foreach (var entry in entries)
         {
-            using (Stream sourceStream = entry.OpenEntryStream())
+            await using (Stream sourceStream = entry.OpenEntryStream())
             {
                 var targetName = Path.Combine(targetPath, entry.Key!);
                 var targetDir = Path.GetDirectoryName(targetName)?? throw new InvalidOperationException("Extraction failed");
@@ -40,7 +40,7 @@ internal sealed class UpdateMpv : GithubUpdateCommand
                     Directory.CreateDirectory(targetDir);
                 }
 
-                using (FileStream targetStream = File.Create(targetName))
+                await using (FileStream targetStream = File.Create(targetName))
                 {
                     do
                     {
