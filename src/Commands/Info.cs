@@ -5,7 +5,6 @@ using FFCmd.Infrastructure;
 using FFCmd.Infrastructure.Validation;
 using FFCmd.Interop;
 
-using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;

@@ -51,7 +51,7 @@ internal static class FFProbe
             Size = Converters.BytesToHumanSize(result.Format.Size),
             Streams = new StreamInfo[result.Streams.Length],
         };
-        for (int i=0; i<result.Streams.Length; i++)
+        for (int i = 0; i < result.Streams.Length; i++)
         {
             info.Streams[i] = new StreamInfo
             {

@@ -13,7 +13,7 @@ internal sealed class GithubClient : IDisposable
     {
         _options = new JsonSerializerOptions
         {
-            Converters = 
+            Converters =
             {
                 new Json.DateOnlyConverter(),
                 new Json.IsoDateTimeOffsetConverter(),
@@ -52,7 +52,7 @@ internal sealed class GithubClient : IDisposable
         using Stream sourceStream = await response.Content.ReadAsStreamAsync();
         using FileStream targetSteam = File.Create(path);
 
-        byte[] buffer = new byte[16*1024];
+        byte[] buffer = new byte[16 * 1024];
         int read = 0;
         do
         {

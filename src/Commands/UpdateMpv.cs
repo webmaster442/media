@@ -34,7 +34,7 @@ internal sealed class UpdateMpv : GithubUpdateCommand
             await using (Stream sourceStream = entry.OpenEntryStream())
             {
                 var targetName = Path.Combine(targetPath, entry.Key!);
-                var targetDir = Path.GetDirectoryName(targetName)?? throw new InvalidOperationException("Extraction failed");
+                var targetDir = Path.GetDirectoryName(targetName) ?? throw new InvalidOperationException("Extraction failed");
                 if (!Directory.Exists(targetDir))
                 {
                     Directory.CreateDirectory(targetDir);

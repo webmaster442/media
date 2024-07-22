@@ -19,7 +19,7 @@ internal sealed class UpdateAll : AsyncCommand
             if (result != ExitCodes.Success)
             {
 
-               return result;
+                return result;
             }
         }
         return ExitCodes.Success;

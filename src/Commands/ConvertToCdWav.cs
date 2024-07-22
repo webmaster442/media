@@ -1,5 +1,5 @@
-﻿using FFCmd.Interop;
-using FFCmd.Infrastructure;
+﻿using FFCmd.Infrastructure;
+using FFCmd.Interop;
 
 namespace FFCmd.Commands;
 

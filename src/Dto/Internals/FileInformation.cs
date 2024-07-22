@@ -2,7 +2,7 @@
 
 namespace FFCmd.Dto.Internals;
 
-internal class FileInformation 
+internal class FileInformation
 {
     [JsonPropertyOrder(0)]
     public required string FileName { get; init; }

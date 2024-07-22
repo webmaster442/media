@@ -2,8 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-using FFCmd.Interop;
 using FFCmd.Infrastructure;
+using FFCmd.Interop;
 
 using Spectre.Console.Cli;
 

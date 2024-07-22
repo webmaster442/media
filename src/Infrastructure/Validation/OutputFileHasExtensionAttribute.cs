@@ -7,7 +7,7 @@ internal sealed class OutputFileHasExtensionAttribute : ValidationAttribute
 {
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        if (value is string filePath 
+        if (value is string filePath
             && validationContext.Items.TryGetValue(nameof(BaseFFMpegSettings.OutputExtension), out object? extensionObject)
             && extensionObject is string extension)
         {

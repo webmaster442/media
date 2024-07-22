@@ -26,13 +26,13 @@ internal static class Terminal
     public static void DisplayException(Exception e)
         => AnsiConsole.WriteException(e);
 
-    public static void EnableUTF8Output() 
+    public static void EnableUTF8Output()
         => Console.OutputEncoding = Encoding.UTF8;
 
-    public static void GreenText(string str) 
+    public static void GreenText(string str)
         => AnsiConsole.MarkupLineInterpolated($"[green]{str.EscapeMarkup()}[/]");
 
-    public static void InfoText(string str) 
+    public static void InfoText(string str)
         => AnsiConsole.MarkupLineInterpolated($"[yellow]{str.EscapeMarkup()}[/]");
 
     internal static void RedText(string str)
