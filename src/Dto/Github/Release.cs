@@ -17,7 +17,7 @@ public record Release(
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("node_id")] string NodeId,
     [property: JsonPropertyName("prerelease")] bool Prerelease,
-    [property: JsonPropertyName("published_at")] DateTimeOffset? PublishedAt,
+    [property: JsonPropertyName("published_at")] DateTimeOffset PublishedAt,
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)][property: JsonPropertyName("reactions")] ReactionRollup Reactions,
     [property: JsonPropertyName("tag_name")] string TagName,
     [property: JsonPropertyName("tarball_url")] Uri TarballUrl,

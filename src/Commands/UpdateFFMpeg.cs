@@ -9,8 +9,7 @@ internal sealed class UpdateFFMpeg : GithubUpdateCommand
 {
     public UpdateFFMpeg() : base(programName: "FFMpeg",
                                  repoOwner: "BtbN",
-                                 repoName: "FFmpeg-Builds",
-                                 updateFileName: "ffmpeg.json")
+                                 repoName: "FFmpeg-Builds")
     {
     }
 

@@ -12,35 +12,54 @@ internal abstract class GithubUpdateCommand : AsyncCommand
     private readonly string _programName;
     private readonly string _repoOwner;
     private readonly string _repoName;
-    private readonly string _updateFileName;
 
-    public GithubUpdateCommand(string programName,
-                               string repoOwner,
-                               string repoName,
-                               string updateFileName)
+    private const string VersionsFileName = "versions.json";
+
+    protected GithubUpdateCommand(string programName,
+                                  string repoOwner,
+                                  string repoName)
     {
         _programName = programName;
         _repoOwner = repoOwner;
         _repoName = repoName;
-        _updateFileName = updateFileName;
     }
 
-    private static async Task SetInstalledVersion(string versionFileName, DateTimeOffset? publishedAt)
+    private async Task SetInstalledVersion(DateTimeOffset publishedAt)
     {
-        var versionFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, versionFileName);
-        await using var stream = File.Create(versionFile);
-        await JsonSerializer.SerializeAsync(stream, publishedAt);
+        var versionFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, VersionsFileName);
+        Dictionary<string, DateTimeOffset> versions = new();
+        if (File.Exists(VersionsFileName))
+        {
+            using (var stream = File.OpenRead(versionFile))
+            {
+                versions = await JsonSerializer.DeserializeAsync<Dictionary<string, DateTimeOffset>>(stream) 
+                    ?? throw new InvalidOperationException("Versions file deserialization error");
+            }
+        }
+        versions[_programName] = publishedAt;
+        using (var stream = File.Create(versionFile))
+        {
+            await JsonSerializer.SerializeAsync(stream, versions);
+        }
     }
 
-    private static async Task<DateTimeOffset?> GetInstalledVersion(string versionFileName)
+    private async Task<DateTimeOffset?> GetInstalledVersion()
     {
-        var versionFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, versionFileName);
+        var versionFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, VersionsFileName);
         if (!File.Exists(versionFile))
         {
             return null;
         }
         await using var stream = File.OpenRead(versionFile);
-        return await JsonSerializer.DeserializeAsync<DateTimeOffset>(stream);
+        var versions = await JsonSerializer.DeserializeAsync<Dictionary<string, DateTimeOffset>>(stream)
+            ?? throw new InvalidOperationException("Versions file deserialization error");
+
+        if (versions.TryGetValue(_programName, out DateTimeOffset version))
+        {
+            return version;
+        }
+
+        return null;
     }
 
     private static Release GetLatestRelease(IEnumerable<Release> releases)
@@ -69,7 +88,7 @@ internal abstract class GithubUpdateCommand : AsyncCommand
 
             Release latest = GetLatestRelease(releases);
 
-            DateTimeOffset? installed = await GetInstalledVersion(_updateFileName);
+            DateTimeOffset? installed = await GetInstalledVersion();
 
             if (installed == null
                 || installed < latest.PublishedAt)
@@ -97,7 +116,7 @@ internal abstract class GithubUpdateCommand : AsyncCommand
                     });
                 });
 
-                await SetInstalledVersion(_updateFileName, latest.PublishedAt);
+                await SetInstalledVersion(latest.PublishedAt);
 
                 File.Delete(tempName);
 

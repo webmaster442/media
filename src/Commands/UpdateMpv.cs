@@ -9,8 +9,7 @@ internal sealed class UpdateMpv : GithubUpdateCommand
 {
     public UpdateMpv() : base(programName: "mpv",
                               repoOwner: "shinchiro",
-                              repoName: "mpv-winbuild-cmake",
-                              updateFileName: "mpv.json")
+                              repoName: "mpv-winbuild-cmake")
     {
     }
 
