@@ -8,11 +8,11 @@ using FFCmd.Infrastructure;
 namespace FFCmd.Interop;
 internal static class FFProbe
 {
-    private const string ffprobeBinary = "ffprobe.exe";
+    private const string FfprobeBinary = "ffprobe.exe";
 
     private static bool TryGetFFProbePath(out string ffprobePath)
     {
-        ffprobePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ffprobeBinary);
+        ffprobePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FfprobeBinary);
         return File.Exists(ffprobePath);
     }
 

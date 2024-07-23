@@ -4,11 +4,11 @@ namespace FFCmd.Interop;
 
 internal sealed class FFMpeg
 {
-    private const string ffmpegBinary = "ffmpeg.exe";
+    private const string FfmpegBinary = "ffmpeg.exe";
 
     private static bool TryGetInstalledPath(out string ffmpegPath)
     {
-        ffmpegPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ffmpegBinary);
+        ffmpegPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FfmpegBinary);
         return File.Exists(ffmpegPath);
     }
 

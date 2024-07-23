@@ -67,4 +67,66 @@ internal static class YtDlp
 
         return $"-f {video.Id}+{audio.Id} {videoUrl}";
     }
+
+    private const string YtdlpBinary = "yt-dlp.exe";
+
+    private static bool TryGetYtDlpPath(out string ytdlpPath)
+    {
+        ytdlpPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, YtdlpBinary);
+        return File.Exists(ytdlpPath);
+    }
+
+    public static async Task<string> ExtractFromatTable(string url)
+    {
+        if (!IsValidUrl(url))
+        {
+            throw new InvalidOperationException("URL is not a youtube video url");
+        }
+
+        if (!TryGetYtDlpPath(out string ytDlpPath))
+        {
+            throw new InvalidOperationException("Yt-dlp not found.");
+        }
+
+        using var process = new Process()
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = ytDlpPath,
+                Arguments = $"-F {url}",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+            }
+        };
+        process.Start();
+        var result = await process.StandardOutput.ReadToEndAsync();
+        await process.WaitForExitAsync();
+        return result;
+    }
+
+    private static bool IsValidUrl(string url)
+    {
+        return url.StartsWith("https://youtube.com/")
+            || url.StartsWith("https://youtu.be/");
+    }
+
+    public static void StartYtDlp(string commandLine)
+    {
+        if (!TryGetYtDlpPath(out string ytDlpPath))
+        {
+            throw new InvalidOperationException("Yt-dlp not found.");
+        }
+
+        using var process = new Process()
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = ytDlpPath,
+                Arguments = commandLine,
+                UseShellExecute = false,
+            }
+        };
+
+        process.Start();
+    }
 }
