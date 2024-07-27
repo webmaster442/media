@@ -2,7 +2,7 @@
 using FFCmd.Infrastructure;
 
 namespace FFCmd.Commands;
-internal class UpdateYtdlp : GithubUpdateCommand
+internal class UpdateYtdlp : BaseGithubUpdateCommand
 {
     public UpdateYtdlp()
         : base(programName: "yt-dlp",

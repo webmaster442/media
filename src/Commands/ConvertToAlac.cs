@@ -1,4 +1,5 @@
 ﻿using FFCmd.Infrastructure;
+using FFCmd.Infrastructure.BaseCommands;
 using FFCmd.Interop;
 
 namespace FFCmd.Commands;

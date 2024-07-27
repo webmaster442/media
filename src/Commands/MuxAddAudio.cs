@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 
 using FFCmd.Infrastructure;
+using FFCmd.Infrastructure.BaseCommands;
 using FFCmd.Infrastructure.Validation;
 using FFCmd.Interop;
 

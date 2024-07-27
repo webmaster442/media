@@ -7,7 +7,7 @@ using Spectre.Console.Cli;
 
 namespace FFCmd.Infrastructure;
 
-internal abstract class GithubUpdateCommand : AsyncCommand
+internal abstract class BaseGithubUpdateCommand : AsyncCommand
 {
     private readonly string _programName;
     private readonly string _repoOwner;
@@ -17,7 +17,7 @@ internal abstract class GithubUpdateCommand : AsyncCommand
 
     private readonly JsonSerializerOptions _options;
 
-    protected GithubUpdateCommand(string programName,
+    protected BaseGithubUpdateCommand(string programName,
                                   string repoOwner,
                                   string repoName)
     {

@@ -5,7 +5,7 @@ using SharpCompress.Archives.SevenZip;
 
 namespace FFCmd.Commands;
 
-internal sealed class UpdateMpv : GithubUpdateCommand
+internal sealed class UpdateMpv : BaseGithubUpdateCommand
 {
     public UpdateMpv() : base(programName: "mpv",
                               repoOwner: "shinchiro",

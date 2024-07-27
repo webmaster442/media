@@ -37,4 +37,7 @@ internal static class Terminal
 
     internal static void RedText(string str)
          => AnsiConsole.MarkupLineInterpolated($"[red]{str.EscapeMarkup()}[/]");
+
+    internal static bool Confirm(string message)
+        => AnsiConsole.Confirm(message);
 }

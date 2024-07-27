@@ -5,7 +5,7 @@ using FFCmd.Infrastructure;
 
 namespace FFCmd.Commands;
 
-internal sealed class UpdateFFMpeg : GithubUpdateCommand
+internal sealed class UpdateFFMpeg : BaseGithubUpdateCommand
 {
     public UpdateFFMpeg() : base(programName: "FFMpeg",
                                  repoOwner: "BtbN",

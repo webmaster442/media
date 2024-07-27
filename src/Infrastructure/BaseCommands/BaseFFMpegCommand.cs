@@ -2,7 +2,7 @@
 
 using Spectre.Console.Cli;
 
-namespace FFCmd.Infrastructure;
+namespace FFCmd.Infrastructure.BaseCommands;
 
 internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
     : Command<TBaseFFMpegSettings> where TBaseFFMpegSettings : BaseFFMpegSettings
