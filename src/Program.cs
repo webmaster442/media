@@ -26,6 +26,7 @@ mainApp.Configure(config =>
         convert.AddCommand<ConvertToM4a>("m4a");
         convert.AddCommand<ConvertToMp3>("mp3");
         convert.AddCommand<ConvertToCdWav>("cdwav");
+        convert.AddCommand<ConvertContactSheet>("contactsheet");
     });
     config.AddBranch("extract", extract =>
     {

@@ -5,27 +5,6 @@ namespace FFCmd.Interop;
 
 internal sealed class FFMpegCommandBuilder
 {
-    private enum CliSegment
-    {
-        InputFile = int.MinValue,
-        InputFile2 = int.MinValue + 1,
-        InputFile3 = int.MinValue + 2,
-        InputFile4 = int.MinValue + 3,
-        InputFile5 = int.MinValue + 4,
-        StartTime = 0,
-        IgnoreVideo = 10,
-        CompressionLevel = 20,
-        AudioStreamSelect = 30,
-        Duration = 35,
-        AudioCodec = 40,
-        AudioBitrate = 50,
-        AudioFilter = 60,
-        AudioSampleRate = 70,
-        VideCodec = 80,
-        AdditionalsBeforeOutputFile = int.MaxValue - 1,
-        OutputFile = int.MaxValue
-    }
-
     private readonly Dictionary<CliSegment, string> _data;
 
     private readonly Dictionary<CliSegment, string> _segmentFormats = new()
@@ -43,26 +22,58 @@ internal sealed class FFMpegCommandBuilder
         { CliSegment.AudioStreamSelect, "-map 0:a:{0}" },
         { CliSegment.AdditionalsBeforeOutputFile, "{0}" },
         { CliSegment.VideCodec, "-c:v {0}" },
+        { CliSegment.VideoBitrate, "-b:v {0}" },
         { CliSegment.AudioSampleRate, "-ar {0}" },
         { CliSegment.StartTime, "-ss {0}" },
-        { CliSegment.Duration, "-t {0}" }
+        { CliSegment.Duration, "-t {0}" },
+        { CliSegment.AspectRatio, "-aspect {0}" },
+        { CliSegment.VideoFilter, "-vf \"{0}\"" },
+        { CliSegment.Vsync, "-vsync {0}" }
     };
-
-    private void SetArgument(CliSegment segment, object? value)
-    {
-        _data[segment] = value == null
-            ? _segmentFormats[segment]
-            : string.Format(CultureInfo.InvariantCulture, _segmentFormats[segment], value);
-    }
 
     public FFMpegCommandBuilder()
     {
         _data = new Dictionary<CliSegment, string>();
     }
 
-    public FFMpegCommandBuilder WithInputFile(string inputFile)
+    private enum CliSegment
     {
-        SetArgument(CliSegment.InputFile, inputFile);
+        InputFile = int.MinValue,
+        InputFile2 = int.MinValue + 1,
+        InputFile3 = int.MinValue + 2,
+        InputFile4 = int.MinValue + 3,
+        InputFile5 = int.MinValue + 4,
+        StartTime = 0,
+        IgnoreVideo = 10,
+        CompressionLevel = 20,
+        AudioStreamSelect = 30,
+        Duration = 35,
+        AudioCodec = 40,
+        AudioBitrate = 50,
+        AudioFilter = 60,
+        AudioSampleRate = 70,
+        VideCodec = 80,
+        VideoBitrate = 90,
+        VideoQuality = 91,
+        VideoFilter = 95,
+        Vsync = 100,
+        AspectRatio = 110,
+        AdditionalsBeforeOutputFile = int.MaxValue - 1,
+        OutputFile = int.MaxValue
+    }
+    public string BuildCommandLine()
+    {
+        var ordered = _data
+            .Where(x => !string.IsNullOrWhiteSpace(x.Value))
+            .OrderBy(x => x.Key)
+            .Select(x => x.Value);
+
+        return string.Join(" ", ordered);
+    }
+
+    public FFMpegCommandBuilder IgnoreVideo()
+    {
+        SetArgument(CliSegment.IgnoreVideo, string.Empty);
         return this;
     }
 
@@ -79,9 +90,15 @@ internal sealed class FFMpegCommandBuilder
         return this;
     }
 
-    public FFMpegCommandBuilder IgnoreVideo()
+    public FFMpegCommandBuilder WithAdditionalsBeforeOutputFile(string cmd)
     {
-        SetArgument(CliSegment.IgnoreVideo, string.Empty);
+        SetArgument(CliSegment.AdditionalsBeforeOutputFile, cmd);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithAspectRatio(string aspectRatio)
+    {
+        SetArgument(CliSegment.AspectRatio, aspectRatio);
         return this;
     }
 
@@ -97,39 +114,9 @@ internal sealed class FFMpegCommandBuilder
         return this;
     }
 
-    public FFMpegCommandBuilder WithVideoCodec(string codecName)
-    {
-        SetArgument(CliSegment.VideCodec, codecName);
-        return this;
-    }
-
     public FFMpegCommandBuilder WithAudioFilter(string filterString)
     {
         SetArgument(CliSegment.AudioFilter, filterString);
-        return this;
-    }
-
-    public FFMpegCommandBuilder WithCompressionLevel(int compressionLevel)
-    {
-        SetArgument(CliSegment.CompressionLevel, compressionLevel);
-        return this;
-    }
-
-    public FFMpegCommandBuilder WithAdditionalsBeforeOutputFile(string cmd)
-    {
-        SetArgument(CliSegment.AdditionalsBeforeOutputFile, cmd);
-        return this;
-    }
-
-    public FFMpegCommandBuilder WithOutputFile(string outputFile)
-    {
-        SetArgument(CliSegment.OutputFile, outputFile);
-        return this;
-    }
-
-    public FFMpegCommandBuilder WithAudioStreamSelection(int streamIndex)
-    {
-        SetArgument(CliSegment.AudioStreamSelect, streamIndex);
         return this;
     }
 
@@ -139,9 +126,15 @@ internal sealed class FFMpegCommandBuilder
         return this;
     }
 
-    public FFMpegCommandBuilder WithStartTimeInSeconds(double seconds)
+    public FFMpegCommandBuilder WithAudioStreamSelection(int streamIndex)
     {
-        SetArgument(CliSegment.StartTime, seconds);
+        SetArgument(CliSegment.AudioStreamSelect, streamIndex);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithCompressionLevel(int compressionLevel)
+    {
+        SetArgument(CliSegment.CompressionLevel, compressionLevel);
         return this;
     }
 
@@ -151,9 +144,60 @@ internal sealed class FFMpegCommandBuilder
         return this;
     }
 
-    public string BuildCommandLine()
+    public FFMpegCommandBuilder WithInputFile(string inputFile)
     {
-        var ordered = _data.OrderBy(x => x.Key).Select(x => x.Value);
-        return string.Join(" ", ordered);
+        SetArgument(CliSegment.InputFile, inputFile);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithOutputFile(string outputFile)
+    {
+        SetArgument(CliSegment.OutputFile, outputFile);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithStartTimeInSeconds(double seconds)
+    {
+        SetArgument(CliSegment.StartTime, seconds);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithVideoBitrate(string bitrate)
+    {
+        SetArgument(CliSegment.VideoBitrate, bitrate);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithVideoQuality(int quality)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(quality, 2, nameof(quality));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(quality, 31, nameof(quality));
+        SetArgument(CliSegment.VideoQuality, quality);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithVideoCodec(string codecName)
+    {
+        SetArgument(CliSegment.VideCodec, codecName);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithVideoFilter(string filterString)
+    {
+        SetArgument(CliSegment.VideoFilter, filterString);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithVsync(string vsync)
+    {
+        SetArgument(CliSegment.Vsync, vsync);
+        return this;
+    }
+
+    private void SetArgument(CliSegment segment, object? value)
+    {
+        _data[segment] = value == null
+            ? _segmentFormats[segment]
+            : string.Format(CultureInfo.InvariantCulture, _segmentFormats[segment], value);
     }
 }
