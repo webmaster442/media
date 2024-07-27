@@ -9,6 +9,7 @@ using FFCmd.Interop;
 using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
+
 internal class ExtractAudioStereoM4a : BaseFFMpegCommand<ExtractAudioStereoM4a.Settings>
 {
     public class Settings : BaseFFMpegSettings

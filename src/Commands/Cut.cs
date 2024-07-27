@@ -9,6 +9,7 @@ using FFCmd.Interop;
 using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
+
 internal sealed class Cut : Command<Cut.Settings>
 {
     public sealed class Settings : ValidatedCommandSettings

@@ -18,7 +18,6 @@ internal sealed class UpdateAll : AsyncCommand
             var result = await command.ExecuteAsync(context);
             if (result != ExitCodes.Success)
             {
-
                 return result;
             }
         }

@@ -7,6 +7,7 @@ using FFCmd.Interop;
 using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
+
 internal class YtDload : AsyncCommand<YtDload.Settings>
 {
     public class Settings : ValidatedCommandSettings
@@ -31,7 +32,6 @@ internal class YtDload : AsyncCommand<YtDload.Settings>
             YtDlp.StartYtDlp(arguments);
 
             return ExitCodes.Success;
-
         }
         catch (Exception ex)
         {

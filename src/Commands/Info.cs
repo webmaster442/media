@@ -8,6 +8,7 @@ using FFCmd.Interop;
 using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
+
 internal class Info : AsyncCommand<Info.Settings>
 {
     public class Settings : CommandSettings
