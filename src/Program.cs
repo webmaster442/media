@@ -13,36 +13,36 @@ Terminal.EnableUTF8Output();
 mainApp.Configure(config =>
 {
     config.SetApplicationName("FFCmd");
-    config.SetApplicationCulture(System.Globalization.CultureInfo.InvariantCulture);
     config.AddAutoCompletion(config => config.AddPowershell());
 
     config.AddCommand<Info>("info")
           .WithDescription("Get information about a media file");
-    
+
     config.AddCommand<Cut>("cut")
           .WithDescription("Cut a file without reencoding");
-    
+
     config.AddBranch("convert", convert =>
     {
-        convert.SetDescription("Convert audio/video files");
+        //Note: when adding a new command also add it to the BachCompile class
 
+        convert.SetDescription("Convert audio/video files");
         convert.AddCommand<ConvertToAlac>("alac")
                .WithDescription("Convert audio to Apple Lossless Audio Codec (ALAC)");
 
         convert.AddCommand<ConvertToFlac>("flac")
-               .WithDescription("Convert audio to Free Lossless Audio Codec (FLAC)");
+              .WithDescription("Convert audio to Free Lossless Audio Codec (FLAC)");
 
         convert.AddCommand<ConvertToM4a>("m4a")
-               .WithDescription("Convert audio to MPEG-4 Audio (M4A)");
-        
+              .WithDescription("Convert audio to MPEG-4 Audio (M4A)");
+
         convert.AddCommand<ConvertToMp3>("mp3")
-               .WithDescription("Convert audio to MPEG-1 Audio Layer III (MP3)");
-        
+              .WithDescription("Convert audio to MPEG-1 Audio Layer III (MP3)");
+
         convert.AddCommand<ConvertToCdWav>("cdwav")
-               .WithDescription("Convert audio to CD WAV");
-        
+              .WithDescription("Convert audio to CD WAV");
+
         convert.AddCommand<ConvertContactSheet>("contactsheet")
-               .WithDescription("Create a contact sheet from a video file");
+              .WithDescription("Create a contact sheet from a video file");
     });
     config.AddBranch("bach", bach =>
     {

@@ -9,17 +9,11 @@ namespace FFCmd.Infrastructure.BaseCommands;
 internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
     : Command<TBaseFFMpegSettings> where TBaseFFMpegSettings : BaseFFMpegSettings
 {
-    private readonly Mode _mode;
+    private readonly ICommandConfig? _commandSettings;
 
-    public enum Mode
+    protected BaseFFMpegCommand(ICommandConfig? commandSettings = null)
     {
-        Execute,
-        DryRun
-    }
-
-    protected BaseFFMpegCommand(Mode mode = Mode.Execute)
-    {
-        _mode = mode;
+        _commandSettings = commandSettings;
         GeneratedCommandLine = string.Empty;
     }
 
@@ -34,16 +28,14 @@ internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
 
             var cmdLine = builder.BuildCommandLine();
            
-            switch (_mode)
+            if (_commandSettings != null &&
+                _commandSettings.Mode == ExectuionMode.DryRun)
             {
-                case Mode.Execute:
-                    Execute(cmdLine);
-                    break;
-                case Mode.DryRun:
-                    DryRun(cmdLine);
-                    break;
-                default:
-                    throw new UnreachableException();
+                DryRun(cmdLine);
+            }
+            else
+            {
+                Execute(cmdLine);
             }
 
             return ExitCodes.Success;
