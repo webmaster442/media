@@ -6,7 +6,7 @@ using Spectre.Console.Cli;
 
 namespace FFCmd.Infrastructure.BaseCommands;
 
-internal abstract class BaseBachCommand<T> : AsyncCommand<T> where T : BaseBachSettings 
+internal abstract class BaseBachCommand<T> : AsyncCommand<T> where T : ValidatedCommandSettings
 {
     protected readonly JsonSerializerOptions _serializerOptions;
 

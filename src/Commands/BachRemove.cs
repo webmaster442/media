@@ -15,7 +15,7 @@ internal sealed class BachRemove : BaseBachCommand<BachRemove.Settings>
         [CommandArgument(0, "<file or file pattern>")]
         [Description("File or file pattern (eg. *.mp3) to remove from the project")]
         [Required]
-        public string FileToAdd { get; set; } = string.Empty;
+        public string FileToRemvoe { get; set; } = string.Empty;
     }
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
@@ -23,7 +23,7 @@ internal sealed class BachRemove : BaseBachCommand<BachRemove.Settings>
         try
         {
             var project = await LoadProject(settings.ProjectName);
-            var files = GetFiles(settings.FileToAdd);
+            var files = GetFiles(settings.FileToRemvoe);
             int count = 0;
 
             foreach (var file in files)

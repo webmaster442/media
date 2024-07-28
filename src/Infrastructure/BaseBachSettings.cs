@@ -18,13 +18,6 @@ internal class BaseBachSettings : ValidatedCommandSettings
     public BaseBachSettings()
     {
         var files = Directory.GetFiles(Environment.CurrentDirectory, "*.bach");
-        if (files.Length == 1)
-        {
-            ProjectName = files[0];
-        }
-        else
-        {
-            ProjectName = string.Empty;
-        }
+        ProjectName = files.Length == 1 ? files[0] : string.Empty;
     }
 }
