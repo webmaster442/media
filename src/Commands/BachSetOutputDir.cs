@@ -1,10 +1,6 @@
-﻿using System.ComponentModel;
-
-using FFCmd.Infrastructure;
+﻿using FFCmd.Infrastructure;
 using FFCmd.Infrastructure.BaseCommands;
 using FFCmd.Infrastructure.Validation;
-
-using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
 

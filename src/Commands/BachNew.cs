@@ -1,11 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-
+﻿using FFCmd.Dto;
 using FFCmd.Infrastructure;
 using FFCmd.Infrastructure.BaseCommands;
-
-using Spectre.Console.Cli;
-using FFCmd.Dto;
 
 namespace FFCmd.Commands;
 

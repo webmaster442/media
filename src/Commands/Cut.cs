@@ -1,13 +1,9 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 using FFCmd.Infrastructure;
 using FFCmd.Infrastructure.Validation;
 using FFCmd.Interop;
-
-using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
 

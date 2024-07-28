@@ -1,6 +1,4 @@
-﻿using Spectre.Console.Cli;
-
-namespace FFCmd.Commands;
+﻿namespace FFCmd.Commands;
 
 internal sealed class UpdateAll : AsyncCommand
 {

@@ -1,9 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-
-using FFCmd.Infrastructure.Validation;
-
-using Spectre.Console.Cli;
+﻿using FFCmd.Infrastructure.Validation;
 
 namespace FFCmd.Infrastructure;
 

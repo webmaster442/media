@@ -1,7 +1,5 @@
 ﻿using FFCmd.Infrastructure.Validation;
 
-using Spectre.Console.Cli;
-
 namespace FFCmd.Infrastructure;
 
 internal abstract class ValidatedCommandSettings : CommandSettings

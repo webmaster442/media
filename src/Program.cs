@@ -4,8 +4,6 @@ using FFCmd.Infrastructure;
 using JKToolKit.Spectre.AutoCompletion.Completion;
 using JKToolKit.Spectre.AutoCompletion.Integrations;
 
-using Spectre.Console.Cli;
-
 var mainApp = new CommandApp();
 
 Terminal.EnableUTF8Output();

@@ -20,7 +20,7 @@ internal static class Parsers
         {
             var subColumns = column.Split([' ', '~'], StringSplitOptions.RemoveEmptyEntries);
             int selected = columnSelector(subColumns.Length);
-            if (selected < subColumns.Length 
+            if (selected < subColumns.Length
                 && selected > -1)
             {
                 return subColumns[selected];

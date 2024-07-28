@@ -8,8 +8,8 @@
     - [x] ffcmd bach clear
     - [x] ffcmd bach add
     - [x] ffcmd bach new
-    - [ ] ffcmd bach set preset mp3 -b 128k
-    - [ ] ffcmd bach set outdir outdir
+    - [x] ffcmd bach set preset mp3 -b 128k
+    - [x] ffcmd bach set outdir outdir
     - [ ] ffcmd bach compile shell.ps1
 - [ ] Rename program to media
 - [ ] Powershell file builder

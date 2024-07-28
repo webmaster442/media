@@ -4,8 +4,6 @@ using FFCmd.Infrastructure.BaseCommands;
 
 using Microsoft.Extensions.DependencyInjection;
 
-using Spectre.Console.Cli;
-
 namespace FFCmd.Commands;
 
 internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>

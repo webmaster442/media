@@ -2,8 +2,6 @@
 
 using FFCmd.Interop;
 
-using Spectre.Console.Cli;
-
 namespace FFCmd.Infrastructure.BaseCommands;
 
 internal interface IDryRunResultAcceptor
@@ -16,8 +14,8 @@ internal sealed class DryRunResultAcceptor : IDryRunResultAcceptor
     public string Result { get; set; } = string.Empty;
 }
 
-    internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
-    : Command<TBaseFFMpegSettings> where TBaseFFMpegSettings : BaseFFMpegSettings
+internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
+: Command<TBaseFFMpegSettings> where TBaseFFMpegSettings : BaseFFMpegSettings
 {
     private readonly IDryRunResultAcceptor? _dryRunResultAcceptor;
 

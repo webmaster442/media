@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-using Spectre.Console.Cli;
-
 namespace FFCmd.Infrastructure;
 
 internal sealed class TypeRegistrar : ITypeRegistrar

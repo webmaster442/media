@@ -1,8 +1,4 @@
-﻿using System.Text.Json;
-
-using FFCmd.Dto;
-
-using Spectre.Console.Cli;
+﻿using FFCmd.Dto;
 
 namespace FFCmd.Infrastructure.BaseCommands;
 

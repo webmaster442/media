@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace FFCmd.Infrastructure.Validation;
+﻿namespace FFCmd.Infrastructure.Validation;
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
 internal sealed class OutputFileHasExtensionAttribute : ValidationAttribute
