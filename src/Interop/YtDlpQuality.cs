@@ -1,4 +1,4 @@
-﻿namespace FFCmd.Interop;
+﻿namespace Media.Interop;
 
 public enum YtDlpQuality
 {

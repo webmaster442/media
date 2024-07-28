@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.Json.Serialization;
 
-namespace FFCmd.Infrastructure.Json;
+namespace Media.Infrastructure.Json;
 
 internal class IsoDateTimeOffsetConverter : JsonConverter<DateTimeOffset>
 {

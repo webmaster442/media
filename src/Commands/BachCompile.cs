@@ -1,10 +1,10 @@
-﻿using FFCmd.Dto;
-using FFCmd.Infrastructure;
-using FFCmd.Infrastructure.BaseCommands;
+﻿using Media.Dto;
+using Media.Infrastructure;
+using Media.Infrastructure.BaseCommands;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FFCmd.Commands;
+namespace Media.Commands;
 
 internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
 {

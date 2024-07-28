@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FFCmd.Dto.Github;
+namespace Media.Dto.Github;
 
 public record ReactionRollup(
     [property: JsonPropertyName("+1")] long The1,

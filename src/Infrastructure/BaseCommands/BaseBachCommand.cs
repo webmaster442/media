@@ -1,6 +1,6 @@
-﻿using FFCmd.Dto;
+﻿using Media.Dto;
 
-namespace FFCmd.Infrastructure.BaseCommands;
+namespace Media.Infrastructure.BaseCommands;
 
 internal abstract class BaseBachCommand<T> : AsyncCommand<T> where T : ValidatedCommandSettings
 {

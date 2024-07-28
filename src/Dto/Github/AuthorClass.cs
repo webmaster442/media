@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FFCmd.Dto.Github;
+namespace Media.Dto.Github;
 
 public record AuthorClass(
     [property: JsonPropertyName("avatar_url")] Uri AvatarUrl,

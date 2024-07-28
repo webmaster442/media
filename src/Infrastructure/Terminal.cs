@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using Spectre.Console;
 using Spectre.Console.Json;
 
-namespace FFCmd.Infrastructure;
+namespace Media.Infrastructure;
 
 internal static class Terminal
 {

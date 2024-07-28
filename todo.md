@@ -11,9 +11,9 @@
     - [x] ffcmd bach set preset mp3 -b 128k
     - [x] ffcmd bach set outdir outdir
     - [ ] ffcmd bach compile shell.ps1
-- [ ] Rename program to media
+- [x] Rename program to media
 - [ ] Powershell file builder
 - [ ] Cmd file builder
-- [ ] Global usings file
-- [ ] Code cleanup
+- [x] Global usings file
+- [x] Code cleanup
 - [ ] Push to github

@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using FFCmd.Dto.Github;
+using Media.Dto.Github;
 
-namespace FFCmd.Infrastructure.Json;
+namespace Media.Infrastructure.Json;
 
 internal sealed class StateConverter : JsonConverter<State>
 {

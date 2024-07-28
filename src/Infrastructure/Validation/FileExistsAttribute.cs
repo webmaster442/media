@@ -1,4 +1,4 @@
-﻿namespace FFCmd.Infrastructure.Validation;
+﻿namespace Media.Infrastructure.Validation;
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
 internal sealed class FileExistsAttribute : ValidationAttribute

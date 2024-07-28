@@ -1,5 +1,5 @@
-﻿using FFCmd.Commands;
-using FFCmd.Infrastructure;
+﻿using Media.Commands;
+using Media.Infrastructure;
 
 using JKToolKit.Spectre.AutoCompletion.Completion;
 using JKToolKit.Spectre.AutoCompletion.Integrations;

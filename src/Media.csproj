@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="FFCmd.Tests" />
+    <InternalsVisibleTo Include="Media.Tests" />
   </ItemGroup>
 
   <ItemGroup>

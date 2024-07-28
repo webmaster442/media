@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using FFCmd.Interop;
+using Media.Interop;
 
-namespace FFCmd.Infrastructure.BaseCommands;
+namespace Media.Infrastructure.BaseCommands;
 
 internal interface IDryRunResultAcceptor
 {

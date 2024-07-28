@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Text;
 
-namespace FFCmd.Infrastructure.Validation;
+namespace Media.Infrastructure.Validation;
 
 internal static class ObjectValidator
 {

@@ -1,7 +1,7 @@
-﻿using FFCmd.Infrastructure;
-using FFCmd.Interop;
+﻿using Media.Infrastructure;
+using Media.Interop;
 
-namespace FFCmd.Commands;
+namespace Media.Commands;
 
 internal class YtDload : AsyncCommand<YtDload.Settings>
 {

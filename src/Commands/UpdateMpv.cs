@@ -1,9 +1,9 @@
-﻿using FFCmd.Dto.Github;
-using FFCmd.Infrastructure;
+﻿using Media.Dto.Github;
+using Media.Infrastructure;
 
 using SharpCompress.Archives.SevenZip;
 
-namespace FFCmd.Commands;
+namespace Media.Commands;
 
 internal sealed class UpdateMpv : BaseGithubUpdateCommand
 {

@@ -1,7 +1,7 @@
-﻿using FFCmd.Dto.Github;
-using FFCmd.Infrastructure;
+﻿using Media.Dto.Github;
+using Media.Infrastructure;
 
-namespace FFCmd.Commands;
+namespace Media.Commands;
 
 internal class UpdateYtdlp : BaseGithubUpdateCommand
 {

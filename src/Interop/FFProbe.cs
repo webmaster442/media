@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 
-using FFCmd.Dto.FFProbe;
-using FFCmd.Dto.Internals;
-using FFCmd.Infrastructure;
+using Media.Dto.FFProbe;
+using Media.Dto.Internals;
+using Media.Infrastructure;
 
-namespace FFCmd.Interop;
+namespace Media.Interop;
 internal static class FFProbe
 {
     private const string FfprobeBinary = "ffprobe.exe";

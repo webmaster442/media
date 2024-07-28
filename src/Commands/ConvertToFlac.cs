@@ -1,8 +1,8 @@
-﻿using FFCmd.Infrastructure;
-using FFCmd.Infrastructure.BaseCommands;
-using FFCmd.Interop;
+﻿using Media.Infrastructure;
+using Media.Infrastructure.BaseCommands;
+using Media.Interop;
 
-namespace FFCmd.Commands;
+namespace Media.Commands;
 
 internal sealed class ConvertToFlac : BaseFFMpegCommand<ConvertToFlac.Settings>
 {

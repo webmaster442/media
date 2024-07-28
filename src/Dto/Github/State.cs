@@ -1,3 +1,3 @@
-﻿namespace FFCmd.Dto.Github;
+﻿namespace Media.Dto.Github;
 
 public enum State { Open, Uploaded };

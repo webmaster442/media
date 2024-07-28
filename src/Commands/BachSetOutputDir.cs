@@ -1,8 +1,8 @@
-﻿using FFCmd.Infrastructure;
-using FFCmd.Infrastructure.BaseCommands;
-using FFCmd.Infrastructure.Validation;
+﻿using Media.Infrastructure;
+using Media.Infrastructure.BaseCommands;
+using Media.Infrastructure.Validation;
 
-namespace FFCmd.Commands;
+namespace Media.Commands;
 
 internal sealed class BachSetOutputDir : BaseBachCommand<BachSetOutputDir.Settings>
 {

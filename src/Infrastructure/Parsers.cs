@@ -1,6 +1,6 @@
-﻿using FFCmd.Dto.Internals;
+﻿using Media.Dto.Internals;
 
-namespace FFCmd.Infrastructure;
+namespace Media.Infrastructure;
 internal static class Parsers
 {
     public static IEnumerable<YtDlpFormat> ParseFormats(string formatText)

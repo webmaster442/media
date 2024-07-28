@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FFCmd.Dto.FFProbe;
+namespace Media.Dto.FFProbe;
 
 public record StreamTags(
     [property: JsonPropertyName("language")] string Language,

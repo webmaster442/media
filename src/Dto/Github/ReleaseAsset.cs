@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FFCmd.Dto.Github;
+namespace Media.Dto.Github;
 
 public record ReleaseAsset(
     [property: JsonPropertyName("browser_download_url")] Uri BrowserDownloadUrl,

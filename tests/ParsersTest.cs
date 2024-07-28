@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Media.Dto.Internals;
+using Media.Infrastructure;
 
-using FFCmd.Dto.Internals;
-using FFCmd.Infrastructure;
-
-namespace FFCmd.Tests;
+namespace Media.Tests;
 
 [TestFixture]
 internal class ParsersTest

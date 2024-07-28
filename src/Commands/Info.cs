@@ -1,8 +1,8 @@
-﻿using FFCmd.Infrastructure;
-using FFCmd.Infrastructure.Validation;
-using FFCmd.Interop;
+﻿using Media.Infrastructure;
+using Media.Infrastructure.Validation;
+using Media.Interop;
 
-namespace FFCmd.Commands;
+namespace Media.Commands;
 
 internal class Info : AsyncCommand<Info.Settings>
 {

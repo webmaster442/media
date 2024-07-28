@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FFCmd.Dto.FFProbe;
+namespace Media.Dto.FFProbe;
 
 public record Format([property: JsonPropertyName("filename")] string Filename,
                      [property: JsonPropertyName("nb_streams")] int NbStreams,

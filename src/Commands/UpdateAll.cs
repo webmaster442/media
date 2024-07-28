@@ -1,4 +1,4 @@
-﻿namespace FFCmd.Commands;
+﻿namespace Media.Commands;
 
 internal sealed class UpdateAll : AsyncCommand
 {

@@ -1,6 +1,6 @@
-﻿using FFCmd.Dto.Github;
+﻿using Media.Dto.Github;
 
-namespace FFCmd.Infrastructure;
+namespace Media.Infrastructure;
 
 internal sealed class GithubClient : IDisposable
 {

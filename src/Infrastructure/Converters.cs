@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace FFCmd.Infrastructure;
+namespace Media.Infrastructure;
 internal static class Converters
 {
     public static string SecondsToHumanTime(string seconds)

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FFCmd.Dto.FFProbe;
+namespace Media.Dto.FFProbe;
 
 public record Stream(
     [property: JsonPropertyName("index")] int Index,

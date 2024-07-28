@@ -1,7 +1,7 @@
-﻿using FFCmd.Infrastructure;
-using FFCmd.Interop;
+﻿using Media.Infrastructure;
+using Media.Interop;
 
-namespace FFCmd.Tests;
+namespace Media.Tests;
 
 [TestFixture]
 internal class YtDlpTests

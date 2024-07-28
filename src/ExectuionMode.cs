@@ -1,4 +1,4 @@
-﻿namespace FFCmd;
+﻿namespace Media;
 
 internal enum ExectuionMode
 {

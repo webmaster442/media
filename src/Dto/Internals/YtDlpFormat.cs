@@ -1,4 +1,4 @@
-﻿namespace FFCmd.Dto.Internals;
+﻿namespace Media.Dto.Internals;
 
 internal sealed record class YtDlpFormat
 {

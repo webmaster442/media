@@ -1,8 +1,8 @@
-﻿using FFCmd.Dto.Github;
+﻿using Media.Dto.Github;
 
 using Spectre.Console;
 
-namespace FFCmd.Infrastructure;
+namespace Media.Infrastructure;
 
 internal abstract class BaseGithubUpdateCommand : AsyncCommand
 {

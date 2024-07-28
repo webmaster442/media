@@ -1,8 +1,8 @@
-﻿using FFCmd.Dto;
-using FFCmd.Infrastructure;
-using FFCmd.Infrastructure.BaseCommands;
+﻿using Media.Dto;
+using Media.Infrastructure;
+using Media.Infrastructure.BaseCommands;
 
-namespace FFCmd.Commands;
+namespace Media.Commands;
 
 internal sealed class BachNew : BaseBachCommand<BachNew.Settings>
 {

@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 
-using FFCmd.Dto.Internals;
+using Media.Dto.Internals;
 
-namespace FFCmd.Interop;
+namespace Media.Interop;
 
 internal static class YtDlp
 {

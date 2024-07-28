@@ -1,4 +1,4 @@
-﻿namespace FFCmd.Dto;
+﻿namespace Media.Dto;
 
 internal class BachProject
 {

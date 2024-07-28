@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace FFCmd.Infrastructure;
+namespace Media.Infrastructure;
 
 internal sealed class TypeRegistrar : ITypeRegistrar
 {

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FFCmd.Infrastructure.Json;
+namespace Media.Infrastructure.Json;
 
 public class DateOnlyConverter : JsonConverter<DateOnly>
 {

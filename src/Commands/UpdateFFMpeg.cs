@@ -1,9 +1,9 @@
 ﻿using System.IO.Compression;
 
-using FFCmd.Dto.Github;
-using FFCmd.Infrastructure;
+using Media.Dto.Github;
+using Media.Infrastructure;
 
-namespace FFCmd.Commands;
+namespace Media.Commands;
 
 internal sealed class UpdateFFMpeg : BaseGithubUpdateCommand
 {

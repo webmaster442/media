@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace FFCmd.Interop;
+namespace Media.Interop;
 
 internal sealed class FFMpeg
 {

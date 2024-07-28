@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FFCmd.Dto.Internals;
+namespace Media.Dto.Internals;
 
 internal class FileInformation
 {

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace FFCmd.Dto.Github;
+namespace Media.Dto.Github;
 public record Release(
     [property: JsonPropertyName("assets")] ReleaseAsset[] Assets,
     [property: JsonPropertyName("assets_url")] Uri AssetsUrl,

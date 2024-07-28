@@ -1,6 +1,6 @@
-﻿using FFCmd.Infrastructure.Validation;
+﻿using Media.Infrastructure.Validation;
 
-namespace FFCmd.Infrastructure;
+namespace Media.Infrastructure;
 
 internal class BaseBachSettings : ValidatedCommandSettings
 {

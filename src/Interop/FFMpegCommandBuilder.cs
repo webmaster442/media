@@ -1,7 +1,7 @@
 ﻿
 using System.Globalization;
 
-namespace FFCmd.Interop;
+namespace Media.Interop;
 
 internal sealed class FFMpegCommandBuilder
 {

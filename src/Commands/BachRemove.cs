@@ -1,7 +1,7 @@
-﻿using FFCmd.Infrastructure;
-using FFCmd.Infrastructure.BaseCommands;
+﻿using Media.Infrastructure;
+using Media.Infrastructure.BaseCommands;
 
-namespace FFCmd.Commands;
+namespace Media.Commands;
 
 internal sealed class BachRemove : BaseBachCommand<BachRemove.Settings>
 {
