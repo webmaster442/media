@@ -5,10 +5,17 @@ namespace FFCmd.Infrastructure.Validation;
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
 internal sealed class OutputFileHasExtensionAttribute : ValidationAttribute
 {
+    public OutputFileHasExtensionAttribute(string propertyName)
+    {
+        PropertyName = propertyName;
+    }
+
+    public string PropertyName { get; }
+
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value is string filePath
-            && validationContext.Items.TryGetValue(nameof(BaseFFMpegSettings.OutputExtension), out object? extensionObject)
+            && validationContext.Items.TryGetValue(PropertyName, out object? extensionObject)
             && extensionObject is string extension)
         {
             var currentExtension = Path.GetExtension(filePath);

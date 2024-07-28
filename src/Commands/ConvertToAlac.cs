@@ -6,6 +6,10 @@ namespace FFCmd.Commands;
 
 internal sealed class ConvertToAlac : BaseFFMpegCommand<ConvertToAlac.Settings>
 {
+    public ConvertToAlac(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    {
+    }
+
     public class Settings : BaseFFMpegSettings
     {
         public override string OutputExtension => ".m4a";

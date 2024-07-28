@@ -1,21 +1,21 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 using FFCmd.Infrastructure;
 using FFCmd.Infrastructure.BaseCommands;
+using FFCmd.Infrastructure.Validation;
 
 using Spectre.Console.Cli;
 
 namespace FFCmd.Commands;
 
-internal sealed class BachAdd : BaseBachCommand<BachAdd.Settings>
+internal sealed class BachSetOutputDir : BaseBachCommand<BachSetOutputDir.Settings>
 {
     public class Settings : BaseBachSettings
     {
-        [CommandArgument(0, "<file or file pattern>")]
-        [Description("File or file pattern (eg. *.mp3) to add to the project")]
-        [Required]
-        public string FileToAdd { get; set; } = string.Empty;
+        [CommandArgument(0, "<output directory name>")]
+        [Description("Output directory")]
+        [DirectoryExists]
+        public string OutputDirectory { get; set; } = string.Empty;
     }
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
@@ -23,13 +23,12 @@ internal sealed class BachAdd : BaseBachCommand<BachAdd.Settings>
         try
         {
             var project = await LoadProject(settings.ProjectName);
-            var files = GetFiles(settings.FileToAdd);
-            int count = project.Files.Count;
-            project.Files.AddRange(files);
-            count = project.Files.Count - count;
+
+            project.OutputDirectory = settings.OutputDirectory;
+
             await SaveProject(settings.ProjectName, project);
 
-            Terminal.GreenText($"Added {count} files to project {settings.ProjectName}");
+            Terminal.GreenText($"Set output directory {settings.OutputDirectory} for project {settings.ProjectName}");
 
             return ExitCodes.Success;
         }

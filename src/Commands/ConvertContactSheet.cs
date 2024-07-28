@@ -10,6 +10,10 @@ namespace FFCmd.Commands;
 
 internal sealed class ConvertContactSheet : BaseFFMpegCommand<ConvertContactSheet.Settings>
 {
+    public ConvertContactSheet(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    {
+    }
+
     public class Settings : BaseFFMpegSettings
     {
         public override string OutputExtension => ".jpg";

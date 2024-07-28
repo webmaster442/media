@@ -12,6 +12,10 @@ namespace FFCmd.Commands;
 
 internal sealed class MuxAddSubtitle : BaseFFMpegCommand<MuxAddSubtitle.Settings>
 {
+    public MuxAddSubtitle(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    {
+    }
+
     public class Settings : BaseFFMpegSettings
     {
         public override string OutputExtension => ".mkv";

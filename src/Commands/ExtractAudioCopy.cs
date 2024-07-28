@@ -11,6 +11,10 @@ namespace FFCmd.Commands;
 
 internal sealed class ExtractAudioCopy : BaseFFMpegCommand<ExtractAudioCopy.Settings>
 {
+    public ExtractAudioCopy(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    {
+    }
+
     public class Settings : BaseFFMpegSettings
     {
         [Range(0, 999)]

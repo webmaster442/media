@@ -12,6 +12,10 @@ namespace FFCmd.Commands;
 
 internal sealed class MuxAddAudio : BaseFFMpegCommand<MuxAddAudio.Settings>
 {
+    public MuxAddAudio(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    {
+    }
+
     public class Settings : BaseFFMpegSettings
     {
         public override string OutputExtension => ".mkv";

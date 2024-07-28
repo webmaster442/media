@@ -17,7 +17,7 @@ internal class BaseFFMpegSettings : ValidatedCommandSettings
 
     [Description("Output file")]
     [CommandArgument(1, "<output>")]
-    [OutputFileHasExtension]
+    [OutputFileHasExtension(nameof(OutputExtension))]
     [Required]
     public string OutputFile { get; init; }
 

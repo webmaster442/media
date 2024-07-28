@@ -6,6 +6,10 @@ namespace FFCmd.Commands;
 
 internal sealed class ConvertToCdWav : BaseFFMpegCommand<ConvertToCdWav.Settings>
 {
+    public ConvertToCdWav(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    {
+    }
+
     public class Settings : BaseFFMpegSettings
     {
         public override string OutputExtension => ".wav";

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 using FFCmd.Infrastructure;
@@ -51,7 +52,7 @@ internal sealed class Cut : Command<Cut.Settings>
         return false;
     }
 
-    public override int Execute(CommandContext context, Settings settings)
+    public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
         if (!TryParseAsSeconds(settings.StartTime, out var startTime))
         {

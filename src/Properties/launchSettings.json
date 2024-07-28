@@ -11,6 +11,10 @@
     "update mpv": {
       "commandName": "Project",
       "commandLineArgs": "update mpv"
+    },
+    "Profile 1": {
+      "commandName": "Project",
+      "commandLineArgs": "bach compile"
     }
   }
 }

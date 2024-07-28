@@ -61,6 +61,18 @@ mainApp.Configure(config =>
         bach.AddCommand<BachClear>("clear")
             .WithAlias("reset")
             .WithDescription("Clear all files from a batch project file");
+
+        bach.AddBranch("set", set =>
+        {
+            set.AddCommand<BachSetOutputDir>("output")
+               .WithDescription("Set the output directory for the batch project file");
+
+            set.AddCommand<BachSetConversion>("conversion")
+               .WithDescription("Set the output conversion for the batch project file");
+        });
+
+        bach.AddCommand<BachCompile>("compile")
+            .WithDescription("Compile the batch project file to a shell script");
     });
     config.AddBranch("extract", extract =>
     {
@@ -87,7 +99,6 @@ mainApp.Configure(config =>
 
         update.AddCommand<UpdateAll>("all")
               .WithDescription("Update all tools");
-
     });
     config.AddBranch("mux", mux =>
     {
@@ -98,7 +109,6 @@ mainApp.Configure(config =>
 
         mux.AddCommand<MuxAddSubtitle>("add-subtitle")
            .WithDescription("Add subtitle stream to a video file");
-
     });
 });
 

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+﻿using System.Diagnostics.CodeAnalysis;
 
 using FFCmd.Interop;
 
@@ -6,20 +6,27 @@ using Spectre.Console.Cli;
 
 namespace FFCmd.Infrastructure.BaseCommands;
 
-internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
+internal interface IDryRunResultAcceptor
+{
+    string Result { get; set; }
+}
+
+internal sealed class DryRunResultAcceptor : IDryRunResultAcceptor
+{
+    public string Result { get; set; } = string.Empty;
+}
+
+    internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
     : Command<TBaseFFMpegSettings> where TBaseFFMpegSettings : BaseFFMpegSettings
 {
-    private readonly ICommandConfig? _commandSettings;
+    private readonly IDryRunResultAcceptor? _dryRunResultAcceptor;
 
-    protected BaseFFMpegCommand(ICommandConfig? commandSettings = null)
+    protected BaseFFMpegCommand(IDryRunResultAcceptor? dryRunResultAcceptor)
     {
-        _commandSettings = commandSettings;
-        GeneratedCommandLine = string.Empty;
+        _dryRunResultAcceptor = dryRunResultAcceptor;
     }
 
-    public string GeneratedCommandLine { get; private set; }
-
-    public override int Execute(CommandContext context, TBaseFFMpegSettings settings)
+    public override int Execute([NotNull] CommandContext context, [NotNull] TBaseFFMpegSettings settings)
     {
         try
         {
@@ -27,15 +34,16 @@ internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
             BuildCommandLine(builder, settings);
 
             var cmdLine = builder.BuildCommandLine();
-           
-            if (_commandSettings != null &&
-                _commandSettings.Mode == ExectuionMode.DryRun)
+
+            if (_dryRunResultAcceptor != null)
             {
-                DryRun(cmdLine);
+                _dryRunResultAcceptor.Result = cmdLine;
             }
             else
             {
-                Execute(cmdLine);
+                Terminal.InfoText("Generated arguments:");
+                Terminal.InfoText(cmdLine);
+                FFMpeg.StartFFMpeg(cmdLine);
             }
 
             return ExitCodes.Success;
@@ -45,19 +53,6 @@ internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
             Terminal.DisplayException(e);
             return ExitCodes.Exception;
         }
-    }
-
-    private void DryRun(string commandLine)
-    {
-        GeneratedCommandLine = commandLine;
-    }
-
-    private void Execute(string commandLine)
-    {
-        DryRun(commandLine);
-        Terminal.InfoText("Generated arguments:");
-        Terminal.InfoText(GeneratedCommandLine);
-        FFMpeg.StartFFMpeg(commandLine);
     }
 
     protected abstract void BuildCommandLine(FFMpegCommandBuilder builder, TBaseFFMpegSettings settings);
