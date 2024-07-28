@@ -3,5 +3,17 @@
 - [x] Muxing add subtitle track
 - [ ] Self update support
 - [x] Help command
-- [ ] YTDLP support
+- [X] YTDLP support
 - [ ] Multiple file encode support
+    - [x] ffcmd bach clear
+    - [x] ffcmd bach add
+    - [x] ffcmd bach new
+    - [ ] ffcmd bach set preset mp3 -b 128k
+    - [ ] ffcmd bach set outdir outdir
+    - [ ] ffcmd bach compile shell.ps1
+- [ ] Rename program to media
+- [ ] Powershell file builder
+- [ ] Cmd file builder
+- [ ] Global usings file
+- [ ] Code cleanup
+- [ ] Push to github
