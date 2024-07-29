@@ -6,7 +6,7 @@ internal sealed class FFMpeg
 {
     private const string FfmpegBinary = "ffmpeg.exe";
 
-    private static bool TryGetInstalledPath(out string ffmpegPath)
+    public static bool TryGetInstalledPath(out string ffmpegPath)
     {
         ffmpegPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FfmpegBinary);
         return File.Exists(ffmpegPath);

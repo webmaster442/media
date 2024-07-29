@@ -1,6 +1,7 @@
 ﻿using Media.Dto;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
+using Media.Interop;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -53,10 +54,25 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
         {
             BachProject project = await LoadProject(settings.ProjectName);
 
+            var directory = Path.GetDirectoryName(settings.ProjectName) 
+                ?? throw new InvalidOperationException("Couldn't get directory name");
+
+            var scriptPath = Path.ChangeExtension(Path.GetFileNameWithoutExtension(settings.ProjectName), ".ps1");
+
             string[] cmdLine =
             [
                 project.ConversionCommand, .. project.Args, "input", "output",
             ];
+
+            if (!FFMpeg.TryGetInstalledPath(out string ffmpegPath))
+            {
+                throw new InvalidOperationException("FFMpeg not found.");
+            }
+
+            var builder = new PowershellBuilder()
+                .WithUtf8Enabled()
+                .WithWindowTitle(Path.GetFileNameWithoutExtension(settings.ProjectName))
+                .WithClear();
 
             foreach (var inputFile in project.Files)
             {
@@ -68,7 +84,13 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
                 _bachApp.Run(cmdLine);
 
                 var generated = _dryRunResultAcceptor.Result;
+
+                builder.WithCommandIfFileNotExists(outputFile, $"\"{ffmpegPath}\" {generated}");
             }
+
+            using var scriptWriter = File.CreateText(Path.Combine(directory, scriptPath));
+
+            await scriptWriter.WriteAsync(builder.Build());
 
             return ExitCodes.Success;
         }

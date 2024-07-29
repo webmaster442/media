@@ -6,7 +6,7 @@ internal class PowershellBuilder : IBuilder<string>
 
     public PowershellBuilder()
     {
-        _scriptBuilder = new StringBuilder();
+        _scriptBuilder = new StringBuilder(4096);
     }
 
     public string Build()
