@@ -1,1 +1,0 @@
-ffcmd bach *.cmd m4a d:\test -b 320k

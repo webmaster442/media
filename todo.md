@@ -10,10 +10,31 @@
     - [x] ffcmd bach new
     - [x] ffcmd bach set preset mp3 -b 128k
     - [x] ffcmd bach set outdir outdir
-    - [ ] ffcmd bach compile shell.ps1
+    - [x] ffcmd bach compile shell.ps1
 - [x] Rename program to media
-- [ ] Powershell file builder
-- [ ] Cmd file builder
+- [x] Powershell file builder
+- [ ] Cmd file builder for auto update
+  - [ ] set title
+  - [ ] Move files & overwrite them without confirm
+  - [ ] delete itself
 - [x] Global usings file
 - [x] Code cleanup
-- [ ] Push to github
+- [x] Push to github
+- [ ] License headers
+- [ ] Proper readme
+- [ ] License file (MIT)
+- [ ] dvd convert targets
+  - [ ] ntsc 16:9
+  - [ ] ntsc 4:3
+  - [ ] pal 16:9
+  - [ ] ntsc 4:3
+  - [ ] AC3 audio
+- [ ] Convert aduio to ac3 file
+- [ ] convert aduio to dvd wav (48Khz)
+- [ ] Playlist commands
+  - [ ] Add files
+  - [ ] Clear
+  - [ ] Remove files
+  - [ ] New
+  - [ ] Play
+  - [ ] copy - copy everything to a directory with interactive display
