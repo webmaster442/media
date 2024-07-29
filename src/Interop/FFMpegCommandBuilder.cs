@@ -1,9 +1,6 @@
-﻿
-using System.Globalization;
+﻿namespace Media.Interop;
 
-namespace Media.Interop;
-
-internal sealed class FFMpegCommandBuilder
+internal sealed class FFMpegCommandBuilder : IBuilder<string>
 {
     private readonly Dictionary<CliSegment, string> _data;
 
@@ -61,7 +58,8 @@ internal sealed class FFMpegCommandBuilder
         AdditionalsBeforeOutputFile = int.MaxValue - 1,
         OutputFile = int.MaxValue
     }
-    public string BuildCommandLine()
+
+    public string Build()
     {
         var ordered = _data
             .Where(x => !string.IsNullOrWhiteSpace(x.Value))

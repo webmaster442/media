@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 
 using Media.Infrastructure;
 using Media.Infrastructure.Validation;
@@ -78,7 +77,7 @@ internal sealed class Cut : Command<Cut.Settings>
                 .WithStartTimeInSeconds(startTime)
                 .WithDurationInSeconds(endTime - startTime);
 
-            var cmdLine = builder.BuildCommandLine();
+            var cmdLine = builder.Build();
             Terminal.InfoText("Generated arguments:");
             Terminal.InfoText(cmdLine);
 

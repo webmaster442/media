@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-using Media.Infrastructure;
+﻿using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
 

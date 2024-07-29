@@ -1,8 +1,8 @@
-﻿using Media.Commands;
-using Media.Infrastructure;
-
-using JKToolKit.Spectre.AutoCompletion.Completion;
+﻿using JKToolKit.Spectre.AutoCompletion.Completion;
 using JKToolKit.Spectre.AutoCompletion.Integrations;
+
+using Media.Commands;
+using Media.Infrastructure;
 
 var mainApp = new CommandApp();
 

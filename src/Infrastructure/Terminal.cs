@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 using Spectre.Console;
 using Spectre.Console.Json;

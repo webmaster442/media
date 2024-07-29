@@ -31,7 +31,7 @@ internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
             FFMpegCommandBuilder builder = new();
             BuildCommandLine(builder, settings);
 
-            var cmdLine = builder.BuildCommandLine();
+            var cmdLine = builder.Build();
 
             if (_dryRunResultAcceptor != null)
             {
