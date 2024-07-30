@@ -1,4 +1,9 @@
-﻿namespace Media.Commands;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+namespace Media.Commands;
 
 internal sealed class UpdateAll : AsyncCommand
 {

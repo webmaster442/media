@@ -1,4 +1,9 @@
-﻿namespace Media.Infrastructure.Validation;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+namespace Media.Infrastructure.Validation;
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
 internal sealed class DirectoryExistsAttribute : ValidationAttribute
