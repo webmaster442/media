@@ -32,9 +32,9 @@
 - [ ] Convert aduio to ac3 file
 - [ ] convert aduio to dvd wav (48Khz)
 - [ ] Playlist commands
-  - [ ] Add files
-  - [ ] Clear
-  - [ ] Remove files
-  - [ ] New
+  - [x] Add files
+  - [x] Clear
+  - [x] Remove files
+  - [x] New
   - [ ] Play
   - [ ] copy - copy everything to a directory with interactive display

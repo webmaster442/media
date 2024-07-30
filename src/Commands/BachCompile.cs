@@ -48,56 +48,46 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
         };
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, Settings settings)
     {
-        try
-        {
-            BachProject project = await LoadProject(settings.ProjectName);
+        BachProject project = await LoadProject(settings.ProjectName);
 
-            var directory = Path.GetDirectoryName(settings.ProjectName) 
-                ?? throw new InvalidOperationException("Couldn't get directory name");
+        var directory = Path.GetDirectoryName(settings.ProjectName)
+            ?? throw new InvalidOperationException("Couldn't get directory name");
 
-            var scriptPath = Path.ChangeExtension(Path.GetFileNameWithoutExtension(settings.ProjectName), ".ps1");
+        var scriptPath = Path.ChangeExtension(Path.GetFileNameWithoutExtension(settings.ProjectName), ".ps1");
 
-            string[] cmdLine =
-            [
-                project.ConversionCommand, .. project.Args, "input", "output",
+        string[] cmdLine =
+        [
+            project.ConversionCommand, .. project.Args, "input", "output",
             ];
 
-            if (!FFMpeg.TryGetInstalledPath(out string ffmpegPath))
-            {
-                throw new InvalidOperationException("FFMpeg not found.");
-            }
-
-            var builder = new PowershellBuilder()
-                .WithUtf8Enabled()
-                .WithWindowTitle(Path.GetFileNameWithoutExtension(settings.ProjectName))
-                .WithClear();
-
-            foreach (var inputFile in project.Files)
-            {
-
-                var fileName = Path.GetFileNameWithoutExtension(inputFile);
-                var outputFile = Path.Combine(project.OutputDirectory, Path.ChangeExtension(fileName, _commandNamesAndExtensions[project.ConversionCommand]));
-                cmdLine[^2] = inputFile;
-                cmdLine[^1] = outputFile;
-                _bachApp.Run(cmdLine);
-
-                var generated = _dryRunResultAcceptor.Result;
-
-                builder.WithCommandIfFileNotExists(outputFile, $"\"{ffmpegPath}\" {generated}");
-            }
-
-            using var scriptWriter = File.CreateText(Path.Combine(directory, scriptPath));
-
-            await scriptWriter.WriteAsync(builder.Build());
-
-            return ExitCodes.Success;
-        }
-        catch (Exception e)
+        if (!FFMpeg.TryGetInstalledPath(out string ffmpegPath))
         {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
+            throw new InvalidOperationException("FFMpeg not found.");
         }
+
+        var builder = new PowershellBuilder()
+            .WithUtf8Enabled()
+            .WithWindowTitle(Path.GetFileNameWithoutExtension(settings.ProjectName))
+            .WithClear();
+
+        foreach (var inputFile in project.Files)
+        {
+
+            var fileName = Path.GetFileNameWithoutExtension(inputFile);
+            var outputFile = Path.Combine(project.OutputDirectory, Path.ChangeExtension(fileName, _commandNamesAndExtensions[project.ConversionCommand]));
+            cmdLine[^2] = inputFile;
+            cmdLine[^1] = outputFile;
+            _bachApp.Run(cmdLine);
+
+            var generated = _dryRunResultAcceptor.Result;
+
+            builder.WithCommandIfFileNotExists(outputFile, $"\"{ffmpegPath}\" {generated}");
+        }
+
+        using var scriptWriter = File.CreateText(Path.Combine(directory, scriptPath));
+
+        await scriptWriter.WriteAsync(builder.Build());
     }
 }

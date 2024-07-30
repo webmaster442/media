@@ -1,0 +1,653 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Media.Infrastructure.BaseCommands.BaseBachCommand&lt;T&gt;">
+    <Position X="5.25" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAACAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Infrastructure\BaseCommands\BaseBachCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Infrastructure.BaseCommands.BaseFileWorkCommand&lt;T&gt;">
+    <Position X="6.25" Y="1.75" Width="2.25" />
+    <InheritanceLine Type="Spectre.Console.Cli.AsyncCommand&lt;TSettings&gt;" FixedFromPoint="true">
+      <Path>
+        <Point X="3.25" Y="2.438" />
+        <Point X="6.25" Y="2.438" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAgAAEA=</HashCode>
+      <FileName>Infrastructure\BaseCommands\BaseFileWorkCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Spectre.Console.Cli.AsyncCommand&lt;TSettings&gt;">
+    <Position X="1.25" Y="1.75" Width="2" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;">
+    <Position X="16" Y="1.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAEAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Infrastructure\BaseCommands\BaseFFMpegCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Spectre.Console.Cli.Command&lt;TSettings&gt;">
+    <Position X="13.5" Y="1.75" Width="2" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Media.Infrastructure.BaseGithubUpdateCommand">
+    <Position X="27.75" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAQCIBEAAAIAAAAAAAEAAEAAAAAgAAAAAAEA=</HashCode>
+      <FileName>Infrastructure\BaseCommands\BaseGithubUpdateCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Spectre.Console.Cli.AsyncCommand">
+    <Position X="28" Y="1.25" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Media.Infrastructure.BaseCommands.BasePlaylistCommand&lt;T&gt;">
+    <Position X="7.5" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Infrastructure\BaseCommands\BasePlaylistCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.BachAdd">
+    <Position X="3.5" Y="6.75" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.BachAdd.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\BachAdd.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseBachCommand&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="6.069" />
+        <Point X="6.25" Y="6.444" />
+        <Point X="6.625" Y="6.444" />
+        <Point X="6.625" Y="8.75" />
+        <Point X="6.25" Y="8.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\BachAdd.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.BachClear">
+    <Position X="3.5" Y="9.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\BachClear.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.BachCompile">
+    <Position X="7" Y="13" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.BachCompile.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\BachCompile.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseBachCommand&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="6.069" />
+        <Point X="6.25" Y="6.444" />
+        <Point X="6.625" Y="6.444" />
+        <Point X="6.625" Y="15.812" />
+        <Point X="7" Y="15.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>EAEAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Commands\BachCompile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.BachNew">
+    <Position X="3.5" Y="11.25" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.BachNew.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\BachNew.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseBachCommand&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="6.069" />
+        <Point X="6.25" Y="6.444" />
+        <Point X="6.625" Y="6.444" />
+        <Point X="6.625" Y="12.25" />
+        <Point X="6.25" Y="12.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\BachNew.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.BachRemove">
+    <Position X="7" Y="10" Width="2" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.BachRemove.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\BachRemove.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseBachCommand&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="6.069" />
+        <Point X="6.25" Y="6.444" />
+        <Point X="6.625" Y="6.444" />
+        <Point X="6.625" Y="10.375" />
+        <Point X="7" Y="10.375" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\BachRemove.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.BachSetConversion">
+    <Position X="3.5" Y="15" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.BachSetConversion.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\BachSetConversion.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseBachCommand&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="6.069" />
+        <Point X="6.25" Y="6.444" />
+        <Point X="6.625" Y="6.444" />
+        <Point X="6.625" Y="15.812" />
+        <Point X="6.25" Y="15.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\BachSetConversion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.BachSetOutputDir">
+    <Position X="7" Y="7" Width="2" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.BachSetOutputDir.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\BachSetOutputDir.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseBachCommand&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="6.25" Y="6.069" />
+        <Point X="6.25" Y="6.444" />
+        <Point X="6.625" Y="6.444" />
+        <Point X="6.625" Y="8.75" />
+        <Point X="7" Y="8.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\BachSetOutputDir.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.PlaylistAdd">
+    <Position X="10" Y="6.75" Width="3" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.PlaylistAdd.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\PlaylistAdd.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BasePlaylistCommand&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="8.5" Y="5.617" />
+        <Point X="8.5" Y="5.992" />
+        <Point X="9.625" Y="5.992" />
+        <Point X="9.625" Y="8.5" />
+        <Point X="10" Y="8.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\PlaylistAdd.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.PlaylistClear">
+    <Position X="10" Y="10" Width="3" />
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BasePlaylistCommand&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="8.5" Y="5.617" />
+        <Point X="8.5" Y="5.992" />
+        <Point X="9.625" Y="5.992" />
+        <Point X="9.625" Y="10.625" />
+        <Point X="10" Y="10.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\PlaylistClear.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.PlaylistNew">
+    <Position X="10" Y="11.5" Width="3" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.PlaylistNew.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\PlaylistNew.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BasePlaylistCommand&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="8.5" Y="5.617" />
+        <Point X="8.5" Y="5.992" />
+        <Point X="9.625" Y="5.992" />
+        <Point X="9.625" Y="12.688" />
+        <Point X="10" Y="12.688" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\PlaylistNew.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.PlaylistRemove">
+    <Position X="10" Y="15.25" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.PlaylistRemove.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\PlaylistRemove.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BasePlaylistCommand&lt;T&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="8.5" Y="5.617" />
+        <Point X="8.5" Y="5.992" />
+        <Point X="9.625" Y="5.992" />
+        <Point X="9.625" Y="16.125" />
+        <Point X="10" Y="16.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\PlaylistRemove.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.UpdateAll">
+    <Position X="30.25" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Commands\UpdateAll.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.UpdateFFMpeg">
+    <Position X="29.25" Y="7.25" Width="2" />
+    <InheritanceLine Type="Media.Infrastructure.BaseGithubUpdateCommand" FixedToPoint="true">
+      <Path>
+        <Point X="28.875" Y="6.858" />
+        <Point X="28.875" Y="8.062" />
+        <Point X="29.25" Y="8.062" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Commands\UpdateFFMpeg.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.UpdateMpv">
+    <Position X="29.25" Y="9" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Commands\UpdateMpv.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.UpdateYtdlp">
+    <Position X="29.25" Y="11" Width="2" />
+    <InheritanceLine Type="Media.Infrastructure.BaseGithubUpdateCommand" FixedToPoint="true">
+      <Path>
+        <Point X="28.875" Y="6.858" />
+        <Point X="28.875" Y="11.812" />
+        <Point X="29.25" Y="11.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Commands\UpdateYtdlp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.ConvertContactSheet">
+    <Position X="16.5" Y="4" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.ConvertContactSheet.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\ConvertContactSheet.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="17.5" Y="3.569" />
+        <Point X="17.5" Y="3.809" />
+        <Point X="16.26" Y="3.809" />
+        <Point X="16.26" Y="5.5" />
+        <Point X="16.5" Y="5.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\ConvertContactSheet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.ConvertToAlac">
+    <Position X="16.5" Y="7.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.ConvertToAlac.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\ConvertToAlac.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="17.5" Y="3.569" />
+        <Point X="17.5" Y="3.809" />
+        <Point X="16.26" Y="3.809" />
+        <Point X="16.26" Y="9.188" />
+        <Point X="16.5" Y="9.188" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\ConvertToAlac.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.ConvertToCdWav">
+    <Position X="16.5" Y="11" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.ConvertToCdWav.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\ConvertToCdWav.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="17.5" Y="3.569" />
+        <Point X="17.5" Y="3.809" />
+        <Point X="16.26" Y="3.809" />
+        <Point X="16.26" Y="12.625" />
+        <Point X="16.5" Y="12.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\ConvertToCdWav.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.ConvertToFlac">
+    <Position X="19.25" Y="4" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.ConvertToFlac.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\ConvertToFlac.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="17.5" Y="3.569" />
+        <Point X="17.5" Y="3.809" />
+        <Point X="19.01" Y="3.809" />
+        <Point X="19.01" Y="5.813" />
+        <Point X="19.25" Y="5.813" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\ConvertToFlac.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.ConvertToM4a">
+    <Position X="19.25" Y="7.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.ConvertToM4a.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\ConvertToM4a.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="17.5" Y="3.569" />
+        <Point X="17.5" Y="3.809" />
+        <Point X="19.01" Y="3.809" />
+        <Point X="19.01" Y="8.938" />
+        <Point X="19.25" Y="8.938" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\ConvertToM4a.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.ConvertToMp3">
+    <Position X="19.25" Y="11" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.ConvertToMp3.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\ConvertToMp3.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="17.5" Y="3.569" />
+        <Point X="17.5" Y="3.809" />
+        <Point X="19.01" Y="3.809" />
+        <Point X="19.01" Y="12.125" />
+        <Point X="19.25" Y="12.125" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\ConvertToMp3.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.ExtractAudioStereoM4a">
+    <Position X="22" Y="4" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.ExtractAudioStereoM4a.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\ExtractAudioAndDownMix.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="17.5" Y="3.569" />
+        <Point X="17.5" Y="3.809" />
+        <Point X="21.76" Y="3.809" />
+        <Point X="21.76" Y="5.5" />
+        <Point X="22" Y="5.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\ExtractAudioAndDownMix.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.ExtractAudioCopy">
+    <Position X="22" Y="8" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.ExtractAudioCopy.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\ExtractAudioCopy.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="17.5" Y="3.569" />
+        <Point X="17.5" Y="3.809" />
+        <Point X="21.76" Y="3.809" />
+        <Point X="21.76" Y="9.484" />
+        <Point X="22" Y="9.484" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\ExtractAudioCopy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.MuxAddAudio">
+    <Position X="24.75" Y="4" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.MuxAddAudio.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\MuxAddAudio.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="17.5" Y="3.569" />
+        <Point X="17.5" Y="3.809" />
+        <Point X="24.51" Y="3.809" />
+        <Point X="24.51" Y="4.938" />
+        <Point X="24.75" Y="4.938" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\MuxAddAudio.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.MuxAddSubtitle">
+    <Position X="24.75" Y="7.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.MuxAddSubtitle.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\MuxAddSubtitle.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <InheritanceLine Type="Media.Infrastructure.BaseCommands.BaseFFMpegCommand&lt;TBaseFFMpegSettings&gt;" FixedToPoint="true">
+      <Path>
+        <Point X="17.5" Y="3.569" />
+        <Point X="17.5" Y="3.809" />
+        <Point X="24.51" Y="3.809" />
+        <Point X="24.51" Y="8.625" />
+        <Point X="24.75" Y="8.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\MuxAddSubtitle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.YtDload">
+    <Position X="0.75" Y="4.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.YtDload.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\YtDload.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Commands\YtDload.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Media.Commands.Cut">
+    <Position X="13.5" Y="3.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Media.Commands.Cut.Settings">
+        <TypeIdentifier>
+          <NewMemberFileName>Commands\Cut.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Commands\Cut.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

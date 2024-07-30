@@ -13,36 +13,26 @@ internal sealed class BachSetConversion : BaseBachCommand<BachSetConversion.Sett
         public string Conversion { get; set; } = string.Empty;
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, Settings settings)
     {
-        try
+        List<string> additionals = new();
+
+        foreach (var arg in context.Remaining.Parsed)
         {
-            List<string> additionals = new();
-
-            foreach (var arg in context.Remaining.Parsed)
-            {
-                additionals.Add(arg.Key.Length == 1 ? $"-{arg.Key}" : $"--{arg.Key}");
-                additionals.AddRange(arg.Where(x => !string.IsNullOrEmpty(x))!);
-            }
-
-            var project = await LoadProject(settings.ProjectName);
-
-            project.ConversionCommand = settings.Conversion;
-
-            project.Args = additionals;
-
-            await SaveProject(settings.ProjectName, project);
-
-            Terminal.GreenText($"Set conversion command {settings.Conversion} for project {settings.ProjectName}");
-            Terminal.GreenText("Additional specified args:");
-            Terminal.GreenText($"{string.Join('\n', project.Args)}");
-
-            return ExitCodes.Success;
+            additionals.Add(arg.Key.Length == 1 ? $"-{arg.Key}" : $"--{arg.Key}");
+            additionals.AddRange(arg.Where(x => !string.IsNullOrEmpty(x))!);
         }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
-        }
+
+        var project = await LoadProject(settings.ProjectName);
+
+        project.ConversionCommand = settings.Conversion;
+
+        project.Args = additionals;
+
+        await SaveProject(settings.ProjectName, project);
+
+        Terminal.GreenText($"Set conversion command {settings.Conversion} for project {settings.ProjectName}");
+        Terminal.GreenText("Additional specified args:");
+        Terminal.GreenText($"{string.Join('\n', project.Args)}");
     }
 }

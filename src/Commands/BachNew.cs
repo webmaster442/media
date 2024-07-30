@@ -26,22 +26,12 @@ internal sealed class BachNew : BaseBachCommand<BachNew.Settings>
         }
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, Settings settings)
     {
-        try
-        {
-            var project = new BachProject();
+        var project = new BachProject();
 
-            await SaveProject(settings.ProjectName, project);
+        await SaveProject(settings.ProjectName, project);
 
-            Terminal.GreenText($"Created project {settings.ProjectName}");
-
-            return ExitCodes.Success;
-        }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
-        }
+        Terminal.GreenText($"Created project {settings.ProjectName}");
     }
 }

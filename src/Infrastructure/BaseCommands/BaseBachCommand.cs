@@ -2,7 +2,7 @@
 
 namespace Media.Infrastructure.BaseCommands;
 
-internal abstract class BaseBachCommand<T> : AsyncCommand<T> where T : ValidatedCommandSettings
+internal abstract class BaseBachCommand<T> : BaseFileWorkCommand<T> where T : ValidatedCommandSettings
 {
     protected readonly JsonSerializerOptions _serializerOptions;
 
@@ -26,28 +26,5 @@ internal abstract class BaseBachCommand<T> : AsyncCommand<T> where T : Validated
     {
         using var stream = File.Create(projectFile);
         await JsonSerializer.SerializeAsync(stream, project, _serializerOptions);
-    }
-
-    protected IEnumerable<string> GetFiles(string pattern)
-    {
-        if (string.IsNullOrWhiteSpace(pattern))
-        {
-            yield break;
-        }
-
-        if (File.Exists(pattern))
-        {
-            yield return pattern;
-        }
-
-        string directory = Path.GetDirectoryName(pattern) ?? Directory.GetCurrentDirectory();
-        string searchPattern = Path.GetFileName(pattern);
-
-        directory = Environment.ExpandEnvironmentVariables(directory);
-
-        foreach (var file in Directory.EnumerateFiles(directory, searchPattern))
-        {
-            yield return file;
-        }
     }
 }

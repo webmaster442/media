@@ -5,25 +5,15 @@ namespace Media.Commands;
 
 internal sealed class BachClear : BaseBachCommand<BaseBachSettings>
 {
-    public override async Task<int> ExecuteAsync(CommandContext context, BaseBachSettings settings)
+    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, BaseBachSettings settings)
     {
-        try
-        {
-            var project = await LoadProject(settings.ProjectName);
+        var project = await LoadProject(settings.ProjectName);
 
-            int count = project.Files.Count;
-            project.Files.Clear();
+        int count = project.Files.Count;
+        project.Files.Clear();
 
-            await SaveProject(settings.ProjectName, project);
+        await SaveProject(settings.ProjectName, project);
 
-            Terminal.GreenText($"Removed {count} files from project {settings.ProjectName}");
-
-            return ExitCodes.Success;
-        }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
-        }
+        Terminal.GreenText($"Removed {count} files from project {settings.ProjectName}");
     }
 }
