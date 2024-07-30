@@ -20,17 +20,17 @@
 - [x] Global usings file
 - [x] Code cleanup
 - [x] Push to github
-- [ ] License headers
+- [x] License headers
 - [ ] Proper readme
-- [ ] License file (MIT)
+- [x] License file (MIT)
 - [ ] dvd convert targets
   - [ ] ntsc 16:9
   - [ ] ntsc 4:3
   - [ ] pal 16:9
   - [ ] ntsc 4:3
   - [ ] AC3 audio
-- [ ] Convert aduio to ac3 file
-- [ ] convert aduio to dvd wav (48Khz)
+- [x] Convert aduio to ac3 file
+- [x] convert aduio to dvd wav (48Khz)
 - [ ] Playlist commands
   - [x] Add files
   - [x] Clear

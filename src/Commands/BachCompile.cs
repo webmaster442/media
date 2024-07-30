@@ -39,6 +39,8 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
             c.AddCommand<ConvertToM4a>("m4a");
             c.AddCommand<ConvertToMp3>("mp3");
             c.AddCommand<ConvertToCdWav>("cdwav");
+            c.AddCommand<ConvertToDVDWav>("dvdwav");
+            c.AddCommand<ConvertToAc3>("ac3");
             c.AddCommand<ConvertContactSheet>("contactsheet");
         });
 

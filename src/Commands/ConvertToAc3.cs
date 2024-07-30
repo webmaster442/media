@@ -9,20 +9,20 @@ using Media.Interop;
 
 namespace Media.Commands;
 
-internal sealed class ConvertToMp3 : BaseFFMpegCommand<ConvertToMp3.Settings>
+internal sealed class ConvertToAc3 : BaseFFMpegCommand<ConvertToAc3.Settings>
 {
-    public ConvertToMp3(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertToAc3(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
     {
     }
 
     public class Settings : BaseFFMpegSettings
     {
-        public override string OutputExtension => ".mp3";
+        public override string OutputExtension => ".ac3";
 
         [Required]
-        [Description("Audio bitrate Valid values: 32k, 40k, 48k, 64k, 80k, 96k, 112k, 128k, 160k, 192k, 224k, 256k, 320k")]
+        [Description("Audio bitrate. Valid values: 32k, 40k, 56k, 64k, 80k, 96k, 112k, 128k, 192k, 224k, 256k, 320k, 384k, 448k, 512k, 576k, 640k")]
         [CommandOption("-b|--bitrate")]
-        [AllowedValues("32k", "40k", "48k", "56k", "64k", "80k", "96k", "112k", "128k", "160k", "192k", "224k", "256k", "320k")]
+        [AllowedValues("32k", "40k", "48k", "56k", "64k", "80k", "96k", "112k", "128k", "160k", "192k", "224k", "256k", "320k", "384k", "448k", "512k", "576k", "640k")]
         public string Bitrate { get; set; } = "";
     }
 
@@ -32,6 +32,7 @@ internal sealed class ConvertToMp3 : BaseFFMpegCommand<ConvertToMp3.Settings>
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
             .IgnoreVideo()
+            .WithAudioCodec(FFMpeg.AudioCodecNames.Ac3)
             .WithAudioBitrate(settings.Bitrate);
     }
 }

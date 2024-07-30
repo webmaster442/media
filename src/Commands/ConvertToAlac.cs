@@ -26,6 +26,6 @@ internal sealed class ConvertToAlac : BaseFFMpegCommand<ConvertToAlac.Settings>
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
             .IgnoreVideo()
-            .WithAudioCodec("alac");
+            .WithAudioCodec(FFMpeg.AudioCodecNames.Alac);
     }
 }

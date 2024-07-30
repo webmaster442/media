@@ -30,6 +30,6 @@ internal sealed class ExtractAudioCopy : BaseFFMpegCommand<ExtractAudioCopy.Sett
             .WithOutputFile(settings.OutputFile)
             .IgnoreVideo()
             .WithAudioStreamSelection(settings.AudioStreamIndex)
-            .WithAudioCodec("copy");
+            .WithAudioCodec(FFMpeg.AudioCodecNames.Copy);
     }
 }

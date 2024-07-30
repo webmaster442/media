@@ -36,8 +36,8 @@ internal sealed class MuxAddSubtitle : BaseFFMpegCommand<MuxAddSubtitle.Settings
         builder
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
-            .WithAudioCodec("copy")
-            .WithVideoCodec("copy")
+            .WithAudioCodec(FFMpeg.AudioCodecNames.Copy)
+            .WithVideoCodec(FFMpeg.VideoCodecNames.Copy)
             .WithAdditionalInputFiles(settings.SubtitleFile)
             .WithAdditionalsBeforeOutputFile($"-c:s mov_text -metadata:s:s:0 title=\"{settings.SubtitleTitle}\"");
     }

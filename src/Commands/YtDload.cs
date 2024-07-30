@@ -26,6 +26,8 @@ internal class YtDload : AsyncCommand<YtDload.Settings>
     {
         try
         {
+            FFMpeg.EnsureIsInstalled(); //Because YtDlp uses FFMpeg
+
             string formatTable = await YtDlp.ExtractFromatTable(settings.Url);
             IEnumerable<Dto.Internals.YtDlpFormat> table = Parsers.ParseFormats(formatTable);
             var arguments = YtDlp.CreateDownloadArguments(table, settings.Quality, settings.Url);

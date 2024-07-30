@@ -20,7 +20,7 @@ internal sealed class ConvertToM4a : BaseFFMpegCommand<ConvertToM4a.Settings>
         public override string OutputExtension => ".m4a";
 
         [Required]
-        [Description("Audio bitrate")]
+        [Description("Audio bitrate Valid values: 64k, 96k, 128k, 160k, 192k, 256k, 320k")]
         [CommandOption("-b|--bitrate")]
         [AllowedValues("64k", "96k", "128k", "160k", "192k", "256k", "320k")]
         public string Bitrate { get; set; } = "";
@@ -32,7 +32,7 @@ internal sealed class ConvertToM4a : BaseFFMpegCommand<ConvertToM4a.Settings>
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
             .IgnoreVideo()
-            .WithAudioCodec("aac")
+            .WithAudioCodec(FFMpeg.AudioCodecNames.Aac)
             .WithAudioBitrate(settings.Bitrate);
     }
 }

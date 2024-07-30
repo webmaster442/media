@@ -9,7 +9,7 @@ using JKToolKit.Spectre.AutoCompletion.Integrations;
 using Media.Commands;
 using Media.Infrastructure;
 
-var mainApp = new CommandApp();
+var mainApp = new CommandApp<DefaultCommand>();
 
 Terminal.EnableUTF8Output();
 
@@ -43,6 +43,12 @@ mainApp.Configure(config =>
 
         convert.AddCommand<ConvertToCdWav>("cdwav")
               .WithDescription("Convert audio to CD WAV");
+
+        convert.AddCommand<ConvertToDVDWav>("dvdwav")
+               .WithDescription("Convert audio to DVD video compatible WAV");
+
+        convert.AddCommand<ConvertToAc3>("ac3")
+               .WithDescription("Convert audio to Dolby Digital AC-3");
 
         convert.AddCommand<ConvertContactSheet>("contactsheet")
               .WithDescription("Create a contact sheet from a video file");
@@ -84,7 +90,7 @@ mainApp.Configure(config =>
         extract.AddCommand<ExtractAudioStereoM4a>("stereo-m4a")
                .WithDescription("Extract adudio to a stereo (downmixed) m4a audio stream");
 
-        extract.AddCommand<ExtractAudioCopy>("copy")
+        extract.AddCommand<ExtractAudioCopy>("audio")
                .WithDescription("Extract audio stream without reencoding");
     });
     config.AddBranch("update", update =>

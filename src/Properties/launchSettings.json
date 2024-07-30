@@ -14,7 +14,7 @@
     },
     "Profile 1": {
       "commandName": "Project",
-      "commandLineArgs": "bach compile"
+      "commandLineArgs": "-h"
     }
   }
 }

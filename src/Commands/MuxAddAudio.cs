@@ -36,8 +36,8 @@ internal sealed class MuxAddAudio : BaseFFMpegCommand<MuxAddAudio.Settings>
         builder
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
-            .WithAudioCodec("copy")
-            .WithVideoCodec("copy")
+            .WithAudioCodec(FFMpeg.AudioCodecNames.Copy)
+            .WithVideoCodec(FFMpeg.VideoCodecNames.Copy)
             .WithAdditionalInputFiles(settings.AudioFile)
             .WithAdditionalsBeforeOutputFile($"-map 0 -map 1:a -metadata:s:a:1 title=\"{settings.AudioTitle}\"");
     }

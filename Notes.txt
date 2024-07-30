@@ -1,0 +1,57 @@
+﻿  __  __            _   _        
+ |  \/  |  ___   __| | (_)  __ _ 
+ | |\/| | / -_) / _` | | | / _` |
+ |_|  |_| \___| \__,_| |_| \__,_|
+                                 
+A Media Coversion tool to convert video and audio files to most popular
+media formats.
+
+In the background it uses:
+
+* ffmpeg - https://www.ffmpeg.org/
+* yt-dlp - https://github.com/yt-dlp/yt-dlp
+* mpv - https://mpv.io/
+
+Subcommand layout
+
+media
+  ├── bach
+  │   ├── add
+  │   ├── clear
+  │   ├── compile
+  │   ├── new
+  │   ├── remove
+  │   └── set 
+  ├── convert
+  │   ├── ac3
+  │   ├── alac
+  │   ├── cdwav
+  │   ├── dvdwav
+  │   ├── flac
+  │   ├── m4a
+  │   └── mp3
+  ├── cut
+  ├── extract
+  │   ├── audio
+  │   └── stereo-m4a
+  ├── info
+  ├── mux
+  │   ├── add-audio
+  │   └── add-subtitle
+  ├── playlist
+  │   ├── new
+  │   ├── add
+  │   ├── remove
+  │   └── clear
+  ├── updtate
+  │   ├── all
+  │   ├── ffmpeg
+  │   ├── mpv
+  │   └── yt-dlp
+  └── help
+
+To get detaild help start the program with the -h or --help flag.
+
+The help flag can beused with any subcommand to get detailed help for that. 
+
+Example: media convert -h

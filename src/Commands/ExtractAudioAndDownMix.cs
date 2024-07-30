@@ -20,7 +20,7 @@ internal class ExtractAudioStereoM4a : BaseFFMpegCommand<ExtractAudioStereoM4a.S
         public override string OutputExtension => ".m4a";
 
         [Required]
-        [Description("Audio bitrate")]
+        [Description("Audio bitrate Valid values: 64k, 96k, 128k, 160k, 192k, 256k, 320k")]
         [CommandOption("-b|--bitrate")]
         [AllowedValues("64k", "96k", "128k", "160k", "192k", "256k", "320k")]
         public string Bitrate { get; set; } = "";
@@ -30,7 +30,7 @@ internal class ExtractAudioStereoM4a : BaseFFMpegCommand<ExtractAudioStereoM4a.S
         [CommandOption("-a|--audio-stream")]
         public int AudioStreamIndex { get; set; } = 0;
 
-        [Description("Volume level")]
+        [Description("Volume level (1.0 - 5.0). If not specified = 1.66 is used")]
         [CommandOption("-v|--volume")]
         [Range(1.0, 5.0)]
         public double Volume { get; set; } = 1.66;
@@ -44,7 +44,7 @@ internal class ExtractAudioStereoM4a : BaseFFMpegCommand<ExtractAudioStereoM4a.S
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
             .IgnoreVideo()
-            .WithAudioCodec("aac")
+            .WithAudioCodec(FFMpeg.AudioCodecNames.Aac)
             .WithAudioBitrate(settings.Bitrate)
             .WithAudioStreamSelection(settings.AudioStreamIndex)
             .WithAudioFilter($"pan=stereo|c0=0.5*c2+0.707*c0+0.707*c4+0.5*c3|c1=0.5*c2+0.707*c1+0.707*c5+0.5*c3, volume={volumeValue}");

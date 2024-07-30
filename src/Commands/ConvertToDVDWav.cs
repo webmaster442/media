@@ -9,9 +9,9 @@ using Media.Interop;
 
 namespace Media.Commands;
 
-internal sealed class ConvertToCdWav : BaseFFMpegCommand<ConvertToCdWav.Settings>
+internal sealed class ConvertToDVDWav : BaseFFMpegCommand<ConvertToDVDWav.Settings>
 {
-    public ConvertToCdWav(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertToDVDWav(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
     {
     }
 
@@ -27,6 +27,6 @@ internal sealed class ConvertToCdWav : BaseFFMpegCommand<ConvertToCdWav.Settings
             .WithOutputFile(settings.OutputFile)
             .IgnoreVideo()
             .WithAudioCodec(FFMpeg.AudioCodecNames.PcmS16Le)
-            .WithAudioSampleRate(44100);
+            .WithAudioSampleRate(48000);
     }
 }
