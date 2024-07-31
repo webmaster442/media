@@ -58,8 +58,10 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         VideoBitrate = 90,
         VideoQuality = 91,
         VideoFilter = 95,
-        Vsync = 100,
-        AspectRatio = 110,
+        VideoAspect = 98,
+        Target = 100,
+        Vsync = 110,
+        AspectRatio = 120,
         AdditionalsBeforeOutputFile = int.MaxValue - 1,
         OutputFile = int.MaxValue
     }
@@ -188,6 +190,18 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
     public FFMpegCommandBuilder WithVideoFilter(string filterString)
     {
         SetArgument(CliSegment.VideoFilter, filterString);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithVideoAspect(string aspectRatio)
+    {
+        SetArgument(CliSegment.VideoAspect, aspectRatio);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithTarget(string target)
+    {
+        SetArgument(CliSegment.Target, target);
         return this;
     }
 

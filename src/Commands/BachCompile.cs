@@ -20,6 +20,15 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
 
     public class Settings : BaseBachSettings
     {
+        public enum ShellType
+        {
+            Powershell,
+            Cmd,
+        }
+
+        [Description("Output shell type")]
+        [CommandOption("-s|--shell")]
+        public ShellType OutputType { get; set; } = ShellType.Powershell;
     }
 
     public BachCompile()
@@ -42,6 +51,8 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
             c.AddCommand<ConvertToDVDWav>("dvdwav");
             c.AddCommand<ConvertToAc3>("ac3");
             c.AddCommand<ConvertContactSheet>("contactsheet");
+            c.AddCommand<ConvertNtscDvd>("dvd-ntsc");
+            c.AddCommand<ConvertPalDvd>("dvd-pal");
         });
 
         _commandNamesAndExtensions = new()
@@ -51,6 +62,9 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
             { "m4a", "m4a" },
             { "mp3", "mp3" },
             { "cdwav", "wav" },
+            { "ac3", "ac3" },
+            { "dvd-ntsc", "mpg" },
+            { "dvd-pal", "mpg" },
             { "contactsheet", "jpg" }
         };
     }
@@ -74,10 +88,13 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
             throw new InvalidOperationException("FFMpeg not found.");
         }
 
-        var builder = new PowershellBuilder()
-            .WithUtf8Enabled()
-            .WithWindowTitle(Path.GetFileNameWithoutExtension(settings.ProjectName))
-            .WithClear();
+        IShellBuilder builder = settings.OutputType == Settings.ShellType.Powershell 
+            ? new PowershellBuilder()
+            : new CmdBuilder();
+
+        builder.WithUtf8Enabled();
+        builder.WithWindowTitle(Path.GetFileNameWithoutExtension(settings.ProjectName));
+        builder.WithClear();
 
         foreach (var inputFile in project.Files)
         {

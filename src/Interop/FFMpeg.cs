@@ -7,8 +7,10 @@ using System.Diagnostics;
 
 namespace Media.Interop;
 
-internal sealed class FFMpeg
+internal sealed class FFMpeg : IInterop
 {
+    private FFMpeg() { }
+
     public static class AudioCodecNames
     {
         public const string Alac = "alac";
@@ -23,6 +25,12 @@ internal sealed class FFMpeg
         public const string Copy = "copy";
     }
 
+    public static class TargetNames
+    {
+        public const string NtscDvd = "ntsc-dvd";
+        public const string PalDvd = "pal-dvd";
+    }
+
     private const string FfmpegBinary = "ffmpeg.exe";
 
     public static void EnsureIsInstalled()
@@ -33,13 +41,13 @@ internal sealed class FFMpeg
         }
     }
 
-    public static bool TryGetInstalledPath(out string ffmpegPath)
+    public static bool TryGetInstalledPath(out string toolPath)
     {
-        ffmpegPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FfmpegBinary);
-        return File.Exists(ffmpegPath);
+        toolPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FfmpegBinary);
+        return File.Exists(toolPath);
     }
 
-    public static void StartFFMpeg(string commandLine)
+    public static void Start(string commandLine)
     {
         if (!TryGetInstalledPath(out string ffmpegPath))
         {

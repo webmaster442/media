@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
-// This code is licensed under MIT license (see LICENSE for details)
-// -----------------------------------------------------------------------------------------------
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 using Media.Interop;
 
@@ -46,7 +41,7 @@ internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
             {
                 Terminal.InfoText("Generated arguments:");
                 Terminal.InfoText(cmdLine);
-                FFMpeg.StartFFMpeg(cmdLine);
+                FFMpeg.Start(cmdLine);
             }
 
             return ExitCodes.Success;

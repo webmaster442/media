@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
-// This code is licensed under MIT license (see LICENSE for details)
-// -----------------------------------------------------------------------------------------------
-
-using Media.Infrastructure;
+﻿using Media.Infrastructure;
 using Media.Interop;
 
 namespace Media.Commands;
@@ -26,12 +21,10 @@ internal class YtDload : AsyncCommand<YtDload.Settings>
     {
         try
         {
-            FFMpeg.EnsureIsInstalled(); //Because YtDlp uses FFMpeg
-
             string formatTable = await YtDlp.ExtractFromatTable(settings.Url);
             IEnumerable<Dto.Internals.YtDlpFormat> table = Parsers.ParseFormats(formatTable);
             var arguments = YtDlp.CreateDownloadArguments(table, settings.Quality, settings.Url);
-            YtDlp.StartYtDlp(arguments);
+            YtDlp.Start(arguments);
 
             return ExitCodes.Success;
         }

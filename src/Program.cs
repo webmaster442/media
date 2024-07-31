@@ -24,6 +24,9 @@ mainApp.Configure(config =>
     config.AddCommand<Cut>("cut")
           .WithDescription("Cut a file without reencoding");
 
+    config.AddCommand<Play>("play")
+          .WithDescription("Play a media file with mpv");
+
     config.AddBranch("convert", convert =>
     {
         //Note: when adding a new command also add it to the BachCompile class
@@ -52,6 +55,12 @@ mainApp.Configure(config =>
 
         convert.AddCommand<ConvertContactSheet>("contactsheet")
               .WithDescription("Create a contact sheet from a video file");
+
+        convert.AddCommand<ConvertNtscDvd>("dvd-ntsc")
+              .WithDescription("Create an NTSC DVD compatible MPEG-2 file with AC-3 audio");
+
+        convert.AddCommand<ConvertNtscDvd>("dvd-pal")
+            .WithDescription("Create an PAL DVD compatible MPEG-2 file with AC-3 audio");
     });
     config.AddBranch("bach", bach =>
     {

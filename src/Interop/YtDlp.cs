@@ -9,8 +9,10 @@ using Media.Dto.Internals;
 
 namespace Media.Interop;
 
-internal static class YtDlp
+internal sealed class YtDlp : IInterop
 {
+    private YtDlp() { }
+
     public static string CreateDownloadArguments(IEnumerable<YtDlpFormat> formats, YtDlpQuality qualityToSelect, string videoUrl)
     {
         static (int minHeight, int maxHeight) QualityToConstraints(YtDlpQuality quality)
@@ -75,10 +77,18 @@ internal static class YtDlp
 
     private const string YtdlpBinary = "yt-dlp.exe";
 
-    private static bool TryGetYtDlpPath(out string ytdlpPath)
+    public static void EnsureIsInstalled()
     {
-        ytdlpPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, YtdlpBinary);
-        return File.Exists(ytdlpPath);
+        if (!TryGetInstalledPath(out _))
+        {
+            throw new InvalidOperationException("yt-dlp not found.");
+        }
+    }
+
+    public static bool TryGetInstalledPath(out string toolPath)
+    {
+        toolPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, YtdlpBinary);
+        return File.Exists(toolPath);
     }
 
     public static async Task<string> ExtractFromatTable(string url)
@@ -88,7 +98,7 @@ internal static class YtDlp
             throw new InvalidOperationException("URL is not a youtube video url");
         }
 
-        if (!TryGetYtDlpPath(out string ytDlpPath))
+        if (!TryGetInstalledPath(out string ytDlpPath))
         {
             throw new InvalidOperationException("Yt-dlp not found.");
         }
@@ -115,9 +125,9 @@ internal static class YtDlp
             || url.StartsWith("https://youtu.be/");
     }
 
-    public static void StartYtDlp(string commandLine)
+    public static void Start(string commandLine)
     {
-        if (!TryGetYtDlpPath(out string ytDlpPath))
+        if (!TryGetInstalledPath(out string ytDlpPath))
         {
             throw new InvalidOperationException("Yt-dlp not found.");
         }

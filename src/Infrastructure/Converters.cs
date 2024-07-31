@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------------------------
 
 namespace Media.Infrastructure;
+
 internal static class Converters
 {
     public static string SecondsToHumanTime(string seconds)

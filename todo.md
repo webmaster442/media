@@ -4,7 +4,7 @@
 - [ ] Self update support
 - [x] Help command
 - [X] YTDLP support
-- [ ] Multiple file encode support
+- [x] Multiple file encode support
     - [x] ffcmd bach clear
     - [x] ffcmd bach add
     - [x] ffcmd bach new
@@ -13,22 +13,19 @@
     - [x] ffcmd bach compile shell.ps1
 - [x] Rename program to media
 - [x] Powershell file builder
-- [ ] Cmd file builder for auto update
-  - [ ] set title
-  - [ ] Move files & overwrite them without confirm
-  - [ ] delete itself
+- [x] Cmd file builder
 - [x] Global usings file
 - [x] Code cleanup
 - [x] Push to github
 - [x] License headers
 - [ ] Proper readme
 - [x] License file (MIT)
-- [ ] dvd convert targets
-  - [ ] ntsc 16:9
-  - [ ] ntsc 4:3
-  - [ ] pal 16:9
-  - [ ] ntsc 4:3
-  - [ ] AC3 audio
+- [x] dvd convert targets
+  - [x] ntsc 16:9
+  - [x] ntsc 4:3
+  - [x] pal 16:9
+  - [x] ntsc 4:3
+  - [x] AC3 audio
 - [x] Convert aduio to ac3 file
 - [x] convert aduio to dvd wav (48Khz)
 - [ ] Playlist commands
@@ -36,5 +33,5 @@
   - [x] Clear
   - [x] Remove files
   - [x] New
-  - [ ] Play
+  - [x] Play
   - [ ] copy - copy everything to a directory with interactive display

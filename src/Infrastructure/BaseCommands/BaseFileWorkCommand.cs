@@ -7,7 +7,7 @@ namespace Media.Infrastructure.BaseCommands;
 
 internal abstract class BaseFileWorkCommand<T> : AsyncCommand<T> where T : ValidatedCommandSettings
 {
-    protected IEnumerable<string> GetFiles(string pattern)
+    protected static IEnumerable<string> GetFiles(string pattern)
     {
         if (string.IsNullOrWhiteSpace(pattern))
         {

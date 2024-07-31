@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
-// This code is licensed under MIT license (see LICENSE for details)
-// -----------------------------------------------------------------------------------------------
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 using Media.Infrastructure;
 using Media.Infrastructure.Validation;
@@ -86,7 +81,7 @@ internal sealed class Cut : Command<Cut.Settings>
             Terminal.InfoText("Generated arguments:");
             Terminal.InfoText(cmdLine);
 
-            FFMpeg.StartFFMpeg(cmdLine);
+            FFMpeg.Start(cmdLine);
             return ExitCodes.Success;
         }
         catch (Exception e)
