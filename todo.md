@@ -18,7 +18,7 @@
 - [x] Code cleanup
 - [x] Push to github
 - [x] License headers
-- [ ] Proper readme
+- [x] Proper readme
 - [x] License file (MIT)
 - [x] dvd convert targets
   - [x] ntsc 16:9

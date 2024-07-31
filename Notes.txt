@@ -46,12 +46,12 @@ media
   │   ├── add
   │   ├── remove
   │   └── clear
-  ├── updtate
-  │   ├── all
-  │   ├── ffmpeg
-  │   ├── mpv
-  │   └── yt-dlp
-  └── help
+  └── updtate
+      ├── all
+      ├── ffmpeg
+      ├── mpv
+      └── yt-dlp
+
 
 To get detaild help start the program with the -h or --help flag.
 
