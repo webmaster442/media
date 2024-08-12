@@ -1,54 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Media.Interop.CdRip;
-
-internal delegate void OnReadingTrack(byte[] buffer);
-internal delegate void OnTrackReadingProgress(uint bytesRead, uint totalBytes);
+﻿namespace Media.Interop.CdRip;
 
 internal sealed class TrackReader
 {
-    private CdDrive _drive;
-
-    public event OnTrackReadingProgress Progress = delegate { };
+    private readonly CdDrive _drive;
 
     public TrackReader(CdDrive drive)
     {
         _drive = drive;
     }
 
-    public async Task ReadTrackAsync(Track track, OnReadingTrack onTrackRead)
+    public async Task ReadTrackAsync(Track track, Action<byte[]> onTrackRead, Action<long, long> progress, CancellationToken token)
     {
-        await ReadTrackAsync(track, onTrackRead, CancellationToken.None);
-    }
-
-    public async Task ReadTrackAsync(Track track, OnReadingTrack onTrackRead, CancellationToken token)
-    {
-        await ReadTrackAsync(track.Offset, track.Sectors, onTrackRead, token);
-    }
-
-    public async Task ReadTrackAsync(int offset, int sectors, OnReadingTrack onTrackRead, CancellationToken token)
-    {
-        var bytes2Read = (uint)(sectors) * Constants.CB_AUDIO;
+        var bytes2Read = (uint)(track.Sectors) * Constants.CB_AUDIO;
         var bytesRead = (uint)0;
 
-        Progress(bytesRead, bytes2Read);
 
-        for (int sector = 0; (sector < sectors); sector += Constants.NSECTORS)
+        progress(bytesRead, bytes2Read);
+
+        for (int sector = 0; (sector < track.Sectors); sector += Constants.NSECTORS)
         {
             if (token.IsCancellationRequested)
                 return;
 
-            var sectors2Read = ((sector + Constants.NSECTORS) < sectors) ? Constants.NSECTORS : (sectors - sector);
-            var buffer = await _drive.ReadSector(offset - 150 + sector, sectors2Read);//No 2 second lead in for reading the track
+            var sectors2Read = ((sector + Constants.NSECTORS) < track.Sectors) ? Constants.NSECTORS : (track.Sectors - sector);
+            var buffer = await _drive.ReadSector(track.Offset - 150 + sector, sectors2Read);//No 2 second lead in for reading the track
 
             onTrackRead(buffer);
             bytesRead += (uint)(Constants.CB_AUDIO * sectors2Read);
 
-            Progress(bytesRead, bytes2Read);
+            progress(bytesRead, bytes2Read);
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using Media.Infrastructure;
 using Media.Infrastructure.Validation;
-using Media.Interop;
 using Media.Interop.CdRip;
+
+using Spectre.Console;
 
 namespace Media.Commands;
 internal sealed class CdRip : AsyncCommand<CdRip.Settings>
@@ -43,16 +44,28 @@ internal sealed class CdRip : AsyncCommand<CdRip.Settings>
                 return ExitCodes.Error;
             }
 
-            FFMpegCommandBuilder builder = new FFMpegCommandBuilder();
-
             var reader = new TrackReader(drive);
 
-            foreach (var track in toc.Tracks)
+            await AnsiConsole.Progress().AutoRefresh(false).StartAsync(async ctx =>
             {
-                var fileName = Path.Combine(settings.TargetDirectory, $"Track-{track.TrackNumber}.flac");
-                Terminal.InfoText($"Ripping track {track.TrackNumber} to {fileName}");
+                foreach (var track in toc.Tracks)
+                {
+                    var fileName = Path.Combine(settings.TargetDirectory, $"Track-{track.TrackNumber}.wav");
+                    var task = ctx.AddTask($"Ripping track {track.TrackNumber} to {fileName}");
 
-            }
+                    using (var wav = new WaveFileWriter(File.Create(fileName), false))
+                    {
+                        uint trackSize = (uint)track.Sectors * Constants.CB_AUDIO;
+                        wav.WriteHeader(44100, 16, 2, trackSize);
+                        await reader.ReadTrackAsync(track, data => wav.WriteData(data), (long position, long length) =>
+                        {
+                            task.Value = (double)position / length * 100;
+                            ctx.Refresh();
+                        }, CancellationToken.None);
+                    }
+
+                }
+            });
             await drive.UnLockAsync();
             return ExitCodes.Success;
         }
