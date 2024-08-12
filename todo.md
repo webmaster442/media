@@ -2,6 +2,12 @@
 - [x] Cut without reencoding
 - [x] Muxing add subtitle track
 - [ ] Self update support
+    - [ ] Extract to .new folder in the same directory
+    - [ ] Create powershell to move files in .new to the main folder
+    - [ ] powershell script is executed by the main program
+    - [ ] poweshell script deletes the .new folder
+    - [ ] powershell script restarts the main program
+    - [ ] powershell script deletes itself
 - [x] Help command
 - [X] YTDLP support
 - [x] Multiple file encode support
@@ -28,10 +34,18 @@
   - [x] AC3 audio
 - [x] Convert aduio to ac3 file
 - [x] convert aduio to dvd wav (48Khz)
-- [ ] Playlist commands
+- [ ] CD commands
+  - [ ] rip
+  - [ ] list
+    - [ ] List tracks and lengths with sizes
+    - [ ] List total disc size in MiB
+    - [ ] Spectre console table output
+  - [ ] Eject
+- [ ] Do a stable release
+- [x] Playlist commands
   - [x] Add files
   - [x] Clear
   - [x] Remove files
   - [x] New
   - [x] Play
-  - [ ] copy - copy everything to a directory with interactive display
+  - [x] copy - copy everything to a directory with interactive display
