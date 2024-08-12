@@ -66,6 +66,12 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         OutputFile = int.MaxValue
     }
 
+    public FFMpegCommandBuilder New()
+    {
+        _data.Clear();
+        return this;
+    }
+
     public string Build()
     {
         var ordered = _data

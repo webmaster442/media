@@ -3,17 +3,6 @@
 namespace Media.Interop.CdRip;
 internal static class Win32Functions
 {
-    public enum DriveTypes : uint
-    {
-        DRIVE_UNKNOWN = 0,
-        DRIVE_NO_ROOT_DIR,
-        DRIVE_REMOVABLE,
-        DRIVE_FIXED,
-        DRIVE_REMOTE,
-        DRIVE_CDROM,
-        DRIVE_RAMDISK
-    };
-
     //DesiredAccess values
     public const uint GENERIC_READ = 0x80000000;
     public const uint GENERIC_WRITE = 0x40000000;
@@ -86,8 +75,8 @@ internal static class Win32Functions
                 GCHandle handle = GCHandle.Alloc(Data, GCHandleType.Pinned);
                 try
                 {
-                    IntPtr buffer = handle.AddrOfPinnedObject();
-                    buffer = (IntPtr)(buffer.ToInt32() + (Index * Marshal.SizeOf(typeof(TRACK_DATA))));
+                    nint buffer = handle.AddrOfPinnedObject();
+                    buffer = buffer + (Index * Marshal.SizeOf(typeof(TRACK_DATA)));
                     res = (TRACK_DATA)Marshal.PtrToStructure(buffer, typeof(TRACK_DATA));
                 }
                 finally
@@ -103,10 +92,6 @@ internal static class Win32Functions
             Data = new byte[MAXIMUM_NUMBER_TRACKS * Marshal.SizeOf(typeof(TRACK_DATA))];
         }
     }
-
-
-    [DllImport("Kernel32.dll")]
-    public extern static DriveTypes GetDriveType(string drive);
 
     [StructLayout(LayoutKind.Sequential)]
     public class CDROM_TOC

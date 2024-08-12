@@ -18,6 +18,9 @@ mainApp.Configure(config =>
     config.SetApplicationName("FFCmd");
     config.AddAutoCompletion(config => config.AddPowershell());
 
+    config.AddCommand<CdRip>("cdrip")
+          .WithDescription("Rip an audio CD");
+
     config.AddCommand<Info>("info")
           .WithDescription("Get information about a media file");
 

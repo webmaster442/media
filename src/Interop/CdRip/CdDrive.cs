@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Media.Interop.CdRip;
 
@@ -11,26 +12,26 @@ internal sealed class CdDrive : IDisposable
 
     public static CdDrive Create(DriveInfo drive)
     {
-        return Create(drive.Name[..1]);
+        return new CdDrive(drive);
     }
 
     public static CdDrive Create(string driveName)
     {
-        return new CdDrive(driveName);
+        return new CdDrive(new DriveInfo(driveName));
     }
 
-    private CdDrive(string driveName)
+    private CdDrive(DriveInfo driveInfo)
     {
-        if (Win32Functions.GetDriveType(driveName + ":\\") != Win32Functions.DriveTypes.DRIVE_CDROM)
+        if (driveInfo.DriveType != DriveType.CDRom)
         {
-            throw new InvalidOperationException("Drive '" + driveName + "' is not an optical disc drive.");
+            throw new InvalidOperationException("Drive '" + driveInfo.Name + "' is not an optical disc drive.");
         }
 
-        _driveName = driveName;
+        _driveName = driveInfo.Name;
         _driveHandle = CreateDriveHandle().Result;
     }
 
-    public async Task<bool> IsCdInDrive()
+    public async Task<bool> IsCdInDriveAsync()
     {
         return await Task.Run(() =>
         {
@@ -43,7 +44,7 @@ internal sealed class CdDrive : IDisposable
 
     public async Task<TableOfContents?> ReadTableOfContents()
     {
-        if (!await IsCdInDrive())
+        if (!await IsCdInDriveAsync())
         {
             return null;
         }
@@ -91,7 +92,7 @@ internal sealed class CdDrive : IDisposable
     private static bool IsValidHandle(IntPtr handle) 
         => ((int)handle != -1) && ((int)handle != 0);
 
-    public async Task<bool> Lock()
+    public async Task<bool> LockAsync()
     {
         return await Task.Run(() =>
         {
@@ -103,7 +104,7 @@ internal sealed class CdDrive : IDisposable
         });
     }
 
-    public async Task<bool> UnLock()
+    public async Task<bool> UnLockAsync()
     {
         return await Task.Run(() =>
         {
@@ -126,8 +127,13 @@ internal sealed class CdDrive : IDisposable
     {
         return await Task.Run(() =>
         {
-            var handle = Win32Functions.CreateFile("\\\\.\\" + _driveName + ':', Win32Functions.GENERIC_READ,
-                Win32Functions.FILE_SHARE_READ, IntPtr.Zero, Win32Functions.OPEN_EXISTING, 0, IntPtr.Zero);
+            var handle = Win32Functions.CreateFile("\\\\.\\" + _driveName.First() + ':',
+                                                   Win32Functions.GENERIC_READ,
+                                                   Win32Functions.FILE_SHARE_READ,
+                                                   IntPtr.Zero,
+                                                   Win32Functions.OPEN_EXISTING,
+                                                   0,
+                                                   IntPtr.Zero);
             if (IsValidHandle(handle))
             {
                 return handle;
@@ -138,7 +144,7 @@ internal sealed class CdDrive : IDisposable
 
     public void Dispose()
     {
-        UnLock().Wait();
+        UnLockAsync().Wait();
         Win32Functions.CloseHandle(_driveHandle);
         _driveHandle = IntPtr.Zero;
         _driveName = string.Empty;

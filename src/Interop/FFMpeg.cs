@@ -18,6 +18,7 @@ internal sealed class FFMpeg : IInterop
         public const string Aac = "aac";
         public const string Copy = "copy";
         public const string Ac3 = "ac3";
+        public const string Flac = "flac";
     }
 
     public static class VideoCodecNames
@@ -47,22 +48,33 @@ internal sealed class FFMpeg : IInterop
         return File.Exists(toolPath);
     }
 
-    public static void Start(string commandLine)
+    public static Process Create(string commandLine, bool redirectStdIn, bool redirectStdOut, bool redirectStderr)
     {
         if (!TryGetInstalledPath(out string ffmpegPath))
         {
             throw new InvalidOperationException("FFMpeg not found.");
         }
 
-        using var process = new Process()
+        return new Process
         {
             StartInfo = new ProcessStartInfo
             {
                 FileName = ffmpegPath,
                 Arguments = commandLine,
                 UseShellExecute = false,
+                RedirectStandardInput = redirectStdIn,
+                RedirectStandardOutput = redirectStdOut,
+                RedirectStandardError = redirectStderr,
             }
         };
+    }
+
+    public static void Start(string commandLine)
+    {
+        using var process = Create(commandLine,
+                                   redirectStdIn: false,
+                                   redirectStdOut: false,
+                                   redirectStderr: false);
 
         process.Start();
     }
