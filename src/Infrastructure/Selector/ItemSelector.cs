@@ -21,8 +21,12 @@ internal class ItemSelector<T> where T : IITem
         _currentPath = string.Empty;
     }
 
+    private string Convert(T item)
+        => _itemProvider.ConvertItem(item).EscapeMarkup();
+
     public async Task<T> SelectItemAsync(CancellationToken cancellationToken)
     {
+        AnsiConsole.Clear();
         while (true)
         {
             var items = await _itemProvider.GetItemsAsync(_currentPath, cancellationToken);
@@ -31,9 +35,7 @@ internal class ItemSelector<T> where T : IITem
                 .Title($"{Title}\r\n[green]{_currentPath}[/]")
                 .PageSize(Console.WindowHeight - 5)
                 .AddChoices(items)
-                .UseConverter(_itemProvider.ConvertItem);
-
-            selection.AddChoices(items);
+                .UseConverter(Convert);
 
             var item = await selection.ShowAsync(AnsiConsole.Console, cancellationToken);
 

@@ -8,10 +8,15 @@ namespace Media.Infrastructure.Validation;
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
 internal sealed class FileExistsAttribute : ValidationAttribute
 {
+    public bool IsOptional { get; set; }
+
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value is string filePath)
         {
+            if (string.IsNullOrWhiteSpace(filePath) && IsOptional)
+                return ValidationResult.Success;
+
             if (File.Exists(filePath))
                 return ValidationResult.Success;
             else

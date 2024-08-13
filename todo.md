@@ -34,7 +34,7 @@
   - [x] AC3 audio
 - [x] Convert aduio to ac3 file
 - [x] convert aduio to dvd wav (48Khz)
-- [ ] CD commands
+- [x] CD commands
   - [x] rip
   - [x] list
     - [x] List tracks and lengths with sizes

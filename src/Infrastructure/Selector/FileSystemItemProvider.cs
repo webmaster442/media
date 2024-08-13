@@ -25,7 +25,7 @@ internal sealed class FileSystemItemProvider : IItemProvider<Item>
     {
         IReadOnlyCollection<Item> items = string.IsNullOrEmpty(currentPath)
             ? GetDrives().ToList()
-            : (IReadOnlyCollection<Item>)GetFileSystemItems(currentPath).ToList();
+            : GetFileSystemItems(currentPath);
 
         return Task.FromResult(items);
     }
@@ -64,7 +64,7 @@ internal sealed class FileSystemItemProvider : IItemProvider<Item>
             yield return new Item
             {
                 FullPath = drive.RootDirectory.FullName,
-                Name = $"{drive.Name} - {drive.VolumeLabel}",
+                Name = $"{drive.Name} -{(drive.IsReady ? drive.VolumeLabel : "")}",
                 Icon = GetIcon(drive.DriveType)
             };
         }
@@ -76,33 +76,56 @@ internal sealed class FileSystemItemProvider : IItemProvider<Item>
         return string.Join(Path.DirectorySeparatorChar, parts.Take(parts.Length - 1));
     }
 
-    private IEnumerable<Item> GetFileSystemItems(string currentPath)
+    private List<Item> GetFileSystemItems(string currentPath)
     {
+        List<Item> results = new();
+
         var directoryInfo = new DirectoryInfo(currentPath);
-        yield return new Item
+        try
         {
-            Name = "..",
-            FullPath = GetPreviousPath(currentPath),
-            Icon = ""
-        };
-        foreach (var directory in directoryInfo.GetDirectories().OrderBy(x => x.Name))
-        {
-            if (!directory.Attributes.HasFlag(FileAttributes.Hidden)
-                && !directory.Attributes.HasFlag(FileAttributes.System))
+            results.Add(new Item
             {
-                yield return CreateItem(directory);
+                Name = ".. Previous folder",
+                FullPath = GetPreviousPath(currentPath),
+                Icon = Emoji.Known.FileFolder
+            });
+            foreach (var directory in directoryInfo.GetDirectories().OrderBy(x => x.Name))
+            {
+                if (!directory.Attributes.HasFlag(FileAttributes.Hidden)
+                    && !directory.Attributes.HasFlag(FileAttributes.System))
+                {
+                    results.Add(CreateItem(directory));
+                }
+            }
+            foreach (var file in directoryInfo.GetFiles().OrderBy(x => x.Name))
+            {
+                if (!file.Attributes.HasFlag(FileAttributes.Hidden)
+                    && !file.Attributes.HasFlag(FileAttributes.System))
+                {
+                    if (_extensionsToShow.Count == 0)
+                        results.Add(CreateItem(file));
+                    else if (_extensionsToShow.Contains(file.Extension))
+                        results.Add(CreateItem(file));
+                }
             }
         }
-        foreach (var file in directoryInfo.GetFiles().OrderBy(x => x.Name))
+        catch (Exception e)
         {
-            if (!file.Attributes.HasFlag(FileAttributes.Hidden)
-                && !file.Attributes.HasFlag(FileAttributes.System))
+            results.Clear();
+            results.Add(new Item
             {
-                if (_extensionsToShow.Count == 0)
-                    yield return CreateItem(file);
-                else if (_extensionsToShow.Contains(file.Extension))
-                    yield return CreateItem(file);
-            }
+                Name = ".. Previous folder",
+                FullPath = GetPreviousPath(currentPath),
+                Icon = Emoji.Known.FileFolder
+            });
+            results.Add(new Item
+            {
+                Name = e.Message,
+                FullPath = "error",
+                Icon = Emoji.Known.Warning
+            });
         }
+
+        return results;
     }
 }
