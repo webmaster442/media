@@ -1,4 +1,9 @@
-﻿using System.Runtime.InteropServices;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Runtime.InteropServices;
 
 namespace Media.Interop.CdRip;
 internal static class Win32Functions
@@ -61,7 +66,7 @@ internal static class Win32Functions
     public class TrackDataList
     {
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAXIMUM_NUMBER_TRACKS * 8)]
-        private byte[] Data;
+        private readonly byte[] Data;
 
         public TRACK_DATA this[int Index]
         {

@@ -1,4 +1,9 @@
-﻿using Spectre.Console;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using Spectre.Console;
 
 namespace Media.Infrastructure.Selector;
 
@@ -16,7 +21,7 @@ internal sealed class FileSystemItemProvider : IItemProvider<Item>
     string IItemProvider<Item>.ConvertItem(Item item)
         => $"{item.Icon} {item.Name}";
 
-    Task<IReadOnlyCollection<Item>> IItemProvider<Item>.GetItemsAsync(string currentPath , CancellationToken cancellationToken)
+    Task<IReadOnlyCollection<Item>> IItemProvider<Item>.GetItemsAsync(string currentPath, CancellationToken cancellationToken)
     {
         IReadOnlyCollection<Item> items = string.IsNullOrEmpty(currentPath)
             ? GetDrives().ToList()

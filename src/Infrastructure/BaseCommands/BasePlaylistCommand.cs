@@ -28,7 +28,7 @@ internal abstract class BasePlaylistCommand<T> : BaseFileWorkCommand<T> where T 
 
     protected async Task SaveToFile(Playlist playlist, string playlistFile, bool relativePaths)
     {
-        var relativeBasePath = Path.GetDirectoryName(playlistFile) 
+        var relativeBasePath = Path.GetDirectoryName(playlistFile)
             ?? throw new InvalidOperationException("Couldn't get directory of the file");
 
         using var writer = File.CreateText(playlistFile);

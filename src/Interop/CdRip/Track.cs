@@ -1,4 +1,9 @@
-﻿namespace Media.Interop.CdRip;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+namespace Media.Interop.CdRip;
 
 internal sealed class Track
 {

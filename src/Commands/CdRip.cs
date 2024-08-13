@@ -1,4 +1,9 @@
-﻿using Media.Infrastructure;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using Media.Infrastructure;
 using Media.Infrastructure.Validation;
 using Media.Interop.CdRip;
 
@@ -40,7 +45,7 @@ internal sealed class CdRip : AsyncCommand<CdRip.Settings>
             if (toc == null)
             {
 
-               Terminal.RedText("Failed to read table of contents");
+                Terminal.RedText("Failed to read table of contents");
                 return ExitCodes.Error;
             }
 

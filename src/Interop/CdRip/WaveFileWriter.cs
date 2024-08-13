@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
 
-using static Media.Interop.CdRip.WaveFileWriter;
+using System.Runtime.InteropServices;
 
 namespace Media.Interop.CdRip;
 internal sealed class WaveFileWriter : IDisposable
@@ -28,7 +25,7 @@ internal sealed class WaveFileWriter : IDisposable
         }
         GC.SuppressFinalize(this);
     }
-    
+
     [StructLayout(LayoutKind.Sequential)]
     private class WaveFormat
     {

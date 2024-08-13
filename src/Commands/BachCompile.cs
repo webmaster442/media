@@ -88,7 +88,7 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
             throw new InvalidOperationException("FFMpeg not found.");
         }
 
-        IShellBuilder builder = settings.OutputType == Settings.ShellType.Powershell 
+        IShellBuilder builder = settings.OutputType == Settings.ShellType.Powershell
             ? new PowershellBuilder()
             : new CmdBuilder();
 

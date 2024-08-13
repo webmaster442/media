@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
 using System.Runtime.InteropServices;
 
 namespace Media.Interop.CdRip;
@@ -89,7 +93,7 @@ internal sealed class CdDrive : IDisposable
         });
     }
 
-    private static bool IsValidHandle(IntPtr handle) 
+    private static bool IsValidHandle(IntPtr handle)
         => ((int)handle != -1) && ((int)handle != 0);
 
     public async Task<bool> LockAsync()
