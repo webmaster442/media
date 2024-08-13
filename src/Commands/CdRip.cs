@@ -51,10 +51,14 @@ internal sealed class CdRip : AsyncCommand<CdRip.Settings>
 
             var reader = new TrackReader(drive);
 
+            using var tokenSource = new ConsoleCancelTokenSource();
+
             await AnsiConsole.Progress().AutoRefresh(false).StartAsync(async ctx =>
             {
                 foreach (var track in toc.Tracks)
                 {
+                    tokenSource.Token.ThrowIfCancellationRequested();
+
                     var fileName = Path.Combine(settings.TargetDirectory, $"Track-{track.TrackNumber}.wav");
                     var task = ctx.AddTask($"Ripping track {track.TrackNumber} to {fileName}");
 
@@ -66,7 +70,7 @@ internal sealed class CdRip : AsyncCommand<CdRip.Settings>
                         {
                             task.Value = (double)position / length * 100;
                             ctx.Refresh();
-                        }, CancellationToken.None);
+                        }, tokenSource.Token);
                     }
 
                 }

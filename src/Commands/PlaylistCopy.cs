@@ -26,7 +26,10 @@ internal class PlaylistCopy : BasePlaylistCommand<PlaylistCopy.Settings>
         Errored
     }
 
-    private static async Task<CopyResult> CopyFile(string sourceFile, string targetDirectory, Action<long, long> progeress)
+    private static async Task<CopyResult> CopyFile(string sourceFile,
+                                                   string targetDirectory,
+                                                   Action<long, long> progeress,
+                                                   CancellationToken cancellationToken)
     {
         var targetFile = Path.Combine(targetDirectory, Path.GetFileName(sourceFile));
         if (File.Exists(targetFile))
@@ -43,8 +46,8 @@ internal class PlaylistCopy : BasePlaylistCommand<PlaylistCopy.Settings>
             using var target = File.Create(targetFile);
             do
             {
-                read = await source.ReadAsync(buffer, 0, buffer.Length);
-                await target.WriteAsync(buffer, 0, read);
+                read = await source.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
+                await target.WriteAsync(buffer, 0, read, cancellationToken);
                 position += read;
                 progeress.Invoke(position, source.Length);
             }
@@ -64,16 +67,21 @@ internal class PlaylistCopy : BasePlaylistCommand<PlaylistCopy.Settings>
         int copied = 0;
         int skipped = 0;
         int failed = 0;
+
+        using var consoleTokenSource = new ConsoleCancelTokenSource();
+
         await AnsiConsole.Progress().AutoRefresh(false).StartAsync(async ctx =>
         {
             foreach (var file in list)
             {
+                consoleTokenSource.ThrowIfCancellationRequested();
+
                 var task = ctx.AddTask($"Copying {Path.GetFileName(file)}");
                 var result = await CopyFile(file, settings.TargetDirectory, (long position, long length) =>
                 {
                     task.Value = (double)position / length * 100;
                     ctx.Refresh();
-                });
+                }, consoleTokenSource.Token);
                 switch (result)
                 {
                     case CopyResult.Copied:

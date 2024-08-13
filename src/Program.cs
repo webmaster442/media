@@ -133,4 +133,4 @@ mainApp.Configure(config =>
     });
 });
 
-mainApp.Run(args);
+await mainApp.RunAsync(args);

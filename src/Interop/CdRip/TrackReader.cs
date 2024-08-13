@@ -14,7 +14,10 @@ internal sealed class TrackReader
         _drive = drive;
     }
 
-    public async Task ReadTrackAsync(Track track, Action<byte[]> onTrackRead, Action<long, long> progress, CancellationToken token)
+    public async Task ReadTrackAsync(Track track,
+                                     Action<byte[]> onTrackRead,
+                                     Action<long, long> progress,
+                                     CancellationToken token)
     {
         var bytes2Read = (uint)(track.Sectors) * Constants.CB_AUDIO;
         var bytesRead = (uint)0;
