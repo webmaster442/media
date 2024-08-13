@@ -10,16 +10,11 @@ using Media.Interop.CdRip;
 using Spectre.Console;
 
 namespace Media.Commands;
+
 internal sealed class CdRip : AsyncCommand<CdRip.Settings>
 {
-    public class Settings : ValidatedCommandSettings
+    public class Settings : BaseCdSettings
     {
-        [Required]
-        [DriveLetter]
-        [CommandArgument(0, "<cd drive letter>")]
-        [Description("The drive letter of the cd drive to rip")]
-        public string DriveLetter { get; set; } = string.Empty;
-
         [Required]
         [DirectoryExists]
         [CommandArgument(1, "<target directory>")]
@@ -41,10 +36,10 @@ internal sealed class CdRip : AsyncCommand<CdRip.Settings>
 
             await drive.LockAsync();
 
-            var toc = await drive.ReadTableOfContents();
+            var toc = await drive.ReadTableOfContentsAsync();
             if (toc == null)
             {
-
+                await drive.UnLockAsync();
                 Terminal.RedText("Failed to read table of contents");
                 return ExitCodes.Error;
             }

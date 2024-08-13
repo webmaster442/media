@@ -46,7 +46,7 @@ internal sealed class CdDrive : IDisposable
         });
     }
 
-    public async Task<TableOfContents?> ReadTableOfContents()
+    public async Task<TableOfContents?> ReadTableOfContentsAsync()
     {
         if (!await IsCdInDriveAsync())
         {
@@ -118,12 +118,21 @@ internal sealed class CdDrive : IDisposable
         });
     }
 
-    public async Task<bool> Eject()
+    public async Task<bool> EjectAsync()
     {
         return await Task.Run(() =>
         {
             uint Dummy = 0;
             return Win32Functions.DeviceIoControl(_driveHandle, Win32Functions.IOCTL_STORAGE_EJECT_MEDIA, IntPtr.Zero, 0, IntPtr.Zero, 0, ref Dummy, IntPtr.Zero) != 0;
+        });
+    }
+
+    public async Task<bool> CloseAsync()
+    {
+        return await Task.Run(() =>
+        {
+            uint Dummy = 0;
+            return Win32Functions.DeviceIoControl(_driveHandle, Win32Functions.IOCTL_STORAGE_LOAD_MEDIA, IntPtr.Zero, 0, IntPtr.Zero, 0, ref Dummy, IntPtr.Zero) != 0;
         });
     }
 

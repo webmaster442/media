@@ -14,8 +14,10 @@ internal static class Converters
     }
 
     public static string BytesToHumanSize(string bytes)
+        => BytesToHumanSize(long.Parse(bytes, CultureInfo.InvariantCulture));
+
+    public static string BytesToHumanSize(long size)
     {
-        long size = long.Parse(bytes, CultureInfo.InvariantCulture);
         string[] suffixes = { "B", "KiB", "MiB", "GiB", "TiB" };
         int suffixIndex = 0;
 

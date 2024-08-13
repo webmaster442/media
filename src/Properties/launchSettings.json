@@ -14,7 +14,7 @@
     },
     "Profile 1": {
       "commandName": "Project",
-      "commandLineArgs": "cdrip g:\\ e:\\test"
+      "commandLineArgs": "cd list g:\\"
     }
   }
 }

@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Security.AccessControl;
+
 using JKToolKit.Spectre.AutoCompletion.Completion;
 using JKToolKit.Spectre.AutoCompletion.Integrations;
 
@@ -18,9 +20,6 @@ mainApp.Configure(config =>
     config.SetApplicationName("FFCmd");
     config.AddAutoCompletion(config => config.AddPowershell());
 
-    config.AddCommand<CdRip>("cdrip")
-          .WithDescription("Rip an audio CD");
-
     config.AddCommand<Info>("info")
           .WithDescription("Get information about a media file");
 
@@ -29,6 +28,23 @@ mainApp.Configure(config =>
 
     config.AddCommand<Play>("play")
           .WithDescription("Play a media file with mpv");
+
+    config.AddBranch("cd", cd =>
+    {
+        cd.SetDescription("CD related commands");
+
+        cd.AddCommand<CdList>("list")
+            .WithDescription("List tracks on a CD");
+
+        cd.AddCommand<CdRip>("rip")
+            .WithDescription("Rip a CD to audio files");
+
+        cd.AddCommand<CdEject>("eject")
+            .WithDescription("Eject a CD from the drive");
+
+        cd.AddCommand<CdClose>("close")
+            .WithDescription("Close the CD drive");
+    });
 
     config.AddBranch("convert", convert =>
     {

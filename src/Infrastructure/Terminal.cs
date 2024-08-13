@@ -27,7 +27,12 @@ internal static class Terminal
     }
 
     public static void DisplayException(Exception e)
-        => AnsiConsole.WriteException(e);
+    {
+        if (e is OperationCanceledException)
+            AnsiConsole.MarkupLine("[yellow]Operation canceled[/]");
+        else
+            AnsiConsole.WriteException(e);
+    }
 
     public static void EnableUTF8Output()
         => Console.OutputEncoding = Encoding.UTF8;

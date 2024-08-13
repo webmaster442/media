@@ -36,11 +36,11 @@
 - [x] convert aduio to dvd wav (48Khz)
 - [ ] CD commands
   - [x] rip
-  - [ ] list
-    - [ ] List tracks and lengths with sizes
-    - [ ] List total disc size in MiB
-    - [ ] Spectre console table output
-  - [ ] Eject
+  - [x] list
+    - [x] List tracks and lengths with sizes
+    - [x] List total disc size in MiB
+    - [x] Spectre console table output
+  - [x] Eject
 - [ ] Do a stable release
 - [x] Playlist commands
   - [x] Add files
