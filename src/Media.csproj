@@ -9,7 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Embedded\Update.ps1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="..\Notes.txt" Link="Notes.txt" />
+    <EmbeddedResource Include="Embedded\Update.ps1" />
   </ItemGroup>
 
   <ItemGroup>

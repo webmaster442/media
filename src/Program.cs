@@ -125,6 +125,9 @@ mainApp.Configure(config =>
     {
         update.SetDescription("Update related commands");
 
+        update.AddCommand<UpdateMedia>("media")
+              .WithDescription("Update the media cli");
+
         update.AddCommand<UpdateFFMpeg>("ffmpeg")
               .WithDescription("Update ffmpeg");
 

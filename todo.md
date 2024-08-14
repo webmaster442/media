@@ -1,13 +1,13 @@
 - [x] FFProbe support
 - [x] Cut without reencoding
 - [x] Muxing add subtitle track
-- [ ] Self update support
-    - [ ] Extract to .new folder in the same directory
-    - [ ] Create powershell to move files in .new to the main folder
-    - [ ] powershell script is executed by the main program
-    - [ ] poweshell script deletes the .new folder
-    - [ ] powershell script restarts the main program
-    - [ ] powershell script deletes itself
+- [x] Self update support
+    - [x] Extract to .new folder in the same directory
+    - [x] Create powershell to move files in .new to the main folder
+    - [x] powershell script is executed by the main program
+    - [x] poweshell script deletes the .new folder
+    - [ ] powershell script restarts the main program to display version
+    - [x] powershell script deletes itself
 - [x] Help command
 - [X] YTDLP support
 - [x] Multiple file encode support

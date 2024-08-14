@@ -21,7 +21,12 @@ media
   │   ├── compile
   │   ├── new
   │   ├── remove
-  │   └── set 
+  │   └── set
+  ├── cd
+  │   ├── close
+  │   ├── eject
+  │   ├── list
+  │   └── ripp
   ├── convert
   │   ├── ac3
   │   ├── alac
@@ -49,6 +54,7 @@ media
   └── updtate
       ├── all
       ├── ffmpeg
+      ├── media
       ├── mpv
       └── yt-dlp
 

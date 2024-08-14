@@ -86,6 +86,14 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
     protected abstract Task ExtractBinariesTo(string compressedFile, string targetPath, Action<long, long> reporter);
 
+    protected virtual string TargetFolder { get; } = AppContext.BaseDirectory;
+
+    protected virtual Task PostInstall(Action<long, long> reporter)
+    {
+        reporter.Invoke(1, 1);
+        return Task.CompletedTask;
+    }
+
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
         try
@@ -117,14 +125,24 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
                     var task2 = ctx.AddTask($"Extracting {_programName.EscapeMarkup()}...");
 
-                    await ExtractBinariesTo(tempName, AppContext.BaseDirectory, (long pogress, long total) =>
+                    await ExtractBinariesTo(tempName, TargetFolder, (long pogress, long total) =>
                     {
                         task2.Value = (double)pogress / total * 100;
                         ctx.Refresh();
                     });
+
+                    var postExtract = ctx.AddTask($"Post install actions...");
+                    await PostInstall((long pogress, long total) =>
+                    {
+                        postExtract.Value = (double)pogress / total * 100;
+                        ctx.Refresh();
+                    });
+
                 });
 
                 await SetInstalledVersion(latest.PublishedAt);
+
+                
 
                 File.Delete(tempName);
 
