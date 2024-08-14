@@ -29,7 +29,8 @@ mainApp.Configure(config =>
     config.AddCommand<Play>("play")
           .WithDescription("Play a media file with mpv");
 
-
+    config.AddCommand<Media.Commands.Version>("version")
+        .WithDescription("Print program version");
 
     config.AddBranch("cd", cd =>
     {
