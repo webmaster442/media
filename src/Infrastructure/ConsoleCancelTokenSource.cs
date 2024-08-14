@@ -1,4 +1,9 @@
-﻿namespace Media.Infrastructure;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+namespace Media.Infrastructure;
 internal sealed class ConsoleCancelTokenSource : IDisposable
 {
     private readonly CancellationTokenSource _tokenSource;

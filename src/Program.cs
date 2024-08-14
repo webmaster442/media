@@ -29,6 +29,8 @@ mainApp.Configure(config =>
     config.AddCommand<Play>("play")
           .WithDescription("Play a media file with mpv");
 
+
+
     config.AddBranch("cd", cd =>
     {
         cd.SetDescription("CD related commands");
