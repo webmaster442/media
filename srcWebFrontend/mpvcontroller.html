@@ -15,9 +15,13 @@
     </header>
 
     <div>
-        <button class="w3-button w3-block w3-purple w3-margin-bottom">Play</button>
-        <button class="w3-button w3-block w3-purple w3-margin-bottom">Pause</button>
+        <button onclick="await apiCall('/action/play')" class="w3-button w3-block w3-purple w3-margin-bottom">Play</button>
+        <button onclick="await apiCall('/action/pause')" class="w3-button w3-block w3-purple w3-margin-bottom">Pause</button>
     </div>
+
+    <footer>
+        <div class="w3-panel" style="display: none">api result</div>
+    </footer>
 
 </body>
 
