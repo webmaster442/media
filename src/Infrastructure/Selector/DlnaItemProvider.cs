@@ -4,8 +4,10 @@ using Media.Dto.Internals;
 
 namespace Media.Infrastructure.Selector;
 
-public sealed class DlnaItemProvider : IItemProvider<DlnaItem>, IDisposable
+public sealed class DlnaItemProvider : IItemProvider<DlnaItem, DlnaItemProvider.CurrentPath>, IDisposable
 {
+    public record class CurrentPath(string Uri, string Id);
+
     private readonly DLNAClient _client;
 
     public DlnaItemProvider()
@@ -14,27 +16,21 @@ public sealed class DlnaItemProvider : IItemProvider<DlnaItem>, IDisposable
     }
 
     public void Dispose()
-        => _client.Dispose();
-
-    public string ConvertItem(DlnaItem item)
     {
-        return item.Name;
+        _client.Dispose();
     }
 
-    public async Task<IReadOnlyCollection<DlnaItem>> GetItemsAsync(string currentPath, CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrEmpty(currentPath))
-            return await _client.GetServersAsync(cancellationToken);
-    }
+    string IItemProvider<DlnaItem, CurrentPath>.ConvertItem(in DlnaItem item)
+        => item.Name;
 
-    public bool SelectionCanExit(DlnaItem selectedItem)
-    {
-        return !selectedItem.IsBrowsable
-            && !selectedItem.IsServer;
-    }
-
-    public string ModifyCurrentPath(DlnaItem item)
+    Task<IReadOnlyCollection<DlnaItem>> IItemProvider<DlnaItem, CurrentPath>.GetItemsAsync(CurrentPath currentPath, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
+
+    CurrentPath IItemProvider<DlnaItem, CurrentPath>.SelectCurrentPath(in DlnaItem item)
+        => new CurrentPath(item.Uri.ToString(), item.Id);
+
+    bool IItemProvider<DlnaItem, CurrentPath>.SelectionCanExit(in DlnaItem selectedItem)
+        => !selectedItem.IsBrowsable;
 }

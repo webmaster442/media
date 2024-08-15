@@ -7,31 +7,31 @@ using Spectre.Console;
 
 namespace Media.Infrastructure.Selector;
 
-internal class ItemSelector<T> where T : IITem
+internal class ItemSelector<TItem, TPath> where TItem : IITem
 {
-    private readonly IItemProvider<T> _itemProvider;
-    private string _currentPath;
+    private readonly IItemProvider<TItem, TPath> _itemProvider;
+    private TPath _currentPath;
 
     public string Title { get; set; }
 
-    public ItemSelector(IItemProvider<T> itemProvider, string title)
+    public ItemSelector(IItemProvider<TItem, TPath> itemProvider, string title, TPath defaultPath)
     {
         _itemProvider = itemProvider;
         Title = title;
-        _currentPath = string.Empty;
+        _currentPath = defaultPath;
     }
 
-    private string Convert(T item)
+    private string Convert(TItem item)
         => _itemProvider.ConvertItem(item).EscapeMarkup();
 
-    public async Task<T> SelectItemAsync(CancellationToken cancellationToken)
+    public async Task<TItem> SelectItemAsync(CancellationToken cancellationToken)
     {
         AnsiConsole.Clear();
         while (true)
         {
             var items = await _itemProvider.GetItemsAsync(_currentPath, cancellationToken);
 
-            var selection = new SelectionPrompt<T>()
+            var selection = new SelectionPrompt<TItem>()
                 .Title($"{Title}\r\n[green]{_currentPath}[/]")
                 .PageSize(Console.WindowHeight - 5)
                 .AddChoices(items)
@@ -45,7 +45,7 @@ internal class ItemSelector<T> where T : IITem
             }
             else
             {
-                _currentPath = _itemProvider.ModifyCurrentPath(item);
+                _currentPath = _itemProvider.SelectCurrentPath(item);
             }
         }
     }

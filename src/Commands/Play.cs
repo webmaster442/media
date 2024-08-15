@@ -3,8 +3,6 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System.Runtime.InteropServices;
-
 using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Infrastructure.Selector;
@@ -22,9 +20,22 @@ internal class Play : AsyncCommand<Play.Settings>
         [FileExists(IsOptional = true)]
         public string InputFile { get; init; }
 
+        [Description("Use DLNA for browsing")]
+        [CommandOption("-d|--dlna")]
+        public bool Dlna { get; init; }
+
         public Settings()
         {
             InputFile = string.Empty;
+        }
+
+        public override Spectre.Console.ValidationResult Validate()
+        {
+            if (Dlna && !string.IsNullOrEmpty(InputFile))
+            {
+                return Spectre.Console.ValidationResult.Error("DLNA and file input cannot be used together");
+            }
+            return base.Validate();
         }
     }
 
@@ -36,7 +47,13 @@ internal class Play : AsyncCommand<Play.Settings>
 
             if (string.IsNullOrWhiteSpace(settings.InputFile))
             {
-                var file = await DoFileSelection();
+                string file = string.Empty;
+
+                if (settings.Dlna)
+                    file = await DoDlnaBrowse();
+                else
+                    file = await DoFileSelection();
+
                 Mpv.Start(file);
                 return ExitCodes.Success;
             }
@@ -51,11 +68,33 @@ internal class Play : AsyncCommand<Play.Settings>
         }
     }
 
+    private static async Task<string> DoDlnaBrowse()
+    {
+        using var consoleCancel = new ConsoleCancelTokenSource();
+        using var provider = new DlnaItemProvider();
+
+        var selector = new ItemSelector<DlnaItem, DlnaItemProvider.CurrentPath>(
+            itemProvider: provider,
+            title: "Select a media server",
+            defaultPath: new DlnaItemProvider.CurrentPath(string.Empty, string.Empty));
+
+        var selectedItem = await selector.SelectItemAsync(consoleCancel.Token);
+
+        return selectedItem.Uri.ToString();
+
+    }
+
     private static async Task<string> DoFileSelection()
     {
         using var consoleCancel = new ConsoleCancelTokenSource();
-        var selector = new ItemSelector<Item>(new FileSystemItemProvider(Mpv.GetSupportedExtensions()), "Select a file");
-        var selectedItem = await selector.SelectItemAsync(consoleCancel.Token);
+        
+        var selector = new ItemSelector<Item, string>(
+            itemProvider: new FileSystemItemProvider(Mpv.GetSupportedExtensions()),
+            title: "Select a file",
+            defaultPath: string.Empty);
+
+        Item selectedItem = await selector.SelectItemAsync(consoleCancel.Token);
+
         return $"\"{selectedItem.FullPath}\"";
     }
 }

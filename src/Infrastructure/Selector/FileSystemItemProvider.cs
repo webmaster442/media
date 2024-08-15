@@ -9,7 +9,7 @@ using Spectre.Console;
 
 namespace Media.Infrastructure.Selector;
 
-internal sealed class FileSystemItemProvider : IItemProvider<Item>
+internal sealed class FileSystemItemProvider : IItemProvider<Item, string>
 {
     private readonly HashSet<string> _extensionsToShow;
 
@@ -20,10 +20,10 @@ internal sealed class FileSystemItemProvider : IItemProvider<Item>
             : new HashSet<string>(extensions, StringComparer.OrdinalIgnoreCase);
     }
 
-    string IItemProvider<Item>.ConvertItem(Item item)
+    string IItemProvider<Item, string>.ConvertItem(in Item item)
         => $"{item.Icon} {item.Name}";
 
-    Task<IReadOnlyCollection<Item>> IItemProvider<Item>.GetItemsAsync(string currentPath, CancellationToken cancellationToken)
+    Task<IReadOnlyCollection<Item>> IItemProvider<Item, string>.GetItemsAsync(string currentPath, CancellationToken cancellationToken)
     {
         IReadOnlyCollection<Item> items = string.IsNullOrEmpty(currentPath)
             ? GetDrives().ToList()
@@ -32,7 +32,7 @@ internal sealed class FileSystemItemProvider : IItemProvider<Item>
         return Task.FromResult(items);
     }
 
-    bool IItemProvider<Item>.SelectionCanExit(Item selectedItem)
+    bool IItemProvider<Item, string>.SelectionCanExit(in Item selectedItem)
         => File.Exists(selectedItem.FullPath);
 
     private static Item CreateItem(FileSystemInfo item)
@@ -131,6 +131,6 @@ internal sealed class FileSystemItemProvider : IItemProvider<Item>
         return results;
     }
 
-    public string ModifyCurrentPath(Item item)
+    public string SelectCurrentPath(in Item item)
         => item.FullPath;
 }

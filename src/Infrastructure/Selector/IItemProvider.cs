@@ -5,10 +5,10 @@
 
 namespace Media.Infrastructure.Selector;
 
-internal interface IItemProvider<TItem> where TItem : IITem
+internal interface IItemProvider<TItem, TPath> where TItem : IITem
 {
-    string ConvertItem(TItem item);
-    Task<IReadOnlyCollection<TItem>> GetItemsAsync(string currentPath, CancellationToken cancellationToken);
-    string ModifyCurrentPath(TItem item);
-    bool SelectionCanExit(TItem selectedItem);
+    string ConvertItem(in TItem item);
+    Task<IReadOnlyCollection<TItem>> GetItemsAsync(TPath currentPath, CancellationToken cancellationToken);
+    TPath SelectCurrentPath(in TItem item);
+    bool SelectionCanExit(in TItem selectedItem);
 }
