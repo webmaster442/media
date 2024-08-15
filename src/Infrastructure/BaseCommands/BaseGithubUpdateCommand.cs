@@ -142,7 +142,7 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
                 await SetInstalledVersion(latest.PublishedAt);
 
-                
+
 
                 File.Delete(tempName);
 

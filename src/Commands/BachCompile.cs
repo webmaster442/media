@@ -8,8 +8,6 @@ using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Media.Commands;
 
 internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>

@@ -1,4 +1,9 @@
-﻿using System.Net;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Web;
@@ -208,8 +213,11 @@ internal sealed class DLNAClient : IDisposable
         throw new InvalidOperationException("Invalid response");
     }
 
-    private static string CreateBrowseXml(string id)
+    private static string CreateBrowseXml(string id, int startIndex = 0, int requestedCount = 0)
     {
+        ArgumentOutOfRangeException.ThrowIfLessThan(startIndex, 0);
+        ArgumentOutOfRangeException.ThrowIfLessThan(requestedCount, 0);
+
         return $"""
             <?xml version=\"1.0\"?>
             <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
@@ -218,8 +226,8 @@ internal sealed class DLNAClient : IDisposable
                         <ObjectID>{id}</ObjectID>
                         <BrowseFlag>BrowseDirectChildren</BrowseFlag>
                         <Filter>*</Filter>
-                        <StartingIndex>0</StartingIndex>
-                        <RequestedCount>1000</RequestedCount>
+                        <StartingIndex>{startIndex}</StartingIndex>
+                        <RequestedCount>{requestedCount}</RequestedCount>
                         <SortCriteria></SortCriteria>
                     </u:Browse>
                 </s:Body>

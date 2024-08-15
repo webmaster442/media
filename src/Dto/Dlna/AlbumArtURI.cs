@@ -1,4 +1,9 @@
-﻿using System.Xml.Serialization;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Xml.Serialization;
 
 namespace Media.Dto.Dlna;
 
@@ -10,5 +15,5 @@ public class AlbumArtURI
     public string? ProfileID { get; set; }
 
     [XmlText]
-    public string? Value { get;  set; }
+    public string? Value { get; set; }
 }

@@ -3,8 +3,6 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Media.Infrastructure;
 
 internal sealed class TypeRegistrar : ITypeRegistrar

@@ -1,6 +1,11 @@
-﻿
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
 
 using Media.Dto.Internals;
+
+using Spectre.Console;
 
 namespace Media.Infrastructure.Selector;
 
@@ -38,7 +43,14 @@ public sealed class DlnaItemProvider : IItemProvider<DlnaItem, DlnaItemProvider.
     }
 
     string IItemProvider<DlnaItem, CurrentPath>.ConvertItem(in DlnaItem item)
-        => item.Name;
+    {
+        if (item.IsServer)
+            return $"{Emoji.Known.DesktopComputer} {item.Name}";
+        else if (item.IsBrowsable)
+            return $"{Emoji.Known.FileFolder} {item.Name}";
+        else
+            return $"{Emoji.Known.Memo} {item.Name}";
+    }
 
     async Task<IReadOnlyCollection<DlnaItem>> IItemProvider<DlnaItem, CurrentPath>.GetItemsAsync(CurrentPath currentPath, CancellationToken cancellationToken)
     {
