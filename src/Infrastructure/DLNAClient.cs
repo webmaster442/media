@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
+using System.Web;
 using System.Xml.Serialization;
 
 using Media.Dto.Dlna;
@@ -128,11 +129,11 @@ internal sealed class DLNAClient : IDisposable
         return servers;
     }
 
-    public async Task<IReadOnlyCollection<DlnaItem>> Browse(Uri uri, string id, CancellationToken token)
+    public async Task<IReadOnlyCollection<DlnaItem>> Browse(string uri, string id, CancellationToken token)
     {
         using var request = new HttpRequestMessage()
         {
-            RequestUri = uri,
+            RequestUri = new Uri(uri),
             Method = HttpMethod.Post
         };
         request.Content = new StringContent(CreateBrowseXml(id), Encoding.UTF8, "text/xml");
@@ -145,12 +146,12 @@ internal sealed class DLNAClient : IDisposable
 
         var xml = await response.Content.ReadAsStringAsync(token);
 
-        return ProcessEnvelopeXml(xml);
+        return ProcessEnvelopeXml(xml, uri);
     }
 
-    private IReadOnlyCollection<DlnaItem> ProcessEnvelopeXml(string xml)
+    private IReadOnlyCollection<DlnaItem> ProcessEnvelopeXml(string xml, string defaultUri)
     {
-        using var reader = new StringReader(xml);
+        using var reader = new StringReader(HttpUtility.HtmlDecode(xml));
         if (_envelopeSerializer.Deserialize(reader) is Envelope envelope
             && envelope?.Body?.BrowseResponse?.Result?.DIDLLite?.Items?.Length > 0)
         {
@@ -176,7 +177,7 @@ internal sealed class DLNAClient : IDisposable
                         IsBrowsable = true,
                         IsServer = false,
                         Name = container.Title,
-                        Uri = new Uri("")
+                        Uri = new Uri(defaultUri),
                     });
                 }
             }
@@ -218,7 +219,7 @@ internal sealed class DLNAClient : IDisposable
                         <BrowseFlag>BrowseDirectChildren</BrowseFlag>
                         <Filter>*</Filter>
                         <StartingIndex>0</StartingIndex>
-                        <RequestedCount>0</RequestedCount>
+                        <RequestedCount>1000</RequestedCount>
                         <SortCriteria></SortCriteria>
                     </u:Browse>
                 </s:Body>

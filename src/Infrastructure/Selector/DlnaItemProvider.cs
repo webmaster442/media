@@ -40,19 +40,19 @@ public sealed class DlnaItemProvider : IItemProvider<DlnaItem, DlnaItemProvider.
     string IItemProvider<DlnaItem, CurrentPath>.ConvertItem(in DlnaItem item)
         => item.Name;
 
-    Task<IReadOnlyCollection<DlnaItem>> IItemProvider<DlnaItem, CurrentPath>.GetItemsAsync(CurrentPath currentPath, CancellationToken cancellationToken)
+    async Task<IReadOnlyCollection<DlnaItem>> IItemProvider<DlnaItem, CurrentPath>.GetItemsAsync(CurrentPath currentPath, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(currentPath.Id))
-            return _client.GetServersAsync(cancellationToken);
+        if (string.IsNullOrEmpty(currentPath.Uri))
+            return await _client.GetServersAsync(cancellationToken);
 
-        throw new NotImplementedException();
+        return await _client.Browse(currentPath.Uri, currentPath.Id, cancellationToken);
     }
 
     CurrentPath IItemProvider<DlnaItem, CurrentPath>.SelectCurrentPath(in DlnaItem item)
         => new CurrentPath
         {
             Uri = item.Uri.ToString(),
-            Id = item.Id,
+            Id = string.IsNullOrEmpty(item.Id) ? "0" : item.Id,
             Name = item.Name
         };
 

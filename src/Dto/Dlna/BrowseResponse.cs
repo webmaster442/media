@@ -15,11 +15,11 @@ public class BrowseResponse
     public Result Result { get; set; }
 
     [XmlElement(Namespace = "")]
-    public byte NumberReturned { get; set; }
+    public int NumberReturned { get; set; }
 
     [XmlElement(Namespace = "")]
-    public byte TotalMatches { get; set; }
+    public int TotalMatches { get; set; }
 
     [XmlElement(Namespace = "")]
-    public byte UpdateID { get; set; }
+    public int UpdateID { get; set; }
 }
