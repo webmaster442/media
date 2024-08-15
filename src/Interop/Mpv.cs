@@ -4,6 +4,9 @@
 // -----------------------------------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.IO.Pipes;
+
+using Media.Dto;
 
 namespace Media.Interop;
 
@@ -78,7 +81,7 @@ internal sealed class Mpv : IInterop
         }
     }
 
-    public static void Start(string commandLine)
+    public static int Start(string commandLine)
     {
         if (!TryGetInstalledPath(out string mpvPath))
         {
@@ -96,5 +99,33 @@ internal sealed class Mpv : IInterop
         };
 
         process.Start();
+        return process.Id;
+    }
+
+    public static async Task<MpvIpcResponse?> SendCommand(string pipeName, string[] payload)
+    {
+        var commandObject = new
+        {
+            command = payload
+        };
+
+        string json = JsonSerializer.Serialize(commandObject);
+
+        using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous))
+        {
+            using (var writer = new StreamWriter(client))
+            {
+                await writer.WriteLineAsync(json);
+            }
+            using (var reader = new StreamReader(client, Encoding.UTF8))
+            {
+                string? response = await reader.ReadLineAsync();
+                if (response != null)
+                {
+                    return JsonSerializer.Deserialize<MpvIpcResponse>(response);
+                }
+            }
+        }
+        return null;
     }
 }

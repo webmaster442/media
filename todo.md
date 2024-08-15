@@ -1,51 +1,6 @@
-- [x] FFProbe support
-- [x] Cut without reencoding
-- [x] Muxing add subtitle track
-- [x] Self update support
-    - [x] Extract to .new folder in the same directory
-    - [x] Create powershell to move files in .new to the main folder
-    - [x] powershell script is executed by the main program
-    - [x] poweshell script deletes the .new folder
-    - [ ] powershell script restarts the main program to display version
-    - [x] powershell script deletes itself
-- [x] Help command
-- [X] YTDLP support
-- [x] Multiple file encode support
-    - [x] ffcmd bach clear
-    - [x] ffcmd bach add
-    - [x] ffcmd bach new
-    - [x] ffcmd bach set preset mp3 -b 128k
-    - [x] ffcmd bach set outdir outdir
-    - [x] ffcmd bach compile shell.ps1
-- [x] Rename program to media
-- [x] Powershell file builder
-- [x] Cmd file builder
-- [x] Global usings file
-- [x] Code cleanup
-- [x] Push to github
-- [x] License headers
-- [x] Proper readme
-- [x] License file (MIT)
-- [x] dvd convert targets
-  - [x] ntsc 16:9
-  - [x] ntsc 4:3
-  - [x] pal 16:9
-  - [x] ntsc 4:3
-  - [x] AC3 audio
-- [x] Convert aduio to ac3 file
-- [x] convert aduio to dvd wav (48Khz)
-- [x] CD commands
-  - [x] rip
-  - [x] list
-    - [x] List tracks and lengths with sizes
-    - [x] List total disc size in MiB
-    - [x] Spectre console table output
-  - [x] Eject
-- [ ] Do a stable release
-- [x] Playlist commands
-  - [x] Add files
-  - [x] Clear
-  - [x] Remove files
-  - [x] New
-  - [x] Play
-  - [x] copy - copy everything to a directory with interactive display
+- [ ] Release on github
+
+After MMP:
+
+- [ ] DLNA browser integration
+- [ ] HTTP Remote control for MPV player

@@ -69,7 +69,7 @@ internal sealed class FFMpeg : IInterop
         };
     }
 
-    public static void Start(string commandLine)
+    public static int Start(string commandLine)
     {
         using var process = Create(commandLine,
                                    redirectStdIn: false,
@@ -77,5 +77,6 @@ internal sealed class FFMpeg : IInterop
                                    redirectStderr: false);
 
         process.Start();
+        return process.Id;
     }
 }

@@ -125,7 +125,7 @@ internal sealed class YtDlp : IInterop
             || url.StartsWith("https://youtu.be/");
     }
 
-    public static void Start(string commandLine)
+    public static int Start(string commandLine)
     {
         if (!TryGetInstalledPath(out string ytDlpPath))
         {
@@ -143,5 +143,6 @@ internal sealed class YtDlp : IInterop
         };
 
         process.Start();
+        return process.Id;
     }
 }
