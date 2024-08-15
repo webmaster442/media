@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.Dto.Internals;
+
 using Spectre.Console;
 
 namespace Media.Infrastructure.Selector;
@@ -128,4 +130,7 @@ internal sealed class FileSystemItemProvider : IItemProvider<Item>
 
         return results;
     }
+
+    public string ModifyCurrentPath(Item item)
+        => item.FullPath;
 }

@@ -9,5 +9,6 @@ internal interface IItemProvider<TItem> where TItem : IITem
 {
     string ConvertItem(TItem item);
     Task<IReadOnlyCollection<TItem>> GetItemsAsync(string currentPath, CancellationToken cancellationToken);
+    string ModifyCurrentPath(TItem item);
     bool SelectionCanExit(TItem selectedItem);
 }

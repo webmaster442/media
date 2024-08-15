@@ -14,7 +14,7 @@ internal sealed class DLNAClient : IDisposable
     private readonly XmlSerializer _rootSerializer;
     private readonly XmlSerializer _envelopeSerializer;
 
-    private DLNAClient()
+    public DLNAClient()
     {
         _client = new HttpClient();
         _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/xml"));

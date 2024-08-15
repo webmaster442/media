@@ -45,7 +45,7 @@ internal class ItemSelector<T> where T : IITem
             }
             else
             {
-                _currentPath = item.FullPath;
+                _currentPath = _itemProvider.ModifyCurrentPath(item);
             }
         }
     }

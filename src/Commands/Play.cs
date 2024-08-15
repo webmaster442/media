@@ -5,6 +5,7 @@
 
 using System.Runtime.InteropServices;
 
+using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Infrastructure.Selector;
 using Media.Infrastructure.Validation;

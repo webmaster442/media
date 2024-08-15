@@ -3,7 +3,9 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Infrastructure.Selector;
+using Media.Infrastructure.Selector;
+
+namespace Media.Dto.Internals;
 
 internal sealed class Item : IITem
 {
