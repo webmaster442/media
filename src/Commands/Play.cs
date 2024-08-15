@@ -76,7 +76,7 @@ internal class Play : AsyncCommand<Play.Settings>
         var selector = new ItemSelector<DlnaItem, DlnaItemProvider.CurrentPath>(
             itemProvider: provider,
             title: "Select a media server",
-            defaultPath: new DlnaItemProvider.CurrentPath(string.Empty, string.Empty));
+            defaultPath: DlnaItemProvider.CurrentPath.Empty);
 
         var selectedItem = await selector.SelectItemAsync(consoleCancel.Token);
 

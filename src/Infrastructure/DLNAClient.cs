@@ -27,6 +27,23 @@ internal sealed class DLNAClient : IDisposable
         _client.Dispose();
     }
 
+    private static Dictionary<string, string> ParseSSDPResponse(string str)
+    {
+        string[] lines = str.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        Dictionary<string, string> results = new();
+        foreach (var line in lines)
+        {
+            int colonIndex = line.IndexOf(':');
+            if (colonIndex > 0)
+            {
+                string key = line[..colonIndex];
+                string value = line[(colonIndex + 1)..];
+                results[key] = value;
+            }
+        }
+        return results;
+    }
+
     private async Task<ISet<Uri>> SSDPQueryAsync(CancellationToken token)
     {
         HashSet<Uri> results = new HashSet<Uri>();
@@ -57,7 +74,7 @@ internal sealed class DLNAClient : IDisposable
             byte[] receiveBuffer = new byte[4096];
 
             int count = 0;
-            while (count < 20)
+            while (count < 30)
             {
                 token.ThrowIfCancellationRequested();
                 count++;
@@ -66,13 +83,15 @@ internal sealed class DLNAClient : IDisposable
                     int receivedBytes = await udpSocket.ReceiveAsync(receiveBuffer, SocketFlags.None, token);
                     if (receivedBytes > 0)
                     {
-                        string data = Encoding.UTF8.GetString(receiveBuffer, 0, receivedBytes);
-                        if (data.IndexOf("LOCATION: ", StringComparison.OrdinalIgnoreCase) > -1)
+                        string responseText = Encoding.UTF8.GetString(receiveBuffer, 0, receivedBytes);
+
+                        var ssdpResponse = ParseSSDPResponse(responseText);
+
+                        if (ssdpResponse["ST"].Contains("urn:schemas-upnp-org:device:MediaServer"))
                         {
-                            data = data.ChopOffBefore("LOCATION: ").ChopOffAfter(Environment.NewLine);
+                            var url = new Uri(ssdpResponse["LOCATION"]);
+                            results.Add(url);
                         }
-                        var url = new Uri(data);
-                        results.Add(url);
                     }
                 }
                 else

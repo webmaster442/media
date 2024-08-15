@@ -6,7 +6,24 @@ namespace Media.Infrastructure.Selector;
 
 public sealed class DlnaItemProvider : IItemProvider<DlnaItem, DlnaItemProvider.CurrentPath>, IDisposable
 {
-    public record class CurrentPath(string Uri, string Id);
+    public sealed class CurrentPath
+    {
+        internal static readonly CurrentPath Empty = new()
+        {
+            Id = string.Empty,
+            Name = string.Empty,
+            Uri = string.Empty
+        };
+
+        public required string Uri { get; init; }
+        public required string Id { get; init; }
+        public required string Name { get; init; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
 
     private readonly DLNAClient _client;
 
@@ -25,11 +42,19 @@ public sealed class DlnaItemProvider : IItemProvider<DlnaItem, DlnaItemProvider.
 
     Task<IReadOnlyCollection<DlnaItem>> IItemProvider<DlnaItem, CurrentPath>.GetItemsAsync(CurrentPath currentPath, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(currentPath.Id))
+            return _client.GetServersAsync(cancellationToken);
+
         throw new NotImplementedException();
     }
 
     CurrentPath IItemProvider<DlnaItem, CurrentPath>.SelectCurrentPath(in DlnaItem item)
-        => new CurrentPath(item.Uri.ToString(), item.Id);
+        => new CurrentPath
+        {
+            Uri = item.Uri.ToString(),
+            Id = item.Id,
+            Name = item.Name
+        };
 
     bool IItemProvider<DlnaItem, CurrentPath>.SelectionCanExit(in DlnaItem selectedItem)
         => !selectedItem.IsBrowsable;
