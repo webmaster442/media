@@ -1,4 +1,9 @@
-﻿using System.Net;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Web;

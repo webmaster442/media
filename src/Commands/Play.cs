@@ -87,7 +87,7 @@ internal class Play : AsyncCommand<Play.Settings>
     private static async Task<string> DoFileSelection()
     {
         using var consoleCancel = new ConsoleCancelTokenSource();
-        
+
         var selector = new ItemSelector<Item, string>(
             itemProvider: new FileSystemItemProvider(Mpv.GetSupportedExtensions()),
             title: "Select a file",
