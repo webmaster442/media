@@ -1,52 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <ApplicationIcon>..\branding\icon.ico</ApplicationIcon>
-    <OutputPath>..\bin\$(Configuration)\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <Version>$([System.DateTime]::UtcNow.ToString("yyyy")).$([System.DateTime]::UtcNow.ToString("MM")).$([System.DateTime]::UtcNow.ToString("dd")).0</Version>
-    <AssemblyVersion>$([System.DateTime]::UtcNow.ToString("yyyy")).$([System.DateTime]::UtcNow.ToString("MM")).$([System.DateTime]::UtcNow.ToString("dd")).0</AssemblyVersion>
-    <FileVersion>$([System.DateTime]::UtcNow.ToString("yyyy")).$([System.DateTime]::UtcNow.ToString("MM")).$([System.DateTime]::UtcNow.ToString("dd")).0</FileVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <ApplicationIcon>..\branding\icon.ico</ApplicationIcon>
+        <OutputPath>..\bin\$(Configuration)\</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <Version>$([System.DateTime]::UtcNow.ToString("yyyy")).$([System.DateTime]::UtcNow.ToString("MM")).$([System.DateTime]::UtcNow.ToString("dd")).0</Version>
+        <AssemblyVersion>$([System.DateTime]::UtcNow.ToString("yyyy")).$([System.DateTime]::UtcNow.ToString("MM")).$([System.DateTime]::UtcNow.ToString("dd")).0</AssemblyVersion>
+        <FileVersion>$([System.DateTime]::UtcNow.ToString("yyyy")).$([System.DateTime]::UtcNow.ToString("MM")).$([System.DateTime]::UtcNow.ToString("dd")).0</FileVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Embedded\Update.ps1" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="..\srcWebFrontend\mpv-logo-128.png" Link="Embedded\mpv-logo-128.png" />
+        <EmbeddedResource Include="..\srcWebFrontend\mpvcontroller.html" Link="Embedded\mpvcontroller.html" />
+        <EmbeddedResource Include="..\srcWebFrontend\w3.css" Link="Embedded\w3.css" />
+        <EmbeddedResource Include="..\srcWebFrontend\request.js" Link="Embedded\request.js" />
+        <EmbeddedResource Include="..\Notes.txt" Link="Notes.txt" />
+        
+        <EmbeddedResource Include="Embedded\Update.ps1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="..\Notes.txt" Link="Notes.txt" />
-    <EmbeddedResource Include="Embedded\Update.ps1" />
-  </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="Media.Tests" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="Media.Tests" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="JKToolKit.Spectre.AutoCompletion" Version="0.0.8" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+        <PackageReference Include="SharpCompress" Version="0.37.2" />
+        <PackageReference Include="Spectre.Console" Version="0.49.1" />
+        <PackageReference Include="Spectre.Console.Analyzer" Version="0.49.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Spectre.Console.Json" Version="0.49.1" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JKToolKit.Spectre.AutoCompletion" Version="0.0.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="SharpCompress" Version="0.37.2" />
-    <PackageReference Include="Spectre.Console" Version="0.49.1" />
-    <PackageReference Include="Spectre.Console.Analyzer" Version="0.49.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Spectre.Console.Json" Version="0.49.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="firststart.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="firststart.ps1">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
 </Project>

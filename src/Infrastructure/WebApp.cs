@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace Media;
+namespace Media.Infrastructure;
 
 internal sealed class WebApp
 {
@@ -35,10 +35,10 @@ internal sealed class WebApp
             throw new ArgumentException($"'{nameof(mimeType)}' cannot be null or empty.", nameof(mimeType));
         }
 
-        _app.MapGet(requestPath, async (HttpContext context) =>
+        _app.MapGet(requestPath, async (context) =>
         {
             var assembly = Assembly.GetExecutingAssembly();
-            using var data = assembly.GetManifestResourceStream(embeddedName);
+            using var data = Embedded.EmbeddedResources.GetFile(embeddedName);
             if (data == null)
             {
                 context.Response.StatusCode = 404;
