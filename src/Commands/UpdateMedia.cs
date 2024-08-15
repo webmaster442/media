@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Diagnostics;
 using System.IO.Compression;
 
 using Media.Dto.Github;
@@ -48,14 +49,24 @@ internal sealed class UpdateMedia : BaseGithubUpdateCommand
 
     protected override async Task PostInstall(Action<long, long> reporter)
     {
+        var targetScriptName = Path.Combine(AppContext.BaseDirectory, "Update.ps1");
         using (var updateScript = EmbeddedResources.GetFile(EmbeddedResources.UpdatePS1))
         {
-            reporter.Invoke(0, 1);
-            using (var targetScript = File.Create(Path.Combine(AppContext.BaseDirectory, "Update.ps1")))
+            reporter.Invoke(0, 2);
+            using (var targetScript = File.Create(targetScriptName))
             {
                 await updateScript.CopyToAsync(targetScript);
-                reporter.Invoke(1, 1);
+                reporter.Invoke(1, 2);
             }
+        }
+
+        reporter.Invoke(2, 2);
+        using (var process = new Process())
+        {
+            process.StartInfo.FileName = "powershell.exe";
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.Arguments = $"-executionpolicy bypass -file {targetScriptName} \"{TargetFolder}\" \"{AppContext.BaseDirectory}\"";
+            process.Start();
         }
     }
 
