@@ -45,7 +45,7 @@ public sealed class DlnaItemProvider : IItemProvider<DlnaItem, DlnaItemProvider.
     string IItemProvider<DlnaItem, CurrentPath>.ConvertItem(in DlnaItem item)
     {
         if (item.IsServer)
-            return $"{Emoji.Known.DesktopComputer} {item.Name}";
+            return $"{Emoji.Known.DesktopComputer}  {item.Name}";
         else if (item.IsBrowsable)
             return $"{Emoji.Known.FileFolder} {item.Name}";
         else
@@ -55,7 +55,23 @@ public sealed class DlnaItemProvider : IItemProvider<DlnaItem, DlnaItemProvider.
     async Task<IReadOnlyCollection<DlnaItem>> IItemProvider<DlnaItem, CurrentPath>.GetItemsAsync(CurrentPath currentPath, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(currentPath.Uri))
-            return await _client.GetServersAsync(cancellationToken);
+        {
+            var servers = await _client.GetServersAsync(cancellationToken);
+            if (servers.Count < 1)
+            {
+                return new DlnaItem[]
+                {
+                    new() {
+                        Name = "No servers found",
+                        IsBrowsable = false,
+                        IsServer = true,
+                        Uri = new Uri("none://"),
+                        Id = "0"
+                    }
+                };
+            }
+            return servers;
+        }
 
         return await _client.Browse(currentPath.Uri, currentPath.Id, cancellationToken);
     }

@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------------------------
 
 namespace Media.Infrastructure;
+
 internal sealed class ConsoleCancelTokenSource : IDisposable
 {
     private readonly CancellationTokenSource _tokenSource;
@@ -23,9 +24,9 @@ internal sealed class ConsoleCancelTokenSource : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    internal void ThrowIfCancellationRequested()
+    public void ThrowIfCancellationRequested()
     {
-        throw new NotImplementedException();
+        _tokenSource.Token.ThrowIfCancellationRequested();
     }
 
     private void HandleCancelPress(object? sender, ConsoleCancelEventArgs e)
