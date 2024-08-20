@@ -48,6 +48,13 @@ internal sealed class FFMpeg : IInterop
         return File.Exists(toolPath);
     }
 
+    public static string GetEnoderList()
+    {
+        using var ffmpegProcess = Create("-hide_banner -encoders", false, true, false);
+        ffmpegProcess.Start();
+        return ffmpegProcess.StandardOutput.ReadToEnd();
+    }
+
     public static Process Create(string commandLine, bool redirectStdIn, bool redirectStdOut, bool redirectStderr)
     {
         if (!TryGetInstalledPath(out string ffmpegPath))

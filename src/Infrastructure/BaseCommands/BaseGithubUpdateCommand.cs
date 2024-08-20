@@ -4,7 +4,6 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Dto.Github;
-using Media.Infrastructure.Config;
 
 using Spectre.Console;
 

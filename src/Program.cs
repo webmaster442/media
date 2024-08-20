@@ -18,9 +18,6 @@ mainApp.Configure(config =>
     config.SetApplicationName("FFCmd");
     config.AddAutoCompletion(config => config.AddPowershell());
 
-    config.AddCommand<Info>("info")
-          .WithDescription("Get information about a media file");
-
     config.AddCommand<Cut>("cut")
           .WithDescription("Cut a file without reencoding");
 
@@ -29,6 +26,12 @@ mainApp.Configure(config =>
 
     config.AddCommand<Media.Commands.Version>("version")
         .WithDescription("Print program version");
+
+    config.AddBranch("info", info =>
+    {
+        info.AddCommand<InfoFile>("file")
+        .WithDescription("Get information about a media file");
+    });
 
     config.AddBranch("cd", cd =>
     {

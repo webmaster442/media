@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Security.Cryptography.X509Certificates;
+
 using Media.Dto.Internals;
 
 namespace Media.Infrastructure;

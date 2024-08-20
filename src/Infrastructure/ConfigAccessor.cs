@@ -1,6 +1,6 @@
 ﻿using Media.Dto;
 
-namespace Media.Infrastructure.Config;
+namespace Media.Infrastructure;
 
 public sealed class ConfigAccessor
 {
@@ -29,7 +29,7 @@ public sealed class ConfigAccessor
 
     private async Task SaveConfig()
     {
-        var temp  = Path.GetTempFileName();
+        var temp = Path.GetTempFileName();
         await using (var stream = File.Create(temp))
         {
             await JsonSerializer.SerializeAsync(stream, _config, _options);
@@ -50,6 +50,17 @@ public sealed class ConfigAccessor
     public async Task SetInstalledVersion(string programName, DateTimeOffset publishedAt)
     {
         _config.Versions[programName] = publishedAt;
+        await SaveConfig();
+    }
+
+    public (DateTimeOffset Version, string[] encoders)? GetCachedEncoderList()
+    {
+        return _config.CachedHwEncoderList;
+    }
+
+    public async Task SetCachedEncoderList(DateTimeOffset version, string[] encoderList)
+    {
+        _config.CachedHwEncoderList = (version, encoderList);
         await SaveConfig();
     }
 }

@@ -9,7 +9,7 @@ using Media.Interop;
 
 namespace Media.Commands;
 
-internal class Info : AsyncCommand<Info.Settings>
+internal class InfoFile : AsyncCommand<InfoFile.Settings>
 {
     public class Settings : CommandSettings
     {
