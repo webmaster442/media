@@ -11,7 +11,7 @@ namespace Media.Tests;
 [TestFixture]
 internal class ParsersTest
 {
-    public const string TestCase = """
+    public const string YtDlpTestCase = """
         [youtube] Extracting URL: https://www.youtube.com/watch?v=WEBaZPsBQKE
         [youtube] WEBaZPsBQKE: Downloading webpage
         [youtube] WEBaZPsBQKE: Downloading ios player API JSON
@@ -64,17 +64,44 @@ internal class ParsersTest
         313 webm  3840x2160   25    |  335.96MiB 13259k https | vp9           13259k video only          2160p, webm_dash
         """;
 
+    public const string FFMpegEncoders = """
+               Encoders:
+        V..... = Video
+        A..... = Audio
+        S..... = Subtitle
+        .F.... = Frame-level multithreading
+        ..S... = Slice-level multithreading
+        ...X.. = Codec is experimental
+        ....B. = Supports draw_horiz_band
+        .....D = Supports direct rendering method 1
+        ------
+        V....D a64multi             Multicolor charset for Commodore 64 (codec a64_multi)
+        V....D a64multi5            Multicolor charset for Commodore 64, extended with 5th color (colram) (codec a64_multi5)
+        V....D alias_pix            Alias/Wavefront PIX image
+        V..... amv                  AMV Video
+        V....D apng                 APNG (Animated Portable Network Graphics) image
+        V....D asv1                 ASUS V1
+        V....D asv2                 ASUS V2
+        V....D libaom-av1           libaom AV1 (codec av1)
+        V....D librav1e             librav1e AV1 (codec av1)
+        V..... libsvtav1            SVT-AV1(Scalable Video Technology for AV1) encoder (codec av1)
+        V....D av1_nvenc            NVIDIA NVENC av1 encoder (codec av1)
+        V..... av1_qsv              AV1 (Intel Quick Sync Video acceleration) (codec av1)
+        V....D av1_amf              AMD AMF AV1 encoder (codec av1)
+        V....D avrp                 Avid 1:1 10-bit RGB Packer
+        """;
+
     [Test]
     public void TestParseCount()
     {
-        var result = Parsers.ParseFormats(TestCase).ToArray();
+        var result = Parsers.ParseFormats(YtDlpTestCase).ToArray();
         Assert.That(result, Has.Length.EqualTo(41));
     }
 
     [Test]
     public void TestFormatParse()
     {
-        var result = Parsers.ParseFormats(TestCase).ToArray();
+        var result = Parsers.ParseFormats(YtDlpTestCase).ToArray();
         var expected = new YtDlpFormat
         {
             Id = "313",
@@ -85,5 +112,12 @@ internal class ParsersTest
             Codec = "vp9",
         };
         Assert.That(result[40], Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void TestEncoderParse()
+    {
+        var result = Parsers.ParseEncoderInfos(FFMpegEncoders).ToArray();
+        Assert.That(result, Has.Length.EqualTo(14));
     }
 }

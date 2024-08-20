@@ -3,9 +3,9 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System.Security.Cryptography.X509Certificates;
-
 using Media.Dto.Internals;
+
+using Spectre.Console;
 
 namespace Media.Infrastructure;
 internal static class Parsers
@@ -58,6 +58,26 @@ internal static class Parsers
                 Height = height,
                 BitrateInK = int.Parse(ExtractSubColumn(columns[1], len => len == 3 ? 1 : 2, "0").Replace("k", "")),
                 Codec = ExtractSubColumn(columns[2], _ => 0),
+            };
+        }
+    }
+
+    public static IEnumerable<FFMpegEncoderInfo> ParseEncoderInfos(string encoderInfos)
+    {
+        using var reader = new StringReader(encoderInfos);
+        string? line;
+
+        reader.SkipToLine("------");
+
+        while ((line = reader.ReadLine()) != null)
+        {
+            var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            yield return new FFMpegEncoderInfo
+            {
+                Name = parts[1],
+                Description = string.Join(' ', parts[2..]),
+                Type = parts[0][0].ToEncoderType(),
             };
         }
     }

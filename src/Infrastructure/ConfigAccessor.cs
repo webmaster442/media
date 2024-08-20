@@ -1,4 +1,4 @@
-﻿using Media.Dto;
+﻿using Media.Dto.Config;
 
 namespace Media.Infrastructure;
 
@@ -53,14 +53,14 @@ public sealed class ConfigAccessor
         await SaveConfig();
     }
 
-    public (DateTimeOffset Version, string[] encoders)? GetCachedEncoderList()
+    public EncoderInfos? GetCachedEncoderList()
     {
-        return _config.CachedHwEncoderList;
+        return _config.EncoderInfoCache;
     }
 
-    public async Task SetCachedEncoderList(DateTimeOffset version, string[] encoderList)
+    public async Task SetCachedEncoderList(EncoderInfos encoderInfos)
     {
-        _config.CachedHwEncoderList = (version, encoderList);
+        _config.EncoderInfoCache = encoderInfos;
         await SaveConfig();
     }
 }
