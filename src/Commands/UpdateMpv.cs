@@ -13,6 +13,7 @@ namespace Media.Commands;
 internal sealed class UpdateMpv : BaseGithubUpdateCommand
 {
     public UpdateMpv() : base(programName: "mpv",
+                              exeName: "mpv.exe",
                               repoOwner: "shinchiro",
                               repoName: "mpv-winbuild-cmake")
     {

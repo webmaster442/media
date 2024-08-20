@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Dto.Github;
+using Media.Infrastructure.Config;
 
 using Spectre.Console;
 
@@ -11,63 +12,23 @@ namespace Media.Infrastructure;
 
 internal abstract class BaseGithubUpdateCommand : AsyncCommand
 {
+    private readonly string _exeName;
     private readonly string _programName;
     private readonly string _repoOwner;
     private readonly string _repoName;
 
-    private const string VersionsFileName = "versions.json";
-
-    private readonly JsonSerializerOptions _options;
+    private readonly ConfigAccessor _configAccessor;
 
     protected BaseGithubUpdateCommand(string programName,
-                                  string repoOwner,
-                                  string repoName)
+                                      string exeName,
+                                      string repoOwner,
+                                      string repoName)
     {
+        _exeName = exeName;
         _programName = programName;
         _repoOwner = repoOwner;
         _repoName = repoName;
-        _options = new JsonSerializerOptions()
-        {
-            WriteIndented = true
-        };
-    }
-
-    private async Task SetInstalledVersion(DateTimeOffset publishedAt)
-    {
-        var versionFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, VersionsFileName);
-        Dictionary<string, DateTimeOffset> versions = new();
-        if (File.Exists(VersionsFileName))
-        {
-            using (var stream = File.OpenRead(versionFile))
-            {
-                versions = await JsonSerializer.DeserializeAsync<Dictionary<string, DateTimeOffset>>(stream, _options)
-                    ?? throw new InvalidOperationException("Versions file deserialization error");
-            }
-        }
-        versions[_programName] = publishedAt;
-        using (var stream = File.Create(versionFile))
-        {
-            await JsonSerializer.SerializeAsync(stream, versions, _options);
-        }
-    }
-
-    private async Task<DateTimeOffset?> GetInstalledVersion()
-    {
-        var versionFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, VersionsFileName);
-        if (!File.Exists(versionFile))
-        {
-            return null;
-        }
-        await using var stream = File.OpenRead(versionFile);
-        var versions = await JsonSerializer.DeserializeAsync<Dictionary<string, DateTimeOffset>>(stream, _options)
-            ?? throw new InvalidOperationException("Versions file deserialization error");
-
-        if (versions.TryGetValue(_programName, out DateTimeOffset version))
-        {
-            return version;
-        }
-
-        return null;
+        _configAccessor = new ConfigAccessor();
     }
 
     private static Release GetLatestRelease(IEnumerable<Release> releases)
@@ -104,10 +65,11 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
             Release latest = GetLatestRelease(releases);
 
-            DateTimeOffset? installed = await GetInstalledVersion();
+            DateTimeOffset? installed = _configAccessor.GetInstalledVersion(_programName);
 
             if (installed == null
-                || installed < latest.PublishedAt)
+                || installed < latest.PublishedAt
+                || !File.Exists(_exeName))
             {
 
                 var asset = SelectAssetToDownload(latest.Assets);
@@ -140,7 +102,7 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
                 });
 
-                await SetInstalledVersion(latest.PublishedAt);
+                await _configAccessor.SetInstalledVersion(_programName, latest.PublishedAt);
 
 
 

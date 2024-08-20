@@ -12,6 +12,7 @@ internal class UpdateYtdlp : BaseGithubUpdateCommand
 {
     public UpdateYtdlp()
         : base(programName: "yt-dlp",
+               exeName: "yt-dlp.exe",
                repoOwner: "yt-dlp",
                repoName: "yt-dlp")
     {

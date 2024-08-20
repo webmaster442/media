@@ -13,6 +13,7 @@ namespace Media.Commands;
 internal sealed class UpdateFFMpeg : BaseGithubUpdateCommand
 {
     public UpdateFFMpeg() : base(programName: "FFMpeg",
+                                 exeName: "ffmpeg.exe",
                                  repoOwner: "BtbN",
                                  repoName: "FFmpeg-Builds")
     {

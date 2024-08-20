@@ -15,6 +15,7 @@ namespace Media.Commands;
 internal sealed class UpdateMedia : BaseGithubUpdateCommand
 {
     public UpdateMedia() : base(programName: "Media CLI",
+                                exeName: "media.exe",
                                 repoOwner: "webmaster442",
                                 repoName: "media")
     {
