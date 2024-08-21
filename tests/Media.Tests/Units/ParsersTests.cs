@@ -6,10 +6,10 @@
 using Media.Dto.Internals;
 using Media.Infrastructure;
 
-namespace Media.Tests;
+namespace Media.Tests.Units;
 
 [TestFixture]
-internal class ParsersTest
+internal class ParsersTests
 {
     public const string YtDlpTestCase = """
         [youtube] Extracting URL: https://www.youtube.com/watch?v=WEBaZPsBQKE
