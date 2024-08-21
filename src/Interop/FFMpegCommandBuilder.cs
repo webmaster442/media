@@ -30,7 +30,8 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         { CliSegment.Duration, "-t {0}" },
         { CliSegment.AspectRatio, "-aspect {0}" },
         { CliSegment.VideoFilter, "-vf \"{0}\"" },
-        { CliSegment.Vsync, "-vsync {0}" }
+        { CliSegment.Vsync, "-vsync {0}" },
+        { CliSegment.Target, "-target {0}" }
     };
 
     public FFMpegCommandBuilder()

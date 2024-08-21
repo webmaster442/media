@@ -57,4 +57,106 @@ internal class ConvertTests : FFMpegCommandSystemTest
 
         Assert.That(results, Is.EqualTo(expected));
     }
+
+    [Test]
+    public async Task TestConvertToM4a()
+    {
+        SetCommand<ConvertToM4a>();
+        MockFiles("input.wav");
+
+        int exitCode = await ExecuteAsync("input.wav", "-b", "128k", "output.m4a");
+
+        Assert.That(exitCode, Is.EqualTo(0));
+
+        var results = await ReadMockExeStartArgs();
+
+        string[] expected = ["-i", "input.wav", "-vn", "-c:a", "aac", "-b:a", "128k", "output.m4a"];
+
+        Assert.That(results, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public async Task TestConvertToMp3()
+    {
+        SetCommand<ConvertToMp3>();
+        MockFiles("input.wav");
+
+        int exitCode = await ExecuteAsync("input.wav", "-b", "128k", "output.mp3");
+
+        Assert.That(exitCode, Is.EqualTo(0));
+
+        var results = await ReadMockExeStartArgs();
+
+        string[] expected = ["-i", "input.wav", "-vn", "-b:a", "128k", "output.mp3"];
+
+        Assert.That(results, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public async Task TestConvertToCdWav()
+    {
+        SetCommand<ConvertToCdWav>();
+        MockFiles("input.wav");
+
+        int exitCode = await ExecuteAsync("input.wav", "output.wav");
+
+        Assert.That(exitCode, Is.EqualTo(0));
+
+        var results = await ReadMockExeStartArgs();
+
+        string[] expected = ["-i", "input.wav", "-vn", "-c:a", "pcm_s16le", "-ar", "44100", "output.wav"];
+
+        Assert.That(results, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public async Task TestConvertToDVDWav()
+    {
+        SetCommand<ConvertToDVDWav>();
+        MockFiles("input.wav");
+
+        int exitCode = await ExecuteAsync("input.wav", "output.wav");
+
+        Assert.That(exitCode, Is.EqualTo(0));
+
+        var results = await ReadMockExeStartArgs();
+
+        string[] expected = ["-i", "input.wav", "-vn", "-c:a", "pcm_s16le", "-ar", "48000", "output.wav"];
+
+        Assert.That(results, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public async Task TestConvertNtscDvd()
+    {
+        SetCommand<ConvertNtscDvd>();
+        MockFiles("input.avi");
+
+        int exitCode = await ExecuteAsync("input.avi", "-b", "320k", "output.mpg");
+
+        Assert.That(exitCode, Is.EqualTo(0));
+
+        var results = await ReadMockExeStartArgs();
+
+        string[] expected = ["-i", "input.avi", "-c:a", "ac3", "-b:a", "320k", "-target", "ntsc-dvd", "-aspect", "16:9", "output.mpg"];
+
+        Assert.That(results, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public async Task TestConvertPalDvd()
+    {
+        SetCommand<ConvertPalDvd>();
+        MockFiles("input.avi");
+
+        int exitCode = await ExecuteAsync("input.avi", "-b", "320k", "output.mpg");
+
+        Assert.That(exitCode, Is.EqualTo(0));
+
+        var results = await ReadMockExeStartArgs();
+
+        string[] expected = ["-i", "input.avi", "-c:a", "ac3", "-b:a", "320k", "-target", "pal-dvd", "-aspect", "16:9", "output.mpg"];
+
+        Assert.That(results, Is.EqualTo(expected));
+    }
 }
