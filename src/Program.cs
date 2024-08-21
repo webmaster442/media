@@ -6,20 +6,11 @@
 using JKToolKit.Spectre.AutoCompletion.Completion;
 using JKToolKit.Spectre.AutoCompletion.Integrations;
 
+using Media;
 using Media.Commands;
 using Media.Infrastructure;
-using Media.Infrastructure.BaseCommands;
 
-var services = new ServiceCollection();
-
-services.AddSingleton<IDryRunResultAcceptor>(new DryRunResultAcceptor
-{
-    Enabled = false
-});
-var registar = new TypeRegistrar(services);
-registar.Build();
-
-var mainApp = new CommandApp<DefaultCommand>(registar);
+var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar(isDryRunEnabled: false));
 
 Terminal.EnableUTF8Output();
 

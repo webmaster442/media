@@ -3,16 +3,18 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Reflection;
+
 namespace Media.Dto.Config;
 
 public sealed class ConfigObject
 {
-    public Dictionary<string, DateTimeOffset> Versions { get; set; }
-
-    public EncoderInfos? EncoderInfoCache { get; set; }
+    public Dictionary<string, string> Settings { get; }
+    public Version Version { get; set; }
 
     public ConfigObject()
     {
-        Versions = new();
+        Settings = new Dictionary<string, string>();
+        Version = Assembly.GetAssembly(typeof(ConfigObject))?.GetName().Version ?? new Version();
     }
 }

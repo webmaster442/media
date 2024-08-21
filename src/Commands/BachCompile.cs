@@ -31,18 +31,12 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
 
     public BachCompile()
     {
-        var services = new ServiceCollection();
-
         _dryRunResultAcceptor = new DryRunResultAcceptor
         {
             Enabled = true
         };
 
-        services.AddSingleton<IDryRunResultAcceptor>(_dryRunResultAcceptor);
-        var registar = new TypeRegistrar(services);
-        registar.Build();
-
-        _bachApp = new CommandApp(registar);
+        _bachApp = new CommandApp(ProgramFactory.CreateTypeRegistar(_dryRunResultAcceptor));
         _bachApp.Configure(c =>
         {
             c.AddCommand<ConvertToAlac>("alac");

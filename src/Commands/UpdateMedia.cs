@@ -14,10 +14,11 @@ namespace Media.Commands;
 
 internal sealed class UpdateMedia : BaseGithubUpdateCommand
 {
-    public UpdateMedia() : base(programName: "Media CLI",
-                                exeName: "media.exe",
-                                repoOwner: "webmaster442",
-                                repoName: "media")
+    public UpdateMedia() 
+        : base(programName: "Media CLI",
+               exeName: "media.exe",
+               repoOwner: "webmaster442",
+               repoName: "media")
     {
     }
 
@@ -37,7 +38,7 @@ internal sealed class UpdateMedia : BaseGithubUpdateCommand
                 {
                     do
                     {
-                        read = await sourceStream.ReadAsync(buffer, 0, buffer.Length);
+                        read = await sourceStream.ReadAsync(buffer);
                         await targetStream.WriteAsync(buffer, 0, read);
                         progress += read;
                         reporter(progress, total);
@@ -51,10 +52,10 @@ internal sealed class UpdateMedia : BaseGithubUpdateCommand
     protected override async Task PostInstall(Action<long, long> reporter)
     {
         var targetScriptName = Path.Combine(AppContext.BaseDirectory, "Update.ps1");
-        using (var updateScript = EmbeddedResources.GetFile(EmbeddedResources.UpdatePS1))
+        await using (var updateScript = EmbeddedResources.GetFile(EmbeddedResources.UpdatePS1))
         {
             reporter.Invoke(0, 2);
-            using (var targetScript = File.Create(targetScriptName))
+            await using (var targetScript = File.Create(targetScriptName))
             {
                 await updateScript.CopyToAsync(targetScript);
                 reporter.Invoke(1, 2);
@@ -76,4 +77,19 @@ internal sealed class UpdateMedia : BaseGithubUpdateCommand
 
     protected override ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets)
         => assets.First(a => a.Name.Contains("win.zip"));
+
+    protected override DateTimeOffset? GetInstalledVersion()
+    {
+        System.Version? version = typeof(UpdateMedia).Assembly?.GetName()?.Version;
+        if (version != null)
+        {
+            return new DateTimeOffset(version.Major, version.Minor, version.Build, 0, 0, 0, TimeSpan.Zero);
+        }
+        return null;
+    }
+
+    protected override Task SetInstalledVersion(DateTimeOffset version)
+    {
+        return Task.CompletedTask;
+    }
 }

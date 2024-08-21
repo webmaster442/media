@@ -8,7 +8,7 @@ using Media.Commands;
 namespace Media.Tests.System;
 
 [TestFixture]
-[Timeout(5000)]
+[CancelAfter(5000)]
 internal class ConvertTests : FFMpegCommandSystemTest
 {
     protected override void Setup()

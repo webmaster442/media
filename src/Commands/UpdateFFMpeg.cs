@@ -6,17 +6,22 @@
 using System.IO.Compression;
 
 using Media.Dto.Github;
+using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 
 namespace Media.Commands;
 
 internal sealed class UpdateFFMpeg : BaseGithubUpdateCommand
 {
-    public UpdateFFMpeg() : base(programName: "FFMpeg",
-                                 exeName: "ffmpeg.exe",
-                                 repoOwner: "BtbN",
-                                 repoName: "FFmpeg-Builds")
+    private readonly ConfigAccessor _configAccessor;
+
+    public UpdateFFMpeg(ConfigAccessor configAccessor)
+        : base(programName: "FFMpeg",
+               exeName: "ffmpeg.exe",
+               repoOwner: "BtbN",
+               repoName: "FFmpeg-Builds")
     {
+        _configAccessor = configAccessor;
     }
 
     protected override async Task ExtractBinariesTo(string compressedFile, string targetPath, Action<long, long> reporter)
@@ -35,7 +40,7 @@ internal sealed class UpdateFFMpeg : BaseGithubUpdateCommand
                 {
                     do
                     {
-                        read = await sourceStream.ReadAsync(buffer, 0, buffer.Length);
+                        read = await sourceStream.ReadAsync(buffer);
                         await targetStream.WriteAsync(buffer, 0, read);
                         progress += read;
                         reporter(progress, total);
@@ -46,6 +51,12 @@ internal sealed class UpdateFFMpeg : BaseGithubUpdateCommand
         }
     }
 
+    protected override DateTimeOffset? GetInstalledVersion()
+        => _configAccessor.GetFFMPegVesion();
+
     protected override ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets)
         => assets.First(a => a.Name.Contains("win64-gpl-shared.zip"));
+
+    protected override async Task SetInstalledVersion(DateTimeOffset version)
+        => await _configAccessor.SetFFMpegVersion(version);
 }

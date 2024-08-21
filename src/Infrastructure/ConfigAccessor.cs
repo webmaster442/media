@@ -25,6 +25,21 @@ public sealed class ConfigAccessor
         _config = File.Exists(_configPath) ? LoadConfig() : new ConfigObject();
     }
 
+    public T? Read<T>(string key, T? defaultValue = default) where T : IParsable<T>
+    {
+        if (_config.Settings.TryGetValue(key, out string? value)
+            && T.TryParse(value, CultureInfo.InvariantCulture, out T? parsed))
+        {
+            return parsed;
+        }
+        return defaultValue;
+    }
+
+    public void Write<T>(string key, T value) where T : IFormattable, IParsable<T>
+    {
+        _config.Settings[key] = value.ToString(null, CultureInfo.InvariantCulture);
+    }
+
     private ConfigObject LoadConfig()
     {
         using var stream = File.OpenRead(_configPath);
@@ -43,29 +58,30 @@ public sealed class ConfigAccessor
         File.Delete(temp);
     }
 
-    public DateTimeOffset? GetInstalledVersion(string programName)
-    {
-        if (_config.Versions.TryGetValue(programName, out DateTimeOffset version))
-        {
-            return version;
-        }
-        return null;
-    }
+    public DateTimeOffset? GetFFMPegVesion()
+        => Read<DateTimeOffset>(ConfigKeys.FFMpegVersion);
 
-    public async Task SetInstalledVersion(string programName, DateTimeOffset publishedAt)
+    public async Task SetFFMpegVersion(DateTimeOffset publishedAt)
     {
-        _config.Versions[programName] = publishedAt;
+        Write(ConfigKeys.FFMpegVersion, publishedAt);
         await SaveConfig();
     }
 
-    public EncoderInfos? GetCachedEncoderList()
+    public DateTimeOffset? GetMpvVesion()
+        => Read<DateTimeOffset>(ConfigKeys.MpvVersion);
+
+    public async Task SetMpvVersion(DateTimeOffset publishedAt)
     {
-        return _config.EncoderInfoCache;
+        Write(ConfigKeys.MpvVersion, publishedAt);
+        await SaveConfig();
     }
 
-    public async Task SetCachedEncoderList(EncoderInfos encoderInfos)
+    public DateTimeOffset? GetYtdlpVesion()
+        => Read<DateTimeOffset>(ConfigKeys.YtdlpVersion);
+
+    public async Task SetYtdlpVersion(DateTimeOffset publishedAt)
     {
-        _config.EncoderInfoCache = encoderInfos;
+        Write(ConfigKeys.YtdlpVersion, publishedAt);
         await SaveConfig();
     }
 }

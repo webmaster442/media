@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Interop;
@@ -11,7 +13,7 @@ using Spectre.Console;
 
 namespace Media.Commands;
 
-internal class InfoEncoders : AsyncCommand<InfoEncoders.Settings>
+internal class InfoEncoders : Command<InfoEncoders.Settings>
 {
     public class Settings : ValidatedCommandSettings
     {
@@ -42,10 +44,10 @@ internal class InfoEncoders : AsyncCommand<InfoEncoders.Settings>
         _configAccessor = new ConfigAccessor();
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
-        IEnumerable<FFMpegEncoderInfo> encoders = (await GetEncoders()).OrderBy(x => x.Name);
-        
+        IEnumerable<FFMpegEncoderInfo> encoders = GetEncoders().OrderBy(x => x.Name);
+
         if (settings.ListHardware)
         {
             encoders = encoders.Where(e => IsHardWareAccelerated(e));
@@ -94,29 +96,10 @@ internal class InfoEncoders : AsyncCommand<InfoEncoders.Settings>
         AnsiConsole.Write(table);
     }
 
-    private async Task<FFMpegEncoderInfo[]> GetEncoders()
+    private static FFMpegEncoderInfo[] GetEncoders()
     {
-        var installedVersion = _configAccessor.GetInstalledVersion("FFMpeg");
-        if (installedVersion == null)
-            throw new InvalidOperationException("Coudn't get installed version of FFMpeg");
-
-        var cached = _configAccessor.GetCachedEncoderList();
-        if (cached != null 
-            && installedVersion == cached.Version)
-        {
-            return cached.Encoders;
-        }
-
         var encoderString = FFMpeg.GetEnoderList();
-        
         var parsed = Parsers.ParseEncoderInfos(encoderString).ToArray();
-
-        await _configAccessor.SetCachedEncoderList(new Dto.Config.EncoderInfos
-        {
-            Encoders = parsed,
-            Version = installedVersion.Value,
-        });
-
         return parsed;
     }
 }

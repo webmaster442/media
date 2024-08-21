@@ -17,8 +17,6 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
     public string ProgramName { get; }
 
-    private readonly ConfigAccessor _configAccessor;
-
     protected BaseGithubUpdateCommand(string programName,
                                       string exeName,
                                       string repoOwner,
@@ -28,7 +26,6 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
         ProgramName = programName;
         _repoOwner = repoOwner;
         _repoName = repoName;
-        _configAccessor = new ConfigAccessor();
     }
 
     private static Release? GetLatestRelease(IEnumerable<Release> releases)
@@ -55,6 +52,10 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
         return Task.CompletedTask;
     }
 
+    protected abstract DateTimeOffset? GetInstalledVersion();
+
+    protected abstract Task SetInstalledVersion(DateTimeOffset version);
+
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
         try
@@ -71,7 +72,7 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
                 return ExitCodes.Error;
             }
 
-            DateTimeOffset? installed = _configAccessor.GetInstalledVersion(ProgramName);
+            DateTimeOffset? installed = GetInstalledVersion();
 
             if (installed == null
                 || installed < latest.PublishedAt
@@ -108,7 +109,7 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
                 });
 
-                await _configAccessor.SetInstalledVersion(ProgramName, latest.PublishedAt);
+                await SetInstalledVersion(latest.PublishedAt);
 
                 File.Delete(tempName);
 

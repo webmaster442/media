@@ -4,18 +4,22 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Dto.Github;
+using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 
 namespace Media.Commands;
 
 internal class UpdateYtdlp : BaseGithubUpdateCommand
 {
-    public UpdateYtdlp()
+    private readonly ConfigAccessor _configAccessor;
+
+    public UpdateYtdlp(ConfigAccessor configAccessor)
         : base(programName: "yt-dlp",
                exeName: "yt-dlp.exe",
                repoOwner: "yt-dlp",
                repoName: "yt-dlp")
     {
+        _configAccessor = configAccessor;
     }
 
     protected override async Task ExtractBinariesTo(string compressedFile, string targetPath, Action<long, long> reporter)
@@ -28,7 +32,7 @@ internal class UpdateYtdlp : BaseGithubUpdateCommand
         long total = sourceStream.Length;
         do
         {
-            read = await sourceStream.ReadAsync(buffer, 0, buffer.Length);
+            read = await sourceStream.ReadAsync(buffer);
             await targetStream.WriteAsync(buffer, 0, read);
             progress += read;
             reporter(progress, total);
@@ -36,6 +40,12 @@ internal class UpdateYtdlp : BaseGithubUpdateCommand
         while (read > 0);
     }
 
+    protected override DateTimeOffset? GetInstalledVersion()
+        => _configAccessor.GetYtdlpVesion();
+
     protected override ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets)
         => assets.First(a => a.Name.Contains("yt-dlp.exe"));
+
+    protected override async Task SetInstalledVersion(DateTimeOffset version)
+        => await _configAccessor.SetYtdlpVersion(version);
 }

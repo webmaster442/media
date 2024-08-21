@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Dto.Github;
+using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 
 using SharpCompress.Archives.SevenZip;
@@ -12,11 +13,15 @@ namespace Media.Commands;
 
 internal sealed class UpdateMpv : BaseGithubUpdateCommand
 {
-    public UpdateMpv() : base(programName: "mpv",
-                              exeName: "mpv.exe",
-                              repoOwner: "shinchiro",
-                              repoName: "mpv-winbuild-cmake")
+    private readonly ConfigAccessor _configAccessor;
+
+    public UpdateMpv(ConfigAccessor configAccessor)
+        : base(programName: "mpv",
+               exeName: "mpv.exe",
+               repoOwner: "shinchiro",
+               repoName: "mpv-winbuild-cmake")
     {
+        _configAccessor = configAccessor;
     }
 
     protected override async Task ExtractBinariesTo(string compressedFile, string targetPath, Action<long, long> reporter)
@@ -61,6 +66,12 @@ internal sealed class UpdateMpv : BaseGithubUpdateCommand
         }
     }
 
+    protected override DateTimeOffset? GetInstalledVersion()
+        => _configAccessor.GetMpvVesion();
+
     protected override ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets)
         => assets.First(a => a.Name.Contains("mpv-x86_64-"));
+
+    protected override async Task SetInstalledVersion(DateTimeOffset version)
+        => await _configAccessor.SetMpvVersion(version);
 }

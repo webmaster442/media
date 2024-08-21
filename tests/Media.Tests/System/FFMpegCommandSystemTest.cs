@@ -3,10 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
-
-using Microsoft.Extensions.DependencyInjection;
 
 using Spectre.Console.Cli;
 
@@ -21,18 +18,12 @@ public abstract class FFMpegCommandSystemTest
     public void SetupBase()
     {
         _mockedFiles = new List<string>();
-        var services = new ServiceCollection();
-
         _acceptor = new DryRunResultAcceptor
         {
             Enabled = false
         };
 
-        services.AddSingleton<IDryRunResultAcceptor>(_acceptor);
-        var registar = new TypeRegistrar(services);
-        registar.Build();
-
-        _testApp = new CommandApp(registar);
+        _testApp = new CommandApp(ProgramFactory.CreateTypeRegistar(_acceptor));
 
         Setup();
     }
