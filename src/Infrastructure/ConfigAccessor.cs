@@ -43,8 +43,13 @@ public sealed class ConfigAccessor
     private ConfigObject LoadConfig()
     {
         using var stream = File.OpenRead(_configPath);
-        return JsonSerializer.Deserialize<ConfigObject>(stream, _options)
+        var loaded = JsonSerializer.Deserialize<ConfigObject>(stream, _options)
             ?? throw new InvalidOperationException("Config file deserialization error");
+
+        var migrator = new ConfigMigrations.Migrations();
+        migrator.ApplyMigrations(loaded);
+
+        return loaded;
     }
 
     private async Task SaveConfig()
