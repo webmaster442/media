@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Media.csproj" />
+    <ProjectReference Include="..\Media.MockExecutable\Media.MockExecutable.csproj" />
   </ItemGroup>
 
   <ItemGroup>

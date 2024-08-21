@@ -18,7 +18,10 @@ public abstract class FFMpegCommandSystemTest
         _mockedFiles = new List<string>();
         var services = new ServiceCollection();
 
-        _acceptor = new DryRunResultAcceptor();
+        _acceptor = new DryRunResultAcceptor
+        {
+            Enabled = false
+        };
 
         services.AddSingleton<IDryRunResultAcceptor>(_acceptor);
         var registar = new TypeRegistrar(services);
@@ -52,6 +55,19 @@ public abstract class FFMpegCommandSystemTest
         //Empty for now
     }
 
+    protected void MockExe(string exeName)
+    {
+        var sourceFile = Path.Combine(AppContext.BaseDirectory, "Media.MockExecutable.exe");
+        var targetFile = Path.Combine(AppContext.BaseDirectory, exeName);
+        File.Copy(sourceFile, targetFile, true);
+    }
+
+    public async Task<string[]> ReadMockExeStartArgs()
+    {
+        var sourceFile = Path.Combine(AppContext.BaseDirectory, "Media.MockExecutable.txt");
+        return await File.ReadAllLinesAsync(sourceFile);
+    }
+
     protected void SetCommand<TCommand>() where TCommand: class, ICommand
     {
         _testApp.SetDefaultCommand<TCommand>();
@@ -72,11 +88,8 @@ public abstract class FFMpegCommandSystemTest
 
     protected async Task<int> ExecuteAsync(params string[] args)
     {
-        return await _testApp.RunAsync(args);
-    }
-
-    protected string GetResults()
-    {
-        return _acceptor.Result;
+        var result = await _testApp.RunAsync(args);
+        await Task.Delay(100); //wait for result writing to be completed
+        return result;
     }
 }
