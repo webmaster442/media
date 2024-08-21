@@ -11,7 +11,7 @@ namespace Media.Commands;
 
 internal sealed class ConvertToAlac : BaseFFMpegCommand<ConvertToAlac.Settings>
 {
-    public ConvertToAlac(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertToAlac(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
     {
     }
 

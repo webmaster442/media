@@ -11,7 +11,7 @@ namespace Media.Commands;
 
 internal class ExtractAudioStereoM4a : BaseFFMpegCommand<ExtractAudioStereoM4a.Settings>
 {
-    public ExtractAudioStereoM4a(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ExtractAudioStereoM4a(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
     {
     }
 

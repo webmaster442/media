@@ -82,7 +82,7 @@ internal static class Win32Functions
                 {
                     nint buffer = handle.AddrOfPinnedObject();
                     buffer = buffer + (Index * Marshal.SizeOf(typeof(TRACK_DATA)));
-                    res = (TRACK_DATA)Marshal.PtrToStructure(buffer, typeof(TRACK_DATA));
+                    res = (TRACK_DATA)Marshal.PtrToStructure(buffer, typeof(TRACK_DATA))!;
                 }
                 finally
                 {

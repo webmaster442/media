@@ -11,7 +11,7 @@ namespace Media.Commands;
 
 internal sealed class ConvertToM4a : BaseFFMpegCommand<ConvertToM4a.Settings>
 {
-    public ConvertToM4a(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertToM4a(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
     {
     }
 

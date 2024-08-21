@@ -11,7 +11,7 @@ namespace Media.Commands;
 
 internal sealed class ConvertToMp3 : BaseFFMpegCommand<ConvertToMp3.Settings>
 {
-    public ConvertToMp3(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertToMp3(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
     {
     }
 

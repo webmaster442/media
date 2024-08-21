@@ -12,7 +12,7 @@ namespace Media.Commands;
 
 internal sealed class MuxAddAudio : BaseFFMpegCommand<MuxAddAudio.Settings>
 {
-    public MuxAddAudio(IDryRunResultAcceptor? dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public MuxAddAudio(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
     {
     }
 

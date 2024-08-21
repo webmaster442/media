@@ -8,8 +8,18 @@ using JKToolKit.Spectre.AutoCompletion.Integrations;
 
 using Media.Commands;
 using Media.Infrastructure;
+using Media.Infrastructure.BaseCommands;
 
-var mainApp = new CommandApp<DefaultCommand>();
+var services = new ServiceCollection();
+
+services.AddSingleton<IDryRunResultAcceptor>(new DryRunResultAcceptor
+{
+    Enabled = false
+});
+var registar = new TypeRegistrar(services);
+registar.Build();
+
+var mainApp = new CommandApp<DefaultCommand>(registar);
 
 Terminal.EnableUTF8Output();
 

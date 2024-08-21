@@ -12,19 +12,23 @@ namespace Media.Infrastructure.BaseCommands;
 internal interface IDryRunResultAcceptor
 {
     string Result { get; set; }
+
+    bool Enabled { get; set; }
 }
 
 internal sealed class DryRunResultAcceptor : IDryRunResultAcceptor
 {
+    public bool Enabled { get; set; }
+
     public string Result { get; set; } = string.Empty;
 }
 
 internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
 : Command<TBaseFFMpegSettings> where TBaseFFMpegSettings : BaseFFMpegSettings
 {
-    private readonly IDryRunResultAcceptor? _dryRunResultAcceptor;
+    private readonly IDryRunResultAcceptor _dryRunResultAcceptor;
 
-    protected BaseFFMpegCommand(IDryRunResultAcceptor? dryRunResultAcceptor)
+    protected BaseFFMpegCommand(IDryRunResultAcceptor dryRunResultAcceptor)
     {
         _dryRunResultAcceptor = dryRunResultAcceptor;
     }
@@ -38,7 +42,7 @@ internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
 
             var cmdLine = builder.Build();
 
-            if (_dryRunResultAcceptor != null)
+            if (_dryRunResultAcceptor.Enabled)
             {
                 _dryRunResultAcceptor.Result = cmdLine;
             }

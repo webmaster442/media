@@ -33,9 +33,12 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
     {
         var services = new ServiceCollection();
 
-        _dryRunResultAcceptor = new DryRunResultAcceptor();
+        _dryRunResultAcceptor = new DryRunResultAcceptor
+        {
+            Enabled = true
+        };
 
-        services.AddSingleton(_dryRunResultAcceptor);
+        services.AddSingleton<IDryRunResultAcceptor>(_dryRunResultAcceptor);
         var registar = new TypeRegistrar(services);
         registar.Build();
 
