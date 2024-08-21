@@ -3,13 +3,29 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.Dto.Dlna;
 using Media.Dto.Internals;
 
-using Spectre.Console;
-
 namespace Media.Infrastructure;
+
 internal static class Parsers
 {
+    public static SSDP ParseSSDPResponse(string ssdpResponse)
+    {
+        SSDP result = new();
+        string[] lines = ssdpResponse.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (var line in lines)
+        {
+            int colonIndex = line.IndexOf(':');
+            if (colonIndex > 0)
+            {
+                string key = line[..colonIndex];
+                result[key] = line[(colonIndex + 1)..];
+            }
+        }
+        return result;
+    }
+
     public static IEnumerable<YtDlpFormat> ParseFormats(string formatText)
     {
         static (string id, string format, int width, int height) ParseColumn0(string column0)

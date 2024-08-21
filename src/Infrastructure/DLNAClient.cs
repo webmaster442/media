@@ -33,23 +33,6 @@ internal sealed class DLNAClient : IDisposable
         _client.Dispose();
     }
 
-    private static Dictionary<string, string> ParseSSDPResponse(string str)
-    {
-        string[] lines = str.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-        Dictionary<string, string> results = new();
-        foreach (var line in lines)
-        {
-            int colonIndex = line.IndexOf(':');
-            if (colonIndex > 0)
-            {
-                string key = line[..colonIndex];
-                string value = line[(colonIndex + 1)..];
-                results[key] = value;
-            }
-        }
-        return results;
-    }
-
     private async Task<ISet<Uri>> SSDPQueryAsync(CancellationToken token)
     {
         HashSet<Uri> results = new HashSet<Uri>();
@@ -91,11 +74,11 @@ internal sealed class DLNAClient : IDisposable
                     {
                         string responseText = Encoding.UTF8.GetString(receiveBuffer, 0, receivedBytes);
 
-                        var ssdpResponse = ParseSSDPResponse(responseText);
+                        var ssdpResponse = Parsers.ParseSSDPResponse(responseText);
 
-                        if (ssdpResponse["ST"].Contains("urn:schemas-upnp-org:device:MediaServer"))
+                        if (ssdpResponse.ST.Contains("urn:schemas-upnp-org:device:MediaServer"))
                         {
-                            var url = new Uri(ssdpResponse["LOCATION"]);
+                            var url = new Uri(ssdpResponse.Location);
                             results.Add(url);
                         }
                     }
