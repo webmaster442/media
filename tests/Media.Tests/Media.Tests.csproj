@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Media.csproj" />
+    <ProjectReference Include="..\..\src\Media.csproj" />
+    <ProjectReference Include="..\Media.FakeCommand\Media.FakeCommand.csproj" />
   </ItemGroup>
 
   <ItemGroup>
