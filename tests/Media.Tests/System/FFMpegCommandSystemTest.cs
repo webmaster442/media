@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console.Cli;
 
 namespace Media.Tests.System;
-public abstract class SystemTestBase
+public abstract class FFMpegCommandSystemTest
 {
     private CommandApp _testApp;
     private DryRunResultAcceptor _acceptor;
@@ -57,13 +57,16 @@ public abstract class SystemTestBase
         _testApp.SetDefaultCommand<TCommand>();
     }
 
-    protected void MockFile(string fileName)
+    protected void MockFiles(params string[] fileNames)
     {
-        var fullPath = Path.Combine(AppContext.BaseDirectory, fileName);
-        _mockedFiles.Add(fullPath);
-        if (!File.Exists(fullPath))
+        foreach (var fileName in fileNames)
         {
-            using var d = File.Create(fullPath);
+            var fullPath = Path.Combine(AppContext.BaseDirectory, fileName);
+            _mockedFiles.Add(fullPath);
+            if (!File.Exists(fullPath))
+            {
+                using var d = File.Create(fullPath);
+            }
         }
     }
 
