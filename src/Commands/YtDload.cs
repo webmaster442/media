@@ -10,6 +10,8 @@ namespace Media.Commands;
 
 internal class YtDload : AsyncCommand<YtDload.Settings>
 {
+    private readonly YtDlp _ytdlp;
+
     public class Settings : ValidatedCommandSettings
     {
         [Required]
@@ -22,14 +24,19 @@ internal class YtDload : AsyncCommand<YtDload.Settings>
         public YtDlpQuality Quality { get; init; }
     }
 
+    public YtDload(ConfigAccessor configAccessor)
+    {
+        _ytdlp = new YtDlp(configAccessor);
+    }
+
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         try
         {
-            string formatTable = await YtDlp.ExtractFromatTable(settings.Url);
+            string formatTable = await _ytdlp.ExtractFromatTable(settings.Url);
             IEnumerable<Dto.Internals.YtDlpFormat> table = Parsers.ParseFormats(formatTable);
             var arguments = YtDlp.CreateDownloadArguments(table, settings.Quality, settings.Url);
-            YtDlp.Start(arguments);
+            _ytdlp.Start(arguments);
 
             return ExitCodes.Success;
         }

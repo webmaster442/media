@@ -38,10 +38,12 @@ internal class InfoEncoders : Command<InfoEncoders.Settings>
     }
 
     private readonly ConfigAccessor _configAccessor;
+    private readonly FFMpeg _ffMpeg;
 
     public InfoEncoders()
     {
         _configAccessor = new ConfigAccessor();
+        _ffMpeg = new FFMpeg(_configAccessor);
     }
 
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
@@ -96,9 +98,9 @@ internal class InfoEncoders : Command<InfoEncoders.Settings>
         AnsiConsole.Write(table);
     }
 
-    private static FFMpegEncoderInfo[] GetEncoders()
+    private FFMpegEncoderInfo[] GetEncoders()
     {
-        var encoderString = FFMpeg.GetEnoderList();
+        var encoderString = _ffMpeg.GetEnoderList();
         var parsed = Parsers.ParseEncoderInfos(encoderString).ToArray();
         return parsed;
     }

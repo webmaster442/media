@@ -11,7 +11,8 @@ namespace Media.Commands;
 
 internal sealed class ConvertPalDvd : BaseFFMpegCommand<ConvertPalDvd.Settings>
 {
-    public ConvertPalDvd(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertPalDvd(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
+        : base(configAccessor, dryRunResultAcceptor)
     {
     }
 

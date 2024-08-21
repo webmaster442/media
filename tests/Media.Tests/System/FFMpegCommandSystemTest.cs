@@ -64,7 +64,7 @@ public abstract class FFMpegCommandSystemTest
         return await File.ReadAllLinesAsync(sourceFile);
     }
 
-    protected void SetCommand<TCommand>() where TCommand: class, ICommand
+    protected void SetCommand<TCommand>() where TCommand : class, ICommand
     {
         _testApp.SetDefaultCommand<TCommand>();
     }

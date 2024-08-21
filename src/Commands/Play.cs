@@ -11,8 +11,10 @@ using Media.Interop;
 
 namespace Media.Commands;
 
-internal class Play : AsyncCommand<Play.Settings>
+internal sealed class Play : AsyncCommand<Play.Settings>
 {
+    private readonly Mpv _mpv;
+
     public class Settings : ValidatedCommandSettings
     {
         [Description("Input file")]
@@ -39,26 +41,28 @@ internal class Play : AsyncCommand<Play.Settings>
         }
     }
 
+    public Play(ConfigAccessor configAccessor)
+    {
+        _mpv = new Mpv(configAccessor);
+    }
+
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         try
         {
-            Mpv.EnsureIsInstalled();
-
             if (string.IsNullOrWhiteSpace(settings.InputFile))
             {
                 string file = string.Empty;
 
-                if (settings.Dlna)
-                    file = await DoDlnaBrowse();
-                else
-                    file = await DoFileSelection();
+                file = settings.Dlna
+                    ? await DoDlnaBrowse()
+                    : await DoFileSelection();
 
-                Mpv.Start(file);
+                _mpv.Start(file);
                 return ExitCodes.Success;
             }
 
-            Mpv.Start(settings.InputFile);
+            _mpv.Start(settings.InputFile);
             return ExitCodes.Success;
         }
         catch (Exception e)
@@ -81,7 +85,6 @@ internal class Play : AsyncCommand<Play.Settings>
         var selectedItem = await selector.SelectItemAsync(consoleCancel.Token);
 
         return selectedItem.Uri.ToString();
-
     }
 
     private static async Task<string> DoFileSelection()

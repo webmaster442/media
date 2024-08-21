@@ -26,11 +26,15 @@ internal sealed class DryRunResultAcceptor : IDryRunResultAcceptor
 internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
 : Command<TBaseFFMpegSettings> where TBaseFFMpegSettings : BaseFFMpegSettings
 {
+    private readonly ConfigAccessor _configAccessor;
     private readonly IDryRunResultAcceptor _dryRunResultAcceptor;
+    private readonly FFMpeg _ffMpeg;
 
-    protected BaseFFMpegCommand(IDryRunResultAcceptor dryRunResultAcceptor)
+    protected BaseFFMpegCommand(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
     {
+        _configAccessor = configAccessor;
         _dryRunResultAcceptor = dryRunResultAcceptor;
+        _ffMpeg = new FFMpeg(_configAccessor);
     }
 
     public override int Execute([NotNull] CommandContext context, [NotNull] TBaseFFMpegSettings settings)
@@ -50,7 +54,7 @@ internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
             {
                 Terminal.InfoText("Generated arguments:");
                 Terminal.InfoText(cmdLine);
-                FFMpeg.Start(cmdLine);
+                _ffMpeg.Start(cmdLine);
             }
 
             return ExitCodes.Success;

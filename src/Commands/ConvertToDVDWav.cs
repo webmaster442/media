@@ -11,7 +11,8 @@ namespace Media.Commands;
 
 internal sealed class ConvertToDVDWav : BaseFFMpegCommand<ConvertToDVDWav.Settings>
 {
-    public ConvertToDVDWav(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertToDVDWav(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
+        : base(configAccessor, dryRunResultAcceptor)
     {
     }
 

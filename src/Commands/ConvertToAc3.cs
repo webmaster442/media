@@ -11,7 +11,8 @@ namespace Media.Commands;
 
 internal sealed class ConvertToAc3 : BaseFFMpegCommand<ConvertToAc3.Settings>
 {
-    public ConvertToAc3(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertToAc3(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
+        : base(configAccessor, dryRunResultAcceptor)
     {
     }
 

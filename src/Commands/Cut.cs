@@ -13,6 +13,8 @@ namespace Media.Commands;
 
 internal sealed class Cut : Command<Cut.Settings>
 {
+    private readonly FFMpeg _ffMpeg;
+
     public sealed class Settings : ValidatedCommandSettings
     {
         [Description("Input file")]
@@ -52,6 +54,11 @@ internal sealed class Cut : Command<Cut.Settings>
         return false;
     }
 
+    public Cut(ConfigAccessor configAccessor)
+    {
+        _ffMpeg = new FFMpeg(configAccessor);
+    }
+
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
         if (!TryParseAsSeconds(settings.StartTime, out var startTime))
@@ -86,7 +93,7 @@ internal sealed class Cut : Command<Cut.Settings>
             Terminal.InfoText("Generated arguments:");
             Terminal.InfoText(cmdLine);
 
-            FFMpeg.Start(cmdLine);
+            _ffMpeg.Start(cmdLine);
             return ExitCodes.Success;
         }
         catch (Exception e)

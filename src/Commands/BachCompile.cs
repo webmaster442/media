@@ -14,6 +14,7 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
 {
     private readonly CommandApp _bachApp;
     private readonly Dictionary<string, string> _commandNamesAndExtensions;
+    private readonly FFMpeg _ffMpeg;
     private readonly IDryRunResultAcceptor _dryRunResultAcceptor;
 
     public class Settings : BaseBachSettings
@@ -29,8 +30,9 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
         public ShellType OutputType { get; set; } = ShellType.Powershell;
     }
 
-    public BachCompile()
+    public BachCompile(ConfigAccessor configAccessor)
     {
+        _ffMpeg = new FFMpeg(configAccessor);
         _dryRunResultAcceptor = new DryRunResultAcceptor
         {
             Enabled = true
@@ -79,7 +81,7 @@ internal sealed class BachCompile : BaseBachCommand<BachCompile.Settings>
             project.ConversionCommand, .. project.Args, "input", "output",
             ];
 
-        if (!FFMpeg.TryGetInstalledPath(out string ffmpegPath))
+        if (!_ffMpeg.TryGetInstalledPath(out string? ffmpegPath))
         {
             throw new InvalidOperationException("FFMpeg not found.");
         }

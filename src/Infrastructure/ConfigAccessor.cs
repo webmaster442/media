@@ -89,4 +89,13 @@ public sealed class ConfigAccessor
         Write(ConfigKeys.YtdlpVersion, publishedAt);
         await SaveConfig();
     }
+
+    public string? GetExternalFFMpegPath()
+        => Read<string>(ConfigKeys.ExternalFfMpegPath);
+
+    public string? GetExternalMpvPath()
+        => Read<string>(ConfigKeys.ExternalMpvPath);
+
+    public string? GetExternalYtdlpPath()
+        => Read<string>(ConfigKeys.ExternalYtdlpPath);
 }

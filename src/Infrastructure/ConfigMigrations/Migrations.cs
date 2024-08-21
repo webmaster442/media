@@ -1,4 +1,9 @@
-﻿using Media.Dto.Config;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using Media.Dto.Config;
 
 namespace Media.Infrastructure.ConfigMigrations;
 

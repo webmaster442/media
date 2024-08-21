@@ -11,7 +11,8 @@ namespace Media.Commands;
 
 internal sealed class ConvertContactSheet : BaseFFMpegCommand<ConvertContactSheet.Settings>
 {
-    public ConvertContactSheet(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertContactSheet(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
+        : base(configAccessor, dryRunResultAcceptor)
     {
     }
 

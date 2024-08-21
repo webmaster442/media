@@ -6,13 +6,12 @@
 using System.Diagnostics;
 
 using Media.Dto.Internals;
+using Media.Infrastructure;
 
 namespace Media.Interop;
 
-internal sealed class YtDlp : IInterop
+internal sealed class YtDlp : InteropBase
 {
-    private YtDlp() { }
-
     public static string CreateDownloadArguments(IEnumerable<YtDlpFormat> formats, YtDlpQuality qualityToSelect, string videoUrl)
     {
         static (int minHeight, int maxHeight) QualityToConstraints(YtDlpQuality quality)
@@ -76,43 +75,29 @@ internal sealed class YtDlp : IInterop
     }
 
     private const string YtdlpBinary = "yt-dlp.exe";
+    private readonly ConfigAccessor _configAccessor;
 
-    public static void EnsureIsInstalled()
+    public YtDlp(ConfigAccessor configAccessor) : base(YtdlpBinary)
     {
-        if (!TryGetInstalledPath(out _))
-        {
-            throw new InvalidOperationException("yt-dlp not found.");
-        }
+        _configAccessor = configAccessor;
     }
 
-    public static bool TryGetInstalledPath(out string toolPath)
-    {
-        toolPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, YtdlpBinary);
-        return File.Exists(toolPath);
-    }
-
-    public static async Task<string> ExtractFromatTable(string url)
+    public async Task<string> ExtractFromatTable(string url)
     {
         if (!IsValidUrl(url))
         {
             throw new InvalidOperationException("URL is not a youtube video url");
         }
 
-        if (!TryGetInstalledPath(out string ytDlpPath))
+        if (!TryGetInstalledPath(out string? ytDlpPath))
         {
             throw new InvalidOperationException("Yt-dlp not found.");
         }
 
-        using var process = new Process()
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = ytDlpPath,
-                Arguments = $"-F {url}",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-            }
-        };
+        using var process = CreateProcess(ytDlpPath,
+                                          redirectStdIn: false,
+                                          redirectStdOut: true,
+                                          redirectStderr: false);
         process.Start();
         var result = await process.StandardOutput.ReadToEndAsync();
         await process.WaitForExitAsync();
@@ -125,24 +110,6 @@ internal sealed class YtDlp : IInterop
             || url.StartsWith("https://youtu.be/");
     }
 
-    public static int Start(string commandLine)
-    {
-        if (!TryGetInstalledPath(out string ytDlpPath))
-        {
-            throw new InvalidOperationException("Yt-dlp not found.");
-        }
-
-        using var process = new Process()
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = ytDlpPath,
-                Arguments = commandLine,
-                UseShellExecute = false,
-            }
-        };
-
-        process.Start();
-        return process.Id;
-    }
+    protected override string? GetExternalPath()
+        => _configAccessor.GetExternalYtdlpPath();
 }

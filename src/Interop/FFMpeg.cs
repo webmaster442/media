@@ -3,14 +3,12 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System.Diagnostics;
+using Media.Infrastructure;
 
 namespace Media.Interop;
 
-internal sealed class FFMpeg : IInterop
+internal sealed class FFMpeg : InteropBase
 {
-    private FFMpeg() { }
-
     public static class AudioCodecNames
     {
         public const string Alac = "alac";
@@ -33,57 +31,20 @@ internal sealed class FFMpeg : IInterop
     }
 
     private const string FfmpegBinary = "ffmpeg.exe";
+    private readonly ConfigAccessor _configAccessor;
 
-    public static void EnsureIsInstalled()
+    public FFMpeg(ConfigAccessor configAccessor) : base(FfmpegBinary)
     {
-        if (!TryGetInstalledPath(out _))
-        {
-            throw new InvalidOperationException("ffmpeg not found.");
-        }
+        _configAccessor = configAccessor;
     }
 
-    public static bool TryGetInstalledPath(out string toolPath)
+    public string GetEnoderList()
     {
-        toolPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FfmpegBinary);
-        return File.Exists(toolPath);
-    }
-
-    public static string GetEnoderList()
-    {
-        using var ffmpegProcess = Create("-hide_banner -encoders", false, true, false);
+        using var ffmpegProcess = CreateProcess("-hide_banner -encoders", false, true, false);
         ffmpegProcess.Start();
         return ffmpegProcess.StandardOutput.ReadToEnd();
     }
 
-    public static Process Create(string commandLine, bool redirectStdIn, bool redirectStdOut, bool redirectStderr)
-    {
-        if (!TryGetInstalledPath(out string ffmpegPath))
-        {
-            throw new InvalidOperationException("FFMpeg not found.");
-        }
-
-        return new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = ffmpegPath,
-                Arguments = commandLine,
-                UseShellExecute = false,
-                RedirectStandardInput = redirectStdIn,
-                RedirectStandardOutput = redirectStdOut,
-                RedirectStandardError = redirectStderr,
-            }
-        };
-    }
-
-    public static int Start(string commandLine)
-    {
-        using var process = Create(commandLine,
-                                   redirectStdIn: false,
-                                   redirectStdOut: false,
-                                   redirectStderr: false);
-
-        process.Start();
-        return process.Id;
-    }
+    protected override string? GetExternalPath()
+        => _configAccessor.GetExternalFFMpegPath();
 }

@@ -11,7 +11,8 @@ namespace Media.Commands;
 
 internal sealed class ConvertNtscDvd : BaseFFMpegCommand<ConvertNtscDvd.Settings>
 {
-    public ConvertNtscDvd(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertNtscDvd(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
+        : base(configAccessor, dryRunResultAcceptor)
     {
     }
 

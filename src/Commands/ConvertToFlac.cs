@@ -11,7 +11,8 @@ namespace Media.Commands;
 
 internal sealed class ConvertToFlac : BaseFFMpegCommand<ConvertToFlac.Settings>
 {
-    public ConvertToFlac(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertToFlac(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
+        : base(configAccessor, dryRunResultAcceptor)
     {
     }
 

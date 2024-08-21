@@ -14,7 +14,7 @@ public sealed record class FFMpegEncoderInfo
     [JsonPropertyName("d")]
     public required string Description { get; init; }
     [JsonPropertyName("t")]
-    public required EncoderType Type  { get; init; }
+    public required EncoderType Type { get; init; }
 
     public enum EncoderType
     {

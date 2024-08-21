@@ -11,7 +11,8 @@ namespace Media.Commands;
 
 internal sealed class ConvertToCdWav : BaseFFMpegCommand<ConvertToCdWav.Settings>
 {
-    public ConvertToCdWav(IDryRunResultAcceptor dryRunResultAcceptor) : base(dryRunResultAcceptor)
+    public ConvertToCdWav(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
+        : base(configAccessor, dryRunResultAcceptor)
     {
     }
 

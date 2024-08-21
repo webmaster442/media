@@ -3,18 +3,23 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System.Diagnostics;
 using System.IO.Pipes;
 
 using Media.Dto;
+using Media.Infrastructure;
 
 namespace Media.Interop;
 
-internal sealed class Mpv : IInterop
+internal sealed class Mpv : InteropBase
 {
-    private Mpv() { }
 
     private const string MpvBinary = "mpv.exe";
+    private readonly ConfigAccessor _configAccessor;
+
+    public Mpv(ConfigAccessor configAccessor) : base(MpvBinary)
+    {
+        _configAccessor = configAccessor;
+    }
 
     public static IEnumerable<string> GetSupportedExtensions()
     {
@@ -67,41 +72,6 @@ internal sealed class Mpv : IInterop
         yield return ".webp";
     }
 
-    public static bool TryGetInstalledPath(out string toolPath)
-    {
-        toolPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, MpvBinary);
-        return File.Exists(toolPath);
-    }
-
-    public static void EnsureIsInstalled()
-    {
-        if (!TryGetInstalledPath(out _))
-        {
-            throw new InvalidOperationException("mpv not found.");
-        }
-    }
-
-    public static int Start(string commandLine)
-    {
-        if (!TryGetInstalledPath(out string mpvPath))
-        {
-            throw new InvalidOperationException("mpv not found.");
-        }
-
-        using var process = new Process()
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = mpvPath,
-                Arguments = commandLine,
-                UseShellExecute = false,
-            }
-        };
-
-        process.Start();
-        return process.Id;
-    }
-
     public static async Task<MpvIpcResponse?> SendCommand(string pipeName, string[] payload)
     {
         var commandObject = new
@@ -128,4 +98,7 @@ internal sealed class Mpv : IInterop
         }
         return null;
     }
+
+    protected override string? GetExternalPath()
+        => _configAccessor.GetExternalMpvPath();
 }
