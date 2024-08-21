@@ -1,7 +1,13 @@
-﻿
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
 using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Interop;
+
+using Spectre.Console;
 
 namespace Media.Commands;
 
@@ -21,6 +27,10 @@ internal class InfoEncoders : AsyncCommand<InfoEncoders.Settings>
         [Description("List subtitle encoders")]
         public bool ListSubtitle { get; set; }
 
+        [CommandOption("-w|--hardware")]
+        [Description("List hardware accelerated encoders only")]
+        public bool ListHardware { get; set; }
+
         public bool NoneGiven =>
             !ListAudio && !ListVideo && !ListSubtitle;
     }
@@ -34,8 +44,13 @@ internal class InfoEncoders : AsyncCommand<InfoEncoders.Settings>
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        var encoders = await GetEncoders();
-        if (!settings.NoneGiven)
+        IEnumerable<FFMpegEncoderInfo> encoders = (await GetEncoders()).OrderBy(x => x.Name);
+        
+        if (settings.ListHardware)
+        {
+            encoders = encoders.Where(e => IsHardWareAccelerated(e));
+        }
+        else if (!settings.NoneGiven)
         {
             encoders = Filter(encoders, settings);
         }
@@ -43,7 +58,14 @@ internal class InfoEncoders : AsyncCommand<InfoEncoders.Settings>
         return ExitCodes.Success;
     }
 
-    private FFMpegEncoderInfo[] Filter(FFMpegEncoderInfo[] encoders, Settings settings)
+    private static bool IsHardWareAccelerated(FFMpegEncoderInfo e)
+    {
+        return e.Name.EndsWith("_amf")
+            || e.Name.EndsWith("_nvenc")
+            || e.Name.EndsWith("_qsv");
+    }
+
+    private static IEnumerable<FFMpegEncoderInfo> Filter(IEnumerable<FFMpegEncoderInfo> encoders, Settings settings)
     {
         var filter = PredicateBuilder.False<FFMpegEncoderInfo>();
         if (settings.ListVideo)
@@ -58,21 +80,25 @@ internal class InfoEncoders : AsyncCommand<InfoEncoders.Settings>
         {
             filter = filter.Or(e => e.Type == FFMpegEncoderInfo.EncoderType.Subtitle);
         }
-        return encoders
-            .Where(filter.Lambda())
-            .ToArray();
+        return encoders.Where(filter.Compile());
     }
 
-    private void PrintTable(FFMpegEncoderInfo[] encoders)
+    private static void PrintTable(IEnumerable<FFMpegEncoderInfo> encoders)
     {
-        throw new NotImplementedException();
+        var table = new Table();
+        table.AddColumns("Name", "Type", "Description");
+        foreach (var encoder in encoders)
+        {
+            table.AddRow(encoder.Name, encoder.Type.ToString(), encoder.Description);
+        }
+        AnsiConsole.Write(table);
     }
 
     private async Task<FFMpegEncoderInfo[]> GetEncoders()
     {
-        var installedVersion = _configAccessor.GetInstalledVersion("ffmpeg");
+        var installedVersion = _configAccessor.GetInstalledVersion("FFMpeg");
         if (installedVersion == null)
-            throw new InvalidOperationException("Coudn't get installed version of ffmpeg");
+            throw new InvalidOperationException("Coudn't get installed version of FFMpeg");
 
         var cached = _configAccessor.GetCachedEncoderList();
         if (cached != null 
@@ -86,12 +112,11 @@ internal class InfoEncoders : AsyncCommand<InfoEncoders.Settings>
         var parsed = Parsers.ParseEncoderInfos(encoderString).ToArray();
 
         await _configAccessor.SetCachedEncoderList(new Dto.Config.EncoderInfos
-        { 
+        {
             Encoders = parsed,
             Version = installedVersion.Value,
         });
 
         return parsed;
-
     }
 }

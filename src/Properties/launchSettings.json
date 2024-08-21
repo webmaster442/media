@@ -12,9 +12,13 @@
       "commandName": "Project",
       "commandLineArgs": "update mpv"
     },
-    "Profile 1": {
+    "update media": {
       "commandName": "Project",
-      "commandLineArgs": "play -d"
+      "commandLineArgs": "update media"
+    },
+    "update all": {
+      "commandName": "Project",
+      "commandLineArgs": "update all"
     }
   }
 }

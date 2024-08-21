@@ -7,14 +7,15 @@ using Media.Dto.Github;
 
 using Spectre.Console;
 
-namespace Media.Infrastructure;
+namespace Media.Infrastructure.BaseCommands;
 
 internal abstract class BaseGithubUpdateCommand : AsyncCommand
 {
     private readonly string _exeName;
-    private readonly string _programName;
     private readonly string _repoOwner;
     private readonly string _repoName;
+
+    public string ProgramName { get; }
 
     private readonly ConfigAccessor _configAccessor;
 
@@ -24,20 +25,20 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
                                       string repoName)
     {
         _exeName = exeName;
-        _programName = programName;
+        ProgramName = programName;
         _repoOwner = repoOwner;
         _repoName = repoName;
         _configAccessor = new ConfigAccessor();
     }
 
-    private static Release GetLatestRelease(IEnumerable<Release> releases)
+    private static Release? GetLatestRelease(IEnumerable<Release> releases)
     {
         var latest = releases
             .Where(r => !r.Prerelease
                    && !r.Draft
                    && r.Assets.Length > 0)
             .OrderByDescending(r => r.PublishedAt)
-            .First();
+            .FirstOrDefault();
 
         return latest;
     }
@@ -58,13 +59,19 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
     {
         try
         {
-            Terminal.GreenText($"Checking for {_programName} update...");
+            Terminal.GreenText($"Checking for {ProgramName} update...");
             using var client = new GithubClient();
             var releases = await client.GetReleases(_repoOwner, _repoName);
 
-            Release latest = GetLatestRelease(releases);
+            Release? latest = GetLatestRelease(releases);
 
-            DateTimeOffset? installed = _configAccessor.GetInstalledVersion(_programName);
+            if (latest == null)
+            {
+                Terminal.RedText("No release found");
+                return ExitCodes.Error;
+            }
+
+            DateTimeOffset? installed = _configAccessor.GetInstalledVersion(ProgramName);
 
             if (installed == null
                 || installed < latest.PublishedAt
@@ -77,14 +84,14 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
                 await AnsiConsole.Progress().AutoRefresh(false).StartAsync(async ctx =>
                 {
-                    var task1 = ctx.AddTask($"Downloading {_programName.EscapeMarkup()}...");
+                    var task1 = ctx.AddTask($"Downloading {ProgramName.EscapeMarkup()}...");
                     tempName = await client.DownloadAsset(asset, (long position, long length) =>
                     {
                         task1.Value = (double)position / length * 100;
                         ctx.Refresh();
                     });
 
-                    var task2 = ctx.AddTask($"Extracting {_programName.EscapeMarkup()}...");
+                    var task2 = ctx.AddTask($"Extracting {ProgramName.EscapeMarkup()}...");
 
                     await ExtractBinariesTo(tempName, TargetFolder, (long pogress, long total) =>
                     {
@@ -101,17 +108,15 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
                 });
 
-                await _configAccessor.SetInstalledVersion(_programName, latest.PublishedAt);
-
-
+                await _configAccessor.SetInstalledVersion(ProgramName, latest.PublishedAt);
 
                 File.Delete(tempName);
 
-                Terminal.GreenText($"{_programName} uptated to: {latest.PublishedAt}");
+                Terminal.GreenText($"{ProgramName} uptated to: {latest.PublishedAt}");
             }
             else
             {
-                Terminal.GreenText($"{_programName} is up to date");
+                Terminal.GreenText($"{ProgramName} is up to date");
             }
 
             return ExitCodes.Success;

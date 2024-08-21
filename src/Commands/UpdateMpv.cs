@@ -4,7 +4,7 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Dto.Github;
-using Media.Infrastructure;
+using Media.Infrastructure.BaseCommands;
 
 using SharpCompress.Archives.SevenZip;
 

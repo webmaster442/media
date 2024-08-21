@@ -40,7 +40,10 @@ mainApp.Configure(config =>
     config.AddBranch("info", info =>
     {
         info.AddCommand<InfoFile>("file")
-        .WithDescription("Get information about a media file");
+            .WithDescription("Get information about a media file");
+
+        info.AddCommand<InfoEncoders>("encoders")
+            .WithDescription("List available encoders");
     });
 
     config.AddBranch("cd", cd =>

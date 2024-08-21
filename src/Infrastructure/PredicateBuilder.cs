@@ -1,4 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Linq.Expressions;
 
 namespace Media.Infrastructure;
 
@@ -19,7 +24,4 @@ internal static class PredicateBuilder
         InvocationExpression invokedExpr = Expression.Invoke(expr2, expr1.Parameters.Cast<Expression>());
         return Expression.Lambda<Func<T, bool>>(Expression.AndAlso(expr1.Body, invokedExpr), expr1.Parameters);
     }
-
-    public static Func<T, bool> Lambda<T>(this Expression<Func<T, bool>> expr)
-        => expr.Compile();
 }
