@@ -83,7 +83,7 @@ internal static class Parsers
         using var reader = new StringReader(encoderInfos);
         string? line;
 
-        reader.SkipToLine("------");
+        reader.SkipToLine(" ------");
 
         while ((line = reader.ReadLine()) != null)
         {

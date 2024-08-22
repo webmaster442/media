@@ -55,7 +55,7 @@ internal sealed class UpdateFFMpeg : BaseGithubUpdateCommand
         => _configAccessor.GetFFMPegVesion();
 
     protected override ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets)
-        => assets.First(a => a.Name.Contains("win64-gpl-shared.zip"));
+        => assets.First(a => a.Name.EndsWith("-win64-gpl-shared.zip"));
 
     protected override async Task SetInstalledVersion(DateTimeOffset version)
         => await _configAccessor.SetFFMpegVersion(version);
