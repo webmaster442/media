@@ -81,15 +81,17 @@ internal sealed class Mpv : InteropBase
 
         string json = JsonSerializer.Serialize(commandObject);
 
-        using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous))
+        using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut))
         {
-            using (var writer = new StreamWriter(client))
+            client.Connect();
+            using (var writer = new StreamWriter(client, leaveOpen: true))
             {
-                await writer.WriteLineAsync(json);
+                writer.WriteLine(json);
+                writer.Flush();
             }
-            using (var reader = new StreamReader(client, Encoding.UTF8))
+            using (var reader = new StreamReader(client))
             {
-                string? response = await reader.ReadLineAsync();
+                var response = await reader.ReadLineAsync();
                 if (response != null)
                 {
                     return JsonSerializer.Deserialize<MpvIpcResponse>(response);

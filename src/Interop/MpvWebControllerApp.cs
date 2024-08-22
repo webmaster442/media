@@ -22,8 +22,7 @@ public class MpvWebControllerApp
         _pipeName = pipeName;
         _app = new WebApp(12345);
         _app.AddEmbeddedFile("/", "mpvcontroller.html", MediaTypeNames.Text.Html);
-        _app.AddEmbeddedFile("/index.html", "index.html", MediaTypeNames.Text.Html);
-        _app.AddEmbeddedFile("/request.js", "request.js", MediaTypeNames.Text.JavaScript);
+        _app.AddEmbeddedFile("/index.html", "mpvcontroller.html", MediaTypeNames.Text.Html);
         _app.AddEmbeddedFile("/mpv-logo-128.png", "mpv-logo-128.png", MediaTypeNames.Image.Png);
         _app.AddEmbeddedFile("/w3.css", "w3.css", MediaTypeNames.Text.Css);
         _app.AddGetRoute("/action/play", (context) => PerformCommand(context, MpvIpcCommandFactory.Play()));
@@ -32,12 +31,22 @@ public class MpvWebControllerApp
 
     private async Task PerformCommand(HttpContext context, string[] payload)
     {
-        if (!IsRunning()) return;
+        if (!IsRunning())
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsync("Mpv is not running");
+            return;
+        }
         Dto.MpvIpcResponse? result = await Mpv.SendCommand(_pipeName, payload);
         if (result?.IsSuccess == true)
         {
             context.Response.StatusCode = StatusCodes.Status200OK;
             await context.Response.WriteAsync("Ok");
+        }
+        else
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsync(result?.Data ?? "error");
         }
     }
 

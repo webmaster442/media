@@ -5,7 +5,23 @@
     <title>Mpv Web controller</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="w3.css">
-    <script type="javacript" src="request.js"></script>
+    <script type="text/javascript">
+        function apiCall(url) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text) });
+                    }
+                    return response.text(); // Return the response content
+                })
+                .then(data => {
+                    console.log("success", url, data);
+                })
+                .catch(error => {
+                    alert("Error: " + error.message);
+                });
+        }
+    </script>
 </head>
 
 <body class="w3-light-gray">
@@ -15,8 +31,8 @@
     </header>
 
     <div>
-        <button onclick="await apiCall('/action/play')" class="w3-button w3-block w3-purple w3-margin-bottom">Play</button>
-        <button onclick="await apiCall('/action/pause')" class="w3-button w3-block w3-purple w3-margin-bottom">Pause</button>
+        <button onclick="apiCall('/action/play')" class="w3-button w3-block w3-purple w3-margin-bottom">Play</button>
+        <button onclick="apiCall('/action/pause')" class="w3-button w3-block w3-purple w3-margin-bottom">Pause</button>
     </div>
 
     <footer>

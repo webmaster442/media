@@ -26,10 +26,10 @@ internal static class MpvIpcCommandFactory
         => ["quit-watch-later", "0"];
 
     public static string[] Play()
-        => ["set_property", "pause", "false"];
+        => ["set_property", "pause", "no"];
 
     public static string[] Pause()
-        => ["set_property", "pause", "true"];
+        => ["set_property", "pause", "yes"];
 
     public static string[] GetPosition()
         => ["get_property", "time-pos"];

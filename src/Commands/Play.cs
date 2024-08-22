@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Diagnostics;
+
 using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Infrastructure.Selector;
@@ -58,11 +60,13 @@ internal sealed class Play : AsyncCommand<Play.Settings>
                     ? await DoDlnaBrowse()
                     : await DoFileSelection();
 
-                _mpv.Start(file);
+                await RunMpv(file);
+
                 return ExitCodes.Success;
             }
 
-            _mpv.Start(settings.InputFile);
+            await RunMpv(settings.InputFile);
+
             return ExitCodes.Success;
         }
         catch (Exception e)
@@ -70,6 +74,23 @@ internal sealed class Play : AsyncCommand<Play.Settings>
             Terminal.DisplayException(e);
             return ExitCodes.Exception;
         }
+    }
+
+    private async Task RunMpv(string fileName)
+    {
+        string cmd = $"\"{fileName}\" --input-ipc-server=\\\\.\\pipe\\mpvsocket";
+        using var process = _mpv.CreateProcess(cmd,
+                                               redirectStdIn: false,
+                                               redirectStdOut: false,
+                                               redirectStderr: false);
+
+        process.Start();
+
+        var webapp = new MpvWebControllerApp(process.Id, "mpvsocket");
+
+        await webapp.RunAsync(CancellationToken.None);
+        Terminal.InfoText("Press a key to exit...");
+        Console.ReadKey();
     }
 
     private static async Task<string> DoDlnaBrowse()
