@@ -19,6 +19,10 @@
     "update all": {
       "commandName": "Project",
       "commandLineArgs": "update all"
+    },
+    "play -d": {
+      "commandName": "Project",
+      "commandLineArgs": "play -d"
     }
   }
 }

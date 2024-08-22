@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Web;
+using System.Xml;
 using System.Xml.Serialization;
 
 using Media.Dto.Dlna;
@@ -18,14 +19,14 @@ internal sealed class DLNAClient : IDisposable
 {
     private readonly HttpClient _client;
     private readonly XmlSerializer _rootSerializer;
-    private readonly XmlSerializer _envelopeSerializer;
+    private readonly XmlSerializer _browseResponseSerializer;
 
     public DLNAClient()
     {
         _client = new HttpClient();
         _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/xml"));
         _rootSerializer = new XmlSerializer(typeof(Root));
-        _envelopeSerializer = new XmlSerializer(typeof(Envelope));
+        _browseResponseSerializer = new XmlSerializer(typeof(BrowseResponse));
     }
 
     public void Dispose()
@@ -139,38 +140,51 @@ internal sealed class DLNAClient : IDisposable
 
     private IReadOnlyCollection<DlnaItem> ProcessEnvelopeXml(string xml, string defaultUri)
     {
-        using var reader = new StringReader(HttpUtility.HtmlDecode(xml));
-        if (_envelopeSerializer.Deserialize(reader) is Envelope envelope
-            && envelope?.Body?.BrowseResponse?.Result?.DIDLLite?.Items?.Length > 0)
+        var xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(xml);
+
+        XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
+        nsmgr.AddNamespace("soap", "http://schemas.xmlsoap.org/soap/envelope/");
+
+        XmlNode? bodyNode = xmlDoc.SelectSingleNode("//soap:Body", nsmgr);
+
+        if (bodyNode != null)
         {
-            List<DlnaItem> items = new();
-            foreach (var objItem in envelope.Body.BrowseResponse.Result.DIDLLite.Items)
+            var inner = HttpUtility.HtmlDecode(bodyNode.InnerXml);
+            using var reader = new StringReader(inner);
+            var deserialized =  _browseResponseSerializer.Deserialize(reader);
+            if (deserialized is BrowseResponse response)
             {
-                if (objItem is DIDLLiteItem item)
+                List<DlnaItem> items = new();
+                foreach (var objItem in response.Result.DIDLLite.Items)
                 {
-                    items.Add(new DlnaItem
+                    if (objItem is DIDLLiteItem item)
                     {
-                        Id = item.Id,
-                        IsBrowsable = false,
-                        IsServer = false,
-                        Name = item.Title,
-                        Uri = new Uri(item.Res.Value ?? string.Empty),
-                    });
-                }
-                else if (objItem is DIDLLiteContainer container)
-                {
-                    items.Add(new DlnaItem
+                        items.Add(new DlnaItem
+                        {
+                            Id = item.Id,
+                            IsBrowsable = false,
+                            IsServer = false,
+                            Name = item.Title,
+                            Uri = new Uri(item.Res.Value ?? string.Empty),
+                        });
+                    }
+                    else if (objItem is DIDLLiteContainer container)
                     {
-                        Id = container.Id,
-                        IsBrowsable = true,
-                        IsServer = false,
-                        Name = container.Title,
-                        Uri = new Uri(defaultUri),
-                    });
+                        items.Add(new DlnaItem
+                        {
+                            Id = container.Id,
+                            IsBrowsable = true,
+                            IsServer = false,
+                            Name = container.Title,
+                            Uri = new Uri(defaultUri),
+                        });
+                    }
                 }
+                return items;
             }
-            return items;
         }
+
         return Array.Empty<DlnaItem>();
     }
 
