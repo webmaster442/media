@@ -78,7 +78,9 @@ internal sealed class Play : AsyncCommand<Play.Settings>
 
     private async Task RunMpv(string fileName)
     {
-        string cmd = $"\"{fileName}\" --input-ipc-server=\\\\.\\pipe\\mpvsocket";
+        var pipeName = $"mpvsocket-{Guid.NewGuid()}";
+
+        string cmd = $"\"{fileName}\" --input-ipc-server=\\\\.\\pipe\\{pipeName}";
         using var process = _mpv.CreateProcess(cmd,
                                                redirectStdIn: false,
                                                redirectStdOut: false,
@@ -86,7 +88,7 @@ internal sealed class Play : AsyncCommand<Play.Settings>
 
         process.Start();
 
-        var webapp = new MpvWebControllerApp(process.Id, "mpvsocket");
+        var webapp = new MpvWebControllerApp(process.Id, pipeName);
 
         await webapp.RunAsync(CancellationToken.None);
         Terminal.InfoText("Press a key to exit...");
