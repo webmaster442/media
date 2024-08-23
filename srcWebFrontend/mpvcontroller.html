@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Mpv Web controller</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="w3.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPV remote</title>
+    <link rel="stylesheet" href="style.css">
     <script type="text/javascript">
         function apiCall(url) {
             fetch(url)
@@ -24,21 +25,27 @@
     </script>
 </head>
 
-<body class="w3-light-gray">
-    <header class="w3-container w3-deep-purple w3-margin-bottom">
-        <img src="mpv-logo-128.png" class="w3-image" style="display: block; float: left;" />
-        <h1>MPV Remote</h1>
-    </header>
-
-    <div>
-        <button onclick="apiCall('/action/play')" class="w3-button w3-block w3-purple w3-margin-bottom">Play</button>
-        <button onclick="apiCall('/action/pause')" class="w3-button w3-block w3-purple w3-margin-bottom">Pause</button>
+<body>
+    <div class="parent">
+        <div class="header">
+            <h1>MPV remote</h1>
+            <img class="logo" src="mpv-logo-128.png" />
+        </div>
+        <button onclick="apiCall('/action/windowed')" class="button-windowed">🪟 Windowed</button>
+        <button onclick="apiCall('/action/fullscreen')" class="button-fs">🖥️ Fullscreen</button>
+        <button onclick="apiCall('/action/play')" class="button-play">▶️ Play</button>
+        <button onclick="apiCall('/action/pause')" class="button-pause">⏸ Pause</button>
+        <button onclick="apiCall('/action/seek-plus')" class="button-seek-10">⏪ Seek -10sec</button>
+        <button onclick="apiCall('/action/seek-minus')" class="button-seek+10">⏩ Seek +10sec</button>
+        <button onclick="apiCall('/action/playlist-previous')" class="button-previous">⏮ Previous file</button>
+        <button onclick="apiCall('/action/playlist-next')" class="button-next">⏭ Next file</button>
+        <button onclick="apiCall('/action/volume-plus')" class="button-volume-">🔈Volume -</button>
+        <button onclick="apiCall('/action/volume-minus')" class="button-volume+">🔊 Volume +</button>
+        <button onclick="apiCall('/action/volume-mute')" class="button-mute">🔇 Mute</button>
+        <button onclick="apiCall('/action/volume-unmute')"class="button-unmute">🔉 Unmute</button>
+        <button onclick="apiCall('/action/subtitle')" class="button-subtitles">💬 Subtitles</button>
+        <button onclick="apiCall('/action/audio')" class="button-audio">📢 Audio</button>
     </div>
-
-    <footer>
-        <div class="w3-panel" style="display: none">api result</div>
-    </footer>
-
 </body>
 
 </html>

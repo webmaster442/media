@@ -1,0 +1,44 @@
+body {
+    background-color: #222222;
+    margin: 0px;
+}
+
+.parent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 0px;
+
+}
+
+.header {
+    background-color: #520053;
+    color: white;
+    grid-column: span 2 / span 2;
+    margin-bottom: 0.8rem;
+}
+
+.header h1 {
+    float: left;
+    margin: 2rem;
+}
+
+.header .logo {
+    width: 96px;
+    display: inline-block;
+}
+
+button {
+    margin: 0.4rem;
+    border-radius: 12px;
+    font-size: x-large;
+}
+
+.button:hover, button:active {
+    background-color: #722B72;
+}
+
+.button-windowed {
+    grid-row-start: 2;
+}
+
