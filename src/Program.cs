@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Runtime.InteropServices;
+
 using JKToolKit.Spectre.AutoCompletion.Completion;
 using JKToolKit.Spectre.AutoCompletion.Integrations;
 
@@ -13,6 +15,12 @@ using Media.Infrastructure;
 var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar(isDryRunEnabled: false));
 
 Terminal.EnableUTF8Output();
+
+if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+{
+    Terminal.RedText("This program is only supported on Windows at the moment");
+    Environment.Exit(ExitCodes.NotSuppoertedOs);
+}
 
 mainApp.Configure(config =>
 {
