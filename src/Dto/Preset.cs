@@ -22,4 +22,9 @@ public class Preset
     [XmlElement("Description")]
     [NotEmptyOrWiteSpace]
     public required string Description { get; set; }
+
+    [XmlIgnore]
+    public const string InputPlaceHolder = "{input}";
+    [XmlIgnore]
+    public const string OutputPlaceHolder = "{output}";
 }

@@ -9,6 +9,7 @@ internal static class EmbeddedResources
 {
     public const string UpdatePS1 = "Update.ps1";
     public const string TestImage = "testimg.png";
+    public const string Presets = "presets.xml";
 
     public static Stream GetFile(string name)
     {
