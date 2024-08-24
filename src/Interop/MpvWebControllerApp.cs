@@ -8,8 +8,6 @@ using System.Net.Mime;
 
 using Media.Infrastructure;
 
-using Spectre.Console;
-
 namespace Media.Interop;
 
 public class MpvWebControllerApp
@@ -27,7 +25,7 @@ public class MpvWebControllerApp
         _app.AddEmbeddedFile("/index.html", "mpvcontroller.html", MediaTypeNames.Text.Html);
         _app.AddEmbeddedFile("/mpv-logo-128.png", "mpv-logo-128.png", MediaTypeNames.Image.Png);
         _app.AddEmbeddedFile("/style.css", "style.css", MediaTypeNames.Text.Css);
-        
+
         _app.AddGetRoute("/action/windowed", (context) => PerformCommand(context, MpvIpcCommandFactory.Fullscreen(false)));
         _app.AddGetRoute("/action/fullscreen", (context) => PerformCommand(context, MpvIpcCommandFactory.Fullscreen(true)));
         _app.AddGetRoute("/action/play", (context) => PerformCommand(context, MpvIpcCommandFactory.Play()));

@@ -152,7 +152,7 @@ internal sealed class DLNAClient : IDisposable
         {
             var inner = HttpUtility.HtmlDecode(bodyNode.InnerXml);
             using var reader = new StringReader(inner);
-            var deserialized =  _browseResponseSerializer.Deserialize(reader);
+            var deserialized = _browseResponseSerializer.Deserialize(reader);
             if (deserialized is BrowseResponse response)
             {
                 List<DlnaItem> items = new();

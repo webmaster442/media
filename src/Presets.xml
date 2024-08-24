@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Presets XML file for the encode presets command
+-->
+<Presets>
+  <Preset Name="hevc-nvenc-mp4" Extension=".mp4">
+    <CommandLine>-i {input} {output}</CommandLine>
+    <Description>Encodes video to H.265 with NVidia Hardware acceleration to MP4 format</Description>
+  </Preset>
+</Presets>
