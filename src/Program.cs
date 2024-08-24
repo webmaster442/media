@@ -43,6 +43,9 @@ mainApp.Configure(config =>
 
         info.AddCommand<InfoEncoders>("encoders")
             .WithDescription("List available encoders");
+
+        info.AddCommand<InfoHwEncoders>("hw-encoders")
+            .WithDescription("List available hardware encoders");
     });
 
     config.AddBranch("cd", cd =>

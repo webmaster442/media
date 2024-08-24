@@ -29,44 +29,35 @@ internal class InfoEncoders : Command<InfoEncoders.Settings>
         [Description("List subtitle encoders")]
         public bool ListSubtitle { get; set; }
 
-        [CommandOption("-w|--hardware")]
-        [Description("List hardware accelerated encoders only")]
-        public bool ListHardware { get; set; }
-
         public bool NoneGiven =>
             !ListAudio && !ListVideo && !ListSubtitle;
     }
 
-    private readonly ConfigAccessor _configAccessor;
     private readonly FFMpeg _ffMpeg;
 
-    public InfoEncoders()
+    public InfoEncoders(ConfigAccessor configAccessor)
     {
-        _configAccessor = new ConfigAccessor();
-        _ffMpeg = new FFMpeg(_configAccessor);
+        _ffMpeg = new FFMpeg(configAccessor);
     }
 
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
-        IEnumerable<FFMpegEncoderInfo> encoders = GetEncoders().OrderBy(x => x.Name);
-
-        if (settings.ListHardware)
+        try
         {
-            encoders = encoders.Where(e => IsHardWareAccelerated(e));
-        }
-        else if (!settings.NoneGiven)
-        {
-            encoders = Filter(encoders, settings);
-        }
-        PrintTable(encoders);
-        return ExitCodes.Success;
-    }
+            IEnumerable<FFMpegEncoderInfo> encoders = _ffMpeg.GetEncoders().OrderBy(x => x.Name);
 
-    private static bool IsHardWareAccelerated(FFMpegEncoderInfo e)
-    {
-        return e.Name.EndsWith("_amf")
-            || e.Name.EndsWith("_nvenc")
-            || e.Name.EndsWith("_qsv");
+            if (!settings.NoneGiven)
+            {
+                encoders = Filter(encoders, settings);
+            }
+            PrintTable(encoders);
+            return ExitCodes.Success;
+        }
+        catch (Exception e)
+        {
+            AnsiConsole.WriteException(e);
+            return ExitCodes.Exception;
+        }
     }
 
     private static IEnumerable<FFMpegEncoderInfo> Filter(IEnumerable<FFMpegEncoderInfo> encoders, Settings settings)
@@ -98,10 +89,5 @@ internal class InfoEncoders : Command<InfoEncoders.Settings>
         AnsiConsole.Write(table);
     }
 
-    private FFMpegEncoderInfo[] GetEncoders()
-    {
-        var encoderString = _ffMpeg.GetEnoderList();
-        var parsed = Parsers.ParseEncoderInfos(encoderString).ToArray();
-        return parsed;
-    }
+
 }

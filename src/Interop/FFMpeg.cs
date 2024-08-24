@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.Dto.Internals;
 using Media.Infrastructure;
 
 namespace Media.Interop;
@@ -38,13 +39,15 @@ internal sealed class FFMpeg : InteropBase
         _configAccessor = configAccessor;
     }
 
-    public string GetEnoderList()
+    protected override string? GetExternalPath()
+        => _configAccessor.GetExternalFFMpegPath();
+
+    public FFMpegEncoderInfo[] GetEncoders()
     {
         using var ffmpegProcess = CreateProcess("-hide_banner -encoders", false, true, false);
         ffmpegProcess.Start();
-        return ffmpegProcess.StandardOutput.ReadToEnd();
-    }
 
-    protected override string? GetExternalPath()
-        => _configAccessor.GetExternalFFMpegPath();
+        var encoderString = ffmpegProcess.StandardOutput.ReadToEnd();
+        return Parsers.ParseEncoderInfos(encoderString).ToArray();
+    }
 }

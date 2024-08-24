@@ -27,6 +27,10 @@
     "play -r": {
       "commandName": "Project",
       "commandLineArgs": "play -r"
+    },
+    "info hw-encoders": {
+      "commandName": "Project",
+      "commandLineArgs": "info hw-encoders"
     }
   }
 }
