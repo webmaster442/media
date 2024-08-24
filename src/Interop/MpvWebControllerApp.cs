@@ -8,6 +8,8 @@ using System.Net.Mime;
 
 using Media.Infrastructure;
 
+using Spectre.Console;
+
 namespace Media.Interop;
 
 public class MpvWebControllerApp
@@ -24,9 +26,25 @@ public class MpvWebControllerApp
         _app.AddEmbeddedFile("/", "mpvcontroller.html", MediaTypeNames.Text.Html);
         _app.AddEmbeddedFile("/index.html", "mpvcontroller.html", MediaTypeNames.Text.Html);
         _app.AddEmbeddedFile("/mpv-logo-128.png", "mpv-logo-128.png", MediaTypeNames.Image.Png);
-        _app.AddEmbeddedFile("/w3.css", "w3.css", MediaTypeNames.Text.Css);
+        _app.AddEmbeddedFile("/style.css", "style.css", MediaTypeNames.Text.Css);
+        
+        _app.AddGetRoute("/action/windowed", (context) => PerformCommand(context, MpvIpcCommandFactory.Fullscreen(false)));
+        _app.AddGetRoute("/action/fullscreen", (context) => PerformCommand(context, MpvIpcCommandFactory.Fullscreen(true)));
         _app.AddGetRoute("/action/play", (context) => PerformCommand(context, MpvIpcCommandFactory.Play()));
         _app.AddGetRoute("/action/pause", (context) => PerformCommand(context, MpvIpcCommandFactory.Pause()));
+        _app.AddGetRoute("/action/seek-plus", (context) => PerformCommand(context, MpvIpcCommandFactory.SeekRelative(-15)));
+        _app.AddGetRoute("/action/seek-minus", (context) => PerformCommand(context, MpvIpcCommandFactory.SeekRelative(+15)));
+
+        _app.AddGetRoute("/action/playlist-previous", (context) => PerformCommand(context, MpvIpcCommandFactory.PlayListPrevious()));
+        _app.AddGetRoute("/action/playlist-next", (context) => PerformCommand(context, MpvIpcCommandFactory.PlayListNext()));
+
+        _app.AddGetRoute("/action/volume-plus", (context) => PerformCommand(context, MpvIpcCommandFactory.VolumeRelative(-10)));
+        _app.AddGetRoute("/action/volume-minus", (context) => PerformCommand(context, MpvIpcCommandFactory.VolumeRelative(+10)));
+        _app.AddGetRoute("/action/volume-mute", (context) => PerformCommand(context, MpvIpcCommandFactory.Mute(true)));
+        _app.AddGetRoute("/action/volume-unmute", (context) => PerformCommand(context, MpvIpcCommandFactory.Mute(false)));
+        _app.AddGetRoute("/action/subtitle", (context) => PerformCommand(context, MpvIpcCommandFactory.CycleSubtitle()));
+        _app.AddGetRoute("/action/audio", (context) => PerformCommand(context, MpvIpcCommandFactory.CycleAudio()));
+
     }
 
     private async Task PerformCommand(HttpContext context, string[] payload)
@@ -46,7 +64,7 @@ public class MpvWebControllerApp
         else
         {
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsync(result?.Data ?? "error");
+            await context.Response.WriteAsync(result?.Error ?? "error");
         }
     }
 
@@ -59,6 +77,9 @@ public class MpvWebControllerApp
 
     public async Task RunAsync(CancellationToken token)
     {
+        var adresses = string.Join("\r\n", _app.GetListenUrls());
+        Terminal.InfoText("Server listening on adresses: ");
+        Terminal.InfoText(adresses);
         await _app.RunAsync(token);
     }
 }

@@ -23,6 +23,10 @@
     "play -d": {
       "commandName": "Project",
       "commandLineArgs": "play -d"
+    },
+    "play -r": {
+      "commandName": "Project",
+      "commandLineArgs": "play -r"
     }
   }
 }

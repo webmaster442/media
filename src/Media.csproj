@@ -14,9 +14,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="..\srcWebFrontend\style.css" Link="Embedded\style.css" />
+    </ItemGroup>
+
+    <ItemGroup>
         <EmbeddedResource Include="..\srcWebFrontend\mpv-logo-128.png" Link="Embedded\mpv-logo-128.png" />
         <EmbeddedResource Include="..\srcWebFrontend\mpvcontroller.html" Link="Embedded\mpvcontroller.html" />
-        <EmbeddedResource Include="..\srcWebFrontend\w3.css" Link="Embedded\w3.css" />
         <EmbeddedResource Include="..\Notes.txt" Link="Notes.txt" />
         
         <EmbeddedResource Include="Embedded\Update.ps1" />

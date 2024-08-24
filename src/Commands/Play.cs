@@ -3,8 +3,6 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System.Diagnostics;
-
 using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Infrastructure.Selector;
@@ -27,6 +25,10 @@ internal sealed class Play : AsyncCommand<Play.Settings>
         [Description("Use DLNA for browsing")]
         [CommandOption("-d|--dlna")]
         public bool Dlna { get; init; }
+
+        [Description("Enable http remote control")]
+        [CommandOption("-r|--remote")]
+        public bool EnableRemote { get; init; }
 
         public Settings()
         {
@@ -60,12 +62,12 @@ internal sealed class Play : AsyncCommand<Play.Settings>
                     ? await DoDlnaBrowse()
                     : await DoFileSelection();
 
-                await RunMpv(file);
+                await RunMpv(file, settings.EnableRemote);
 
                 return ExitCodes.Success;
             }
 
-            await RunMpv(settings.InputFile);
+            await RunMpv(settings.InputFile, settings.EnableRemote);
 
             return ExitCodes.Success;
         }
@@ -76,11 +78,14 @@ internal sealed class Play : AsyncCommand<Play.Settings>
         }
     }
 
-    private async Task RunMpv(string fileName)
+    private async Task RunMpv(string fileName, bool enableRemote)
     {
-        var pipeName = $"mpvsocket-{Guid.NewGuid()}";
+        var pipeName = $"mpvsocket-{GetRandomId()}";
 
-        string cmd = $"\"{fileName}\" --input-ipc-server=\\\\.\\pipe\\{pipeName}";
+        string cmd = enableRemote ?
+            $"{fileName} --input-ipc-server=\\\\.\\pipe\\{pipeName}"
+            : $"\"{fileName}\"";
+
         using var process = _mpv.CreateProcess(cmd,
                                                redirectStdIn: false,
                                                redirectStdOut: false,
@@ -88,12 +93,17 @@ internal sealed class Play : AsyncCommand<Play.Settings>
 
         process.Start();
 
-        var webapp = new MpvWebControllerApp(process.Id, pipeName);
-
-        await webapp.RunAsync(CancellationToken.None);
+        if (enableRemote)
+        {
+            var webapp = new MpvWebControllerApp(process.Id, pipeName);
+            await webapp.RunAsync(CancellationToken.None);
+        }
         Terminal.InfoText("Press a key to exit...");
         Console.ReadKey();
     }
+
+    private int GetRandomId()
+        => Random.Shared.Next(100, 1000);
 
     private static async Task<string> DoDlnaBrowse()
     {

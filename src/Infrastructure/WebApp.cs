@@ -4,6 +4,8 @@
 // -----------------------------------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 
 namespace Media.Infrastructure;
@@ -16,9 +18,24 @@ internal sealed class WebApp
     public WebApp(int port)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder();
+        builder.Logging.ClearProviders();
+        builder.Logging.SetMinimumLevel(LogLevel.Error);
+        builder.Logging.AddConsole();
         builder.WebHost.ConfigureKestrel((context, serverOptions) => serverOptions.ListenAnyIP(port));
         _app = builder.Build();
         _port = port;
+    }
+
+    public IEnumerable<string> GetListenUrls()
+    {
+        var host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (var ip in host.AddressList)
+        {
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            {
+                yield return $"http://{ip}:{_port}";
+            }
+        }
     }
 
     public void AddEmbeddedFile(string requestPath,
