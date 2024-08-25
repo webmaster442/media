@@ -36,7 +36,7 @@ internal sealed class InfoHwEncoders : AsyncCommand
     {
         try
         {
-            await EmbeddedResources.Extract(EmbeddedResources.TestImage);
+            await EmbeddedResources.ExtractAsync(EmbeddedResources.TestImage);
 
             var encoders = _ffMpeg
                 .GetEncoders()

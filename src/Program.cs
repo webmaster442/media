@@ -46,6 +46,9 @@ mainApp.Configure(config =>
 
         info.AddCommand<InfoHwEncoders>("hw-encoders")
             .WithDescription("List available hardware encoders");
+
+        info.AddCommand<InfoPresets>("presets")
+            .WithDescription("List available presets");
     });
 
     config.AddBranch("cd", cd =>
@@ -99,6 +102,9 @@ mainApp.Configure(config =>
 
         convert.AddCommand<ConvertNtscDvd>("dvd-pal")
             .WithDescription("Create an PAL DVD compatible MPEG-2 file with AC-3 audio");
+
+        convert.AddCommand<ConvertPreset>("preset")
+            .WithDescription("Convert a file using a preset");
     });
     config.AddBranch("bach", bach =>
     {

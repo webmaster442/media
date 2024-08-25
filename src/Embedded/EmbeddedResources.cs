@@ -19,7 +19,7 @@ internal static class EmbeddedResources
             ?? throw new InvalidOperationException($"Resource {name} not found");
     }
 
-    public static async Task Extract(string fileName)
+    public static async Task ExtractAsync(string fileName)
     {
         var targetName = Path.Combine(AppContext.BaseDirectory, fileName);
         await using var soruce = GetFile(fileName);

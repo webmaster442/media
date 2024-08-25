@@ -9,20 +9,6 @@ using Media.Interop;
 
 namespace Media.Infrastructure.BaseCommands;
 
-internal interface IDryRunResultAcceptor
-{
-    string Result { get; set; }
-
-    bool Enabled { get; set; }
-}
-
-internal sealed class DryRunResultAcceptor : IDryRunResultAcceptor
-{
-    public bool Enabled { get; set; }
-
-    public string Result { get; set; } = string.Empty;
-}
-
 internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
 : Command<TBaseFFMpegSettings> where TBaseFFMpegSettings : BaseFFMpegSettings
 {
