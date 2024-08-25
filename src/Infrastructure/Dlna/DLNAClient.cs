@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using Media.Dto.Dlna;
 using Media.Dto.Internals;
 
-namespace Media.Infrastructure;
+namespace Media.Infrastructure.Dlna;
 
 internal sealed class DLNAClient : IDisposable
 {

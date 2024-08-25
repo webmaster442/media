@@ -6,7 +6,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace Media.Infrastructure;
+namespace Media.Infrastructure.Dlna;
 
 public class DLNASsdpResponder
 {

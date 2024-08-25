@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Dto.Internals;
+using Media.Infrastructure.Dlna;
 
 using Spectre.Console;
 

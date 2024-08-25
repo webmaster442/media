@@ -6,6 +6,7 @@
 using System.Diagnostics;
 using System.Net.Mime;
 
+using Media.Embedded;
 using Media.Infrastructure;
 
 namespace Media.Interop;
@@ -21,10 +22,10 @@ public class MpvWebControllerApp
         _processId = processId;
         _pipeName = pipeName;
         _app = new WebApp(12345);
-        _app.AddEmbeddedFile("/", "mpvcontroller.html", MediaTypeNames.Text.Html);
-        _app.AddEmbeddedFile("/index.html", "mpvcontroller.html", MediaTypeNames.Text.Html);
-        _app.AddEmbeddedFile("/mpv-logo-128.png", "mpv-logo-128.png", MediaTypeNames.Image.Png);
-        _app.AddEmbeddedFile("/style.css", "style.css", MediaTypeNames.Text.Css);
+        _app.AddEmbeddedFile("/", EmbeddedResources.MpvController, MediaTypeNames.Text.Html);
+        _app.AddEmbeddedFile("/index.html", EmbeddedResources.MpvController, MediaTypeNames.Text.Html);
+        _app.AddEmbeddedFile("/mpv-logo-128.png", EmbeddedResources.MpvLogo, MediaTypeNames.Image.Png);
+        _app.AddEmbeddedFile("/style.css", EmbeddedResources.StyleCss, MediaTypeNames.Text.Css);
 
         _app.AddGetRoute("/action/windowed", (context) => PerformCommand(context, MpvIpcCommandFactory.Fullscreen(false)));
         _app.AddGetRoute("/action/fullscreen", (context) => PerformCommand(context, MpvIpcCommandFactory.Fullscreen(true)));

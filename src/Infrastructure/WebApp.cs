@@ -8,6 +8,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 
+using Media.Dto.Internals;
+
 namespace Media.Infrastructure;
 
 internal sealed class WebApp
@@ -71,6 +73,48 @@ internal sealed class WebApp
             context.Response.ContentLength = data.Length;
             await data.CopyToAsync(context.Response.Body);
         });
+    }
+
+    public void AddStreamingRoutes(IEnumerable<MediaRoute> mediaRoutes)
+    {
+        foreach (var route in mediaRoutes)
+        {
+            _app.MapGet(route.FileUrl, async (context) => await ServeMediaFile(context, route.FilePath, route.MimeType));
+        }
+    }
+
+    private static async Task ServeMediaFile(HttpContext context, string filePath, string mimeType)
+    {
+        using (var fileStream = File.OpenRead(filePath))
+        {
+            string? range = context.Request.Headers.Range;
+            if (range != null)
+            {
+                range = range.ToUpperInvariant().Replace("BYTES=", string.Empty);
+                long position = long.Parse(range.TrimEnd('-'), CultureInfo.InvariantCulture);
+                context.Response.StatusCode = 206;
+                context.Response.ContentType = mimeType;
+                context.Response.Headers.Append("Cache-Control", "no-store");
+                context.Response.Headers.Append("Pragma", "no-cache");
+                context.Response.Headers.Append("Connection", "Keep=Alive");
+                context.Response.Headers.Append("transferMode.dlna.org", "Streaming");
+                context.Response.Headers.Append("Accept-Ranges", "bytes");
+                context.Response.ContentLength = fileStream.Length - position;
+                context.Response.Headers.Append("Content-Range", $"bytes {range}/{fileStream.Length}");
+                fileStream.Seek(position, SeekOrigin.Begin);
+                await fileStream.CopyToAsync(context.Response.Body);
+            }
+            else
+            {
+                context.Response.StatusCode = 200;
+                context.Response.ContentType = mimeType;
+                context.Response.Headers.Append("Cache-Control", "no-store");
+                context.Response.Headers.Append("Pragma", "no-cache");
+                context.Response.Headers.Append("Connection", "Keep=Alive");
+                context.Response.Headers.Append("transferMode.dlna.org", "Streaming");
+                await fileStream.CopyToAsync(context.Response.Body);
+            }
+        }
     }
 
     public void AddGetRoute([StringSyntax("Route")] string endpoint, RequestDelegate handler)
