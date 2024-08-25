@@ -15,7 +15,15 @@
 
     <ItemGroup>
       <None Remove="Embedded\Presets.xml" />
+      <None Remove="Embedded\rootDesc.xml" />
       <None Remove="Embedded\testimg.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="..\branding\icon-192.jpg" Link="Embedded\icon-192.jpg" />
+      <EmbeddedResource Include="..\branding\icon-192.png" Link="Embedded\icon-192.png" />
+      <EmbeddedResource Include="..\branding\icon-48.jpg" Link="Embedded\icon-48.jpg" />
+      <EmbeddedResource Include="..\branding\icon-48.png" Link="Embedded\icon-48.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,6 +37,7 @@
         <EmbeddedResource Include="Embedded\Presets.xml">
           <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
+        <EmbeddedResource Include="Embedded\rootDesc.xml" />
         <EmbeddedResource Include="Embedded\testimg.png" />
         
         <EmbeddedResource Include="Embedded\Update.ps1" />
