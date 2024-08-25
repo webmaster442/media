@@ -1,4 +1,9 @@
-﻿using System.Net;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Net;
 using System.Net.Sockets;
 
 namespace Media.Infrastructure;
@@ -43,8 +48,6 @@ public class DLNASsdpResponder
         }
     }
 
-    //
-
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         var udpClient = new UdpClient();
@@ -80,5 +83,4 @@ public class DLNASsdpResponder
             udpClient.Close();
         }
     }
-
 }

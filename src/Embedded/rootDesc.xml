@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+***********************************************************************************************
+ Copyright (c) 2024 Ruzsinszki Gábor
+ This code is licensed under MIT license (see LICENSE for details)
+***********************************************************************************************
+-->
+
 <root xmlns="urn:schemas-upnp-org:device-1-0">
   <specVersion>
     <major>1</major>

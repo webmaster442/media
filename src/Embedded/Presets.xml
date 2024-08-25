@@ -1,5 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--
+***********************************************************************************************
+ Copyright (c) 2024 Ruzsinszki Gábor
+ This code is licensed under MIT license (see LICENSE for details)
+***********************************************************************************************
+-->
+
+<!--
 Presets XML file for the encode presets command
 -->
 <Presets>

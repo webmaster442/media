@@ -1,4 +1,9 @@
-﻿using Media.Embedded;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using Media.Embedded;
 using Media.Infrastructure;
 using Media.Interop;
 
@@ -51,7 +56,7 @@ internal sealed class InfoHwEncoders : AsyncCommand
             {
                 Terminal.InfoText($"Testing {encoder.Name}...");
                 var supported = await IsSupported(encoder.Name);
-                var icon = supported 
+                var icon = supported
                     ? $"{Emoji.Known.CheckMark} yes"
                     : $"{Emoji.Known.CrossMark} no";
                 table.AddRow(encoder.Name, encoder.Type.ToString(), encoder.Description, icon);

@@ -3,7 +3,6 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-
 namespace Media.Interop;
 
 internal static class MpvIpcCommandFactory
