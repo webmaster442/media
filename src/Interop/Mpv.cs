@@ -43,7 +43,6 @@ internal sealed class Mpv : InteropBase
         yield return ".aac";
         yield return ".ac3";
         yield return ".aiff";
-        yield return ".alac";
         yield return ".ape";
         yield return ".au";
         yield return ".dts";
@@ -58,6 +57,7 @@ internal sealed class Mpv : InteropBase
         yield return ".tta";
         yield return ".wav";
         yield return ".wma";
+        yield return ".weba";
         // Playlist formats
         yield return ".m3u";
         yield return ".m3u8";

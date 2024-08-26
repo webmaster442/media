@@ -10,12 +10,12 @@ namespace Media.Infrastructure.Dlna;
 
 public class DLNASsdpResponder
 {
-    private readonly ILogger<DLNASsdpResponder> _logger;
+    private readonly ILogger _logger;
     private readonly IEnumerable<string> _serverLocations;
     private const string MulticastAddress = "239.255.255.250";
     private const int MulticastPort = 1900;
 
-    public DLNASsdpResponder(ILogger<DLNASsdpResponder> logger, IEnumerable<string> serverLocations)
+    public DLNASsdpResponder(ILogger logger, IEnumerable<string> serverLocations)
     {
         _logger = logger;
         _serverLocations = serverLocations;
@@ -48,7 +48,7 @@ public class DLNASsdpResponder
         }
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public async Task RunAsync(CancellationToken cancellationToken)
     {
         var udpClient = new UdpClient();
         udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);

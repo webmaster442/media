@@ -28,6 +28,8 @@ internal sealed class WebApp
         _port = port;
     }
 
+    public ILogger Logger => _app.Logger;
+
     public IEnumerable<string> GetListenUrls()
     {
         var host = Dns.GetHostEntry(Dns.GetHostName());
