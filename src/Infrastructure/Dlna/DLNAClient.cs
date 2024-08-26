@@ -6,9 +6,6 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
-using System.Web;
-using System.Xml;
-using System.Xml.Serialization;
 
 using Media.Dto.Dlna;
 using Media.Dto.Internals;
@@ -18,15 +15,17 @@ namespace Media.Infrastructure.Dlna;
 internal sealed class DLNAClient : IDisposable
 {
     private readonly HttpClient _client;
-    private readonly XmlSerializer _rootSerializer;
-    private readonly XmlSerializer _browseResponseSerializer;
+    private readonly XmlStringSerializer<Root> _rootSerializer;
+    private readonly XmlStringSerializer<BrowseResponse> _browseResponseSerializer;
+    private readonly XmlStringSerializer<BrowseRequest> _browseRequestSerializer;
 
     public DLNAClient()
     {
         _client = new HttpClient();
         _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/xml"));
-        _rootSerializer = new XmlSerializer(typeof(Root));
-        _browseResponseSerializer = new XmlSerializer(typeof(BrowseResponse));
+        _rootSerializer = new XmlStringSerializer<Root>();
+        _browseResponseSerializer = new XmlStringSerializer<BrowseResponse>();
+        _browseRequestSerializer = new XmlStringSerializer<BrowseRequest>();
     }
 
     public void Dispose()
@@ -140,49 +139,37 @@ internal sealed class DLNAClient : IDisposable
 
     private IReadOnlyCollection<DlnaItem> ProcessEnvelopeXml(string xml, string defaultUri)
     {
-        var xmlDoc = new XmlDocument();
-        xmlDoc.LoadXml(xml);
+        BrowseResponse? response = _browseResponseSerializer.DeserializeSoap(xml, true);
 
-        XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
-        nsmgr.AddNamespace("soap", "http://schemas.xmlsoap.org/soap/envelope/");
-
-        XmlNode? bodyNode = xmlDoc.SelectSingleNode("//soap:Body", nsmgr);
-
-        if (bodyNode != null)
+        if (response != null)
         {
-            var inner = HttpUtility.HtmlDecode(bodyNode.InnerXml);
-            using var reader = new StringReader(inner);
-            var deserialized = _browseResponseSerializer.Deserialize(reader);
-            if (deserialized is BrowseResponse response)
+            List<DlnaItem> items = new();
+            foreach (var objItem in response.Result.DIDLLite.Items)
             {
-                List<DlnaItem> items = new();
-                foreach (var objItem in response.Result.DIDLLite.Items)
+                if (objItem is DIDLLiteItem item)
                 {
-                    if (objItem is DIDLLiteItem item)
+                    items.Add(new DlnaItem
                     {
-                        items.Add(new DlnaItem
-                        {
-                            Id = item.Id,
-                            IsBrowsable = false,
-                            IsServer = false,
-                            Name = item.Title,
-                            Uri = new Uri(item.Res.Value ?? string.Empty),
-                        });
-                    }
-                    else if (objItem is DIDLLiteContainer container)
-                    {
-                        items.Add(new DlnaItem
-                        {
-                            Id = container.Id,
-                            IsBrowsable = true,
-                            IsServer = false,
-                            Name = container.Title,
-                            Uri = new Uri(defaultUri),
-                        });
-                    }
+                        Id = item.Id,
+                        IsBrowsable = false,
+                        IsServer = false,
+                        Name = item.Title,
+                        Uri = new Uri(item.Res.Value ?? string.Empty),
+                    });
                 }
-                return items;
+                else if (objItem is DIDLLiteContainer container)
+                {
+                    items.Add(new DlnaItem
+                    {
+                        Id = container.Id,
+                        IsBrowsable = true,
+                        IsServer = false,
+                        Name = container.Title,
+                        Uri = new Uri(defaultUri),
+                    });
+                }
             }
+            return items;
         }
 
         return Array.Empty<DlnaItem>();
@@ -190,8 +177,7 @@ internal sealed class DLNAClient : IDisposable
 
     private DlnaItem ProcessServerXml(Uri server, string content)
     {
-        using var reader = new StringReader(content);
-        var data = _rootSerializer.Deserialize(reader) as Root;
+        var data = _rootSerializer.Deserialize(content);
         var serverEntry = data?.Device.ServiceList?.Service.FirstOrDefault(S => S.ServiceType == "urn:schemas-upnp-org:service:ContentDirectory:1");
 
         if (serverEntry != null)
@@ -210,25 +196,23 @@ internal sealed class DLNAClient : IDisposable
         throw new InvalidOperationException("Invalid response");
     }
 
-    private static string CreateBrowseXml(string id, int startIndex = 0, int requestedCount = 0)
+    private string CreateBrowseXml(string id, int startIndex = 0, int requestedCount = 0)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(startIndex, 0);
         ArgumentOutOfRangeException.ThrowIfLessThan(requestedCount, 0);
 
-        return $"""
-            <?xml version=\"1.0\"?>
-            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-                <s:Body>
-                    <u:Browse xmlns:u="urn:schemas-upnp-org:service:ContentDirectory:1">
-                        <ObjectID>{id}</ObjectID>
-                        <BrowseFlag>BrowseDirectChildren</BrowseFlag>
-                        <Filter>*</Filter>
-                        <StartingIndex>{startIndex}</StartingIndex>
-                        <RequestedCount>{requestedCount}</RequestedCount>
-                        <SortCriteria></SortCriteria>
-                    </u:Browse>
-                </s:Body>
-            </s:Envelope>
-            """;
+        var brwseObject = new BrowseRequest
+        {
+            ObjectID = id,
+            BrowseFlag = "BrowseDirectChildren",
+            Filter = "*",
+            StartingIndex = startIndex,
+            RequestedCount = requestedCount,
+            SortCriteria = string.Empty,
+        };
+
+        var xml = _browseRequestSerializer.SerializeSoap(brwseObject, false);
+
+        return xml;
     }
 }
