@@ -5,8 +5,10 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 using Media.Dto.Internals;
 
@@ -15,8 +17,7 @@ namespace Media.Infrastructure;
 internal sealed class WebApp
 {
     private readonly WebApplication _app;
-    private readonly int _port;
-
+    
     public WebApp(int port)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder();
@@ -25,20 +26,35 @@ internal sealed class WebApp
         builder.Logging.AddConsole();
         builder.WebHost.ConfigureKestrel((context, serverOptions) => serverOptions.ListenAnyIP(port));
         _app = builder.Build();
-        _port = port;
+        Port = port;
     }
 
     public ILogger Logger => _app.Logger;
 
+    public int Port { get; }
+
     public IEnumerable<string> GetListenUrls()
     {
-        var host = Dns.GetHostEntry(Dns.GetHostName());
-        foreach (var ip in host.AddressList)
+        foreach (var (adress, _) in GetIpAdresses())
         {
-            if (ip.AddressFamily == AddressFamily.InterNetwork)
-            {
-                yield return $"http://{ip}:{_port}";
-            }
+            yield return $"http://{adress}:{Port}";
+        }
+    }
+
+    public IEnumerable<(IPAddress adress, IPAddress mask)> GetIpAdresses()
+    {
+        var ipAdresses = Dns.GetHostEntry(Dns.GetHostName()).AddressList
+            .Where(i => i.AddressFamily == AddressFamily.InterNetwork)
+            .ToHashSet();
+        
+        var ifaceAddrs = NetworkInterface.GetAllNetworkInterfaces()
+            .Where(i => i.OperationalStatus == OperationalStatus.Up)
+            .SelectMany(x => x.GetIPProperties().UnicastAddresses)
+            .Where(x => ipAdresses.Contains(x.Address));
+
+        foreach (var adress in ifaceAddrs)
+        {
+            yield return (adress.Address, adress.IPv4Mask);
         }
     }
 

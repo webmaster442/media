@@ -13,15 +13,19 @@ namespace Media.Infrastructure.Dlna;
 public class DLNASsdpResponder
 {
     private readonly ILogger _logger;
-    private readonly IEnumerable<string> _serverLocations;
+    private readonly IEnumerable<(IPAddress adress, IPAddress mask)> _ipAdresses;
+    private readonly int _httpServerPort;
     private const string MulticastAddress = "239.255.255.250";
     private const int MulticastPort = 1900;
     private readonly Dictionary<string, string> _stUSns;
 
-    public DLNASsdpResponder(ILogger logger, IEnumerable<string> serverLocations)
+    public DLNASsdpResponder(ILogger logger,
+                             int serverPort,
+                             IEnumerable<(IPAddress adress, IPAddress mask)> httpServerIps)
     {
+        _httpServerPort = serverPort;
         _logger = logger;
-        _serverLocations = serverLocations;
+        _ipAdresses = httpServerIps;
         _stUSns = new Dictionary<string, string>
         {
             { "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad", "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad" },
@@ -31,9 +35,27 @@ public class DLNASsdpResponder
         };
     }
 
+    private static bool IsSameNetwork(IPAddress a, IPAddress b, IPAddress mask)
+    {
+        static uint ToUint(IPAddress address)
+        {
+            byte[] bytes = address.GetAddressBytes();
+            return BitConverter.ToUInt32(bytes, 0);
+        }
+
+        uint netA = ToUint(a) & ToUint(mask);
+        uint netB = ToUint(b) & ToUint(mask);
+        return netA == netB;
+    }
+
+
     private async Task SendSSDPResponse(UdpClient client, IPEndPoint destinationEndPoint)
     {
-        foreach (var serverLocation in _serverLocations)
+        var locations = _ipAdresses
+            .Where(ip => IsSameNetwork(ip.adress, destinationEndPoint.Address, ip.mask))
+            .Select(ip => $"http://{ip.adress}:{_httpServerPort}");
+
+        foreach (var serverLocation in locations)
         {
             foreach (var stusn in _stUSns)
             {
@@ -52,7 +74,7 @@ public class DLNASsdpResponder
 
                 byte[] responseBytes = Encoding.UTF8.GetBytes(response);
 
-                await client.SendAsync(responseBytes, responseBytes.Length, destinationEndPoint);
+               await client.SendAsync(responseBytes, responseBytes.Length, destinationEndPoint);
             }
             _logger.LogInformation("Sent SSDP response to {Adress}:{Port}",
                        destinationEndPoint.Address,
