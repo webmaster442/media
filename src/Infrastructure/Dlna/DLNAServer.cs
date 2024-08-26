@@ -1,5 +1,4 @@
 ﻿using System.Net.Mime;
-using System.Security.Cryptography.X509Certificates;
 
 using Media.Embedded;
 
@@ -17,7 +16,7 @@ public class DLNAServer
         _mediaDb = new MediaDb();
         _mediaDb.ScanFolder(directory);
         _dLNASsdpResponder = new DLNASsdpResponder(_webApp.Logger,
-                                                   new Guid("08CE8D39-F175-4017-A8C0-BF6C1FDFD0F4"),
+                                                   new Guid("4a8f3b30-d62f-40ed-b003-0719db08fdad"),
                                                    _webApp.Port,
                                                    _webApp.GetIpAdresses());
 
@@ -32,6 +31,5 @@ public class DLNAServer
     public async Task RunAsync(CancellationToken token)
     {
         await Task.WhenAll(_dLNASsdpResponder.RunAsync(token), _webApp.RunAsync(token));
-        
     }
 }
