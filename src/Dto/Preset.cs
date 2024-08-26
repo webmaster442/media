@@ -26,7 +26,7 @@ public class Preset
 
     [XmlElement("Description")]
     [NotEmptyOrWiteSpace]
-    public required string Description { get; set; }
+    public required CData Description { get; set; }
 
     [XmlIgnore]
     public const string InputPlaceHolder = "{input}";
