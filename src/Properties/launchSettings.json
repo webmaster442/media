@@ -31,6 +31,10 @@
     "info hw-encoders": {
       "commandName": "Project",
       "commandLineArgs": "info hw-encoders"
+    },
+    "serve": {
+      "commandName": "Project",
+      "commandLineArgs": "serve d:\\video"
     }
   }
 }

@@ -26,9 +26,9 @@ public class DLNAServer
         _webApp.AddStreamingRoutes(_mediaDb.All);
     }
 
-    public async Task Run(CancellationToken token)
+    public async Task RunAsync(CancellationToken token)
     {
-        await _webApp.RunAsync(token);
-        await _dLNASsdpResponder.RunAsync(token);
+        await Task.WhenAll(_dLNASsdpResponder.RunAsync(token), _webApp.RunAsync(token));
+        
     }
 }

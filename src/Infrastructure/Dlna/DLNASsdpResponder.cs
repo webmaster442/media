@@ -6,6 +6,8 @@
 using System.Net;
 using System.Net.Sockets;
 
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace Media.Infrastructure.Dlna;
 
 public class DLNASsdpResponder
@@ -14,23 +16,33 @@ public class DLNASsdpResponder
     private readonly IEnumerable<string> _serverLocations;
     private const string MulticastAddress = "239.255.255.250";
     private const int MulticastPort = 1900;
+    private readonly Dictionary<string, string> _stUSns;
 
     public DLNASsdpResponder(ILogger logger, IEnumerable<string> serverLocations)
     {
         _logger = logger;
         _serverLocations = serverLocations;
+        _stUSns = new Dictionary<string, string>
+        {
+            { "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad", "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad" },
+            { "upnp:rootdevice", "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad::upnp:rootdevice" },
+            { "urn:schemas-upnp-org:device:MediaServer:1", "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad::urn:schemas-upnp-org:device:MediaServer:1" },
+            { "urn:schemas-upnp-org:service:ContentDirectory:1", "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad::urn:schemas-upnp-org:service:ContentDirectory:1" }
+        };
     }
 
     private async Task SendSSDPResponse(UdpClient client, IPEndPoint destinationEndPoint)
     {
         foreach (var serverLocation in _serverLocations)
         {
-            var response = $"""
+            foreach (var stusn in _stUSns)
+            {
+                var response = $"""
                 HTTP/1.1 200 OK
                 CACHE-CONTROL: max-age=1800
                 DATE: {DateTime.UtcNow:r}
-                ST: urn:schemas-upnp-org:service:ContentDirectory:1
-                USN: uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad::urn:schemas-upnp-org:service:ContentDirectory:1
+                ST: {stusn.Key}
+                USN: {stusn.Value}
                 EXT:
                 LOCATION: {serverLocation}/rootDesc.xml
                 SERVER: Media Cli DLNA Server/1.0 UPnP/1.0
@@ -38,13 +50,13 @@ public class DLNASsdpResponder
 
                 """;
 
-            byte[] responseBytes = Encoding.UTF8.GetBytes(response);
+                byte[] responseBytes = Encoding.UTF8.GetBytes(response);
 
-            await client.SendAsync(responseBytes, responseBytes.Length, destinationEndPoint);
-
+                await client.SendAsync(responseBytes, responseBytes.Length, destinationEndPoint);
+            }
             _logger.LogInformation("Sent SSDP response to {Adress}:{Port}",
-                                   destinationEndPoint.Address,
-                                   destinationEndPoint.Port);
+                       destinationEndPoint.Address,
+                       destinationEndPoint.Port);
         }
     }
 
@@ -52,7 +64,9 @@ public class DLNASsdpResponder
     {
         var udpClient = new UdpClient();
         udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-        udpClient.JoinMulticastGroup(IPAddress.Parse(MulticastAddress));
+        udpClient.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(IPAddress.Parse(MulticastAddress), IPAddress.Any));
+        udpClient.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 2);
+        udpClient.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastLoopback, true);
 
         IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, MulticastPort);
         udpClient.Client.Bind(localEndPoint);
@@ -63,7 +77,7 @@ public class DLNASsdpResponder
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                var receivedResult = await udpClient.ReceiveAsync();
+                UdpReceiveResult receivedResult = await udpClient.ReceiveAsync();
                 string receivedMessage = Encoding.UTF8.GetString(receivedResult.Buffer);
                 _logger.LogInformation("Received message: {message}", receivedMessage);
 
