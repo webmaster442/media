@@ -16,7 +16,10 @@ public class DLNAServer
         _webApp = new WebApp(port);
         _mediaDb = new MediaDb();
         _mediaDb.ScanFolder(directory);
-        _dLNASsdpResponder = new DLNASsdpResponder(_webApp.Logger, _webApp.Port, _webApp.GetIpAdresses());
+        _dLNASsdpResponder = new DLNASsdpResponder(_webApp.Logger,
+                                                   new Guid("08CE8D39-F175-4017-A8C0-BF6C1FDFD0F4"),
+                                                   _webApp.Port,
+                                                   _webApp.GetIpAdresses());
 
         _webApp.AddEmbeddedFile("/icon-192.png", EmbeddedResources.Icon192Png, MediaTypeNames.Image.Png);
         _webApp.AddEmbeddedFile("/icon-48.png", EmbeddedResources.Icon48Png, MediaTypeNames.Image.Png);

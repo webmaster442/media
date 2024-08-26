@@ -6,8 +6,6 @@
 using System.Net;
 using System.Net.Sockets;
 
-using Microsoft.AspNetCore.Mvc.Rendering;
-
 namespace Media.Infrastructure.Dlna;
 
 public class DLNASsdpResponder
@@ -20,18 +18,20 @@ public class DLNASsdpResponder
     private readonly Dictionary<string, string> _stUSns;
 
     public DLNASsdpResponder(ILogger logger,
+                             Guid guid,
                              int serverPort,
                              IEnumerable<(IPAddress adress, IPAddress mask)> httpServerIps)
     {
+        var uuid = guid.ToString().ToLower();
         _httpServerPort = serverPort;
         _logger = logger;
         _ipAdresses = httpServerIps;
         _stUSns = new Dictionary<string, string>
         {
-            { "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad", "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad" },
-            { "upnp:rootdevice", "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad::upnp:rootdevice" },
-            { "urn:schemas-upnp-org:device:MediaServer:1", "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad::urn:schemas-upnp-org:device:MediaServer:1" },
-            { "urn:schemas-upnp-org:service:ContentDirectory:1", "uuid:4a8f3b30-d62f-40ed-b003-0719db08fdad::urn:schemas-upnp-org:service:ContentDirectory:1" }
+            { $"uuid:{uuid}", $"uuid:{uuid}" },
+            { "upnp:rootdevice", $"uuid:{uuid}::upnp:rootdevice" },
+            { "urn:schemas-upnp-org:device:MediaServer:1", $"uuid:{uuid}::urn:schemas-upnp-org:device:MediaServer:1" },
+            { "urn:schemas-upnp-org:service:ContentDirectory:1", $"uuid:{uuid}::urn:schemas-upnp-org:service:ContentDirectory:1" }
         };
     }
 
