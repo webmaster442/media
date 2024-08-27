@@ -1,21 +1,20 @@
 ﻿using System;
 
-namespace NMaier.SimpleDlna.Server
+namespace NMaier.SimpleDlna.Server.Handlers;
+
+internal sealed class IconHandler : IPrefixHandler
 {
-  internal sealed class IconHandler : IPrefixHandler
-  {
     public string Prefix => "/icon/";
 
     public IResponse HandleRequest(IRequest req)
     {
-      var resource = req.Path.Substring(Prefix.Length);
-      var isPNG = resource.EndsWith(
-        ".png", StringComparison.OrdinalIgnoreCase);
-      return new ResourceResponse(
-        HttpCode.Ok,
-        isPNG ? "image/png" : "image/jpeg",
-        resource
-        );
+        var resource = req.Path.Substring(Prefix.Length);
+        var isPNG = resource.EndsWith(
+          ".png", StringComparison.OrdinalIgnoreCase);
+        return new ResourceResponse(
+          HttpCode.Ok,
+          isPNG ? "image/png" : "image/jpeg",
+          resource
+          );
     }
-  }
 }

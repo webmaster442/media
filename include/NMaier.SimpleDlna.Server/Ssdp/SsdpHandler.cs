@@ -8,12 +8,15 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Timers;
+
+using NMaier.SimpleDlna.Server.Http;
 using NMaier.SimpleDlna.Utilities;
+
 using Timer = System.Timers.Timer;
 
 namespace NMaier.SimpleDlna.Server.Ssdp
 {
-  internal sealed class SsdpHandler : Logging, IDisposable
+    internal sealed class SsdpHandler : Logging, IDisposable
   {
     private const int DATAGRAMS_PER_MESSAGE = 3;
 
@@ -86,7 +89,7 @@ namespace NMaier.SimpleDlna.Server.Ssdp
     {
       Debug("Disposing SSDP");
       running = false;
-      while (messageQueue.Count != 0) {
+      while (!messageQueue.IsEmpty) {
         datagramPosted.WaitOne();
       }
 
@@ -96,12 +99,13 @@ namespace NMaier.SimpleDlna.Server.Ssdp
       queueTimer.Enabled = false;
       notificationTimer.Dispose();
       queueTimer.Dispose();
-      datagramPosted.Dispose();
-    }
+            client.Dispose();
+            datagramPosted.Dispose();
+        }
 
     private void ProcessQueue(object sender, ElapsedEventArgs e)
     {
-      while (messageQueue.Count != 0) {
+      while (!messageQueue.IsEmpty) {
         Datagram msg;
         if (!messageQueue.TryPeek(out msg)) {
           continue;
@@ -116,7 +120,7 @@ namespace NMaier.SimpleDlna.Server.Ssdp
         messageQueue.TryDequeue(out msg);
       }
       datagramPosted.Set();
-      queueTimer.Enabled = messageQueue.Count != 0;
+      queueTimer.Enabled = !messageQueue.IsEmpty;
       queueTimer.Interval = random.Next(25, running ? 75 : 50);
     }
 
@@ -190,7 +194,7 @@ namespace NMaier.SimpleDlna.Server.Ssdp
         return;
       }
       var dgram = new Datagram(endpoint, address, message, sticky);
-      if (messageQueue.Count == 0) {
+      if (messageQueue.IsEmpty) {
         dgram.Send();
       }
       messageQueue.Enqueue(dgram);

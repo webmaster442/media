@@ -32,7 +32,7 @@ namespace NMaier.SimpleDlna.Server.Ssdp
     {
       var msg = Encoding.ASCII.GetBytes(Message);
       try {
-        var client = new UdpClient();
+        using var client = new UdpClient();
         client.Client.Bind(new IPEndPoint(LocalAddress, 0));
         client.Ttl = 10;
         client.Client.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 10);

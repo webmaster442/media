@@ -1,8 +1,10 @@
 ﻿using System;
 
+using NMaier.SimpleDlna.Server.Http;
+
 namespace NMaier.SimpleDlna.Server
 {
-  public sealed class ResponseHeaders : RawHeaders
+    public sealed class ResponseHeaders : RawHeaders
   {
     public ResponseHeaders()
       : this(true)

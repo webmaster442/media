@@ -1,19 +1,18 @@
 ﻿using System.Net;
 
-namespace NMaier.SimpleDlna.Server
+namespace NMaier.SimpleDlna.Server;
+
+public interface IRequest
 {
-  public interface IRequest
-  {
-    string Body { get; }
+    string? Body { get; }
 
     IHeaders Headers { get; }
 
     IPEndPoint LocalEndPoint { get; }
 
-    string Method { get; }
+    string? Method { get; }
 
     string Path { get; }
 
     IPEndPoint RemoteEndpoint { get; }
-  }
 }
