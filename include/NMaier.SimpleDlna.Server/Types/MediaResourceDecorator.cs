@@ -1,25 +1,24 @@
-﻿using System;
-using System.IO;
-using NMaier.SimpleDlna.Server.Metadata;
+﻿using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 
-namespace NMaier.SimpleDlna.Server
+namespace NMaier.SimpleDlna.Server.Types;
+
+internal class MediaResourceDecorator<T> : IMediaResource, IMetaInfo
+where T : IMediaResource, IMetaInfo
 {
-  internal class MediaResourceDecorator<T> : IMediaResource, IMetaInfo
-    where T : IMediaResource, IMetaInfo
-  {
     protected T Resource;
 
     public MediaResourceDecorator(T resource)
     {
-      Resource = resource;
+        Resource = resource;
     }
 
     public virtual IMediaCoverResource Cover => Resource.Cover;
 
     public string Id
     {
-      get { return Resource.Id; }
-      set { Resource.Id = value; }
+        get { return Resource.Id; }
+        set { Resource.Id = value; }
     }
 
     public virtual DlnaMediaTypes MediaType => Resource.MediaType;
@@ -34,28 +33,27 @@ namespace NMaier.SimpleDlna.Server
 
     public DlnaMime Type => Resource.Type;
 
-    public virtual int CompareTo(IMediaItem other)
+    public virtual int CompareTo(IMediaItem? other)
     {
-      return Resource.CompareTo(other);
+        return Resource.CompareTo(other);
     }
 
     public virtual Stream CreateContentStream()
     {
-      return Resource.CreateContentStream();
+        return Resource.CreateContentStream();
     }
 
-    public bool Equals(IMediaItem other)
+    public bool Equals(IMediaItem? other)
     {
-      return Resource.Equals(other);
+        return Resource.Equals(other);
     }
 
     public string ToComparableTitle()
     {
-      return Resource.ToComparableTitle();
+        return Resource.ToComparableTitle();
     }
 
     public DateTime InfoDate => Resource.InfoDate;
 
     public long? InfoSize => Resource.InfoSize;
-  }
 }

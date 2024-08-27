@@ -1,16 +1,8 @@
-using System;
-using System.Runtime.Serialization;
+namespace NMaier.SimpleDlna.Server.Types;
 
-namespace NMaier.SimpleDlna.Server
+[Serializable]
+public class HttpException : Exception
 {
-  [Serializable]
-  public class HttpException : Exception
-  {
-    protected HttpException(SerializationInfo info, StreamingContext context)
-      : base(info, context)
-    {
-    }
-
     public HttpException()
     {
     }
@@ -24,5 +16,4 @@ namespace NMaier.SimpleDlna.Server
       : base(message, innerException)
     {
     }
-  }
 }

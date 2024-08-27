@@ -1,34 +1,31 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 
-namespace NMaier.SimpleDlna.Server
+namespace NMaier.SimpleDlna.Server.Types;
+
+internal sealed class UpnpDevice
 {
-  internal sealed class UpnpDevice
-  {
-    public readonly IPAddress Address;
+    public IPAddress Address { get; }
 
-    public readonly Uri Descriptor;
+    public Uri Descriptor { get; }
 
-    public readonly string Type;
+    public string Type { get; }
 
-    public readonly string USN;
+    public string USN { get; }
 
-    public readonly Guid UUID;
+    public Guid UUID { get; }
 
-    public UpnpDevice(Guid uuid, string type, Uri descriptor,
-      IPAddress address)
+    public UpnpDevice(Guid uuid,
+                      string type,
+                      Uri descriptor,
+                      IPAddress address)
     {
-      UUID = uuid;
-      Type = type;
-      Descriptor = descriptor;
-      Address = address;
+        UUID = uuid;
+        Type = type;
+        Descriptor = descriptor;
+        Address = address;
 
-      if (Type.StartsWith("uuid:", StringComparison.Ordinal)) {
-        USN = Type;
-      }
-      else {
-        USN = $"uuid:{UUID}::{Type}";
-      }
+        USN = Type.StartsWith("uuid:", StringComparison.Ordinal)
+            ? Type
+            : $"uuid:{UUID}::{Type}";
     }
-  }
 }

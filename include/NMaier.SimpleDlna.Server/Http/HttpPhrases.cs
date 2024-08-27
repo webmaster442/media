@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
+﻿namespace NMaier.SimpleDlna.Server.Http;
 
-namespace NMaier.SimpleDlna.Server
+internal static class HttpPhrases
 {
-  internal static class HttpPhrases
-  {
-    public static readonly IDictionary<HttpCode, string> Phrases =
-      new Dictionary<HttpCode, string>
-      {
+    public static readonly IDictionary<HttpCode, string> Phrases = new Dictionary<HttpCode, string>
+    {
         {HttpCode.Ok, "OK"},
         {HttpCode.Partial, "Partial Content"},
         {HttpCode.MovedPermanently, "Moved Permanently"},
@@ -17,5 +14,4 @@ namespace NMaier.SimpleDlna.Server
         {HttpCode.RangeNotSatisfiable, "Requested Range not satisfiable"},
         {HttpCode.InternalError, "Internal Server Error"}
       };
-  }
 }

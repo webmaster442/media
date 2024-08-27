@@ -1,41 +1,46 @@
-﻿using System;
-using System.IO;
-using System.Resources;
-using NMaier.SimpleDlna.Server.Properties;
-using NMaier.SimpleDlna.Utilities;
+﻿using System.Resources;
 
-namespace NMaier.SimpleDlna.Server
+using NMaier.SimpleDlna.Server.Http;
+using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Properties;
+using NMaier.SimpleDlna.Server.Utilities;
+
+namespace NMaier.SimpleDlna.Server.Responses;
+
+internal sealed class ResourceResponse : Logging, IResponse
 {
-  internal sealed class ResourceResponse : Logging, IResponse
-  {
-    private readonly byte[] resource;
+    private readonly byte[] _resource = Array.Empty<byte>();
 
     public ResourceResponse(HttpCode aStatus, string type, string aResource)
       : this(aStatus, type, Resources.ResourceManager, aResource)
     {
     }
 
-    public ResourceResponse(HttpCode aStatus, string type,
-      ResourceManager aResourceManager, string aResource)
+    public ResourceResponse(HttpCode aStatus, string type, ResourceManager aResourceManager, string aResource)
     {
-      Status = aStatus;
-      try {
-        resource = (byte[])aResourceManager.GetObject(aResource);
+        Status = aStatus;
+        try
+        {
+            if (aResourceManager.GetObject(aResource) is not byte[] obj)
+            {
+                Error("Resource " + aResource + " not found");
+                throw new InvalidOperationException(aResource);
+            }
+            _resource = obj;
 
-        Headers["Content-Type"] = type;
-        var len = resource?.Length.ToString() ?? "0";
-        Headers["Content-Length"] = len;
-      }
-      catch (Exception ex) {
-        Error("Failed to prepare resource " + aResource, ex);
-        throw;
-      }
+            Headers["Content-Type"] = type;
+            Headers["Content-Length"] = _resource?.Length.ToString() ?? "0";
+        }
+        catch (Exception ex)
+        {
+            Error("Failed to prepare resource " + aResource, ex);
+            throw;
+        }
     }
 
-    public Stream Body => new MemoryStream(resource);
+    public Stream Body => new MemoryStream(_resource);
 
     public IHeaders Headers { get; } = new ResponseHeaders();
 
     public HttpCode Status { get; }
-  }
 }

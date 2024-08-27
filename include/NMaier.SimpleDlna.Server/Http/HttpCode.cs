@@ -1,7 +1,7 @@
-﻿namespace NMaier.SimpleDlna.Server
+﻿namespace NMaier.SimpleDlna.Server.Http;
+
+public enum HttpCode
 {
-  public enum HttpCode
-  {
     None = 0,
     Ok = 200,
     Partial = 206,
@@ -12,5 +12,4 @@
     NotFound = 404,
     RangeNotSatisfiable = 416,
     InternalError = 500
-  }
 }

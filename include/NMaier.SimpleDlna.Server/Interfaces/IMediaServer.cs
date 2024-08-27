@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NMaier.SimpleDlna.Server.Http;
 
-namespace NMaier.SimpleDlna.Server
+namespace NMaier.SimpleDlna.Server.Interfaces;
+
+public interface IMediaServer
 {
-  public interface IMediaServer
-  {
     IHttpAuthorizationMethod Authorizer { get; }
 
     string FriendlyName { get; }
@@ -11,5 +11,4 @@ namespace NMaier.SimpleDlna.Server
     Guid UUID { get; }
 
     IMediaItem GetItem(string id);
-  }
 }

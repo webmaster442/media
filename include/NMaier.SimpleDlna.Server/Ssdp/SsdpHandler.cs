@@ -1,324 +1,341 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Timers;
 
 using NMaier.SimpleDlna.Server.Http;
-using NMaier.SimpleDlna.Utilities;
+using NMaier.SimpleDlna.Server.Types;
+using NMaier.SimpleDlna.Server.Utilities;
 
 using Timer = System.Timers.Timer;
 
-namespace NMaier.SimpleDlna.Server.Ssdp
+namespace NMaier.SimpleDlna.Server.Ssdp;
+
+internal sealed class SsdpHandler : Logging, IDisposable
 {
-    internal sealed class SsdpHandler : Logging, IDisposable
-  {
     private const int DATAGRAMS_PER_MESSAGE = 3;
 
     private const string SSDP_ADDR = "239.255.255.250";
 
     private const int SSDP_PORT = 1900;
 
-    private static readonly Random random = new Random();
-
-    private static readonly IPEndPoint ssdpEndp =
+    private static readonly IPEndPoint SsdpEndp =
       new IPEndPoint(IPAddress.Parse(SSDP_ADDR), SSDP_PORT);
 
     internal static readonly IPEndPoint BroadEndp =
       new IPEndPoint(IPAddress.Parse("255.255.255.255"), SSDP_PORT);
 
-    private static readonly IPAddress ssdpIP =
+    private static readonly IPAddress SsdpIP =
       IPAddress.Parse(SSDP_ADDR);
 
-    private readonly UdpClient client = new UdpClient();
+    private readonly UdpClient _client = new UdpClient();
 
-    private readonly AutoResetEvent datagramPosted =
+    private readonly AutoResetEvent _datagramPosted =
       new AutoResetEvent(false);
 
-    private readonly Dictionary<Guid, List<UpnpDevice>> devices =
+    private readonly Dictionary<Guid, List<UpnpDevice>> _devices =
       new Dictionary<Guid, List<UpnpDevice>>();
 
-    private readonly ConcurrentQueue<Datagram> messageQueue =
+    private readonly ConcurrentQueue<Datagram> _messageQueue =
       new ConcurrentQueue<Datagram>();
 
-    private readonly Timer notificationTimer =
+    private readonly Timer _notificationTimer =
       new Timer(60000);
 
-    private readonly Timer queueTimer =
+    private readonly Timer _queueTimer =
       new Timer(1000);
 
-    private bool running = true;
+    private bool _running = true;
 
     public SsdpHandler()
     {
-      notificationTimer.Elapsed += Tick;
-      notificationTimer.Enabled = true;
+        _notificationTimer.Elapsed += Tick;
+        _notificationTimer.Enabled = true;
 
-      queueTimer.Elapsed += ProcessQueue;
+        _queueTimer.Elapsed += ProcessQueue;
 
-      client.Client.UseOnlyOverlappedIO = true;
-      client.Client.SetSocketOption(
-        SocketOptionLevel.Socket,
-        SocketOptionName.ReuseAddress,
-        true
-        );
-      client.ExclusiveAddressUse = false;
-      client.Client.Bind(new IPEndPoint(IPAddress.Any, SSDP_PORT));
-      client.JoinMulticastGroup(ssdpIP, 10);
-      Notice("SSDP service started");
-      Receive();
+        _client.Client.SetSocketOption(
+          SocketOptionLevel.Socket,
+          SocketOptionName.ReuseAddress,
+          true
+          );
+        _client.ExclusiveAddressUse = false;
+        _client.Client.Bind(new IPEndPoint(IPAddress.Any, SSDP_PORT));
+        _client.JoinMulticastGroup(SsdpIP, 10);
+        Notice("SSDP service started");
+        Receive();
     }
 
     private UpnpDevice[] Devices
     {
-      get {
-        UpnpDevice[] devs;
-        lock (devices) {
-          devs = devices.Values.SelectMany(i => i).ToArray();
+        get
+        {
+            UpnpDevice[] devs;
+            lock (_devices)
+            {
+                devs = _devices.Values.SelectMany(i => i).ToArray();
+            }
+            return devs;
         }
-        return devs;
-      }
     }
 
     public void Dispose()
     {
-      Debug("Disposing SSDP");
-      running = false;
-      while (!messageQueue.IsEmpty) {
-        datagramPosted.WaitOne();
-      }
-
-      client.DropMulticastGroup(ssdpIP);
-
-      notificationTimer.Enabled = false;
-      queueTimer.Enabled = false;
-      notificationTimer.Dispose();
-      queueTimer.Dispose();
-            client.Dispose();
-            datagramPosted.Dispose();
+        Debug("Disposing SSDP");
+        _running = false;
+        while (!_messageQueue.IsEmpty)
+        {
+            _datagramPosted.WaitOne();
         }
 
-    private void ProcessQueue(object sender, ElapsedEventArgs e)
+        _client.DropMulticastGroup(SsdpIP);
+
+        _notificationTimer.Enabled = false;
+        _queueTimer.Enabled = false;
+        _notificationTimer.Dispose();
+        _queueTimer.Dispose();
+        _client.Dispose();
+        _datagramPosted.Dispose();
+    }
+
+    private void ProcessQueue(object? sender, ElapsedEventArgs e)
     {
-      while (!messageQueue.IsEmpty) {
-        Datagram msg;
-        if (!messageQueue.TryPeek(out msg)) {
-          continue;
+        while (!_messageQueue.IsEmpty)
+        {
+            if (!_messageQueue.TryPeek(out Datagram? msg))
+            {
+                continue;
+            }
+            if (msg != null && (_running || msg.Sticky))
+            {
+                msg.Send();
+                if (msg.SendCount > DATAGRAMS_PER_MESSAGE)
+                {
+                    _messageQueue.TryDequeue(out msg);
+                }
+                break;
+            }
+            _messageQueue.TryDequeue(out msg);
         }
-        if (msg != null && (running || msg.Sticky)) {
-          msg.Send();
-          if (msg.SendCount > DATAGRAMS_PER_MESSAGE) {
-            messageQueue.TryDequeue(out msg);
-          }
-          break;
-        }
-        messageQueue.TryDequeue(out msg);
-      }
-      datagramPosted.Set();
-      queueTimer.Enabled = !messageQueue.IsEmpty;
-      queueTimer.Interval = random.Next(25, running ? 75 : 50);
+        _datagramPosted.Set();
+        _queueTimer.Enabled = !_messageQueue.IsEmpty;
+        _queueTimer.Interval = Random.Shared.Next(25, _running ? 75 : 50);
     }
 
     private void Receive()
     {
-      try {
-        client.BeginReceive(ReceiveCallback, null);
-      }
-      catch (ObjectDisposedException) {
-      }
+        try
+        {
+            _client.BeginReceive(ReceiveCallback, null);
+        }
+        catch (ObjectDisposedException)
+        {
+        }
     }
 
     private void ReceiveCallback(IAsyncResult result)
     {
-      try {
-        var endpoint = new IPEndPoint(IPAddress.None, SSDP_PORT);
-        var received = client.EndReceive(result, ref endpoint);
-        if (received == null) {
-          throw new IOException("Didn't receive anything");
-        }
-        if (received.Length == 0) {
-          throw new IOException("Didn't receive any bytes");
-        }
-#if DUMP_ALL_SSDP
-        DebugFormat("{0} - SSDP Received a datagram", endpoint);
-#endif
-        using (var reader = new StreamReader(
-          new MemoryStream(received), Encoding.ASCII)) {
-          var proto = reader.ReadLine();
-          if (proto == null) {
-            throw new IOException("Couldn't read protocol line");
-          }
-          proto = proto.Trim();
-          if (string.IsNullOrEmpty(proto)) {
-            throw new IOException("Invalid protocol line");
-          }
-          var method = proto.Split(new[] {' '}, 2)[0];
-          var headers = new Headers();
-          for (var line = reader.ReadLine();
-            line != null;
-            line = reader.ReadLine()) {
-            line = line.Trim();
-            if (string.IsNullOrEmpty(line)) {
-              break;
+        try
+        {
+            IPEndPoint? endpoint = new IPEndPoint(IPAddress.None, SSDP_PORT);
+            var received = _client.EndReceive(result, ref endpoint) ?? throw new IOException("Didn't receive anything");
+            if (received.Length == 0)
+            {
+                throw new IOException("Didn't receive any bytes");
             }
-            var parts = line.Split(new[] {':'}, 2);
-            headers[parts[0]] = parts[1].Trim();
-          }
 #if DUMP_ALL_SSDP
-          DebugFormat("{0} - Datagram method: {1}", endpoint, method);
-          Debug(headers);
+    DebugFormat("{0} - SSDP Received a datagram", endpoint);
 #endif
-          if (method == "M-SEARCH") {
-            RespondToSearch(endpoint, headers["st"]);
-          }
+            using (var reader = new StreamReader(new MemoryStream(received), Encoding.ASCII))
+            {
+                var proto = reader.ReadLine();
+                if (proto == null)
+                {
+                    throw new IOException("Couldn't read protocol line");
+                }
+                proto = proto.Trim();
+                if (string.IsNullOrEmpty(proto))
+                {
+                    throw new IOException("Invalid protocol line");
+                }
+                var method = proto.Split(new[] { ' ' }, 2)[0];
+                var headers = new Headers();
+                for (var line = reader.ReadLine();
+                  line != null;
+                  line = reader.ReadLine())
+                {
+                    line = line.Trim();
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        break;
+                    }
+                    var parts = line.Split(new[] { ':' }, 2);
+                    headers[parts[0]] = parts[1].Trim();
+                }
+#if DUMP_ALL_SSDP
+      DebugFormat("{0} - Datagram method: {1}", endpoint, method);
+      Debug(headers);
+#endif
+                if (method == "M-SEARCH" && endpoint != null)
+                {
+                    RespondToSearch(endpoint, headers["st"]);
+                }
+            }
         }
-      }
-      catch (IOException ex) {
-        Debug("Failed to read SSDP message", ex);
-      }
-      catch (Exception ex) {
-        Warn("Failed to read SSDP message", ex);
-      }
-      Receive();
+        catch (IOException ex)
+        {
+            Debug("Failed to read SSDP message", ex);
+        }
+        catch (Exception ex)
+        {
+            Warn("Failed to read SSDP message", ex);
+        }
+        Receive();
     }
 
     private void SendDatagram(IPEndPoint endpoint, IPAddress address,
       string message, bool sticky)
     {
-      if (!running) {
-        return;
-      }
-      var dgram = new Datagram(endpoint, address, message, sticky);
-      if (messageQueue.IsEmpty) {
-        dgram.Send();
-      }
-      messageQueue.Enqueue(dgram);
-      queueTimer.Enabled = true;
+        if (!_running)
+        {
+            return;
+        }
+        var dgram = new Datagram(endpoint, address, message, sticky);
+        if (_messageQueue.IsEmpty)
+        {
+            dgram.Send();
+        }
+        _messageQueue.Enqueue(dgram);
+        _queueTimer.Enabled = true;
     }
 
     private void SendSearchResponse(IPEndPoint endpoint, UpnpDevice dev)
     {
-      var headers = new RawHeaders
-      {
-        {"CACHE-CONTROL", "max-age = 600"},
-        {"DATE", DateTime.Now.ToString("R")},
-        {"EXT", string.Empty},
-        {"LOCATION", dev.Descriptor.ToString()},
-        {"SERVER", HttpServer.Signature},
-        {"ST", dev.Type},
-        {"USN", dev.USN}
-      };
+        var headers = new RawHeaders
+  {
+    {"CACHE-CONTROL", "max-age = 600"},
+    {"DATE", DateTime.Now.ToString("R")},
+    {"EXT", string.Empty},
+    {"LOCATION", dev.Descriptor.ToString()},
+    {"SERVER", HttpServer.Signature},
+    {"ST", dev.Type},
+    {"USN", dev.USN}
+  };
 
-      SendDatagram(
-        endpoint,
-        dev.Address,
-        $"HTTP/1.1 200 OK\r\n{headers.HeaderBlock}\r\n",
-        false
-        );
-      InfoFormat(
-        "{2}, {1} - Responded to a {0} request", dev.Type, endpoint,
-        dev.Address);
+        SendDatagram(
+          endpoint,
+          dev.Address,
+          $"HTTP/1.1 200 OK\r\n{headers.HeaderBlock}\r\n",
+          false
+          );
+        InfoFormat(
+          "{2}, {1} - Responded to a {0} request", dev.Type, endpoint,
+          dev.Address);
     }
 
-    private void Tick(object sender, ElapsedEventArgs e)
+    private void Tick(object? sender, ElapsedEventArgs e)
     {
-      Debug("Sending SSDP notifications!");
-      notificationTimer.Interval = random.Next(60000, 120000);
-      NotifyAll();
+        Debug("Sending SSDP notifications!");
+        _notificationTimer.Interval = Random.Shared.Next(60000, 120000);
+        NotifyAll();
     }
 
     internal void NotifyAll()
     {
-      Debug("NotifyAll");
-      foreach (var d in Devices) {
-        NotifyDevice(d, "alive", false);
-      }
+        Debug("NotifyAll");
+        foreach (var d in Devices)
+        {
+            NotifyDevice(d, "alive", false);
+        }
     }
 
     internal void NotifyDevice(UpnpDevice dev, string type, bool sticky)
     {
-      Debug("NotifyDevice");
-      var headers = new RawHeaders
-      {
-        {"HOST", "239.255.255.250:1900"},
-        {"CACHE-CONTROL", "max-age = 600"},
-        {"LOCATION", dev.Descriptor.ToString()},
-        {"SERVER", HttpServer.Signature},
-        {"NTS", "ssdp:" + type},
-        {"NT", dev.Type},
-        {"USN", dev.USN}
-      };
+        Debug("NotifyDevice");
+        var headers = new RawHeaders
+  {
+    {"HOST", "239.255.255.250:1900"},
+    {"CACHE-CONTROL", "max-age = 600"},
+    {"LOCATION", dev.Descriptor.ToString()},
+    {"SERVER", HttpServer.Signature},
+    {"NTS", "ssdp:" + type},
+    {"NT", dev.Type},
+    {"USN", dev.USN}
+  };
 
-      SendDatagram(
-        ssdpEndp,
-        dev.Address,
-        $"NOTIFY * HTTP/1.1\r\n{headers.HeaderBlock}\r\n",
-        sticky
-        );
-      // Some buggy network equipment will swallow multicast packets, so lets
-      // cheat, increase the odds, by sending to broadcast.
-      SendDatagram(
-        BroadEndp,
-        dev.Address,
-        $"NOTIFY * HTTP/1.1\r\n{headers.HeaderBlock}\r\n",
-        sticky
-        );
-      DebugFormat("{0} said {1}", dev.USN, type);
+        SendDatagram(
+          SsdpEndp,
+          dev.Address,
+          $"NOTIFY * HTTP/1.1\r\n{headers.HeaderBlock}\r\n",
+          sticky
+          );
+        // Some buggy network equipment will swallow multicast packets, so lets
+        // cheat, increase the odds, by sending to broadcast.
+        SendDatagram(
+          BroadEndp,
+          dev.Address,
+          $"NOTIFY * HTTP/1.1\r\n{headers.HeaderBlock}\r\n",
+          sticky
+          );
+        DebugFormat("{0} said {1}", dev.USN, type);
     }
 
     internal void RegisterNotification(Guid uuid, Uri descriptor,
       IPAddress address)
     {
-      List<UpnpDevice> list;
-      lock (devices) {
-        if (!devices.TryGetValue(uuid, out list)) {
-          devices.Add(uuid, list = new List<UpnpDevice>());
+        List<UpnpDevice>? list;
+        lock (_devices)
+        {
+            if (!_devices.TryGetValue(uuid, out list))
+            {
+                _devices.Add(uuid, list = new List<UpnpDevice>());
+            }
         }
-      }
-      list.AddRange(new[]
-      {
-        "upnp:rootdevice", "urn:schemas-upnp-org:device:MediaServer:1",
-        "urn:schemas-upnp-org:service:ContentDirectory:1", "urn:schemas-upnp-org:service:ConnectionManager:1",
-        "urn:schemas-upnp-org:service:X_MS_MediaReceiverRegistrar:1", "uuid:" + uuid
-      }.Select(t => new UpnpDevice(uuid, t, descriptor, address)));
+        list.AddRange(new[]
+        {
+            "upnp:rootdevice", "urn:schemas-upnp-org:device:MediaServer:1",
+            "urn:schemas-upnp-org:service:ContentDirectory:1", "urn:schemas-upnp-org:service:ConnectionManager:1",
+            "urn:schemas-upnp-org:service:X_MS_MediaReceiverRegistrar:1", "uuid:" + uuid
+        }.Select(t => new UpnpDevice(uuid, t, descriptor, address)));
 
-      NotifyAll();
-      DebugFormat("Registered mount {0}, {1}", uuid, address);
+        NotifyAll();
+        DebugFormat("Registered mount {0}, {1}", uuid, address);
     }
 
-    internal void RespondToSearch(IPEndPoint endpoint, string req)
+    internal void RespondToSearch(IPEndPoint endpoint, string? req)
     {
-      if (req == "ssdp:all") {
-        req = null;
-      }
-
-      DebugFormat("RespondToSearch {0} {1}", endpoint, req);
-      foreach (var d in Devices) {
-        if (!string.IsNullOrEmpty(req) && req != d.Type) {
-          continue;
+        if (req == "ssdp:all")
+        {
+            req = null;
         }
-        SendSearchResponse(endpoint, d);
-      }
+
+        DebugFormat("RespondToSearch {0} {1}", endpoint, req);
+        foreach (var d in Devices)
+        {
+            if (!string.IsNullOrEmpty(req) && req != d.Type)
+            {
+                continue;
+            }
+            SendSearchResponse(endpoint, d);
+        }
     }
 
     internal void UnregisterNotification(Guid uuid)
     {
-      List<UpnpDevice> dl;
-      lock (devices) {
-        if (!devices.TryGetValue(uuid, out dl)) {
-          return;
+        List<UpnpDevice>? dl;
+        lock (_devices)
+        {
+            if (!_devices.TryGetValue(uuid, out dl))
+            {
+                return;
+            }
+            _devices.Remove(uuid);
         }
-        devices.Remove(uuid);
-      }
-      foreach (var d in dl) {
-        NotifyDevice(d, "byebye", true);
-      }
-      DebugFormat("Unregistered mount {0}", uuid);
+        foreach (var d in dl)
+        {
+            NotifyDevice(d, "byebye", true);
+        }
+        DebugFormat("Unregistered mount {0}", uuid);
     }
-  }
 }

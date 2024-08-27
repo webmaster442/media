@@ -1,11 +1,13 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 
-namespace NMaier.SimpleDlna.Server
+using NMaier.SimpleDlna.Server.Http;
+using NMaier.SimpleDlna.Server.Interfaces;
+
+namespace NMaier.SimpleDlna.Server.Responses;
+
+internal class StringResponse : IResponse
 {
-  internal class StringResponse : IResponse
-  {
-    private readonly string body;
+    private readonly string _body;
 
     public StringResponse(HttpCode aStatus, string aBody)
       : this(aStatus, "text/html; charset=utf-8", aBody)
@@ -14,17 +16,16 @@ namespace NMaier.SimpleDlna.Server
 
     public StringResponse(HttpCode aStatus, string aMime, string aBody)
     {
-      Status = aStatus;
-      body = aBody;
+        Status = aStatus;
+        _body = aBody;
 
-      Headers["Content-Type"] = aMime;
-      Headers["Content-Length"] = Encoding.UTF8.GetByteCount(body).ToString();
+        Headers["Content-Type"] = aMime;
+        Headers["Content-Length"] = Encoding.UTF8.GetByteCount(_body).ToString();
     }
 
-    public Stream Body => new MemoryStream(Encoding.UTF8.GetBytes(body));
+    public Stream Body => new MemoryStream(Encoding.UTF8.GetBytes(_body));
 
     public IHeaders Headers { get; } = new ResponseHeaders();
 
     public HttpCode Status { get; }
-  }
 }

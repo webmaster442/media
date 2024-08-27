@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using NMaier.SimpleDlna.Utilities;
+﻿using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server.Comparers;
 

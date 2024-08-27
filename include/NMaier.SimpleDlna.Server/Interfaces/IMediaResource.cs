@@ -1,9 +1,9 @@
-﻿using System.IO;
+﻿using NMaier.SimpleDlna.Server.Types;
 
-namespace NMaier.SimpleDlna.Server
+namespace NMaier.SimpleDlna.Server.Interfaces;
+
+public interface IMediaResource : IMediaItem, IMediaCover
 {
-  public interface IMediaResource : IMediaItem, IMediaCover
-  {
     DlnaMediaTypes MediaType { get; }
 
     string PN { get; }
@@ -11,5 +11,4 @@ namespace NMaier.SimpleDlna.Server
     DlnaMime Type { get; }
 
     Stream CreateContentStream();
-  }
 }

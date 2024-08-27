@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Media.Tests", "tests\Media.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Media.MockExecutable", "tests\Media.MockExecutable\Media.MockExecutable.csproj", "{C3030574-D6D7-4920-A72A-7C5856A1C369}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NMaier.SimpleDlna.Server", "include\NMaier.SimpleDlna.Server\NMaier.SimpleDlna.Server.csproj", "{87DFCC10-1869-4C40-B037-60F48FD90B4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{C3030574-D6D7-4920-A72A-7C5856A1C369}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3030574-D6D7-4920-A72A-7C5856A1C369}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3030574-D6D7-4920-A72A-7C5856A1C369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87DFCC10-1869-4C40-B037-60F48FD90B4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87DFCC10-1869-4C40-B037-60F48FD90B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87DFCC10-1869-4C40-B037-60F48FD90B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87DFCC10-1869-4C40-B037-60F48FD90B4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,11 +1,13 @@
-using System;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using NMaier.SimpleDlna.Utilities;
+using NMaier.SimpleDlna.Server.Handlers;
+using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Responses;
+using NMaier.SimpleDlna.Server.Types;
+using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server.Http;
 
@@ -367,7 +369,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
                 {
                     DebugFormat("{0} - Done writing response", this);
 
-                    if (Headers.TryGetValue("connection", out string? conn) 
+                    if (Headers.TryGetValue("connection", out string? conn)
                     && conn.Equals("KEEP-ALIVE", StringComparison.InvariantCultureIgnoreCase))
                     {
                         ReadNext();
@@ -428,12 +430,15 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
                 case HttpCode.NotFound:
                     _response = Error404.HandleRequest(this);
                     break;
+
                 case HttpCode.Denied:
                     _response = Error403.HandleRequest(this);
                     break;
+
                 case HttpCode.InternalError:
                     _response = Error500.HandleRequest(this);
                     break;
+
                 default:
                     _response = new StaticHandler(new StringResponse(
                                                    ex.Code,

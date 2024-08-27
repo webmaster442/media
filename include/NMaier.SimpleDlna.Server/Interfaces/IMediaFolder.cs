@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
+﻿namespace NMaier.SimpleDlna.Server.Interfaces;
 
-namespace NMaier.SimpleDlna.Server
+public interface IMediaFolder : IMediaItem
 {
-  public interface IMediaFolder : IMediaItem
-  {
     int ChildCount { get; }
 
     int FullChildCount { get; }
@@ -12,7 +10,7 @@ namespace NMaier.SimpleDlna.Server
 
     IEnumerable<IMediaResource> ChildItems { get; }
 
-    IMediaFolder Parent { get; set; }
+    IMediaFolder? Parent { get; set; }
 
     void AddResource(IMediaResource res);
 
@@ -21,5 +19,4 @@ namespace NMaier.SimpleDlna.Server
     bool RemoveResource(IMediaResource res);
 
     void Sort(IComparer<IMediaItem> sortComparer, bool descending);
-  }
 }

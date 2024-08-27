@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Xml;
+﻿using System.Xml;
 
-using NMaier.SimpleDlna.Utilities;
+using NMaier.SimpleDlna.Server.Http;
+using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Responses;
+using NMaier.SimpleDlna.Server.Types;
+using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server;
 

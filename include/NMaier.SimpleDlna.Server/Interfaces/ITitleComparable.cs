@@ -1,7 +1,6 @@
-﻿namespace NMaier.SimpleDlna.Server
+﻿namespace NMaier.SimpleDlna.Server.Interfaces;
+
+public interface ITitleComparable
 {
-  public interface ITitleComparable
-  {
     string ToComparableTitle();
-  }
 }

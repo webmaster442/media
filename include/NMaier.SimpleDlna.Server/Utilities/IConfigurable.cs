@@ -1,7 +1,6 @@
-﻿namespace NMaier.SimpleDlna.Utilities
+﻿namespace NMaier.SimpleDlna.Server.Utilities;
+
+public interface IConfigurable
 {
-  public interface IConfigurable
-  {
     void SetParameters(ConfigParameters parameters);
-  }
 }

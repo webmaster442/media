@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
@@ -9,8 +6,11 @@ using System.Timers;
 
 using log4net;
 
+using NMaier.SimpleDlna.Server.Handlers;
+using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Responses;
 using NMaier.SimpleDlna.Server.Ssdp;
-using NMaier.SimpleDlna.Utilities;
+using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server.Http;
 
@@ -18,23 +18,23 @@ public sealed class HttpServer : Logging, IDisposable
 {
     public static readonly string Signature = GenerateServerSignature();
 
-    private readonly ConcurrentDictionary<HttpClient, DateTime> clients =
-      new ConcurrentDictionary<HttpClient, DateTime>();
+    private readonly ConcurrentDictionary<HttpClient, DateTime> _clients =
+      new();
 
-    private readonly ConcurrentDictionary<Guid, List<Guid>> devicesForServers =
-      new ConcurrentDictionary<Guid, List<Guid>>();
+    private readonly ConcurrentDictionary<Guid, List<Guid>> _devicesForServers =
+      new();
 
-    private readonly TcpListener listener;
+    private readonly TcpListener _listener;
 
-    private readonly ConcurrentDictionary<string, IPrefixHandler> prefixes =
-      new ConcurrentDictionary<string, IPrefixHandler>();
+    private readonly ConcurrentDictionary<string, IPrefixHandler> _prefixes =
+      new();
 
-    private readonly ConcurrentDictionary<Guid, MediaMount> servers =
-      new ConcurrentDictionary<Guid, MediaMount>();
+    private readonly ConcurrentDictionary<Guid, MediaMount> _servers =
+      new();
 
-    private readonly SsdpHandler ssdpServer;
+    private readonly SsdpHandler _ssdpServer;
 
-    private readonly System.Timers.Timer timeouter = new(10 * 1000);
+    private readonly System.Timers.Timer _timeouter = new(10 * 1000);
 
     public HttpServer()
       : this(0)
@@ -43,31 +43,30 @@ public sealed class HttpServer : Logging, IDisposable
 
     public HttpServer(int port)
     {
-        prefixes.TryAdd(
+        _prefixes.TryAdd(
           "/favicon.ico",
           new StaticHandler(
             new ResourceResponse(HttpCode.Ok, "image/icon", "favicon"))
           );
-        prefixes.TryAdd(
+        _prefixes.TryAdd(
           "/static/browse.css",
           new StaticHandler(
             new ResourceResponse(HttpCode.Ok, "text/css", "browse_css"))
           );
         RegisterHandler(new IconHandler());
 
-        listener = new TcpListener(new IPEndPoint(IPAddress.Any, port));
-        listener.Server.Ttl = 32;
-        listener.Server.UseOnlyOverlappedIO = true;
-        listener.Start();
+        _listener = new TcpListener(new IPEndPoint(IPAddress.Any, port));
+        _listener.Server.Ttl = 32;
+        _listener.Start();
 
-        RealPort = ((IPEndPoint)listener.LocalEndpoint).Port;
+        RealPort = ((IPEndPoint)_listener.LocalEndpoint).Port;
 
         NoticeFormat(
           "Running HTTP Server: {0} on port {1}", Signature, RealPort);
-        ssdpServer = new SsdpHandler();
+        _ssdpServer = new SsdpHandler();
 
-        timeouter.Elapsed += TimeouterCallback;
-        timeouter.Enabled = true;
+        _timeouter.Elapsed += TimeouterCallback;
+        _timeouter.Enabled = true;
 
         Accept();
     }
@@ -77,7 +76,7 @@ public sealed class HttpServer : Logging, IDisposable
         get
         {
             var rv = new Dictionary<string, string>();
-            foreach (var m in servers)
+            foreach (var m in _servers)
             {
                 rv[m.Value.Prefix] = m.Value.FriendlyName;
             }
@@ -90,33 +89,33 @@ public sealed class HttpServer : Logging, IDisposable
     public void Dispose()
     {
         Debug("Disposing HTTP");
-        timeouter.Enabled = false;
-        foreach (var s in servers.Values.ToList())
+        _timeouter.Enabled = false;
+        foreach (var s in _servers.Values.ToList())
         {
             UnregisterMediaServer(s);
         }
-        ssdpServer.Dispose();
-        timeouter.Dispose();
-        listener.Stop();
-        foreach (var c in clients.ToList())
+        _ssdpServer.Dispose();
+        _timeouter.Dispose();
+        _listener.Stop();
+        foreach (var c in _clients.ToList())
         {
             c.Key.Dispose();
         }
-        clients.Clear();
-        listener.Dispose();
+        _clients.Clear();
+        _listener.Dispose();
     }
 
-    public event EventHandler<HttpAuthorizationEventArgs> OnAuthorizeClient;
+    public event EventHandler<HttpAuthorizationEventArgs>? OnAuthorizeClient;
 
     private void Accept()
     {
         try
         {
-            if (!listener.Server.IsBound)
+            if (!_listener.Server.IsBound)
             {
                 return;
             }
-            listener.BeginAcceptTcpClient(AcceptCallback, null);
+            _listener.BeginAcceptTcpClient(AcceptCallback, null);
         }
         catch (ObjectDisposedException)
         {
@@ -131,11 +130,11 @@ public sealed class HttpServer : Logging, IDisposable
     {
         try
         {
-            var tcpclient = listener.EndAcceptTcpClient(result);
+            var tcpclient = _listener.EndAcceptTcpClient(result);
             var client = new HttpClient(this, tcpclient);
             try
             {
-                clients.AddOrUpdate(client, DateTime.Now, (k, v) => DateTime.Now);
+                _clients.AddOrUpdate(client, DateTime.Now, (k, v) => DateTime.Now);
                 DebugFormat("Accepted client {0}", client);
                 client.Start();
             }
@@ -169,6 +168,7 @@ public sealed class HttpServer : Logging, IDisposable
             case PlatformID.Win32Windows:
                 pstring = "WIN";
                 break;
+
             default:
                 try
                 {
@@ -180,15 +180,14 @@ public sealed class HttpServer : Logging, IDisposable
                 }
                 break;
         }
-        var version = Assembly.GetExecutingAssembly().GetName().Version;
+        var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0, 0, 0);
         var bitness = nint.Size * 8;
-        return
-          $"{pstring}{bitness}/{os.Version.Major}.{os.Version.Minor} UPnP/1.0 DLNADOC/1.5 sdlna/{version.Major}.{version.Minor}";
+        return $"{pstring}{bitness}/{os.Version.Major}.{os.Version.Minor} UPnP/1.0 DLNADOC/1.5 sdlna/{version.Major}.{version.Minor}";
     }
 
-    private void TimeouterCallback(object sender, ElapsedEventArgs e)
+    private void TimeouterCallback(object? sender, ElapsedEventArgs e)
     {
-        foreach (var c in clients.ToList())
+        foreach (var c in _clients.ToList())
         {
             if (c.Key.IsATimeout)
             {
@@ -214,7 +213,7 @@ public sealed class HttpServer : Logging, IDisposable
         return !e.Cancel;
     }
 
-    internal IPrefixHandler FindHandler(string prefix)
+    internal IPrefixHandler? FindHandler(string prefix)
     {
         if (string.IsNullOrEmpty(prefix))
         {
@@ -226,17 +225,14 @@ public sealed class HttpServer : Logging, IDisposable
             return new IndexHandler(this);
         }
 
-        return (from s in prefixes.Keys
+        return (from s in _prefixes.Keys
                 where prefix.StartsWith(s, StringComparison.Ordinal)
-                select prefixes[s]).FirstOrDefault();
+                select _prefixes[s]).FirstOrDefault();
     }
 
     internal void RegisterHandler(IPrefixHandler handler)
     {
-        if (handler == null)
-        {
-            throw new ArgumentNullException(nameof(handler));
-        }
+        ArgumentNullException.ThrowIfNull(handler);
         var prefix = handler.Prefix;
         if (!prefix.StartsWith('/'))
         {
@@ -250,7 +246,7 @@ public sealed class HttpServer : Logging, IDisposable
         {
             throw new ArgumentException("Invalid prefix; already taken");
         }
-        if (!prefixes.TryAdd(prefix, handler))
+        if (!_prefixes.TryAdd(prefix, handler))
         {
             throw new ArgumentException("Invalid preifx; already taken");
         }
@@ -259,14 +255,12 @@ public sealed class HttpServer : Logging, IDisposable
 
     internal void RemoveClient(HttpClient client)
     {
-        DateTime ignored;
-        clients.TryRemove(client, out ignored);
+        _clients.TryRemove(client, out DateTime ignored);
     }
 
     internal void UnregisterHandler(IPrefixHandler handler)
     {
-        IPrefixHandler ignored;
-        if (prefixes.TryRemove(handler.Prefix, out ignored))
+        if (_prefixes.TryRemove(handler.Prefix, out IPrefixHandler? ignored))
         {
             DebugFormat("Unregistered Handler for {0}", handler.Prefix);
         }
@@ -274,26 +268,23 @@ public sealed class HttpServer : Logging, IDisposable
 
     public void RegisterMediaServer(IMediaServer server)
     {
-        if (server == null)
-        {
-            throw new ArgumentNullException(nameof(server));
-        }
+        ArgumentNullException.ThrowIfNull(server);
         var guid = server.UUID;
-        if (servers.ContainsKey(guid))
+        if (_servers.ContainsKey(guid))
         {
             throw new ArgumentException("Attempting to register more than once");
         }
 
-        var end = (IPEndPoint)listener.LocalEndpoint;
+        var end = (IPEndPoint)_listener.LocalEndpoint;
         var mount = new MediaMount(server);
-        servers[guid] = mount;
+        _servers[guid] = mount;
         RegisterHandler(mount);
 
         foreach (var address in IP.ExternalIPAddresses)
         {
             DebugFormat("Registering device for {0}", address);
             var deviceGuid = Guid.NewGuid();
-            var list = devicesForServers.GetOrAdd(guid, new List<Guid>());
+            var list = _devicesForServers.GetOrAdd(guid, new List<Guid>());
             lock (list)
             {
                 list.Add(deviceGuid);
@@ -302,7 +293,7 @@ public sealed class HttpServer : Logging, IDisposable
             var uri = new Uri($"http://{address}:{end.Port}{mount.DescriptorURI}");
             lock (list)
             {
-                ssdpServer.RegisterNotification(deviceGuid, uri, address);
+                _ssdpServer.RegisterNotification(deviceGuid, uri, address);
             }
             NoticeFormat("New mount at: {0}", uri);
         }
@@ -310,33 +301,27 @@ public sealed class HttpServer : Logging, IDisposable
 
     public void UnregisterMediaServer(IMediaServer server)
     {
-        if (server == null)
-        {
-            throw new ArgumentNullException(nameof(server));
-        }
-        MediaMount mount;
-        if (!servers.TryGetValue(server.UUID, out mount))
+        ArgumentNullException.ThrowIfNull(server);
+        if (!_servers.TryGetValue(server.UUID, out MediaMount? mount))
         {
             return;
         }
 
-        List<Guid> list;
-        if (devicesForServers.TryGetValue(server.UUID, out list))
+        if (_devicesForServers.TryGetValue(server.UUID, out List<Guid>? list))
         {
             lock (list)
             {
                 foreach (var deviceGuid in list)
                 {
-                    ssdpServer.UnregisterNotification(deviceGuid);
+                    _ssdpServer.UnregisterNotification(deviceGuid);
                 }
             }
-            devicesForServers.TryRemove(server.UUID, out list);
+            _devicesForServers.TryRemove(server.UUID, out list);
         }
 
         UnregisterHandler(mount);
 
-        MediaMount ignored;
-        if (servers.TryRemove(server.UUID, out ignored))
+        if (_servers.TryRemove(server.UUID, out MediaMount? ignored))
         {
             InfoFormat("Unregistered Media Server {0}", server.UUID);
         }

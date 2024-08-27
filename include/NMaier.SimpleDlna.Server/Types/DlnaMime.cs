@@ -1,7 +1,7 @@
-﻿namespace NMaier.SimpleDlna.Server
+﻿namespace NMaier.SimpleDlna.Server.Types;
+
+public enum DlnaMime
 {
-  public enum DlnaMime
-  {
     AudioAAC,
     AudioFLAC,
     AudioMP2,
@@ -20,5 +20,4 @@
     VideoMPEG,
     VideoOGV,
     VideoWMV
-  }
 }

@@ -1,36 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 
-namespace NMaier.SimpleDlna.Server.Views
+using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Types;
+
+namespace NMaier.SimpleDlna.Server.Views;
+
+internal class KeyedVirtualFolder<T> : VirtualFolder
+where T : VirtualFolder, new()
 {
-  internal class KeyedVirtualFolder<T> : VirtualFolder
-    where T : VirtualFolder, new()
-  {
-    private readonly Dictionary<string, T> keys = new Dictionary<string, T>(StringComparer.CurrentCultureIgnoreCase);
+private readonly Dictionary<string, T> keys = new Dictionary<string, T>(StringComparer.CurrentCultureIgnoreCase);
 
-    protected KeyedVirtualFolder()
-      : this(null, null)
-    {
-    }
+protected KeyedVirtualFolder()
+  : this(null, "")
+{
+}
 
-    protected KeyedVirtualFolder(IMediaFolder aParent, string aName)
-      : base(aParent, aName)
-    {
-    }
+protected KeyedVirtualFolder(IMediaFolder? aParent, string aName)
+  : base(aParent, aName)
+{
+}
 
-    public T GetFolder(string key)
+public T GetFolder(string key)
+{
+  T rv;
+  if (!keys.TryGetValue(key, out rv)) {
+    rv = new T
     {
-      T rv;
-      if (!keys.TryGetValue(key, out rv)) {
-        rv = new T
-        {
-          Name = key,
-          Parent = this
-        };
-        Folders.Add(rv);
-        keys.Add(key, rv);
-      }
-      return rv;
-    }
+      Name = key,
+      Parent = this
+    };
+    Folders.Add(rv);
+    keys.Add(key, rv);
   }
+  return rv;
+}
 }

@@ -1,7 +1,6 @@
-﻿namespace NMaier.SimpleDlna.Server
+﻿namespace NMaier.SimpleDlna.Server.Interfaces;
+
+internal interface IHandler
 {
-  internal interface IHandler
-  {
     IResponse HandleRequest(IRequest request);
-  }
 }

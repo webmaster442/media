@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using System.Xml;
 
-using NMaier.SimpleDlna.Server.Metadata;
+using NMaier.SimpleDlna.Server.Http;
+using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 using NMaier.SimpleDlna.Server.Properties;
-using NMaier.SimpleDlna.Utilities;
+using NMaier.SimpleDlna.Server.Responses;
+using NMaier.SimpleDlna.Server.Types;
+using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server;
 
@@ -340,12 +342,15 @@ internal partial class MediaMount
             case DlnaMediaTypes.Video:
                 objectClass.InnerText = "object.item.videoItem.movie";
                 break;
+
             case DlnaMediaTypes.Image:
                 objectClass.InnerText = "object.item.imageItem.photo";
                 break;
+
             case DlnaMediaTypes.Audio:
                 objectClass.InnerText = "object.item.audioItem.musicTrack";
                 break;
+
             default:
                 throw new NotSupportedException();
         }

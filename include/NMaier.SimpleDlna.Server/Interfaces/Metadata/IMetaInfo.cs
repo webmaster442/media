@@ -1,11 +1,8 @@
-﻿using System;
+﻿namespace NMaier.SimpleDlna.Server.Interfaces.Metadata;
 
-namespace NMaier.SimpleDlna.Server.Metadata
+public interface IMetaInfo
 {
-  public interface IMetaInfo
-  {
     DateTime InfoDate { get; }
 
     long? InfoSize { get; }
-  }
 }

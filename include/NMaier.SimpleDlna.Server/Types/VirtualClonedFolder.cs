@@ -1,20 +1,22 @@
-﻿namespace NMaier.SimpleDlna.Server
-{
-  public sealed class VirtualClonedFolder : VirtualFolder
-  {
-    private readonly IMediaFolder clone;
+﻿using NMaier.SimpleDlna.Server.Interfaces;
 
-    private readonly DlnaMediaTypes types;
+namespace NMaier.SimpleDlna.Server.Types;
+
+public sealed class VirtualClonedFolder : VirtualFolder
+{
+    private readonly IMediaFolder _clone;
+
+    private readonly DlnaMediaTypes _types;
 
     private VirtualClonedFolder(IMediaFolder parent, string name, string id,
       DlnaMediaTypes types)
       : base(parent, name, id)
     {
-      this.types = types;
-      Id = id;
-      clone = parent;
-      CloneFolder(this, parent);
-      Cleanup();
+        this._types = types;
+        Id = id;
+        _clone = parent;
+        CloneFolder(this, parent);
+        Cleanup();
     }
 
     public VirtualClonedFolder(IMediaFolder parent)
@@ -35,22 +37,24 @@
 
     private void CloneFolder(VirtualFolder parent, IMediaFolder folder)
     {
-      foreach (var f in folder.ChildFolders) {
-        var vf = new VirtualFolder(parent, f.Title, f.Id);
-        parent.AdoptFolder(vf);
-        CloneFolder(vf, f);
-      }
-      foreach (var i in folder.ChildItems) {
-        if ((types & i.MediaType) == i.MediaType) {
-          parent.AddResource(i);
+        foreach (var f in folder.ChildFolders)
+        {
+            var vf = new VirtualFolder(parent, f.Title, f.Id);
+            parent.AdoptFolder(vf);
+            CloneFolder(vf, f);
         }
-      }
+        foreach (var i in folder.ChildItems)
+        {
+            if ((_types & i.MediaType) == i.MediaType)
+            {
+                parent.AddResource(i);
+            }
+        }
     }
 
     public override void Cleanup()
     {
-      base.Cleanup();
-      clone.Cleanup();
+        base.Cleanup();
+        _clone.Cleanup();
     }
-  }
 }

@@ -1,7 +1,6 @@
-﻿namespace NMaier.SimpleDlna.Server
+﻿namespace NMaier.SimpleDlna.Server.Interfaces;
+
+public interface IBookmarkable
 {
-  public interface IBookmarkable
-  {
     long? Bookmark { get; set; }
-  }
 }

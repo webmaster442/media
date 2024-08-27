@@ -1,4 +1,6 @@
-﻿namespace NMaier.SimpleDlna.Server;
+﻿using NMaier.SimpleDlna.Server.Interfaces;
+
+namespace NMaier.SimpleDlna.Server.Handlers;
 
 internal sealed class StaticHandler : IPrefixHandler
 {

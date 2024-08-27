@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NMaier.SimpleDlna.Server.Interfaces;
 
-namespace NMaier.SimpleDlna.Server
+namespace NMaier.SimpleDlna.Server.Types;
+
+internal class AudioResourceDecorator
+  : MediaResourceDecorator<IMediaAudioResource>
 {
-  internal class AudioResourceDecorator
-    : MediaResourceDecorator<IMediaAudioResource>
-  {
     public AudioResourceDecorator(IMediaAudioResource resource)
       : base(resource)
     {
@@ -23,5 +23,4 @@ namespace NMaier.SimpleDlna.Server
     public virtual string MetaPerformer => Resource.MetaPerformer;
 
     public virtual int? MetaTrack => Resource.MetaTrack;
-  }
 }

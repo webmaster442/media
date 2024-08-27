@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
 using System.Xml;
 
-using NMaier.SimpleDlna.Server.Metadata;
+using NMaier.SimpleDlna.Server.Http;
+using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 using NMaier.SimpleDlna.Server.Properties;
-using NMaier.SimpleDlna.Utilities;
+using NMaier.SimpleDlna.Server.Responses;
+using NMaier.SimpleDlna.Server.Types;
+using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server;
 
@@ -154,7 +155,6 @@ internal sealed partial class MediaMount
         InfoFormat("Rescanned mount {0}", UUID);
         _systemID++;
     }
-
 
     private XmlNode SelectSingleNode(XmlDocument document, string xPath)
     {

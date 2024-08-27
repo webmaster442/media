@@ -1,7 +1,6 @@
-﻿namespace NMaier.SimpleDlna.Server.Metadata
+﻿namespace NMaier.SimpleDlna.Server.Interfaces.Metadata;
+
+public interface IMetaDescription
 {
-  public interface IMetaDescription
-  {
     string MetaDescription { get; }
-  }
 }

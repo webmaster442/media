@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace NMaier.SimpleDlna.Server;
+namespace NMaier.SimpleDlna.Server.Interfaces;
 
 public interface IRequest
 {

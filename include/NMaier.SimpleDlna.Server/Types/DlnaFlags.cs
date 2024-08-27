@@ -1,10 +1,8 @@
-﻿using System;
+﻿namespace NMaier.SimpleDlna.Server.Types;
 
-namespace NMaier.SimpleDlna.Server
+[Flags]
+internal enum DlnaFlags : ulong
 {
-  [Flags]
-  internal enum DlnaFlags : ulong
-  {
     BackgroundTransferMode = 1 << 22,
     ByteBasedSeek = 1 << 29,
     ConnectionStall = 1 << 21,
@@ -17,5 +15,4 @@ namespace NMaier.SimpleDlna.Server
     SnIncrease = 1 << 26,
     StreamingTransferMode = 1 << 24,
     TimeBasedSeek = 1 << 30
-  }
 }

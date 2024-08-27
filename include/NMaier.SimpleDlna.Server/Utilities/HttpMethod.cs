@@ -1,8 +1,7 @@
-﻿namespace NMaier.SimpleDlna.Utilities
+﻿namespace NMaier.SimpleDlna.Server.Utilities;
+
+public enum HttpMethod
 {
-  public enum HttpMethod
-  {
     GET,
     HEAD
-  }
 }

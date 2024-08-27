@@ -1,8 +1,7 @@
-﻿using NMaier.SimpleDlna.Utilities;
+﻿using NMaier.SimpleDlna.Server.Utilities;
 
-namespace NMaier.SimpleDlna.Server.Views
+namespace NMaier.SimpleDlna.Server.Views;
+
+public sealed class ViewRepository : Repository<IView>
 {
-  public sealed class ViewRepository : Repository<IView>
-  {
-  }
 }

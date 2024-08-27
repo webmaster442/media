@@ -1,7 +1,6 @@
-﻿namespace NMaier.SimpleDlna.Server
+﻿namespace NMaier.SimpleDlna.Server.Interfaces;
+
+public interface IMediaCover
 {
-  public interface IMediaCover
-  {
     IMediaCoverResource Cover { get; }
-  }
 }

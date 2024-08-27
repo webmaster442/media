@@ -1,15 +1,16 @@
-namespace NMaier.SimpleDlna.Server.Views
-{
-  internal class DoubleKeyedVirtualFolder
-    : KeyedVirtualFolder<SimpleKeyedVirtualFolder>
-  {
-    public DoubleKeyedVirtualFolder()
-    {
-    }
+using NMaier.SimpleDlna.Server.Interfaces;
 
-    public DoubleKeyedVirtualFolder(IMediaFolder aParent, string aName)
-      : base(aParent, aName)
-    {
-    }
-  }
+namespace NMaier.SimpleDlna.Server.Views;
+
+internal class DoubleKeyedVirtualFolder
+: KeyedVirtualFolder<SimpleKeyedVirtualFolder>
+{
+public DoubleKeyedVirtualFolder()
+{
+}
+
+public DoubleKeyedVirtualFolder(IMediaFolder aParent, string aName)
+  : base(aParent, aName)
+{
+}
 }

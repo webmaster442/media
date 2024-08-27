@@ -1,32 +1,21 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿namespace NMaier.SimpleDlna.Server.Utilities;
 
-namespace NMaier.SimpleDlna.Utilities
+[Serializable]
+public sealed class RepositoryLookupException : ArgumentException
 {
-  [Serializable]
-  public sealed class RepositoryLookupException : ArgumentException
-  {
-    private RepositoryLookupException(SerializationInfo info,
-      StreamingContext context)
-      : base(info, context)
+    public RepositoryLookupException(string key)
+      : base($"Failed to lookup {key}")
     {
+        Key = key;
     }
+
+    public string Key { get; private set; } = string.Empty;
 
     public RepositoryLookupException()
     {
     }
 
-    public RepositoryLookupException(string key)
-      : base($"Failed to lookup {key}")
-    {
-      Key = key;
-    }
-
-    public RepositoryLookupException(string message, Exception inner)
-      : base(message, inner)
+    public RepositoryLookupException(string message, Exception innerException) : base(message, innerException)
     {
     }
-
-    public string Key { get; private set; }
-  }
 }

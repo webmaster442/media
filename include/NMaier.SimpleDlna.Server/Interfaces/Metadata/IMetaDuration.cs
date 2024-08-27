@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace NMaier.SimpleDlna.Server.Interfaces.Metadata;
 
-namespace NMaier.SimpleDlna.Server.Metadata
+public interface IMetaDuration
 {
-  public interface IMetaDuration
-  {
     TimeSpan? MetaDuration { get; }
-  }
 }

@@ -1,30 +1,34 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using System.Text;
+
 using log4net;
-using NMaier.SimpleDlna.Utilities;
 
-namespace NMaier.SimpleDlna.Server
+using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Utilities;
+
+namespace NMaier.SimpleDlna.Server.Types;
+
+[Serializable]
+public sealed class Subtitle : IMediaResource
 {
-  [Serializable]
-  public sealed class Subtitle : IMediaResource
-  {
-    [NonSerialized] private static readonly ILog logger =
-      LogManager.GetLogger(typeof (Subtitle));
+    [NonSerialized]
+    private static readonly ILog Logger =
+      LogManager.GetLogger(typeof(Subtitle));
 
-    [NonSerialized] private static readonly string[] exts =
+    [NonSerialized]
+    private static readonly string[] Exts =
     {
-      ".srt", ".SRT",
-      ".ass", ".ASS",
-      ".ssa", ".SSA",
-      ".sub", ".SUB",
-      ".vtt", ".VTT"
+        ".srt", ".SRT",
+        ".ass", ".ASS",
+        ".ssa", ".SSA",
+        ".sub", ".SUB",
+        ".vtt", ".VTT"
     };
 
-    [NonSerialized] private byte[] encodedText;
+    [NonSerialized]
+    private byte[]? _encodedText;
 
-    private string text;
+    private string? _text;
 
     public Subtitle()
     {
@@ -32,46 +36,50 @@ namespace NMaier.SimpleDlna.Server
 
     public Subtitle(FileInfo file)
     {
-      Load(file);
+        Load(file);
     }
 
     public Subtitle(string text)
     {
-      this.text = text;
+        _text = text;
     }
 
-    public bool HasSubtitle => !string.IsNullOrWhiteSpace(text);
+    public bool HasSubtitle => !string.IsNullOrWhiteSpace(_text);
 
     public DateTime InfoDate => DateTime.UtcNow;
 
     public long? InfoSize
     {
-      get {
-        try {
-          using (var s = CreateContentStream()) {
-            return s.Length;
-          }
+        get
+        {
+            try
+            {
+                using (var s = CreateContentStream())
+                {
+                    return s.Length;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
-        catch (Exception) {
-          return null;
-        }
-      }
     }
 
     public IMediaCoverResource Cover
     {
-      get { throw new NotImplementedException(); }
+        get { throw new NotImplementedException(); }
     }
 
     public string Id
     {
-      get { return Path; }
-      set { throw new NotImplementedException(); }
+        get { return Path; }
+        set { throw new NotImplementedException(); }
     }
 
     public DlnaMediaTypes MediaType
     {
-      get { throw new NotImplementedException(); }
+        get { throw new NotImplementedException(); }
     }
 
     public string Path => "ad-hoc-subtitle:";
@@ -80,88 +88,102 @@ namespace NMaier.SimpleDlna.Server
 
     public IHeaders Properties
     {
-      get {
-        var rv = new RawHeaders {{"Type", Type.ToString()}};
-        if (InfoSize.HasValue) {
-          rv.Add("SizeRaw", InfoSize.ToString());
-          rv.Add("Size", InfoSize.Value.FormatFileSize());
+        get
+        {
+            var rv = new RawHeaders { { "Type", Type.ToString() } };
+            if (InfoSize.HasValue)
+            {
+                rv.Add("SizeRaw", InfoSize.Value.ToString());
+                rv.Add("Size", InfoSize.Value.FormatFileSize());
+            }
+            rv.Add("Date", InfoDate.ToString(CultureInfo.InvariantCulture));
+            rv.Add("DateO", InfoDate.ToString("o"));
+            return rv;
         }
-        rv.Add("Date", InfoDate.ToString(CultureInfo.InvariantCulture));
-        rv.Add("DateO", InfoDate.ToString("o"));
-        return rv;
-      }
     }
 
     public string Title
     {
-      get { throw new NotImplementedException(); }
+        get { throw new NotImplementedException(); }
     }
 
     public DlnaMime Type => DlnaMime.SubtitleSRT;
 
-    public int CompareTo(IMediaItem other)
+    public int CompareTo(IMediaItem? other)
     {
-      throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public Stream CreateContentStream()
     {
-      if (!HasSubtitle) {
-        throw new NotSupportedException();
-      }
-      if (encodedText == null) {
-        encodedText = Encoding.UTF8.GetBytes(text);
-      }
-      return new MemoryStream(encodedText, false);
+        if (!HasSubtitle)
+        {
+            throw new NotSupportedException();
+        }
+        if (_encodedText == null)
+        {
+            _encodedText = _text != null ? Encoding.UTF8.GetBytes(_text) : Array.Empty<Byte>();
+        }
+        return new MemoryStream(_encodedText, false);
     }
 
-    public bool Equals(IMediaItem other)
+    public bool Equals(IMediaItem? other)
     {
-      throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public string ToComparableTitle()
     {
-      throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 
     private void Load(FileInfo file)
     {
-      try {
-        // Try external
-        foreach (var i in exts) {
-          var sti = new FileInfo(
-            System.IO.Path.ChangeExtension(file.FullName, i));
-          try {
-            if (!sti.Exists) {
-              sti = new FileInfo(file.FullName + i);
+        try
+        {
+            // Try external
+            foreach (var i in Exts)
+            {
+                var sti = new FileInfo(
+                  System.IO.Path.ChangeExtension(file.FullName, i));
+                try
+                {
+                    if (!sti.Exists)
+                    {
+                        sti = new FileInfo(file.FullName + i);
+                    }
+                    if (!sti.Exists)
+                    {
+                        continue;
+                    }
+                    _text = FFmpeg.GetSubtitleSubrip(sti);
+                    Logger.DebugFormat("Loaded subtitle from {0}", sti.FullName);
+                }
+                catch (NotSupportedException)
+                {
+                }
+                catch (Exception ex)
+                {
+                    Logger.Debug($"Failed to get subtitle from {sti.FullName}", ex);
+                }
             }
-            if (!sti.Exists) {
-              continue;
+            try
+            {
+                _text = FFmpeg.GetSubtitleSubrip(file);
+                Logger.DebugFormat("Loaded subtitle from {0}", file.FullName);
             }
-            text = FFmpeg.GetSubtitleSubrip(sti);
-            logger.DebugFormat("Loaded subtitle from {0}", sti.FullName);
-          }
-          catch (NotSupportedException) {
-          }
-          catch (Exception ex) {
-            logger.Debug($"Failed to get subtitle from {sti.FullName}", ex);
-          }
+            catch (NotSupportedException ex)
+            {
+                Logger.Debug($"Subtitle not supported {file.FullName}", ex);
+            }
+            catch (Exception ex)
+            {
+                Logger.Debug($"Failed to get subtitle from {file.FullName}", ex);
+            }
         }
-        try {
-          text = FFmpeg.GetSubtitleSubrip(file);
-          logger.DebugFormat("Loaded subtitle from {0}", file.FullName);
+        catch (Exception ex)
+        {
+            Logger.Error($"Failed to load subtitle for {file.FullName}", ex);
         }
-        catch (NotSupportedException ex) {
-          logger.Debug($"Subtitle not supported {file.FullName}", ex);
-        }
-        catch (Exception ex) {
-          logger.Debug($"Failed to get subtitle from {file.FullName}", ex);
-        }
-      }
-      catch (Exception ex) {
-        logger.Error($"Failed to load subtitle for {file.FullName}", ex);
-      }
     }
-  }
 }

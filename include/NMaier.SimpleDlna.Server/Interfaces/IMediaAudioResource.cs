@@ -1,8 +1,7 @@
-﻿using NMaier.SimpleDlna.Server.Metadata;
+﻿using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 
-namespace NMaier.SimpleDlna.Server
+namespace NMaier.SimpleDlna.Server.Interfaces;
+
+public interface IMediaAudioResource : IMediaResource, IMetaAudioItem
 {
-  public interface IMediaAudioResource : IMediaResource, IMetaAudioItem
-  {
-  }
 }

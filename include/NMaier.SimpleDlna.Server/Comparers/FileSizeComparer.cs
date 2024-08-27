@@ -1,4 +1,5 @@
-using NMaier.SimpleDlna.Server.Metadata;
+using NMaier.SimpleDlna.Server.Interfaces;
+using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 
 namespace NMaier.SimpleDlna.Server.Comparers;
 

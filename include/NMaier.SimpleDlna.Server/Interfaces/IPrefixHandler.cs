@@ -1,7 +1,6 @@
-﻿namespace NMaier.SimpleDlna.Server
+﻿namespace NMaier.SimpleDlna.Server.Interfaces;
+
+internal interface IPrefixHandler : IHandler
 {
-  internal interface IPrefixHandler : IHandler
-  {
     string Prefix { get; }
-  }
 }

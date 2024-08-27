@@ -1,8 +1,7 @@
-﻿namespace NMaier.SimpleDlna.Utilities
+﻿namespace NMaier.SimpleDlna.Server.Utilities;
+
+public enum StreamPumpResult
 {
-  public enum StreamPumpResult
-  {
     Aborted,
     Delivered
-  }
 }

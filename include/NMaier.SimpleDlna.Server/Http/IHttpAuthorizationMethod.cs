@@ -1,9 +1,11 @@
 ﻿using System.Net;
 
-namespace NMaier.SimpleDlna.Server
+using NMaier.SimpleDlna.Server.Interfaces;
+
+namespace NMaier.SimpleDlna.Server.Http;
+
+public interface IHttpAuthorizationMethod
 {
-  public interface IHttpAuthorizationMethod
-  {
     /// <summary>
     ///   Checks if a request is authorized.
     /// </summary>
@@ -12,5 +14,4 @@ namespace NMaier.SimpleDlna.Server
     /// <param name="mac">Client MAC address</param>
     /// <returns>true if authorized</returns>
     bool Authorize(IHeaders headers, IPEndPoint endPoint, string mac);
-  }
 }

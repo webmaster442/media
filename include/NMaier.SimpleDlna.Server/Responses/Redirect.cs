@@ -1,9 +1,10 @@
-﻿using System;
+﻿using NMaier.SimpleDlna.Server.Http;
+using NMaier.SimpleDlna.Server.Interfaces;
 
-namespace NMaier.SimpleDlna.Server
+namespace NMaier.SimpleDlna.Server.Responses;
+
+internal sealed class Redirect : StringResponse
 {
-  internal sealed class Redirect : StringResponse
-  {
     internal Redirect(string uri)
       : this(HttpCode.TemporaryRedirect, uri)
     {
@@ -22,7 +23,7 @@ namespace NMaier.SimpleDlna.Server
     internal Redirect(HttpCode code, string uri)
       : base(code, "text/plain", "Redirecting...")
     {
-      Headers.Add("Location", uri);
+        Headers.Add("Location", uri);
     }
 
     internal Redirect(HttpCode code, Uri uri)
@@ -34,5 +35,4 @@ namespace NMaier.SimpleDlna.Server
       : this(code, $"http://{request.LocalEndPoint}{path}")
     {
     }
-  }
 }

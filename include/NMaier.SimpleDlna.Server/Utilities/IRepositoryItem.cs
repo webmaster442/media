@@ -1,9 +1,8 @@
-﻿namespace NMaier.SimpleDlna.Utilities
+﻿namespace NMaier.SimpleDlna.Server.Utilities;
+
+public interface IRepositoryItem
 {
-  public interface IRepositoryItem
-  {
     string Description { get; }
 
     string Name { get; }
-  }
 }

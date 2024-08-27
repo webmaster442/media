@@ -1,16 +1,10 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using NMaier.SimpleDlna.Server.Http;
 
-namespace NMaier.SimpleDlna.Server
+namespace NMaier.SimpleDlna.Server.Types;
+
+[Serializable]
+public sealed class HttpStatusException : HttpException
 {
-  [Serializable]
-  public sealed class HttpStatusException : HttpException
-  {
-    private HttpStatusException(SerializationInfo info, StreamingContext context)
-      : base(info, context)
-    {
-    }
-
     public HttpStatusException()
     {
     }
@@ -18,27 +12,26 @@ namespace NMaier.SimpleDlna.Server
     public HttpStatusException(HttpCode code)
       : base(HttpPhrases.Phrases[code])
     {
-      Code = code;
+        Code = code;
     }
 
     public HttpStatusException(string message)
       : base(message)
     {
-      Code = HttpCode.None;
+        Code = HttpCode.None;
     }
 
     public HttpStatusException(HttpCode code, Exception innerException)
       : base(HttpPhrases.Phrases[code], innerException)
     {
-      Code = code;
+        Code = code;
     }
 
     public HttpStatusException(string message, Exception innerException)
       : base(message, innerException)
     {
-      Code = HttpCode.None;
+        Code = HttpCode.None;
     }
 
     public HttpCode Code { get; private set; }
-  }
 }

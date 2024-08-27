@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-namespace NMaier.SimpleDlna.Utilities
+namespace NMaier.SimpleDlna.Server.Utilities;
+
+public sealed class LeastRecentlyUsedDictionary<TKey, TValue>
+  : IDictionary<TKey, TValue> where TKey : notnull
 {
-  public sealed class LeastRecentlyUsedDictionary<TKey, TValue>
-    : IDictionary<TKey, TValue>
-  {
-    private readonly ConcurrentDictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>> items =
-      new ConcurrentDictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>>();
+    private readonly ConcurrentDictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>> items = new();
 
     private readonly LinkedList<KeyValuePair<TKey, TValue>> order =
       new LinkedList<KeyValuePair<TKey, TValue>>();
 
     private readonly uint toDrop;
 
-    [CLSCompliant(false)]
     public LeastRecentlyUsedDictionary(uint capacity)
     {
-      Capacity = capacity;
-      toDrop = Math.Min(10, (uint)(capacity * 0.07));
+        Capacity = capacity;
+        toDrop = Math.Min(10, (uint)(capacity * 0.07));
     }
 
     public LeastRecentlyUsedDictionary(int capacity)
@@ -30,7 +26,6 @@ namespace NMaier.SimpleDlna.Utilities
     {
     }
 
-    [CLSCompliant(false)]
     public uint Capacity { get; }
 
     public int Count => items.Count;
@@ -44,131 +39,142 @@ namespace NMaier.SimpleDlna.Utilities
 
     public TValue this[TKey key]
     {
-      get { return items[key].Value.Value; }
-      [MethodImpl(MethodImplOptions.Synchronized)]
-      set {
-        Remove(key);
-        Add(key, value);
-      }
+        get { return items[key].Value.Value; }
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        set
+        {
+            Remove(key);
+            Add(key, value);
+        }
     }
 
     IEnumerator IEnumerable.GetEnumerator()
     {
-      return items.GetEnumerator();
+        return items.GetEnumerator();
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void Add(KeyValuePair<TKey, TValue> item)
     {
-      AddAndPop(item);
+        AddAndPop(item);
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void Add(TKey key, TValue value)
     {
-      AddAndPop(new KeyValuePair<TKey, TValue>(key, value));
+        AddAndPop(new KeyValuePair<TKey, TValue>(key, value));
     }
-
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void Clear()
     {
-      items.Clear();
-      lock (order) {
-        order.Clear();
-      }
+        items.Clear();
+        lock (order)
+        {
+            order.Clear();
+        }
     }
 
     public bool Contains(KeyValuePair<TKey, TValue> item)
     {
-      return items.ContainsKey(item.Key);
+        return items.ContainsKey(item.Key);
     }
 
     public bool ContainsKey(TKey key)
     {
-      return items.ContainsKey(key);
+        return items.ContainsKey(key);
     }
 
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
-      throw new NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
     {
-      return items.Select(i => i.Value.Value).GetEnumerator();
+        return items.Select(i => i.Value.Value).GetEnumerator();
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public bool Remove(TKey key)
     {
-      LinkedListNode<KeyValuePair<TKey, TValue>> node;
-      if (items.TryRemove(key, out node)) {
-        lock (order) {
-          order.Remove(node);
+        if (items.TryRemove(key, out LinkedListNode<KeyValuePair<TKey, TValue>>? node))
+        {
+            lock (order)
+            {
+                order.Remove(node);
+            }
+            return true;
         }
-        return true;
-      }
-      return false;
+        return false;
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     public bool Remove(KeyValuePair<TKey, TValue> item)
     {
-      LinkedListNode<KeyValuePair<TKey, TValue>> node;
-      if (items.TryRemove(item.Key, out node)) {
-        lock (order) {
-          order.Remove(node);
+        if (items.TryRemove(item.Key, out LinkedListNode<KeyValuePair<TKey, TValue>>? node))
+        {
+            lock (order)
+            {
+                order.Remove(node);
+            }
+            return true;
         }
-        return true;
-      }
-      return false;
+        return false;
     }
 
-    public bool TryGetValue(TKey key, out TValue value)
+    public bool TryGetValue(TKey key, [NotNullWhen(true)] out TValue? value)
     {
-      LinkedListNode<KeyValuePair<TKey, TValue>> node;
-      if (items.TryGetValue(key, out node)) {
-        value = node.Value.Value;
-        return true;
-      }
-      value = default(TValue);
-      return false;
+        if (items.TryGetValue(key, out LinkedListNode<KeyValuePair<TKey, TValue>>? node))
+        {
+            value = node.Value.Value;
+            return value != null;
+        }
+        value = default;
+        return false;
     }
 
-    private TValue MaybeDropSome()
+    private TValue? MaybeDropSome()
     {
-      if (Count <= Capacity) {
-        return default(TValue);
-      }
-      lock (order) {
-        var rv = default(TValue);
-        for (var i = 0; i < toDrop; ++i) {
-          LinkedListNode<KeyValuePair<TKey, TValue>> item;
-          if (items.TryRemove(order.Last.Value.Key, out item)) {
-            rv = item.Value.Value;
-          }
-          order.RemoveLast();
+        if (Count <= Capacity)
+        {
+            return default;
         }
-        return rv;
-      }
+        lock (order)
+        {
+            var rv = default(TValue);
+            for (var i = 0; i < toDrop; ++i)
+            {
+                var last = order.Last;
+                if (last != null)
+                {
+                    var key = last.Value.Key;
+                    if (items.TryRemove(key, out LinkedListNode<KeyValuePair<TKey, TValue>>? item))
+                    {
+                        rv = item.Value.Value;
+                    }
+                    order.RemoveLast();
+                }
+            }
+            return rv;
+        }
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public TValue AddAndPop(KeyValuePair<TKey, TValue> item)
+    public TValue? AddAndPop(KeyValuePair<TKey, TValue> item)
     {
-      LinkedListNode<KeyValuePair<TKey, TValue>> node;
-      lock (order) {
-        node = order.AddFirst(item);
-      }
-      items.TryAdd(item.Key, node);
-      return MaybeDropSome();
+        LinkedListNode<KeyValuePair<TKey, TValue>> node;
+        lock (order)
+        {
+            node = order.AddFirst(item);
+        }
+        items.TryAdd(item.Key, node);
+        return MaybeDropSome();
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public TValue AddAndPop(TKey key, TValue value)
+    public TValue? AddAndPop(TKey key, TValue value)
     {
-      return AddAndPop(new KeyValuePair<TKey, TValue>(key, value));
+        return AddAndPop(new KeyValuePair<TKey, TValue>(key, value));
     }
-  }
 }

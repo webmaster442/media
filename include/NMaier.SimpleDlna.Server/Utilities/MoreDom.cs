@@ -1,42 +1,42 @@
-﻿using System;
-using System.Xml;
+﻿using System.Xml;
 
-namespace NMaier.SimpleDlna.Utilities
+namespace NMaier.SimpleDlna.Server.Utilities;
+
+public static class MoreDom
 {
-  public static class MoreDom
-  {
     public static XmlElement EL(this XmlDocument doc, string name)
     {
-      return EL(doc, name, null, null);
+        return doc.EL(name, null, null);
     }
 
-    public static XmlElement EL(this XmlDocument doc, string name,
-      AttributeCollection attributes)
+    public static XmlElement EL(this XmlDocument doc, string name, AttributeCollection? attributes)
     {
-      return EL(doc, name, attributes, null);
+        return doc.EL(name, attributes, null);
     }
 
-    public static XmlElement EL(this XmlDocument doc, string name, string text)
+    public static XmlElement EL(this XmlDocument doc, string name, string? text)
     {
-      return EL(doc, name, null, text);
+        return doc.EL(name, null, text);
     }
 
-    public static XmlElement EL(this XmlDocument doc, string name,
-      AttributeCollection attributes, string text)
+    public static XmlElement EL(this XmlDocument doc, string name, AttributeCollection? attributes, string? text)
     {
-      if (doc == null) {
-        throw new ArgumentNullException(nameof(doc));
-      }
-      var rv = doc.CreateElement(name);
-      if (text != null) {
-        rv.InnerText = text;
-      }
-      if (attributes != null) {
-        foreach (var i in attributes) {
-          rv.SetAttribute(i.Key, i.Value);
+        if (doc == null)
+        {
+            throw new ArgumentNullException(nameof(doc));
         }
-      }
-      return rv;
+        var rv = doc.CreateElement(name);
+        if (text != null)
+        {
+            rv.InnerText = text;
+        }
+        if (attributes != null)
+        {
+            foreach (var i in attributes)
+            {
+                rv.SetAttribute(i.Key, i.Value);
+            }
+        }
+        return rv;
     }
-  }
 }
