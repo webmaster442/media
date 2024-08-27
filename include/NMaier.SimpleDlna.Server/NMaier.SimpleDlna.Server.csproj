@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\browse.css" />
+    <None Remove="Resources\connectionmanager.xml" />
+    <None Remove="Resources\contentdirectory.xml" />
+    <None Remove="Resources\description.xml" />
+    <None Remove="Resources\favicon.ico" />
+    <None Remove="Resources\large.jpg" />
+    <None Remove="Resources\large.png" />
+    <None Remove="Resources\MSMediaReceiverRegistrar.xml" />
+    <None Remove="Resources\small.jpg" />
+    <None Remove="Resources\small.png" />
+    <None Remove="Resources\x_featurelist.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\browse.css" />
+    <EmbeddedResource Include="Resources\connectionmanager.xml" />
+    <EmbeddedResource Include="Resources\contentdirectory.xml" />
+    <EmbeddedResource Include="Resources\description.xml" />
+    <EmbeddedResource Include="Resources\favicon.ico" />
+    <EmbeddedResource Include="Resources\large.jpg" />
+    <EmbeddedResource Include="Resources\large.png" />
+    <EmbeddedResource Include="Resources\MSMediaReceiverRegistrar.xml" />
+    <EmbeddedResource Include="Resources\small.jpg" />
+    <EmbeddedResource Include="Resources\small.png" />
+    <EmbeddedResource Include="Resources\x_featurelist.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.17" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.1" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+  </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Resources\browse.css" />
+        <None Include="Resources\connectionmanager.xml" />
+        <None Include="Resources\MSMediaReceiverRegistrar.xml" />
+        <Content Include="Resources\large.jpg" />
+        <Content Include="Resources\large.png" />
+        <Content Include="Resources\small.jpg" />
+        <Content Include="Resources\small.png" />
+        <Content Include="Resources\x_featurelist.xml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Properties\Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Properties\Resources.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+</Project>

@@ -6,12 +6,14 @@
 using System.Diagnostics;
 using System.Net.Mime;
 
+using EmbedIO;
+
 using Media.Embedded;
 using Media.Infrastructure;
 
 namespace Media.Interop;
 
-public class MpvWebControllerApp
+internal sealed class MpvWebControllerApp : IDisposable
 {
     private readonly WebApp _app;
     private readonly int _processId;
@@ -46,25 +48,26 @@ public class MpvWebControllerApp
 
     }
 
-    private async Task PerformCommand(HttpContext context, string[] payload)
+    private async Task PerformCommand(IHttpContext context, string[] payload)
     {
         if (!IsRunning())
         {
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsync("Mpv is not running");
+            context.Response.StatusCode = 500;
+            await context.SendDataAsync("Mpv is not running");
             return;
         }
         Dto.MpvIpcResponse? result = await Mpv.SendCommand(_pipeName, payload);
         if (result?.IsSuccess == true)
         {
-            context.Response.StatusCode = StatusCodes.Status200OK;
-            await context.Response.WriteAsync("Ok");
+            context.Response.StatusCode = 200;
+            await context.SendDataAsync("Ok");
         }
         else
         {
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsync(result?.Error ?? "error");
+            context.Response.StatusCode = 500;
+            await context.SendDataAsync(result?.Error ?? "error");
         }
+
     }
 
     private bool IsRunning()
@@ -80,5 +83,10 @@ public class MpvWebControllerApp
         Terminal.InfoText("Server listening on adresses: ");
         Terminal.InfoText(adresses);
         await _app.RunAsync(token);
+    }
+
+    public void Dispose()
+    {
+        _app.Dispose();
     }
 }
