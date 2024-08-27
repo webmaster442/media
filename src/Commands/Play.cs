@@ -95,7 +95,7 @@ internal sealed class Play : AsyncCommand<Play.Settings>
 
         if (enableRemote)
         {
-            var webapp = new MpvWebControllerApp(process.Id, pipeName);
+            using var webapp = new MpvWebControllerApp(process.Id, pipeName);
             await webapp.RunAsync(CancellationToken.None);
         }
         Terminal.InfoText("Press a key to exit...");

@@ -5,6 +5,8 @@
 
 using Media.Infrastructure;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Media;
 
 internal static class ProgramFactory
