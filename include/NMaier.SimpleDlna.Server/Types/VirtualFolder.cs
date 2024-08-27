@@ -118,7 +118,7 @@ public class VirtualFolder : IMediaFolder
         vp?.ReleaseFolder(this);
     }
 
-    public int CompareTo(IMediaItem other)
+    public int CompareTo(IMediaItem? other)
     {
         if (other == null)
         {
@@ -127,7 +127,7 @@ public class VirtualFolder : IMediaFolder
         return Comparer.Compare(Title, other.Title);
     }
 
-    public bool Equals(IMediaItem other)
+    public bool Equals(IMediaItem? other)
     {
         if (other == null)
         {

@@ -49,6 +49,7 @@
     <Content Include="..\LICENSE" Link="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <ProjectReference Include="..\include\NMaier.SimpleDlna.Server\NMaier.SimpleDlna.Server.csproj" />
 	  <None Update="install.ps1">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>

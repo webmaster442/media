@@ -36,6 +36,9 @@ mainApp.Configure(config =>
     config.AddCommand<Media.Commands.Version>("version")
         .WithDescription("Print program version");
 
+    config.AddCommand<Sereve>("serve")
+        .WithDescription("Start a DLNA server");
+
     config.AddBranch("info", info =>
     {
         info.AddCommand<InfoFile>("file")

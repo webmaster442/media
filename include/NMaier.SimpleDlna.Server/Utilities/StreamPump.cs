@@ -26,7 +26,8 @@ public sealed class StreamPump : IDisposable
 
     private void Finish(StreamPumpResult result, StreamPumpCallback? callback)
     {
-        callback?.BeginInvoke(this, result, callback.EndInvoke, null);
+        callback?.Invoke(this, result);
+        //callback?.BeginInvoke(this, result, callback.EndInvoke, null);
         try
         {
             sem.Release();

@@ -365,14 +365,12 @@ public static class DlnaMaps
         {
             var e = (from ext in i
                      select ext.ToUpperInvariant()).ToList();
-            try
-            {
+
+            if (!Media2Ext.ContainsKey(t))
                 Media2Ext.Add(t, e);
-            }
-            catch (ArgumentException)
-            {
+            else
                 Media2Ext[t].AddRange(e);
-            }
+
             foreach (var ext in e)
             {
                 Ext2Media.Add(ext.ToUpperInvariant(), t);
