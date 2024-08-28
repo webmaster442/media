@@ -5,7 +5,7 @@ using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 using NMaier.SimpleDlna.Server.Types;
 using NMaier.SimpleDlna.Server.Utilities;
 
-namespace NMaier.SimpleDlna.FileMediaServer;
+namespace NMaier.SimpleDlna.FileMediaServer.Files;
 
 [Serializable]
 internal sealed class Cover

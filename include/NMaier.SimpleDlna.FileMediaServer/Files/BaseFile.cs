@@ -5,7 +5,7 @@ using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 using NMaier.SimpleDlna.Server.Types;
 using NMaier.SimpleDlna.Server.Utilities;
 
-namespace NMaier.SimpleDlna.FileMediaServer;
+namespace NMaier.SimpleDlna.FileMediaServer.Files;
 
 using CoverCache = LeastRecentlyUsedDictionary<string, Cover>;
 
@@ -207,10 +207,13 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
         {
             case DlnaMediaTypes.Video:
                 return new VideoFile(parentFolder.Server, file, type);
+
             case DlnaMediaTypes.Audio:
                 return new AudioFile(parentFolder.Server, file, type);
+
             case DlnaMediaTypes.Image:
                 return new ImageFile(parentFolder.Server, file, type);
+
             default:
                 return new BaseFile(parentFolder.Server, file, type, mediaType);
         }

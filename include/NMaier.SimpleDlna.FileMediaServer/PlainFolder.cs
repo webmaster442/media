@@ -1,3 +1,4 @@
+using NMaier.SimpleDlna.FileMediaServer.Files;
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 using NMaier.SimpleDlna.Server.Types;

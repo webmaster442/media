@@ -7,7 +7,7 @@ using TagLib;
 
 using File = TagLib.File;
 
-namespace NMaier.SimpleDlna.FileMediaServer;
+namespace NMaier.SimpleDlna.FileMediaServer.Files;
 
 [Serializable]
 internal sealed class ImageFile :
@@ -161,7 +161,6 @@ internal sealed class ImageFile :
                     Debug("Failed to transpose Tag props", ex);
                 }
             }
-
 
             initialized = true;
         }

@@ -7,7 +7,7 @@ using TagLib;
 
 using File = TagLib.File;
 
-namespace NMaier.SimpleDlna.FileMediaServer;
+namespace NMaier.SimpleDlna.FileMediaServer.Files;
 
 [Serializable]
 internal sealed class AudioFile
@@ -222,6 +222,7 @@ internal sealed class AudioFile
                 case PictureType.FileIcon:
                     pic = p;
                     break;
+
                 default:
                     if (pic == null)
                     {
@@ -313,7 +314,6 @@ internal sealed class AudioFile
         {
             track = (int)tag.Track;
         }
-
 
         title = tag.Title;
         if (string.IsNullOrWhiteSpace(title))

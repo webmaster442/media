@@ -4,7 +4,7 @@ using NMaier.SimpleDlna.Server.Utilities;
 
 using Timer = System.Timers.Timer;
 
-namespace NMaier.SimpleDlna.FileMediaServer;
+namespace NMaier.SimpleDlna.FileMediaServer.Files;
 
 internal class FileStreamCache
 {

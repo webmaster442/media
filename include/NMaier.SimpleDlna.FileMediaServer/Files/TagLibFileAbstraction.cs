@@ -1,21 +1,19 @@
-using System;
-using System.IO;
 using File = TagLib.File;
 
-namespace NMaier.SimpleDlna.FileMediaServer
+namespace NMaier.SimpleDlna.FileMediaServer.Files;
+
+internal sealed class TagLibFileAbstraction : File.IFileAbstraction
 {
-  internal sealed class TagLibFileAbstraction : File.IFileAbstraction
-  {
-    private readonly FileInfo info;
+    private readonly FileInfo _info;
 
     public TagLibFileAbstraction(FileInfo info)
     {
-      this.info = info;
+        this._info = info;
     }
 
-    public string Name => info.FullName;
+    public string Name => _info.FullName;
 
-    public Stream ReadStream => info.Open(
+    public Stream ReadStream => _info.Open(
       FileMode.Open,
       FileAccess.Read,
       FileShare.ReadWrite
@@ -23,16 +21,16 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public Stream WriteStream
     {
-      get { throw new NotImplementedException(); }
+        get { throw new NotImplementedException(); }
     }
 
     public void CloseStream(Stream stream)
     {
-      if (stream == null) {
-        return;
-      }
-      stream.Close();
-      stream.Dispose();
+        if (stream == null)
+        {
+            return;
+        }
+        stream.Close();
+        stream.Dispose();
     }
-  }
 }

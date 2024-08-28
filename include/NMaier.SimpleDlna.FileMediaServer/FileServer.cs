@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Timers;
 
+using NMaier.SimpleDlna.FileMediaServer.Files;
 using NMaier.SimpleDlna.Server.Http;
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Types;
@@ -214,7 +215,7 @@ public sealed class FileServer
         lock (ids)
         {
             var info = new FileInfo(fullPath);
-            if (ids.GetItemByPath(info.FullName) is not IMediaResource item 
+            if (ids.GetItemByPath(info.FullName) is not IMediaResource item
                 || ids.GetItemByPath(info.Directory?.FullName ?? "") is not VirtualFolder folder)
             {
                 return false;
@@ -256,6 +257,7 @@ public sealed class FileServer
                                 return;
                             }
                             break;
+
                         case WatcherChangeTypes.Created:
                             if (HandleFileAdded(e.FullPath))
                             {
@@ -263,6 +265,7 @@ public sealed class FileServer
                                 return;
                             }
                             break;
+
                         case WatcherChangeTypes.Deleted:
                             if (HandleFileDeleted(e.FullPath))
                             {
@@ -270,6 +273,7 @@ public sealed class FileServer
                                 return;
                             }
                             break;
+
                         default:
                             break;
                     }
@@ -450,9 +454,11 @@ public sealed class FileServer
             case WatcherChangeTypes.Deleted:
                 changeTimer.Interval = changeDeleteTime;
                 break;
+
             case WatcherChangeTypes.Renamed:
                 changeTimer.Interval = changeRenamedTime;
                 break;
+
             default:
                 changeTimer.Interval = changeDefaultTime;
                 break;

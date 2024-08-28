@@ -1,4 +1,4 @@
-namespace NMaier.SimpleDlna.Thumbnails;
+namespace NMaier.SimpleDlna.FileMediaServer;
 
 public interface IThumbnail
 {

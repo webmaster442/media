@@ -1,4 +1,4 @@
-namespace NMaier.SimpleDlna.Thumbnails;
+namespace NMaier.SimpleDlna.FileMediaServer;
 
 internal sealed class Thumbnail : IThumbnail
 {

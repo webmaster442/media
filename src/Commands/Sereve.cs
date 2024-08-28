@@ -1,5 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
+using log4net;
+using log4net.Appender;
+using log4net.Config;
+using log4net.Repository;
+
 using Media.Infrastructure;
 using Media.Infrastructure.Validation;
 
@@ -27,11 +32,19 @@ internal class Sereve : Command<Sereve.Settings>
         try
         {
             using var server = new HttpServer(8085);
+            server.Logger.IsEnabledFor(log4net.Core.Level.Error);
+
+            ILoggerRepository repository = LogManager.GetRepository();
+            BasicConfigurator.Configure(repository, new ConsoleAppender());
+
             DirectoryInfo directory = new DirectoryInfo(settings.Folder);
 
             using var fileServer = new FileServer(DlnaMediaTypes.All, new Identifiers(new TitleComparer(), false), directory);
+            fileServer.Load();
             server.RegisterMediaServer(fileServer);
-            AnsiConsole.WriteLine("Press any key to stop the server...");
+
+            Terminal.GreenText("Media server running...");
+            Terminal.InfoText("Press any key to stop the server...");
             Console.ReadKey();
             return ExitCodes.Success;
         }
