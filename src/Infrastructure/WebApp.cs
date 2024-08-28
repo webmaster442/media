@@ -5,47 +5,60 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Net.Mime;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
-using EmbedIO;
-using EmbedIO.Actions;
-using EmbedIO.WebApi;
-
-using Media.Dto.Internals;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Media.Infrastructure;
 
-internal sealed class WebApp : IDisposable
+internal sealed class WebApp
 {
-    private readonly WebServer _server;
-    
+    private readonly WebApplication _app;
+
     public WebApp(int port)
     {
+        WebApplicationBuilder builder = WebApplication.CreateBuilder();
+        builder.Logging.ClearProviders();
+        builder.Logging.SetMinimumLevel(LogLevel.Error);
+        builder.Logging.AddConsole();
+        builder.WebHost.ConfigureKestrel((context, serverOptions) => serverOptions.ListenAnyIP(port));
+        _app = builder.Build();
         Port = port;
-        _server = new WebServer(port);
     }
+
+    public ILogger Logger => _app.Logger;
 
     public int Port { get; }
 
     public IEnumerable<string> GetListenUrls()
     {
-        var ipAdresses = Dns.GetHostEntry(Dns.GetHostName()).AddressList
-            .Where(i => i.AddressFamily == AddressFamily.InterNetwork)
-            .ToHashSet();
-
-        foreach (var adress in ipAdresses)
+        foreach (var (adress, _) in GetIpAdresses())
         {
             yield return $"http://{adress}:{Port}";
         }
     }
 
-    public void AddGetRoute(string routePath, RequestHandlerCallback handler)
-        => _server.Modules.Add(routePath, new ActionModule(routePath, HttpVerbs.Get, handler));
+    public IEnumerable<(IPAddress adress, IPAddress mask)> GetIpAdresses()
+    {
+        var ipAdresses = Dns.GetHostEntry(Dns.GetHostName()).AddressList
+            .Where(i => i.AddressFamily == AddressFamily.InterNetwork)
+            .ToHashSet();
 
+        var ifaceAddrs = NetworkInterface.GetAllNetworkInterfaces()
+            .Where(i => i.OperationalStatus == OperationalStatus.Up)
+            .SelectMany(x => x.GetIPProperties().UnicastAddresses)
+            .Where(x => ipAdresses.Contains(x.Address));
+
+        foreach (var adress in ifaceAddrs)
+        {
+            yield return (adress.Address, adress.IPv4Mask);
+        }
+    }
 
     public void AddEmbeddedFile(string requestPath,
                                 string embeddedName,
@@ -66,30 +79,28 @@ internal sealed class WebApp : IDisposable
             throw new ArgumentException($"'{nameof(mimeType)}' cannot be null or empty.", nameof(mimeType));
         }
 
-        _server.Modules.Add("embeddedHandler", new ActionModule(requestPath, HttpVerbs.Get, async context =>
+        _app.MapGet(requestPath, async (context) =>
         {
             var assembly = Assembly.GetExecutingAssembly();
             using var data = Embedded.EmbeddedResources.GetFile(embeddedName);
             if (data == null)
             {
                 context.Response.StatusCode = 404;
-                context.Response.ContentType = MediaTypeNames.Text.Plain;
-                var response = "File not found."u8.ToArray();
-                context.Response.ContentLength64 = response.Length;
-                await context.Response.OutputStream.WriteAsync(response);
+                await context.Response.WriteAsync("File not found.");
                 return;
             }
             context.Response.ContentType = "mimeType";
-            context.Response.ContentLength64 = data.Length;
-            await data.CopyToAsync(context.Response.OutputStream);
-        }));
+            context.Response.ContentLength = data.Length;
+            await data.CopyToAsync(context.Response.Body);
+        });
     }
 
-    public async Task RunAsync(CancellationToken token)
-        => await _server.RunAsync(token);
+    public void AddGetRoute([StringSyntax("Route")] string endpoint, RequestDelegate handler)
+        => _app.MapGet(endpoint, handler);
 
-    public void Dispose()
-    {
-        _server.Dispose();
-    }
+    public void AddPostRoute([StringSyntax("Route")] string endpoint, RequestDelegate handler)
+        => _app.MapPost(endpoint, handler);
+
+    public async Task RunAsync()
+        => await _app.RunAsync();
 }

@@ -6,14 +6,14 @@
 using System.Diagnostics;
 using System.Net.Mime;
 
-using EmbedIO;
-
 using Media.Embedded;
 using Media.Infrastructure;
 
+using Microsoft.AspNetCore.Http;
+
 namespace Media.Interop;
 
-internal sealed class MpvWebControllerApp : IDisposable
+public class MpvWebControllerApp
 {
     private readonly WebApp _app;
     private readonly int _processId;
@@ -48,26 +48,25 @@ internal sealed class MpvWebControllerApp : IDisposable
 
     }
 
-    private async Task PerformCommand(IHttpContext context, string[] payload)
+    private async Task PerformCommand(HttpContext context, string[] payload)
     {
         if (!IsRunning())
         {
-            context.Response.StatusCode = 500;
-            await context.SendDataAsync("Mpv is not running");
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsync("Mpv is not running");
             return;
         }
         Dto.MpvIpcResponse? result = await Mpv.SendCommand(_pipeName, payload);
         if (result?.IsSuccess == true)
         {
-            context.Response.StatusCode = 200;
-            await context.SendDataAsync("Ok");
+            context.Response.StatusCode = StatusCodes.Status200OK;
+            await context.Response.WriteAsync("Ok");
         }
         else
         {
-            context.Response.StatusCode = 500;
-            await context.SendDataAsync(result?.Error ?? "error");
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsync(result?.Error ?? "error");
         }
-
     }
 
     private bool IsRunning()
@@ -82,11 +81,6 @@ internal sealed class MpvWebControllerApp : IDisposable
         var adresses = string.Join("\r\n", _app.GetListenUrls());
         Terminal.InfoText("Server listening on adresses: ");
         Terminal.InfoText(adresses);
-        await _app.RunAsync(token);
-    }
-
-    public void Dispose()
-    {
-        _app.Dispose();
+        await _app.RunAsync();
     }
 }
