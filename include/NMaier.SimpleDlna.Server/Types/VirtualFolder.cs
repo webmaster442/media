@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-
-using NMaier.SimpleDlna.Server.Interfaces;
+﻿using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server.Types;

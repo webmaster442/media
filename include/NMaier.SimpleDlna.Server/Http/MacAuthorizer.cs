@@ -24,7 +24,7 @@ public sealed class MacAuthorizer : Logging, IHttpAuthorizationMethod
         }
     }
 
-    public bool Authorize(IHeaders headers, IPEndPoint endPoint, string mac)
+    public bool Authorize(IHeaders headers, IPEndPoint endPoint, string? mac)
     {
         if (string.IsNullOrEmpty(mac))
         {

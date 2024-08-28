@@ -3,7 +3,7 @@ using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server.Comparers;
 
-internal class TitleComparer : BaseComparer
+public class TitleComparer : BaseComparer
 {
     private static readonly StringComparer Coparer =
       new NaturalStringComparer(false);

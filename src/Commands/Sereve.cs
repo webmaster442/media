@@ -1,8 +1,12 @@
-﻿using Media.Infrastructure;
-using Media.Infrastructure.Dlna;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Media.Infrastructure;
 using Media.Infrastructure.Validation;
 
+using NMaier.SimpleDlna.FileMediaServer;
+using NMaier.SimpleDlna.Server.Comparers;
 using NMaier.SimpleDlna.Server.Http;
+using NMaier.SimpleDlna.Server.Types;
 
 using Spectre.Console;
 
@@ -18,12 +22,15 @@ internal class Sereve : Command<Sereve.Settings>
         public string Folder { get; set; } = Environment.CurrentDirectory;
     }
 
-    public override int Execute(CommandContext context, Settings settings)
+    public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
         try
         {
             using var server = new HttpServer(8085);
-            server.RegisterMediaServer(new MediaServer());
+            DirectoryInfo directory = new DirectoryInfo(settings.Folder);
+
+            using var fileServer = new FileServer(DlnaMediaTypes.All, new Identifiers(new TitleComparer(), false), directory);
+            server.RegisterMediaServer(fileServer);
             AnsiConsole.WriteLine("Press any key to stop the server...");
             Console.ReadKey();
             return ExitCodes.Success;

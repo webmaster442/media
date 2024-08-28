@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Media.MockExecutable", "tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NMaier.SimpleDlna.Server", "include\NMaier.SimpleDlna.Server\NMaier.SimpleDlna.Server.csproj", "{87DFCC10-1869-4C40-B037-60F48FD90B4B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NMaier.SimpleDlna.FileMediaServer", "include\NMaier.SimpleDlna.FileMediaServer\NMaier.SimpleDlna.FileMediaServer.csproj", "{FAA8205C-4312-4FF7-B51C-0FA20E1D8994}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{87DFCC10-1869-4C40-B037-60F48FD90B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87DFCC10-1869-4C40-B037-60F48FD90B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87DFCC10-1869-4C40-B037-60F48FD90B4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAA8205C-4312-4FF7-B51C-0FA20E1D8994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAA8205C-4312-4FF7-B51C-0FA20E1D8994}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAA8205C-4312-4FF7-B51C-0FA20E1D8994}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAA8205C-4312-4FF7-B51C-0FA20E1D8994}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

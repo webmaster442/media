@@ -4,7 +4,7 @@ namespace NMaier.SimpleDlna.Server.Interfaces;
 
 public interface IMediaServer
 {
-    IHttpAuthorizationMethod Authorizer { get; }
+    IHttpAuthorizationMethod? Authorizer { get; }
 
     string FriendlyName { get; }
 

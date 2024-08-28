@@ -38,7 +38,7 @@ public class Logging : ILog
         InternalLogger.DebugFormat(format, args);
     }
 
-    public void DebugFormat(string format, object arg0)
+    public void DebugFormat(string format, object? arg0)
     {
         InternalLogger.DebugFormat(format, arg0);
     }
@@ -54,8 +54,8 @@ public class Logging : ILog
         InternalLogger.DebugFormat(provider, format, args);
     }
 
-    public void DebugFormat(string format, object arg0, object arg1,
-      object arg2)
+    public void DebugFormat(string format, object? arg0, object? arg1,
+      object? arg2)
     {
         InternalLogger.DebugFormat(format, arg0, arg1, arg2);
     }

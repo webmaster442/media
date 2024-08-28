@@ -18,35 +18,35 @@ public class HttpStream : Stream
 
     public static readonly string UserAgent = GenerateUserAgent();
 
-    private readonly Uri referrer;
+    private readonly Uri? _referrer;
 
-    private readonly Uri uri;
+    private readonly Uri _uri;
 
-    private Stream bufferedStream;
+    private Stream? _bufferedStream;
 
-    private long? length;
+    private long? _length;
 
-    private long position;
+    private long _position;
 
-    private HttpWebRequest request;
+    private HttpWebRequest? _request;
 
-    private HttpWebResponse response;
+    private HttpWebResponse? _response;
 
-    private Stream responseStream;
+    private Stream? _responseStream;
 
     public HttpStream(Uri uri)
       : this(uri, null)
     {
     }
 
-    public HttpStream(Uri uri, Uri referrer)
+    public HttpStream(Uri uri, Uri? referrer)
     {
         if (uri == null)
         {
             throw new ArgumentNullException(nameof(uri));
         }
-        this.uri = uri;
-        this.referrer = referrer;
+        _uri = uri;
+        _referrer = referrer;
     }
 
     public override bool CanRead => true;
@@ -61,9 +61,9 @@ public class HttpStream : Stream
             }
 
             EnsureResponse();
-            var ranges = response.Headers.Get("Accept-Ranges");
+            var ranges = _response?.Headers.Get("Accept-Ranges");
             if (!string.IsNullOrEmpty(ranges) &&
-                ranges.ToUpperInvariant() == "none")
+                ranges.Equals("none", StringComparison.InvariantCultureIgnoreCase))
             {
                 return false;
             }
@@ -80,7 +80,7 @@ public class HttpStream : Stream
         get
         {
             EnsureResponse();
-            return response.ContentType;
+            return _response?.ContentType ?? string.Empty;
         }
     }
 
@@ -89,7 +89,7 @@ public class HttpStream : Stream
         get
         {
             EnsureResponse();
-            return response.LastModified;
+            return _response?.LastModified ?? DateTime.Now;
         }
     }
 
@@ -97,30 +97,30 @@ public class HttpStream : Stream
     {
         get
         {
-            if (!length.HasValue)
+            if (!_length.HasValue)
             {
                 OpenAt(0, HttpMethod.HEAD);
-                length = response.ContentLength;
+                _length = _response?.ContentLength;
             }
-            if (length.Value < 0)
+            if (_length == null || _length.Value < 0)
             {
                 throw new IOException("Stream does not feature a length");
             }
-            return length.Value;
+            return _length.Value;
         }
     }
 
     public override long Position
     {
-        get { return position; }
+        get { return _position; }
         set { Seek(value, SeekOrigin.Begin); }
     }
 
-    public Uri Uri => new Uri(uri.ToString());
+    public Uri Uri => new Uri(_uri.ToString());
 
     private void EnsureResponse()
     {
-        if (response != null)
+        if (_response != null)
         {
             return;
         }
@@ -158,18 +158,18 @@ public class HttpStream : Stream
     {
         if (disposing)
         {
-            if (bufferedStream != null)
+            if (_bufferedStream != null)
             {
-                bufferedStream.Dispose();
-                bufferedStream = null;
+                _bufferedStream.Dispose();
+                _bufferedStream = null;
             }
-            if (responseStream != null)
+            if (_responseStream != null)
             {
-                responseStream.Dispose();
-                responseStream = null;
+                _responseStream.Dispose();
+                _responseStream = null;
             }
-            response = null;
-            request = null;
+            _response = null;
+            _request = null;
         }
 
         base.Dispose(disposing);
@@ -189,46 +189,46 @@ public class HttpStream : Stream
         Close();
         Dispose();
 
-        request = (HttpWebRequest)WebRequest.Create(uri);
-        request.Method = method.ToString();
-        if (referrer != null)
+        _request = (HttpWebRequest)WebRequest.Create(_uri);
+        _request.Method = method.ToString();
+        if (_referrer != null)
         {
-            request.Referer = referrer.ToString();
+            _request.Referer = _referrer.ToString();
         }
-        request.AllowAutoRedirect = true;
-        request.Timeout = TIMEOUT * 1000;
-        request.UserAgent = UserAgent;
+        _request.AllowAutoRedirect = true;
+        _request.Timeout = TIMEOUT * 1000;
+        _request.UserAgent = UserAgent;
         if (offset > 0)
         {
-            request.AddRange(offset);
+            _request.AddRange(offset);
         }
-        response = (HttpWebResponse)request.GetResponse();
+        _response = (HttpWebResponse)_request.GetResponse();
         if (method != HttpMethod.HEAD)
         {
-            responseStream = response.GetResponseStream();
-            if (responseStream == null)
+            _responseStream = _response.GetResponseStream();
+            if (_responseStream == null)
             {
                 throw new IOException("Didn't get a response stream");
             }
-            bufferedStream = new BufferedStream(responseStream, BUFFER_SIZE);
+            _bufferedStream = new BufferedStream(_responseStream, BUFFER_SIZE);
         }
-        if (offset > 0 && response.StatusCode != HttpStatusCode.PartialContent)
+        if (offset > 0 && _response.StatusCode != HttpStatusCode.PartialContent)
         {
             throw new IOException(
               "Failed to open the http stream at a specific position");
         }
-        if (offset == 0 && response.StatusCode != HttpStatusCode.OK)
+        if (offset == 0 && _response.StatusCode != HttpStatusCode.OK)
         {
             throw new IOException("Failed to open the http stream");
         }
-        logger.InfoFormat("Opened {0} {1} at {2}", method, uri, offset);
+        logger.InfoFormat("Opened {0} {1} at {2}", method, _uri, offset);
     }
 
     public override void Close()
     {
-        bufferedStream?.Close();
-        responseStream?.Close();
-        response?.Close();
+        _bufferedStream?.Close();
+        _responseStream?.Close();
+        _response?.Close();
         base.Close();
     }
 
@@ -241,14 +241,14 @@ public class HttpStream : Stream
     {
         try
         {
-            if (responseStream == null)
+            if (_responseStream == null)
             {
-                OpenAt(position, HttpMethod.GET);
+                OpenAt(_position, HttpMethod.GET);
             }
-            var read = bufferedStream.Read(buffer, offset, count);
+            var read = _bufferedStream?.Read(buffer, offset, count) ?? 0;
             if (read > 0)
             {
-                position += read;
+                _position += read;
             }
             return read;
         }
@@ -270,7 +270,7 @@ public class HttpStream : Stream
                 break;
 
             case SeekOrigin.Current:
-                np = position + offset;
+                np = _position + offset;
                 break;
 
             case SeekOrigin.End:
@@ -281,17 +281,17 @@ public class HttpStream : Stream
         {
             throw new IOException("Invalid seek; out of stream bounds");
         }
-        var off = position - np;
+        var off = _position - np;
         if (off == 0)
         {
             logger.Debug("No seek required");
         }
         else
         {
-            if (response != null && off > 0 && off < SMALL_SEEK)
+            if (_response != null && off > 0 && off < SMALL_SEEK)
             {
                 var buf = new byte[off];
-                bufferedStream.Read(buf, 0, (int)off);
+                _bufferedStream?.Read(buf, 0, (int)off);
                 logger.DebugFormat("Did a small seek of {0}", off);
             }
             else
@@ -300,14 +300,14 @@ public class HttpStream : Stream
                 logger.DebugFormat("Did a long seek of {0}", off);
             }
         }
-        position = np;
-        logger.DebugFormat("Successfully sought to {0}", position);
-        return position;
+        _position = np;
+        logger.DebugFormat("Successfully sought to {0}", _position);
+        return _position;
     }
 
     public override void SetLength(long value)
     {
-        length = value;
+        _length = value;
     }
 
     public override void Write(byte[] buffer, int offset, int count)

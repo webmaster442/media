@@ -1,9 +1,5 @@
 {
   "profiles": {
-    "WSL": {
-      "commandName": "WSL2",
-      "distributionName": ""
-    },
     "update ffmpeg": {
       "commandName": "Project",
       "commandLineArgs": "update ffmpeg"

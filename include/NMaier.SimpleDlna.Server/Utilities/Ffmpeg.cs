@@ -50,8 +50,7 @@ public static class FFmpeg
         {
             throw new ArgumentNullException(nameof(file));
         }
-        IDictionary<string, string> rv;
-        if (InfoCache.TryGetValue(file, out rv))
+        if (InfoCache.TryGetValue(file, out IDictionary<string, string>? rv))
         {
             return rv;
         }

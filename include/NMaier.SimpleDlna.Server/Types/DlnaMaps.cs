@@ -383,8 +383,8 @@ public static class DlnaMaps
         return $"{(ulong)flags:X8}{0:D24}";
     }
 
-    public static Dictionary<DlnaMime, string?> GenerateMainPN()
+    public static Dictionary<DlnaMime, string> GenerateMainPN()
     {
-        return AllPN.ToDictionary(p => p.Key, p => p.Value.FirstOrDefault());
+        return AllPN.ToDictionary(p => p.Key, p => p.Value.First());
     }
 }

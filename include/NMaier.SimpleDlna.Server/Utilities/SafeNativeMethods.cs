@@ -9,7 +9,4 @@ internal static class SafeNativeMethods
 
     [DllImport("iphlpapi.dll")]
     public static extern uint SendARP(uint destIP, uint srcIP, [Out] byte[] pMacAddr, ref uint phyAddrLen);
-
-    [DllImport("libc", CharSet = CharSet.Ansi)]
-    public static extern int uname(nint buf);
 }

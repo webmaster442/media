@@ -24,7 +24,7 @@ public sealed class IPAddressAuthorizer : Logging, IHttpAuthorizationMethod
     {
     }
 
-    public bool Authorize(IHeaders headers, IPEndPoint endPoint, string mac)
+    public bool Authorize(IHeaders headers, IPEndPoint endPoint, string? mac)
     {
         var addr = endPoint?.Address;
         if (addr == null)

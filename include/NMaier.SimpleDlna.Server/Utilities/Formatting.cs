@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace NMaier.SimpleDlna.Server.Utilities;
 
@@ -64,15 +63,7 @@ public static class Formatting
 
     public static string GetSystemName()
     {
-        var buf = Marshal.AllocHGlobal(8192);
-        // This is a hacktastic way of getting sysname from uname ()
-        if (SafeNativeMethods.uname(buf) != 0)
-        {
-            throw new ArgumentException("Failed to get uname");
-        }
-        var rv = Marshal.PtrToStringAnsi(buf);
-        Marshal.FreeHGlobal(buf);
-        return rv;
+        return Environment.MachineName;
     }
 
     public static string StemCompareBase(this string name)

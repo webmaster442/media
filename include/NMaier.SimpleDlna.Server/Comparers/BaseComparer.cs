@@ -2,7 +2,7 @@
 
 namespace NMaier.SimpleDlna.Server.Comparers;
 
-internal abstract class BaseComparer : IItemComparer
+public abstract class BaseComparer : IItemComparer
 {
     public abstract string Description { get; }
 

@@ -4,13 +4,16 @@ namespace NMaier.SimpleDlna.Server.Utilities;
 
 public sealed class StreamPump : IDisposable
 {
-    private readonly byte[] buffer;
+    private readonly byte[] _buffer;
+    private bool _disposed;
 
-    private readonly SemaphoreSlim sem = new SemaphoreSlim(0, 1);
+    private readonly SemaphoreSlim _sem;
 
     public StreamPump(Stream inputStream, Stream outputStream, int bufferSize)
     {
-        buffer = new byte[bufferSize];
+        _sem = new SemaphoreSlim(0, 1);
+        _disposed = false;
+        _buffer = new byte[bufferSize];
         Input = inputStream;
         Output = outputStream;
     }
@@ -21,20 +24,22 @@ public sealed class StreamPump : IDisposable
 
     public void Dispose()
     {
-        sem.Dispose();
+        if (!_disposed)
+        {
+            _sem.Dispose();
+            _disposed = true;
+        }
     }
 
     private void Finish(StreamPumpResult result, StreamPumpCallback? callback)
     {
         callback?.Invoke(this, result);
-        //callback?.BeginInvoke(this, result, callback.EndInvoke, null);
         try
         {
-            sem.Release();
-        }
-        catch (ObjectDisposedException)
-        {
-            // ignore
+            if (!_disposed)
+            {
+                _sem.Release();
+            }
         }
         catch (Exception ex)
         {
@@ -46,7 +51,7 @@ public sealed class StreamPump : IDisposable
     {
         try
         {
-            Input.BeginRead(buffer, 0, buffer.Length, readResult =>
+            Input.BeginRead(_buffer, 0, _buffer.Length, readResult =>
             {
                 try
                 {
@@ -59,18 +64,18 @@ public sealed class StreamPump : IDisposable
 
                     try
                     {
-                        Output.BeginWrite(buffer, 0, read, writeResult =>
-                {
-                    try
-                    {
-                        Output.EndWrite(writeResult);
-                        Pump(callback);
-                    }
-                    catch (Exception)
-                    {
-                        Finish(StreamPumpResult.Aborted, callback);
-                    }
-                }, null);
+                        Output.BeginWrite(_buffer, 0, read, writeResult =>
+                        {
+                            try
+                            {
+                                Output.EndWrite(writeResult);
+                                Pump(callback);
+                            }
+                            catch (Exception)
+                            {
+                                Finish(StreamPumpResult.Aborted, callback);
+                            }
+                        }, null);
                     }
                     catch (Exception)
                     {
@@ -91,6 +96,6 @@ public sealed class StreamPump : IDisposable
 
     public bool Wait(int timeout)
     {
-        return sem.Wait(timeout);
+        return _sem.Wait(timeout);
     }
 }

@@ -28,7 +28,7 @@ public sealed class HttpAuthorizer
         }
     }
 
-    public bool Authorize(IHeaders headers, IPEndPoint endPoint, string mac)
+    public bool Authorize(IHeaders headers, IPEndPoint endPoint, string? mac)
     {
         if (_methods.Count == 0)
         {
