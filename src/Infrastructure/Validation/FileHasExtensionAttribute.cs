@@ -3,26 +3,27 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using CsvHelper.Configuration;
-
 namespace Media.Infrastructure.Validation;
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-internal sealed class FileExistsAttribute : ValidationAttribute
+internal sealed class FileHasExtensionAttribute : ValidationAttribute
 {
-    public bool IsOptional { get; set; }
+    private readonly HashSet<string> _extensions;
+
+    public FileHasExtensionAttribute(params string[] extensions)
+    {
+        _extensions = new HashSet<string>(extensions, StringComparer.OrdinalIgnoreCase);
+    }
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value is string filePath)
         {
-            if (string.IsNullOrWhiteSpace(filePath) && IsOptional)
-                return ValidationResult.Success;
-
-            if (File.Exists(filePath))
+            var extension = Path.GetExtension(filePath);
+            if (_extensions.Contains(extension))
                 return ValidationResult.Success;
             else
-                return new ValidationResult($"File does not exist: {filePath}");
+                return new ValidationResult($"File has invalid extension: {filePath}");
         }
         throw new InvalidOperationException("Property must be string");
     }

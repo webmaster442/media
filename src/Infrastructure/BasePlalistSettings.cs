@@ -9,10 +9,11 @@ namespace Media.Infrastructure;
 
 internal class BasePlalistSettings : ValidatedCommandSettings
 {
-    [Description("Playlist file")]
+    [Description("Playlist file. Can be *.m3u, *.m3u8 or *.pls")]
     [CommandOption("-p|--playlist")]
     [Required]
     [FileExists]
+    [FileHasExtension(".m3u", ".m3u8", ".pls")]
     public string PlaylistName { get; set; }
 
     public BasePlalistSettings()

@@ -16,6 +16,9 @@ internal class Playlist : IEnumerable<string>
         _items = new List<string>();
     }
 
+    public string this[int index]
+        => _items[index];
+
     public void Clear()
         => _items.Clear();
 
