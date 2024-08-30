@@ -13,6 +13,7 @@ namespace Media.Commands;
 
 internal sealed class Play : AsyncCommand<Play.Settings>
 {
+    private readonly int _remotePort;
     private readonly Mpv _mpv;
 
     public class Settings : ValidatedCommandSettings
@@ -47,6 +48,7 @@ internal sealed class Play : AsyncCommand<Play.Settings>
 
     public Play(ConfigAccessor configAccessor)
     {
+        _remotePort = configAccessor.GetMpvRemotePort() ?? 12345;
         _mpv = new Mpv(configAccessor);
     }
 
@@ -95,7 +97,7 @@ internal sealed class Play : AsyncCommand<Play.Settings>
 
         if (enableRemote)
         {
-            var webapp = new MpvWebControllerApp(process.Id, pipeName);
+            var webapp = new MpvWebControllerApp(process.Id, _remotePort, pipeName);
             await webapp.RunAsync(CancellationToken.None);
         }
         Terminal.InfoText("Press a key to exit...");

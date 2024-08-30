@@ -13,12 +13,12 @@ using NMaier.SimpleDlna.Server.Comparers;
 using NMaier.SimpleDlna.Server.Http;
 using NMaier.SimpleDlna.Server.Types;
 
-using Spectre.Console;
-
 namespace Media.Commands;
 
-internal class Sereve : Command<Sereve.Settings>
+internal sealed class Sereve : Command<Sereve.Settings>
 {
+    private readonly int _dlnaServerPort;
+
     public class Settings : ValidatedCommandSettings
     {
         [DirectoryExists]
@@ -27,19 +27,26 @@ internal class Sereve : Command<Sereve.Settings>
         public string Folder { get; set; } = Environment.CurrentDirectory;
     }
 
+    public Sereve(ConfigAccessor configAccessor)
+    {
+        _dlnaServerPort = configAccessor.GetDlnaServerPort() ?? 8085;
+    }
+
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
         try
         {
-            using var server = new HttpServer(8085);
+            using var server = new HttpServer(_dlnaServerPort);
             server.Logger.IsEnabledFor(log4net.Core.Level.Error);
 
             ILoggerRepository repository = LogManager.GetRepository();
             BasicConfigurator.Configure(repository, new ConsoleAppender());
 
-            DirectoryInfo directory = new DirectoryInfo(settings.Folder);
+            DirectoryInfo directory = new(settings.Folder);
 
-            using var fileServer = new FileServer(DlnaMediaTypes.All, new Identifiers(new TitleComparer(), false), directory);
+            using var fileServer = new FileServer(DlnaMediaTypes.All,
+                                                  new Identifiers(new TitleComparer(), false),
+                                                  directory);
             fileServer.Load();
             server.RegisterMediaServer(fileServer);
 

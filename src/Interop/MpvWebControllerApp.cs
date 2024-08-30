@@ -13,17 +13,17 @@ using Microsoft.AspNetCore.Http;
 
 namespace Media.Interop;
 
-public class MpvWebControllerApp
+internal sealed class MpvWebControllerApp
 {
     private readonly WebApp _app;
     private readonly int _processId;
     private readonly string _pipeName;
 
-    public MpvWebControllerApp(int processId, string pipeName)
+    public MpvWebControllerApp(int processId, int serverPort, string pipeName)
     {
         _processId = processId;
         _pipeName = pipeName;
-        _app = new WebApp(12345);
+        _app = new WebApp(serverPort);
         _app.AddEmbeddedFile("/", EmbeddedResources.MpvController, MediaTypeNames.Text.Html);
         _app.AddEmbeddedFile("/index.html", EmbeddedResources.MpvController, MediaTypeNames.Text.Html);
         _app.AddEmbeddedFile("/mpv-logo-128.png", EmbeddedResources.MpvLogo, MediaTypeNames.Image.Png);

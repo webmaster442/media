@@ -39,6 +39,9 @@ mainApp.Configure(config =>
     config.AddCommand<Sereve>("serve")
         .WithDescription("Start a DLNA server");
 
+    config.AddCommand<Config>("config")
+        .WithDescription("Edit the configuration file");
+
     config.AddBranch("info", info =>
     {
         info.AddCommand<InfoFile>("file")

@@ -11,21 +11,8 @@ public sealed class ConfigAccessor
 {
     private readonly ConfigObject _config;
     private readonly JsonSerializerOptions _options;
-    private readonly string _configPath;
-    public ConfigAccessor()
-    {
-        _configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "media.config.json");
-        _options = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            ReadCommentHandling = JsonCommentHandling.Skip,
-            AllowTrailingCommas = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        };
-        _config = File.Exists(_configPath) ? LoadConfig() : new ConfigObject();
-    }
 
-    public T? Read<T>(string key, T? defaultValue = default) where T : IParsable<T>
+    private T? Read<T>(string key, T? defaultValue = default) where T : IParsable<T>
     {
         if (_config.Settings.TryGetValue(key, out string? value)
             && T.TryParse(value, CultureInfo.InvariantCulture, out T? parsed))
@@ -35,14 +22,14 @@ public sealed class ConfigAccessor
         return defaultValue;
     }
 
-    public void Write<T>(string key, T value) where T : IFormattable, IParsable<T>
+    private void Write<T>(string key, T value) where T : IFormattable, IParsable<T>
     {
         _config.Settings[key] = value.ToString(null, CultureInfo.InvariantCulture);
     }
 
     private ConfigObject LoadConfig()
     {
-        using var stream = File.OpenRead(_configPath);
+        using var stream = File.OpenRead(ConfigPath);
         var loaded = JsonSerializer.Deserialize<ConfigObject>(stream, _options)
             ?? throw new InvalidOperationException("Config file deserialization error");
 
@@ -59,9 +46,34 @@ public sealed class ConfigAccessor
         {
             await JsonSerializer.SerializeAsync(stream, _config, _options);
         }
-        File.Move(temp, _configPath, true);
+        File.Move(temp, ConfigPath, true);
         File.Delete(temp);
     }
+
+    public ConfigAccessor()
+    {
+        ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "media.config.json");
+        _options = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            AllowTrailingCommas = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
+        if (File.Exists(ConfigPath))
+        {
+            _config = LoadConfig();
+        }
+        else
+        {
+            _config = new ConfigObject();
+            _config.FillWithDefaults();
+        }
+    }
+
+    public string ConfigPath { get; }
+
+    public Task ForceSave() => SaveConfig();
 
     public DateTimeOffset? GetFFMPegVesion()
         => Read<DateTimeOffset>(ConfigKeys.FFMpegVersion);
@@ -98,4 +110,10 @@ public sealed class ConfigAccessor
 
     public string? GetExternalYtdlpPath()
         => Read<string>(ConfigKeys.ExternalYtdlpPath);
+
+    public int? GetMpvRemotePort()
+        => Read<int>(ConfigKeys.MpvRemotePort);
+
+    public int? GetDlnaServerPort()
+        => Read<int>(ConfigKeys.DlnaServerPort);
 }

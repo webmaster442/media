@@ -17,4 +17,12 @@ public sealed class ConfigObject
         Settings = new Dictionary<string, string>();
         Version = Assembly.GetAssembly(typeof(ConfigObject))?.GetName().Version ?? new Version();
     }
+
+    public void FillWithDefaults()
+    {
+        foreach (var defaultValue in ConfigKeys.CurrentVersionDefaults)
+        {
+            Settings.TryAdd(defaultValue.Key, defaultValue.Value);
+        }
+    }
 }
