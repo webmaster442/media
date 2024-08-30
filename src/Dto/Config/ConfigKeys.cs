@@ -18,9 +18,9 @@ public static class ConfigKeys
 
     public static readonly Dictionary<string, string> CurrentVersionDefaults = new()
     {
-        { FFMpegVersion, new DateTimeOffset(DateTime.MinValue).ToString() },
-        { MpvVersion, new DateTimeOffset(DateTime.MinValue).ToString() },
-        { YtdlpVersion, new DateTimeOffset(DateTime.MinValue).ToString() },
+        { FFMpegVersion, new DateTimeOffset().ToString() },
+        { MpvVersion, new DateTimeOffset().ToString() },
+        { YtdlpVersion, new DateTimeOffset().ToString() },
         { ExternalFfMpegPath, string.Empty },
         { ExternalMpvPath, string.Empty },
         { ExternalYtdlpPath, string.Empty },
