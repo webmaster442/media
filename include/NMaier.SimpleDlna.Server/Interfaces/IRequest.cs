@@ -10,7 +10,7 @@ public interface IRequest
 
     IPEndPoint LocalEndPoint { get; }
 
-    string? Method { get; }
+    string Method { get; }
 
     string Path { get; }
 

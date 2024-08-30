@@ -9,37 +9,36 @@ namespace NMaier.SimpleDlna.FileMediaServer.Files;
 
 [Serializable]
 internal sealed class Cover
-: Logging, IMediaCoverResource, IMetaInfo, ISerializable, IDisposable
+: Logging, IMediaCoverResource, IMetaInfo, ISerializable
 {
     private static readonly ThumbnailMaker thumber =
       new ThumbnailMaker();
 
-    private readonly FileInfo file;
-    private byte[]? bytes;
+    private readonly FileInfo _file;
+    private byte[]? _bytes;
 
-    private int height = 216;
+    private int _height = 216;
 
-    private bool warned;
+    private bool _warned;
 
-    private int width = 384;
+    private int _width = 384;
 
     internal Cover(FileInfo aFile, Stream aStream)
     {
-        var thumb = thumber.GetThumbnail(
-          aFile.FullName,
-          DlnaMediaTypes.Image,
-          aStream,
-          width,
-          height
-          );
-        bytes = thumb.GetData();
-        height = thumb.Height;
-        width = thumb.Width;
+        _file = aFile;
+        var thumb = thumber.GetThumbnail(aFile.FullName,
+                                         DlnaMediaTypes.Image,
+                                         aStream,
+                                         _width,
+                                         _height);
+        _bytes = thumb.GetData();
+        _height = thumb.Height;
+        _width = thumb.Width;
     }
 
     public Cover(FileInfo aFile)
     {
-        file = aFile;
+        _file = aFile;
     }
 
     private byte[] Bytes
@@ -65,9 +64,9 @@ internal sealed class Cover
 
     public DlnaMediaTypes MediaType => DlnaMediaTypes.Image;
 
-    public int? MetaHeight => height;
+    public int? MetaHeight => _height;
 
-    public int? MetaWidth => width;
+    public int? MetaWidth => _width;
 
     public string Path
     {
@@ -112,9 +111,9 @@ internal sealed class Cover
     {
         get
         {
-            if (file != null)
+            if (_file != null)
             {
-                return file.LastWriteTimeUtc;
+                return _file.LastWriteTimeUtc;
             }
             return DateTime.Now;
         }
@@ -142,13 +141,13 @@ internal sealed class Cover
         {
             throw new ArgumentNullException(nameof(info));
         }
-        if (bytes == null)
+        if (_bytes == null)
         {
             throw new NotSupportedException("No cover loaded");
         }
-        info.AddValue("b", bytes);
-        info.AddValue("w", width);
-        info.AddValue("h", height);
+        info.AddValue("b", _bytes);
+        info.AddValue("w", _width);
+        info.AddValue("h", _height);
     }
 
     internal event EventHandler? OnCoverLazyLoaded;
@@ -157,45 +156,40 @@ internal sealed class Cover
     {
         try
         {
-            if (bytes == null)
+            if (_bytes == null)
             {
                 var thumb = thumber.GetThumbnail(
-                  file,
-                  width,
-                  height
+                  _file,
+                  _width,
+                  _height
                   );
-                bytes = thumb.GetData();
-                height = thumb.Height;
-                width = thumb.Width;
+                _bytes = thumb.GetData();
+                _height = thumb.Height;
+                _width = thumb.Width;
             }
         }
         catch (NotSupportedException ex)
         {
-            Debug("Failed to load thumb for " + file.FullName, ex);
+            Debug("Failed to load thumb for " + _file.FullName, ex);
         }
         catch (Exception ex)
         {
-            if (!warned)
+            if (!_warned)
             {
-                Warn("Failed to load thumb for " + file.FullName, ex);
-                warned = true;
+                Warn("Failed to load thumb for " + _file.FullName, ex);
+                _warned = true;
             }
             else
             {
-                Debug("Failed to load thumb for " + file.FullName, ex);
+                Debug("Failed to load thumb for " + _file.FullName, ex);
             }
             return null;
         }
-        if (bytes == null)
+        if (_bytes == null)
         {
-            bytes = new byte[0];
+            _bytes = new byte[0];
         }
         OnCoverLazyLoaded?.Invoke(this, EventArgs.Empty);
-        return bytes;
-    }
-
-    public void Dispose()
-    {
-        bytes = null;
+        return _bytes;
     }
 }

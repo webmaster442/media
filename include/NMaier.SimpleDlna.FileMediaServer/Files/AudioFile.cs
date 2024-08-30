@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Types;
@@ -6,55 +7,31 @@ using NMaier.SimpleDlna.Server.Types;
 using TagLib;
 
 using File = TagLib.File;
+using NMaier.SimpleDlna.FileMediaServer.Files;
 
 namespace NMaier.SimpleDlna.FileMediaServer.Files;
 
-[Serializable]
 internal sealed class AudioFile
   : BaseFile, IMediaAudioResource
 {
     private static readonly TimeSpan emptyDuration = new TimeSpan(0);
-    private string? album;
+    private string? _album;
 
-    private string? artist;
+    private string? _artist;
 
-    private string? description;
+    private string? _description;
 
-    private TimeSpan? duration;
+    private TimeSpan? _duration;
 
-    private string? genre;
+    private string? _genre;
 
-    private bool initialized;
+    private bool _initialized;
 
-    private string? performer;
+    private string? _performer;
 
-    private string? title;
+    private string? _title;
 
-    private int? track;
-
-    private AudioFile(SerializationInfo info, DeserializeInfo di)
-      : this(di.Server, di.Info, di.Type)
-    {
-        album = info.GetString("al");
-        artist = info.GetString("ar");
-        genre = info.GetString("g");
-        performer = info.GetString("p");
-        title = info.GetString("ti");
-        try
-        {
-            track = info.GetInt32("tr");
-        }
-        catch (Exception)
-        {
-            // no op
-        }
-        var ts = info.GetInt64("d");
-        if (ts > 0)
-        {
-            duration = new TimeSpan(ts);
-        }
-        initialized = true;
-    }
+    private int? _track;
 
     internal AudioFile(FileServer server, FileInfo aFile, DlnaMime aType)
       : base(server, aFile, aType, DlnaMediaTypes.Audio)
@@ -69,7 +46,7 @@ internal sealed class AudioFile
             {
                 MaybeInit();
             }
-            return CachedCover;
+            return CachedCover ?? new Cover(base.Item);
         }
     }
 
@@ -78,7 +55,7 @@ internal sealed class AudioFile
         get
         {
             MaybeInit();
-            return album ?? string.Empty;
+            return _album ?? string.Empty;
         }
     }
 
@@ -87,7 +64,7 @@ internal sealed class AudioFile
         get
         {
             MaybeInit();
-            return artist ?? string.Empty;
+            return _artist ?? string.Empty;
         }
     }
 
@@ -96,7 +73,7 @@ internal sealed class AudioFile
         get
         {
             MaybeInit();
-            return description ?? string.Empty;
+            return _description ?? string.Empty;
         }
     }
 
@@ -105,7 +82,7 @@ internal sealed class AudioFile
         get
         {
             MaybeInit();
-            return duration;
+            return _duration;
         }
     }
 
@@ -114,7 +91,7 @@ internal sealed class AudioFile
         get
         {
             MaybeInit();
-            return genre ?? string.Empty;
+            return _genre ?? string.Empty;
         }
     }
 
@@ -123,7 +100,7 @@ internal sealed class AudioFile
         get
         {
             MaybeInit();
-            return performer ?? string.Empty;
+            return _performer ?? string.Empty;
         }
     }
 
@@ -132,7 +109,7 @@ internal sealed class AudioFile
         get
         {
             MaybeInit();
-            return track;
+            return _track;
         }
     }
 
@@ -142,33 +119,33 @@ internal sealed class AudioFile
         {
             MaybeInit();
             var rv = base.Properties;
-            if (album != null)
+            if (_album != null)
             {
-                rv.Add("Album", album);
+                rv.Add("Album", _album);
             }
-            if (artist != null)
+            if (_artist != null)
             {
-                rv.Add("Artist", artist);
+                rv.Add("Artist", _artist);
             }
-            if (description != null)
+            if (_description != null)
             {
-                rv.Add("Description", description);
+                rv.Add("Description", _description);
             }
-            if (duration != null)
+            if (_duration != null)
             {
-                rv.Add("Duration", duration.Value.ToString("g"));
+                rv.Add("Duration", _duration.Value.ToString("g"));
             }
-            if (genre != null)
+            if (_genre != null)
             {
-                rv.Add("Genre", genre);
+                rv.Add("Genre", _genre);
             }
-            if (performer != null)
+            if (_performer != null)
             {
-                rv.Add("Performer", performer);
+                rv.Add("Performer", _performer);
             }
-            if (track != null)
+            if (_track != null)
             {
-                rv.Add("Track", track.Value.ToString());
+                rv.Add("Track", _track.Value.ToString());
             }
             return rv;
         }
@@ -179,13 +156,13 @@ internal sealed class AudioFile
         get
         {
             MaybeInit();
-            if (!string.IsNullOrWhiteSpace(title))
+            if (!string.IsNullOrWhiteSpace(_title))
             {
-                if (track.HasValue)
+                if (_track.HasValue)
                 {
-                    return $"{track.Value:D2}. — {title}";
+                    return $"{_track.Value:D2}. — {_title}";
                 }
-                return title;
+                return _title;
             }
             return base.Title;
         }
@@ -193,11 +170,11 @@ internal sealed class AudioFile
 
     public override int CompareTo(IMediaItem? other)
     {
-        if (track.HasValue)
+        if (_track.HasValue)
         {
             var oa = other as AudioFile;
             int rv;
-            if (oa?.track != null && (rv = track.Value.CompareTo(oa.track.Value)) != 0)
+            if (oa?._track != null && (rv = _track.Value.CompareTo(oa._track.Value)) != 0)
             {
                 return rv;
             }
@@ -207,7 +184,7 @@ internal sealed class AudioFile
 
     private void InitCover(Tag tag)
     {
-        IPicture pic = null;
+        IPicture? pic = null;
         foreach (var p in tag.Pictures)
         {
             if (p.Type == PictureType.FrontCover)
@@ -246,7 +223,7 @@ internal sealed class AudioFile
 
     private void MaybeInit()
     {
-        if (initialized)
+        if (_initialized)
         {
             return;
         }
@@ -257,10 +234,10 @@ internal sealed class AudioFile
             {
                 try
                 {
-                    duration = tl.Properties.Duration;
-                    if (duration.Value.TotalSeconds < 0.1)
+                    _duration = tl.Properties.Duration;
+                    if (_duration.Value.TotalSeconds < 0.1)
                     {
-                        duration = null;
+                        _duration = null;
                     }
                 }
                 catch (Exception ex)
@@ -280,19 +257,19 @@ internal sealed class AudioFile
                 }
             }
 
-            initialized = true;
+            _initialized = true;
         }
         catch (CorruptFileException ex)
         {
             Debug(
               "Failed to read meta data via taglib for file " + Item.FullName, ex);
-            initialized = true;
+            _initialized = true;
         }
         catch (UnsupportedFormatException ex)
         {
             Debug(
               "Failed to read meta data via taglib for file " + Item.FullName, ex);
-            initialized = true;
+            _initialized = true;
         }
         catch (Exception ex)
         {
@@ -304,53 +281,53 @@ internal sealed class AudioFile
 
     private void SetProperties(Tag tag)
     {
-        genre = tag.FirstGenre;
-        if (string.IsNullOrWhiteSpace(genre))
+        _genre = tag.FirstGenre;
+        if (string.IsNullOrWhiteSpace(_genre))
         {
-            genre = null;
+            _genre = null;
         }
 
         if (tag.Track != 0 && tag.Track < 1 << 10)
         {
-            track = (int)tag.Track;
+            _track = (int)tag.Track;
         }
 
-        title = tag.Title;
-        if (string.IsNullOrWhiteSpace(title))
+        _title = tag.Title;
+        if (string.IsNullOrWhiteSpace(_title))
         {
-            title = null;
+            _title = null;
         }
 
-        description = tag.Comment;
-        if (string.IsNullOrWhiteSpace(description))
+        _description = tag.Comment;
+        if (string.IsNullOrWhiteSpace(_description))
         {
-            description = null;
+            _description = null;
         }
 
-        performer = string.IsNullOrWhiteSpace(artist) ? tag.JoinedPerformers : tag.JoinedPerformersSort;
-        if (string.IsNullOrWhiteSpace(performer))
+        _performer = string.IsNullOrWhiteSpace(_artist) ? tag.JoinedPerformers : tag.JoinedPerformersSort;
+        if (string.IsNullOrWhiteSpace(_performer))
         {
-            performer = null;
+            _performer = null;
         }
 
-        artist = tag.JoinedAlbumArtists;
-        if (string.IsNullOrWhiteSpace(artist))
+        _artist = tag.JoinedAlbumArtists;
+        if (string.IsNullOrWhiteSpace(_artist))
         {
-            artist = tag.JoinedComposers;
+            _artist = tag.JoinedComposers;
         }
-        if (string.IsNullOrWhiteSpace(artist))
+        if (string.IsNullOrWhiteSpace(_artist))
         {
-            artist = null;
+            _artist = null;
         }
 
-        album = tag.AlbumSort;
-        if (string.IsNullOrWhiteSpace(album))
+        _album = tag.AlbumSort;
+        if (string.IsNullOrWhiteSpace(_album))
         {
-            album = tag.Album;
+            _album = tag.Album;
         }
-        if (string.IsNullOrWhiteSpace(album))
+        if (string.IsNullOrWhiteSpace(_album))
         {
-            album = null;
+            _album = null;
         }
     }
 

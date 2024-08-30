@@ -72,7 +72,8 @@ internal sealed class ByTitleView : BaseView
     {
         foreach (var f in folder.ChildFolders.ToList())
         {
-            SortFolder(f as VirtualFolder, titles);
+            var childFolder = f as VirtualFolder ?? throw new InvalidOperationException("Can't cast to VirtualFolder");
+            SortFolder(childFolder, titles);
         }
 
         foreach (var c in folder.ChildItems.ToList())
@@ -100,7 +101,8 @@ internal sealed class ByTitleView : BaseView
                 DebugFormat("Partioning folder {0}", i.Title);
                 using (var prefixer = new Prefixer())
                 {
-                    PartitionChildren(i as VirtualFolder, prefixer);
+                    var virtualFolder = i as VirtualFolder ?? throw new InvalidOperationException("Can't cast to Virtual Folder");
+                    PartitionChildren(virtualFolder, prefixer);
                 }
             }
             root.AdoptFolder(i);
@@ -122,7 +124,7 @@ internal sealed class ByTitleView : BaseView
 
         public string? GetWordPrefix(string str, int wordcount)
         {
-            string[] m;
+            string[]? m;
             var key = str.ToUpperInvariant();
             if (!cache.TryGetValue(key, out m))
             {

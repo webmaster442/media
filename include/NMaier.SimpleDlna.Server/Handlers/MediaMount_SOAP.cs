@@ -357,7 +357,7 @@ internal partial class MediaMount
         return objectClass;
     }
 
-    private IEnumerable<KeyValuePair<string, string>> HandleBrowse(
+    private IEnumerable<KeyValuePair<string, string?>> HandleBrowse(
       IRequest request, IHeaders sparams)
     {
         var key = Prefix + sparams.HeaderBlock;
@@ -510,6 +510,9 @@ internal partial class MediaMount
 
     private StringResponse ProcessSoapRequest(IRequest request)
     {
+        if (string.IsNullOrEmpty(request.Body))
+            throw new HttpStatusException(HttpCode.InternalError);
+
         var soap = new XmlDocument();
         soap.LoadXml(request.Body);
         var sparams = new RawHeaders();
@@ -541,20 +544,20 @@ internal partial class MediaMount
         var code = HttpCode.Ok;
         try
         {
-            IEnumerable<KeyValuePair<string, string>> result = method.LocalName switch
+            IEnumerable<KeyValuePair<string, string?>> result = method.LocalName switch
             {
-                "GetSearchCapabilities" => HandleGetSearchCapabilities(),
-                "GetSortCapabilities" => HandleGetSortCapabilities(),
-                "GetSystemUpdateID" => HandleGetSystemUpdateID(),
+                "GetSearchCapabilities" => HandleGetSearchCapabilities()!,
+                "GetSortCapabilities" => HandleGetSortCapabilities()!,
+                "GetSystemUpdateID" => HandleGetSystemUpdateID()!,
                 "Browse" => HandleBrowse(request, sparams),
-                "X_GetFeatureList" => HandleXGetFeatureList(),
-                "X_SetBookmark" => HandleXSetBookmark(sparams),
-                "GetCurrentConnectionIDs" => HandleGetCurrentConnectionIDs(),
-                "GetCurrentConnectionInfo" => HandleGetCurrentConnectionInfo(),
-                "GetProtocolInfo" => HandleGetProtocolInfo(),
-                "IsAuthorized" => HandleIsAuthorized(),
-                "IsValidated" => HandleIsValidated(),
-                "RegisterDevice" => HandleRegisterDevice(),
+                "X_GetFeatureList" => HandleXGetFeatureList()!,
+                "X_SetBookmark" => HandleXSetBookmark(sparams)!,
+                "GetCurrentConnectionIDs" => HandleGetCurrentConnectionIDs()!,
+                "GetCurrentConnectionInfo" => HandleGetCurrentConnectionInfo()!,
+                "GetProtocolInfo" => HandleGetProtocolInfo()!,
+                "IsAuthorized" => HandleIsAuthorized()!,
+                "IsValidated" => HandleIsValidated()!,
+                "RegisterDevice" => HandleRegisterDevice()!,
                 _ => throw new HttpStatusException(HttpCode.NotFound),
             };
             var response = env.CreateElement($"u:{method.LocalName}Response", method.NamespaceURI);
@@ -563,7 +566,7 @@ internal partial class MediaMount
             foreach (var i in result)
             {
                 var ri = env.CreateElement(i.Key);
-                ri.InnerText = i.Value;
+                ri.InnerText = i.Value!;
                 response.AppendChild(ri);
             }
         }

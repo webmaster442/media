@@ -14,7 +14,7 @@ internal sealed class FlattenView : BaseView
     {
         foreach (var f in current.ChildFolders.ToList())
         {
-            var vf = f as VirtualFolder;
+            var vf = f as VirtualFolder ?? throw new InvalidOperationException("Can't cast to VirtualFolder");
             if (TransformInternal(root, vf))
             {
                 current.ReleaseFolder(vf);
@@ -25,7 +25,7 @@ internal sealed class FlattenView : BaseView
         {
             return false;
         }
-        var newParent = (VirtualFolder)current.Parent;
+        var newParent = current.Parent as VirtualFolder ?? throw new InvalidOperationException("Can't cast to VirtualFolder");
         foreach (var c in current.ChildItems.ToList())
         {
             current.RemoveResource(c);

@@ -3,7 +3,12 @@ using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server.Types;
 
-public class VirtualFolder : IMediaFolder
+public interface ICreatable<TSelf>
+{
+    public abstract static TSelf Create(string key, IMediaFolder? parent);
+}
+
+public class VirtualFolder : IMediaFolder, ICreatable<VirtualFolder>
 {
     private static readonly StringComparer Comparer =
       new NaturalStringComparer(true);
@@ -17,9 +22,9 @@ public class VirtualFolder : IMediaFolder
 
     protected List<IMediaResource> Resources = new List<IMediaResource>();
 
-    public VirtualFolder()
+    public static VirtualFolder Create(string key, IMediaFolder? parent)
     {
-
+        return new VirtualFolder(parent, key);
     }
 
     public VirtualFolder(IMediaFolder? parent, string name)

@@ -35,7 +35,7 @@ internal sealed partial class MediaMount
 
     public string DescriptorURI => $"{Prefix}description.xml";
 
-    public IHttpAuthorizationMethod Authorizer => _server.Authorizer;
+    public IHttpAuthorizationMethod? Authorizer => _server.Authorizer;
 
     public string FriendlyName => _server.FriendlyName;
 

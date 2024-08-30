@@ -6,7 +6,7 @@ using Timer = System.Timers.Timer;
 
 namespace NMaier.SimpleDlna.FileMediaServer.Files;
 
-internal class FileStreamCache
+internal static class FileStreamCache
 {
     private static readonly Ticker ticker = new Ticker();
 
@@ -49,7 +49,7 @@ internal class FileStreamCache
         var key = info.FullName;
         lock (streams)
         {
-            CacheItem rv;
+            CacheItem? rv;
             if (streams.TryGetValue(key, out rv))
             {
                 streams.Remove(key);
@@ -63,27 +63,21 @@ internal class FileStreamCache
 
     internal static void Recycle(FileReadStream stream)
     {
-        try
+        var key = stream.Name;
+        lock (streams)
         {
-            var key = stream.Name;
-            lock (streams)
+            CacheItem? ignore;
+            if (!streams.TryGetValue(key, out ignore) ||
+                Equals(ignore.Stream, stream))
             {
-                CacheItem ignore;
-                if (!streams.TryGetValue(key, out ignore) ||
-                    Equals(ignore.Stream, stream))
-                {
-                    logger.DebugFormat("Recycling {0}", key);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    var removed = streams.AddAndPop(key, new CacheItem(stream));
-                    removed?.Stream.Kill();
-                    return;
-                }
+                logger.DebugFormat("Recycling {0}", key);
+                stream.Seek(0, SeekOrigin.Begin);
+                var removed = streams.AddAndPop(key, new CacheItem(stream));
+                removed?.Stream.Kill();
+                return;
             }
         }
-        catch (Exception)
-        {
-            // no op
-        }
+
         stream.Kill();
     }
 

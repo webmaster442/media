@@ -16,8 +16,6 @@ internal sealed class VideoFile
     private static readonly TimeSpan emptyDuration = new TimeSpan(0);
     private string[]? actors;
 
-    private long? bookmark;
-
     private string? description;
 
     private string? director;
@@ -41,14 +39,7 @@ internal sealed class VideoFile
     {
     }
 
-    public long? Bookmark
-    {
-        get { return bookmark; }
-        set
-        {
-            bookmark = value;
-        }
-    }
+    public long? Bookmark { get; set; }
 
     public IEnumerable<string> MetaActors
     {
@@ -200,7 +191,7 @@ internal sealed class VideoFile
         info.AddValue("t", title);
         info.AddValue("w", width);
         info.AddValue("h", height);
-        info.AddValue("b", bookmark);
+        info.AddValue("b", Bookmark);
         info.AddValue("du", duration.GetValueOrDefault(emptyDuration).Ticks);
         info.AddValue("st", subTitle);
     }

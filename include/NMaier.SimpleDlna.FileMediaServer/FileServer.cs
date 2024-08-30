@@ -103,12 +103,13 @@ public sealed class FileServer
 
     // ReSharper disable once MemberInitializerValueIgnored
     public Guid UUID { get; } = Guid.NewGuid();
-
+    
     public IMediaItem GetItem(string id)
     {
         lock (ids)
         {
-            return ids.GetItemById(id);
+            return ids.GetItemById(id) 
+                ?? throw new InvalidOperationException();
         }
     }
 
@@ -182,14 +183,12 @@ public sealed class FileServer
     {
         lock (ids)
         {
-            var info = new FileInfo(fullPath);
-            var item = ids.GetItemByPath(info.FullName) as IMediaResource;
-            var folder = ids.GetItemByPath(info.Directory?.FullName) as PlainFolder;
-            if (item != null)
+            FileInfo info = new FileInfo(fullPath);
+            if (ids.GetItemByPath(info.FullName) is IMediaResource item)
             {
                 DebugFormat("Did find an existing {0}", info.FullName);
             }
-            if (folder == null)
+            if (ids.GetItemByPath(info.Directory?.FullName ?? "") is not PlainFolder folder)
             {
                 DebugFormat("Did not find folder for {0}", info.Directory?.FullName);
                 return false;
@@ -483,7 +482,7 @@ public sealed class FileServer
 
     internal BaseFile GetFile(PlainFolder aParent, FileInfo info)
     {
-        BaseFile item;
+        BaseFile? item;
         lock (ids)
         {
             item = ids.GetItemByPath(info.FullName) as BaseFile;

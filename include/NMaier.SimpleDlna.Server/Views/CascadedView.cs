@@ -33,7 +33,7 @@ internal abstract class CascadedView : BaseView, IConfigurable
                 }
                 continue;
             }
-            var fsmi = f as VirtualFolder;
+            var fsmi = f as VirtualFolder ?? throw new InvalidOperationException("Can't convert to virtual folder");
             root.AdoptFolder(fsmi);
         }
         foreach (var f in sorted.ChildItems.ToList())

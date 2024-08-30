@@ -17,7 +17,7 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
       new NaturalStringComparer(false);
 
     private readonly string title;
-    private string comparableTitle;
+    private string? comparableTitle;
 
     private DateTime? lastModified;
 
@@ -60,16 +60,14 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
         title = title.StemNameBase();
     }
 
-    protected Cover CachedCover
+    protected Cover? CachedCover
     {
         get { return weakCover.Target as Cover; }
         set
         {
             if (value != null)
             {
-                using (coverCache.AddAndPop(Item.FullName, value))
-                {
-                }
+                coverCache.AddAndPop(Item.FullName, value);
             }
             weakCover = new WeakReference(value);
         }
@@ -219,7 +217,7 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
         }
     }
 
-    internal Cover MaybeGetCover()
+    internal Cover? MaybeGetCover()
     {
         return CachedCover;
     }
