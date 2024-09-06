@@ -28,7 +28,7 @@ public sealed class HttpAuthorizer
         }
     }
 
-    public bool Authorize(IHeaders headers, IPEndPoint endPoint, string? mac)
+    public bool Authorize(IHeaders headers, IPEndPoint endPoint)
     {
         if (_methods.Count == 0)
         {
@@ -36,7 +36,7 @@ public sealed class HttpAuthorizer
         }
         try
         {
-            return _methods.Any(m => m.Authorize(headers, endPoint, mac));
+            return _methods.Any(m => m.Authorize(headers, endPoint));
         }
         catch (Exception ex)
         {
@@ -47,9 +47,7 @@ public sealed class HttpAuthorizer
 
     private void OnAuthorize(object? sender, HttpAuthorizationEventArgs e)
     {
-        e.Cancel = !Authorize(e.Headers,
-                              e.RemoteEndpoint,
-                              IP.GetMAC(e.RemoteEndpoint.Address));
+        e.Cancel = !Authorize(e.Headers, e.RemoteEndpoint);
     }
 
     public void AddMethod(IHttpAuthorizationMethod method)

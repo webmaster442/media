@@ -13,9 +13,6 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
 {
     private static readonly CoverCache coverCache = new CoverCache(120);
 
-    private static readonly StringComparer comparer =
-      new NaturalStringComparer(false);
-
     private readonly string title;
     private string? comparableTitle;
 
@@ -131,7 +128,7 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
         {
             return 1;
         }
-        return comparer.Compare(title, other.Title);
+        return new NaturalStringComparer().Compare(title, other.Title);
     }
 
     public Stream CreateContentStream()
@@ -166,7 +163,7 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
         {
             return false;
         }
-        return comparer.Equals(title, other.Title);
+        return new NaturalStringComparer().Equals(title, other.Title);
     }
 
     public string ToComparableTitle()

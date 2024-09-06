@@ -22,7 +22,7 @@ internal sealed class IndexHandler : IPrefixHandler
         var article = HtmlTools.CreateHtmlArticle("Index");
         var document = article.OwnerDocument ?? throw new HttpStatusException(HttpCode.InternalError);
         var list = document.EL("ul");
-        var mounts = _owner.MediaMounts.OrderBy(m => m.Value, NaturalStringComparer.Comparer);
+        var mounts = _owner.MediaMounts.OrderBy(m => m.Value, new NaturalStringComparer());
         foreach (var m in mounts)
         {
             var li = document.EL("li");

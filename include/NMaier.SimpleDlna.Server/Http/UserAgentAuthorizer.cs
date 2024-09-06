@@ -23,7 +23,7 @@ public sealed class UserAgentAuthorizer : Logging, IHttpAuthorizationMethod
         }
     }
 
-    public bool Authorize(IHeaders headers, IPEndPoint endPoint, string? mac)
+    public bool Authorize(IHeaders headers, IPEndPoint endPoint)
     {
         ArgumentNullException.ThrowIfNull(headers);
         if (!headers.TryGetValue("User-Agent", out string? ua))

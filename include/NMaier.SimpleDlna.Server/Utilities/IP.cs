@@ -8,9 +8,6 @@ namespace NMaier.SimpleDlna.Server.Utilities;
 
 public static class IP
 {
-    private static readonly AddressToMacResolver macResolver =
-      new AddressToMacResolver();
-
     private static readonly ILog logger = LogManager.GetLogger(typeof(IP));
 
     private static bool warned;
@@ -91,15 +88,5 @@ public static class IP
         {
             throw new ApplicationException("No IP");
         }
-    }
-
-    public static string? GetMAC(IPAddress address)
-    {
-        return macResolver.Resolve(address);
-    }
-
-    public static bool IsAcceptedMAC(string mac)
-    {
-        return AddressToMacResolver.IsAcceptedMac(mac);
     }
 }

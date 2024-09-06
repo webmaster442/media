@@ -10,9 +10,6 @@ public interface ICreatable<TSelf>
 
 public class VirtualFolder : IMediaFolder, ICreatable<VirtualFolder>
 {
-    private static readonly StringComparer Comparer =
-      new NaturalStringComparer(true);
-
     private readonly List<IMediaFolder> _merged = new List<IMediaFolder>();
     private string? _comparableTitle;
 
@@ -124,7 +121,7 @@ public class VirtualFolder : IMediaFolder, ICreatable<VirtualFolder>
         {
             return 1;
         }
-        return Comparer.Compare(Title, other.Title);
+        return new NaturalStringComparer().Compare(Title, other.Title);
     }
 
     public bool Equals(IMediaItem? other)

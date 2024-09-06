@@ -11,7 +11,6 @@ public interface IHttpAuthorizationMethod
     /// </summary>
     /// <param name="headers">Client supplied HttpHeaders.</param>
     /// <param name="endPoint">Client EndPoint</param>
-    /// <param name="mac">Client MAC address</param>
     /// <returns>true if authorized</returns>
-    bool Authorize(IHeaders headers, IPEndPoint endPoint, string? mac);
+    bool Authorize(IHeaders headers, IPEndPoint endPoint);
 }

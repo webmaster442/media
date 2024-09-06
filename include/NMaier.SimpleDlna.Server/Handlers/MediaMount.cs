@@ -54,9 +54,7 @@ internal sealed partial class MediaMount
             !IPAddress.IsLoopback(request.RemoteEndpoint.Address) &&
             !Authorizer.Authorize(
               request.Headers,
-              request.RemoteEndpoint,
-              IP.GetMAC(request.RemoteEndpoint.Address)
-              ))
+              request.RemoteEndpoint))
         {
             throw new HttpStatusException(HttpCode.Denied);
         }
