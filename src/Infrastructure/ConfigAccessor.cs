@@ -52,7 +52,7 @@ public sealed class ConfigAccessor
 
     public ConfigAccessor()
     {
-        ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "media.config.json");
+        ConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "media.config.json");
         _options = new JsonSerializerOptions
         {
             WriteIndented = true,

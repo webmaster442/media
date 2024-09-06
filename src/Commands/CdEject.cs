@@ -12,6 +12,8 @@ internal sealed class CdEject : AsyncCommand<BaseCdSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, BaseCdSettings settings)
     {
+        PlarformCheck.EnsureThatPlatformIs(System.Runtime.InteropServices.OSPlatform.Windows);
+
         using var drive = CdDrive.Create(settings.DriveLetter);
         try
         {

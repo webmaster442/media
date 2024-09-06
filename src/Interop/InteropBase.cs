@@ -6,6 +6,8 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
+using Media.Infrastructure;
+
 namespace Media.Interop;
 
 public abstract class InteropBase
@@ -28,11 +30,15 @@ public abstract class InteropBase
             toolPath = externalPath;
             return true;
         }
-        var appBundledPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _programName);
-        if (File.Exists(appBundledPath))
+
+        if (PlarformCheck.IsWindows())
         {
-            toolPath = appBundledPath;
-            return true;
+            var appBundledPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _programName);
+            if (File.Exists(appBundledPath))
+            {
+                toolPath = appBundledPath;
+                return true;
+            }
         }
 
         toolPath = null;

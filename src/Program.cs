@@ -16,12 +16,6 @@ var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar(i
 
 Terminal.EnableUTF8Output();
 
-if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-{
-    Terminal.RedText("This program is only supported on Windows at the moment");
-    Environment.Exit(ExitCodes.NotSuppoertedOs);
-}
-
 mainApp.Configure(config =>
 {
     config.SetApplicationName("FFCmd");
