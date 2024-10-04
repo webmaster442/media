@@ -3,8 +3,6 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System.Runtime.InteropServices;
-
 using JKToolKit.Spectre.AutoCompletion.Completion;
 using JKToolKit.Spectre.AutoCompletion.Integrations;
 
@@ -27,8 +25,11 @@ mainApp.Configure(config =>
     config.AddCommand<Play>("play")
           .WithDescription("Play a media file with mpv");
 
+    config.AddCommand<PlayRandom>("playrandom")
+        .WithDescription("Play a random media file with mpv");
+
     config.AddCommand<Media.Commands.Version>("version")
-        .WithDescription("Print program version");
+            .WithDescription("Print program version");
 
     config.AddCommand<Sereve>("serve")
         .WithDescription("Start a DLNA server");
