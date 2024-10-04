@@ -11,20 +11,23 @@ using CoverCache = LeastRecentlyUsedDictionary<string, Cover>;
 
 internal class BaseFile : Logging, IMediaResource, IMetaInfo
 {
-    private static readonly CoverCache coverCache = new CoverCache(120);
+    private static readonly CoverCache CoverCache = new(120);
 
-    private readonly string title;
-    private string? comparableTitle;
+    private readonly string _title;
+    private string? _comparableTitle;
 
-    private DateTime? lastModified;
+    private DateTime? _lastModified;
 
-    private long? length;
+    private long? _length;
 
-    private WeakReference weakCover = new WeakReference(null);
+    private WeakReference _weakCover = new(null);
 
-    protected BaseFile(FileServer server, FileInfo file, DlnaMime type,
-      DlnaMediaTypes mediaType)
+    protected BaseFile(FileServer server,
+                       FileInfo file,
+                       DlnaMime type,
+                       DlnaMediaTypes mediaType)
     {
+        Id = string.Empty;
         if (server == null)
         {
             throw new ArgumentNullException(nameof(server));
@@ -32,41 +35,41 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
         Server = server;
         Item = file;
 
-        length = Item.Length;
-        lastModified = Item.LastWriteTimeUtc;
+        _length = Item.Length;
+        _lastModified = Item.LastWriteTimeUtc;
 
         Type = type;
         MediaType = mediaType;
 
-        title = System.IO.Path.GetFileNameWithoutExtension(Item.Name);
-        if (string.IsNullOrEmpty(title))
+        _title = System.IO.Path.GetFileNameWithoutExtension(Item.Name);
+        if (string.IsNullOrEmpty(_title))
         {
-            title = Item.Name;
+            _title = Item.Name;
         }
-        if (!string.IsNullOrWhiteSpace(title))
+        if (!string.IsNullOrWhiteSpace(_title))
         {
             try
             {
-                title = Uri.UnescapeDataString(title);
+                _title = Uri.UnescapeDataString(_title);
             }
             catch (UriFormatException)
             {
                 // no op
             }
         }
-        title = title.StemNameBase();
+        _title = _title.StemNameBase();
     }
 
     protected Cover? CachedCover
     {
-        get { return weakCover.Target as Cover; }
+        get { return _weakCover.Target as Cover; }
         set
         {
             if (value != null)
             {
-                coverCache.AddAndPop(Item.FullName, value);
+                CoverCache.AddAndPop(Item.FullName, value);
             }
-            weakCover = new WeakReference(value);
+            _weakCover = new WeakReference(value);
         }
     }
 
@@ -118,7 +121,7 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
         }
     }
 
-    public virtual string Title => title;
+    public virtual string Title => _title;
 
     public DlnaMime Type { get; protected set; }
 
@@ -128,7 +131,7 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
         {
             return 1;
         }
-        return new NaturalStringComparer().Compare(title, other.Title);
+        return new NaturalStringComparer().Compare(_title, other.Title);
     }
 
     public Stream CreateContentStream()
@@ -163,23 +166,23 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
         {
             return false;
         }
-        return new NaturalStringComparer().Equals(title, other.Title);
+        return new NaturalStringComparer().Equals(_title, other.Title);
     }
 
     public string ToComparableTitle()
     {
-        return comparableTitle ?? (comparableTitle = Title.StemCompareBase());
+        return _comparableTitle ?? (_comparableTitle = Title.StemCompareBase());
     }
 
     public DateTime InfoDate
     {
         get
         {
-            if (!lastModified.HasValue)
+            if (!_lastModified.HasValue)
             {
-                lastModified = Item.LastWriteTimeUtc;
+                _lastModified = Item.LastWriteTimeUtc;
             }
-            return lastModified.Value;
+            return _lastModified.Value;
         }
     }
 
@@ -187,31 +190,22 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
     {
         get
         {
-            if (!length.HasValue)
-            {
-                length = Item.Length;
-            }
-            return length;
+            return _length ??= Item.Length;
         }
     }
 
-    internal static BaseFile GetFile(PlainFolder parentFolder, FileInfo file,
-      DlnaMime type, DlnaMediaTypes mediaType)
+    internal static BaseFile GetFile(PlainFolder parentFolder,
+                                     FileInfo file,
+                                     DlnaMime type,
+                                     DlnaMediaTypes mediaType)
     {
-        switch (mediaType)
+        return mediaType switch
         {
-            case DlnaMediaTypes.Video:
-                return new VideoFile(parentFolder.Server, file, type);
-
-            case DlnaMediaTypes.Audio:
-                return new AudioFile(parentFolder.Server, file, type);
-
-            case DlnaMediaTypes.Image:
-                return new ImageFile(parentFolder.Server, file, type);
-
-            default:
-                return new BaseFile(parentFolder.Server, file, type, mediaType);
-        }
+            DlnaMediaTypes.Video => new VideoFile(parentFolder.Server, file, type),
+            DlnaMediaTypes.Audio => new AudioFile(parentFolder.Server, file, type),
+            DlnaMediaTypes.Image => new ImageFile(parentFolder.Server, file, type),
+            _ => new BaseFile(parentFolder.Server, file, type, mediaType),
+        };
     }
 
     internal Cover? MaybeGetCover()

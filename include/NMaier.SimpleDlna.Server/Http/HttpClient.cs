@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -224,6 +225,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
         }
     }
 
+
     private void ReadCallback(IAsyncResult result)
     {
         if (_state == HttpStates.Closed)
@@ -319,6 +321,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
         }
     }
 
+    [MemberNotNull(nameof(_readStream))]
     private void ReadNext()
     {
         Method = null;
@@ -394,6 +397,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
         }
     }
 
+    [MemberNotNull(nameof(_response))]
     private void SetupResponse()
     {
         State = HttpStates.WriteBegin;
