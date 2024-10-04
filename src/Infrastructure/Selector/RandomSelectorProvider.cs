@@ -45,7 +45,7 @@ internal sealed class RandomSelectorProvider : IItemProvider<Item, string>
             yield return new Item
             {
                 Icon = Emoji.Known.FileFolder,
-                Name = Path.GetFileName(Path.GetDirectoryName(directory) ?? ""),
+                Name = Path.GetFileName(directory),
                 FullPath = directory
             };
         }

@@ -6,9 +6,10 @@
 using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Infrastructure.Selector;
+using Media.Infrastructure.Validation;
 using Media.Interop;
 
-namespace Media;
+namespace Media.Commands;
 internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 {
     private readonly Mpv _mpv;
@@ -19,6 +20,11 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
         [Description("Enable subdirectory selector")]
         [CommandOption("-b|--browswe")]
         public bool SubDirectorySelection { get; init; }
+
+        [DirectoryExists]
+        [CommandArgument(0, "[folder]")]
+        [Description("The folder to play from")]
+        public string Folder { get; set; } = Environment.CurrentDirectory;
     }
 
     internal record class DirectoryEntry(string Name, string Path);
@@ -47,7 +53,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
             var selector = new ItemSelector<Item, string>(
                 itemProvider: _randomSelectorProvider,
                 title: "Select a directory",
-                defaultPath: Environment.CurrentDirectory);
+                defaultPath: settings.Folder);
 
             Item selectedItem = await selector.SelectItemAsync(consoleCancel.Token);
 
@@ -62,7 +68,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
         }
         else
         {
-            var file = RandomSelectorProvider.ScanSupportedFiles(Environment.CurrentDirectory)
+            var file = RandomSelectorProvider.ScanSupportedFiles(settings.Folder)
                 .OrderBy(_ => Random.Shared.Next())
                 .FirstOrDefault();
 

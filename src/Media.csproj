@@ -17,7 +17,9 @@
     <EmbeddedResource Include="..\include\MpvRemoteFrontend\style.css" Link="Embedded\style.css" />
     <EmbeddedResource Include="..\include\MpvRemoteFrontend\mpv-logo-128.png" Link="Embedded\mpv-logo-128.png" />
     <EmbeddedResource Include="..\include\MpvRemoteFrontend\mpvcontroller.html" Link="Embedded\mpvcontroller.html" />
-    <Content Include="..\Notes.txt" Link="Notes.txt" />
+    <EmbeddedResource Include="..\Notes.txt" Link="Notes.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Embedded\Presets.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
