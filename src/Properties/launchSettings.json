@@ -31,6 +31,9 @@
     "serve": {
       "commandName": "Project",
       "commandLineArgs": "serve d:\\video"
+    },
+    "default": {
+      "commandName": "Project"
     }
   }
 }
