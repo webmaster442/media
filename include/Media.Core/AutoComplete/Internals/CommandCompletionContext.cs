@@ -1,9 +1,13 @@
-using Spectre.Console.Cli;
+// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
 
-using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace JKToolKit.Spectre.AutoCompletion.Completion.Internals;
+using Spectre.Console.Cli;
+
+namespace Media.Core.AutoComplete.Internals;
 
 internal class MappedCompletionContext : ICompletionContext
 {
@@ -105,7 +109,7 @@ internal class CommandCompletionContextParser
 
     public CommandCompletionContext? Parse(string? commandToComplete, int? position)
     {
-        var originalCommand = new OriginalCommandInfo(commandToComplete, position);
+        var originalCommand = new OriginalCommandInfo(commandToComplete!, position);
         var normalizedCommand = NormalizeCommand(commandToComplete, position);
         var commandElements = SplitBySpace(normalizedCommand).Skip(1).ToArray();
 
@@ -199,25 +203,12 @@ internal class CommandCompletionContextParser
 
     private CommandTreeParser GetParser()
     {
-        // should also be exempt:
-        // 0.46.1-preview.0.19
-        // 0.46.1-preview.0.20
-
-        const string SpecialVersion1 = "0.46.1-preview.0.20";
-        const string SpecialVersion2 = "0.46.1-preview.0.19";
-
-#if SPECTRE_47_OR_NEWER || SpectreConsoleVersion == SpecialVersion1 || SpectreConsoleVersion == SpecialVersion2
         return new CommandTreeParser
         (
             _model,
             _configuration.Settings.CaseSensitivity,
             _configuration.Settings.ParsingMode
-        //,_configuration.Settings.ConvertFlagsToRemainingArguments
-
         );
-#else
-        return new CommandTreeParser(_model, _configuration.Settings);
-#endif
     }
 
     private static CommandTree? FindContextInTree(CommandTreeParserResult? parsedResult)

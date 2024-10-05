@@ -1,8 +1,13 @@
-﻿using JKToolKit.Spectre.AutoCompletion.Completion.Internals;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using JKToolKit.Spectre.AutoCompletion.Completion.Internals;
 
 using Spectre.Console.Cli;
 
-namespace JKToolKit.Spectre.AutoCompletion.Completion;
+namespace Media.Core.AutoComplete;
 
 public static class Extensions
 {

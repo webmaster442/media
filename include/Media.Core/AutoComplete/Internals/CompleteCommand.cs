@@ -1,5 +1,13 @@
+// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
 using System.ComponentModel;
 using System.Reflection;
+
+using Media.Core.AutoComplete;
+using Media.Core.AutoComplete.Internals;
 
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -27,11 +35,7 @@ public sealed class CompleteCommandSettings : CommandSettings
 
     public override ValidationResult Validate()
     {
-#if NET5_0_OR_GREATER
         var allowedFormats = new[] { "plain", "json", };
-#else
-        var allowedFormats = new[] { "plain", };
-#endif
         if (!allowedFormats.Contains(Format, StringComparer.OrdinalIgnoreCase))
         {
             return ValidationResult.Error($"Invalid format '{Format}'");
@@ -142,15 +146,13 @@ public sealed partial class CompleteCommand : AsyncCommand<CompleteCommandSettin
 
     private void RenderCompletion(CompletionResultItem[] completions, CompleteCommandSettings settings)
     {
-#if NET5_0_OR_GREATER
+
         if (string.Equals(settings.Format, "json", StringComparison.OrdinalIgnoreCase))
         {
             _writer.Write(JsonSingleLineRenderable.Create(completions));
             _writer.WriteLine(string.Empty, Style.Plain);
         }
-        else
-#endif
-        if (string.Equals(settings.Format, "plain", StringComparison.OrdinalIgnoreCase))
+        else if (string.Equals(settings.Format, "plain", StringComparison.OrdinalIgnoreCase))
         {
             foreach (var completion in completions)
             {

@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
 using System.Text;
 
 using Media.Core.Properties;

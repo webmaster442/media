@@ -1,6 +1,11 @@
-﻿using Spectre.Console.Cli;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
 
-namespace JKToolKit.Spectre.AutoCompletion.Completion;
+using Spectre.Console.Cli;
+
+namespace Media.Core.AutoComplete;
 
 /// <summary>
 /// Defines the context for command completion.
@@ -26,7 +31,7 @@ public interface ICompletionContext
     /// Gets the mapped parameters for the command.
     /// </summary>
     IReadOnlyCollection<IMappedCommandParameter> MappedParameters { get; }
-    
+
     /// <summary>
     /// Gets the original command.
     /// </summary>

@@ -1,33 +1,14 @@
+// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
 using System.Linq.Expressions;
 using System.Reflection;
 
 using Spectre.Console.Cli;
 
-namespace JKToolKit.Spectre.AutoCompletion.Completion;
-
-/*
- Usage:
-        return new CommandParameterMatcher<LionSettings>()
-            .Add(x => x.Legs, (prefix) =>
-            {
-                if (prefix.Length != 0)
-                {
-                    return CompletionResult.Result(FindNextEvenNumber(prefix)).WithPreventDefault();
-                }
-
-                return CompletionResult.Result("16").WithPreventDefault();
-            })
-            .Add(x => x.Teeth, (prefix) =>
-            {
-                if (prefix.Length != 0)
-                {
-                    return CompletionResult.Result(FindNextEvenNumber(prefix)).WithPreventDefault();
-                }
-
-                return CompletionResult.Result("32").WithPreventDefault();
-            })
-            .Match(parameter, prefix);
- */
+namespace Media.Core.AutoComplete;
 
 /// <summary>
 /// Represents a command parameter matcher.

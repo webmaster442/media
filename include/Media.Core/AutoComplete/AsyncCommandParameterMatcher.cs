@@ -1,9 +1,14 @@
+// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
 using System.Linq.Expressions;
 using System.Reflection;
 
 using Spectre.Console.Cli;
 
-namespace JKToolKit.Spectre.AutoCompletion.Completion;
+namespace Media.Core.AutoComplete;
 
 /*
  Usage:

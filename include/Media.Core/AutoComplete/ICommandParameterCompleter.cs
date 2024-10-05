@@ -1,6 +1,9 @@
-using Spectre.Console.Cli;
+// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
 
-namespace JKToolKit.Spectre.AutoCompletion.Completion;
+namespace Media.Core.AutoComplete;
 
 /// <summary>
 /// Represents a command parameter completer.
@@ -11,7 +14,6 @@ public interface ICommandCompletable
     /// Gets the suggestions for the specified parameter.
     /// </summary>
     /// <param name="parameter">Information on which parameter to get suggestions for.</param>
-    /// <param name="prefix">The prefix.</param>
     /// <returns>The suggestions for the specified parameter.</returns>
     CompletionResult GetSuggestions(IMappedCommandParameter parameter, ICompletionContext context);
 }

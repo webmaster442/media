@@ -1,9 +1,13 @@
-#if NET5_0_OR_GREATER
+// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
 
-using Spectre.Console.Rendering;
 using System.Text.Json;
 
-#endif
+using Media.Core.AutoComplete.Internals;
+
+using Spectre.Console.Rendering;
 
 namespace JKToolKit.Spectre.AutoCompletion.Completion.Internals;
 
@@ -11,11 +15,6 @@ public partial class CompleteCommand
 {
     private async Task<int> RunCompletionServer(CompleteCommandSettings settings)
     {
-        // Uncomment for some kind of debugging through pwsh
-        // if (!Debugger.IsAttached)
-        // {
-        //     Debugger.Launch();
-        // }
         while (true)
         {
             var line = await Console.In.ReadLineAsync();
@@ -51,7 +50,6 @@ public partial class CompleteCommand
     {
         var result = new TabCompletionArgs(line);
 
-#if NET5_0_OR_GREATER
         // When starts with { and ends with }, it's a json object
         var normalizedLine = line.Trim(' ', '\t', '\r', '\n');
         var couldBeJson = normalizedLine.StartsWith('{') && normalizedLine.EndsWith('}');
@@ -73,16 +71,13 @@ public partial class CompleteCommand
                 // ignored
             }
         }
-#endif
 
         return result;
     }
 
-#if NET5_0_OR_GREATER
-
     private class JsonSingleLineRenderable<T> : IRenderable
     {
-        private T _value;
+        private readonly T _value;
 
         public JsonSingleLineRenderable(T value)
         {
@@ -107,6 +102,4 @@ public partial class CompleteCommand
             return new JsonSingleLineRenderable<T>(value);
         }
     }
-
-#endif
 }

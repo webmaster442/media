@@ -1,7 +1,12 @@
+// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-namespace JKToolKit.Spectre.AutoCompletion.Completion.Internals;
+namespace Media.Core.AutoComplete.Internals;
 
 internal class HighjackedAnsiConsole : IAnsiConsole
 {

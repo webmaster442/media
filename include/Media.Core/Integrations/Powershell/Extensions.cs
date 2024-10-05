@@ -1,6 +1,11 @@
-﻿using Spectre.Console.Cli;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
 
-namespace JKToolKit.Spectre.AutoCompletion.Integrations;
+using Spectre.Console.Cli;
+
+namespace Media.Core.Integrations.Powershell;
 
 public static class Extensions
 {
@@ -14,7 +19,7 @@ public static class Extensions
             };
 
             var result = PowershellIntegrationBuilder.BuildIntegration(settings);
-            System.Console.WriteLine(result);
+            Console.WriteLine(result);
 
             return 0;
         });

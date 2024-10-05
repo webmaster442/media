@@ -1,6 +1,11 @@
-﻿using System.Text;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
 
-namespace JKToolKit.Spectre.AutoCompletion.Completion.Internals;
+using System.Text;
+
+namespace Media.Core.AutoComplete.Internals;
 
 internal class HighjackedTextWriter : TextWriter
 {
