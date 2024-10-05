@@ -74,7 +74,7 @@ internal class ParsersTests
         ...X.. = Codec is experimental
         ....B. = Supports draw_horiz_band
         .....D = Supports direct rendering method 1
-        ------
+         ------
         V....D a64multi             Multicolor charset for Commodore 64 (codec a64_multi)
         V....D a64multi5            Multicolor charset for Commodore 64, extended with 5th color (colram) (codec a64_multi5)
         V....D alias_pix            Alias/Wavefront PIX image

@@ -5,9 +5,7 @@
 
 using Media.Infrastructure;
 
-using Spectre.Console.Cli;
-
-namespace Media.Tests.System;
+namespace Media.Tests.SystemTest;
 public abstract class FFMpegCommandSystemTest
 {
     private CommandApp _testApp;

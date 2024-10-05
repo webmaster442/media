@@ -5,7 +5,7 @@
 
 using Media.Commands;
 
-namespace Media.Tests.System;
+namespace Media.Tests.SystemTest;
 
 [TestFixture]
 [CancelAfter(5000)]
