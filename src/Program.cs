@@ -3,11 +3,10 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using JKToolKit.Spectre.AutoCompletion.Completion;
-using JKToolKit.Spectre.AutoCompletion.Integrations;
-
 using Media;
 using Media.Commands;
+using Media.Core.AutoComplete;
+using Media.Core.Integrations.Powershell;
 using Media.Infrastructure;
 
 var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar(isDryRunEnabled: false));

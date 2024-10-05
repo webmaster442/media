@@ -3,8 +3,6 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using CsvHelper.Configuration;
-
 namespace Media.Infrastructure.Validation;
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]

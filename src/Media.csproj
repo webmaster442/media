@@ -36,12 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="33.0.1" />
-    <PackageReference Include="JKToolKit.Spectre.AutoCompletion" Version="0.0.8" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="SharpCompress" Version="0.38.0" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.49.1" />
     <PackageReference Include="Spectre.Console.Analyzer" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -55,6 +54,7 @@
     <Content Include="..\LICENSE" Link="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <ProjectReference Include="..\include\Media.Core\Media.Core.csproj" />
     <ProjectReference Include="..\include\NMaier.SimpleDlna.FileMediaServer\NMaier.SimpleDlna.FileMediaServer.csproj" />
     <ProjectReference Include="..\include\NMaier.SimpleDlna.Server\NMaier.SimpleDlna.Server.csproj" />
 	  <None Update="install.ps1">
