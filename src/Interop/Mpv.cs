@@ -12,7 +12,6 @@ namespace Media.Interop;
 
 internal sealed class Mpv : InteropBase
 {
-
     private const string MpvBinary = "mpv.exe";
     private readonly ConfigAccessor _configAccessor;
 
@@ -100,6 +99,9 @@ internal sealed class Mpv : InteropBase
         }
         return null;
     }
+
+    public void Start(MpvCommandBuilder mpvCommand)
+        => Start(mpvCommand.Build());
 
     protected override string? GetExternalPath()
         => _configAccessor.GetExternalMpvPath();

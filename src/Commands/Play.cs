@@ -83,12 +83,14 @@ internal sealed class Play : AsyncCommand<Play.Settings>
     private async Task RunMpv(string fileName, bool enableRemote)
     {
         var pipeName = $"mpvsocket-{GetRandomId()}";
+        var builder = new MpvCommandBuilder();
 
-        string cmd = enableRemote ?
-            $"{fileName} --input-ipc-server=\\\\.\\pipe\\{pipeName}"
-            : $"\"{fileName}\"";
+        if (enableRemote)
+            builder.WithIpcServer(pipeName);
 
-        using var process = _mpv.CreateProcess(cmd,
+        builder.WithInputFile(fileName);
+
+        using var process = _mpv.CreateProcess(builder.Build(),
                                                redirectStdIn: false,
                                                redirectStdOut: false,
                                                redirectStderr: false);
@@ -104,7 +106,7 @@ internal sealed class Play : AsyncCommand<Play.Settings>
         Console.ReadKey();
     }
 
-    private int GetRandomId()
+    private static int GetRandomId()
         => Random.Shared.Next(100, 1000);
 
     private static async Task<string> DoDlnaBrowse()

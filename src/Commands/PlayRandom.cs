@@ -35,17 +35,10 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
         _randomSelectorProvider = new();
     }
 
-    private void StartPlayer(string? file)
-    {
-        using var process = _mpv.CreateProcess($"\"{file}\"",
-                               redirectStdIn: false,
-                               redirectStdOut: false,
-                               redirectStderr: false);
-        process.Start();
-    }
-
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
+        MpvCommandBuilder builder = new();
+
         if (settings.SubDirectorySelection)
         {
             using var consoleCancel = new ConsoleCancelTokenSource();
@@ -61,9 +54,11 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
                 .OrderBy(_ => Random.Shared.Next())
                 .FirstOrDefault();
 
+
             if (!string.IsNullOrEmpty(file))
             {
-                StartPlayer(file);
+                builder.WithInputFile(file);
+                _mpv.Start(builder);
             }
         }
         else
@@ -74,7 +69,8 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 
             if (!string.IsNullOrEmpty(file))
             {
-                StartPlayer(file);
+                builder.WithInputFile(file);
+                _mpv.Start(builder);
             }
         }
         return ExitCodes.Success;
