@@ -5,7 +5,7 @@
 
 using Spectre.Console.Cli;
 
-namespace Media.Core.Integrations.Powershell;
+namespace Media.Core.Integrations;
 
 public static class Extensions
 {

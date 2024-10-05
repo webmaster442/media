@@ -6,7 +6,7 @@
 using Media;
 using Media.Commands;
 using Media.Core.AutoComplete;
-using Media.Core.Integrations.Powershell;
+using Media.Core.Integrations;
 using Media.Infrastructure;
 
 var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar(isDryRunEnabled: false));
