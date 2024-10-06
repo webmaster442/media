@@ -21,12 +21,6 @@ mainApp.Configure(config =>
     config.AddCommand<Cut>("cut")
           .WithDescription("Cut a file without reencoding");
 
-    config.AddCommand<Play>("play")
-          .WithDescription("Play a media file with mpv");
-
-    config.AddCommand<PlayRandom>("playrandom")
-        .WithDescription("Play a random media file with mpv");
-
     config.AddCommand<Media.Commands.Version>("version")
             .WithDescription("Print program version");
 
@@ -35,6 +29,16 @@ mainApp.Configure(config =>
 
     config.AddCommand<Config>("config")
         .WithDescription("Edit the configuration file");
+
+    config.AddCommand<Play>("play")
+        .WithDescription("Play a media file with mpv");
+
+    config.AddBranch("play", play =>
+    {
+        play.AddCommand<PlayRandom>("random")
+            .WithDescription("Play a random media file with mpv");
+
+    });
 
     config.AddBranch("info", info =>
     {

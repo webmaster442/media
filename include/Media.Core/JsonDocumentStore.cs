@@ -256,6 +256,6 @@ public sealed class JsonDocumentStore
                 entry?.Delete();
             }
         }
-        await SetCollectionInfo(zip, key, 0);
+        await SetCollectionInfo(zip, key, 0, 0);
     }
 }

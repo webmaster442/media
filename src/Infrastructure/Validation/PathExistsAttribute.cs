@@ -6,19 +6,24 @@
 namespace Media.Infrastructure.Validation;
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-internal sealed class FileExistsAttribute : ValidationAttribute
+internal sealed class PathExistsAttribute : ValidationAttribute
 {
+    public bool AllowEmpty { get; set; }
+
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         if (value is string filePath)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
+            if (Directory.Exists(filePath)
+                || File.Exists(filePath) 
+                || (AllowEmpty && string.IsNullOrEmpty(filePath)))
+            {
                 return ValidationResult.Success;
-
-            if (File.Exists(filePath))
-                return ValidationResult.Success;
+            }
             else
-                return new ValidationResult($"File does not exist: {filePath}");
+            {
+                return new ValidationResult($"Directory does not exist: {filePath}");
+            }
         }
         throw new InvalidOperationException("Property must be string");
     }

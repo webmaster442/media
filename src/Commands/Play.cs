@@ -5,13 +5,14 @@
 
 using Media.Dto.Internals;
 using Media.Infrastructure;
+using Media.Infrastructure.BaseCommands;
 using Media.Infrastructure.Selector;
 using Media.Infrastructure.Validation;
 using Media.Interop;
 
 namespace Media.Commands;
 
-internal sealed class Play : AsyncCommand<Play.Settings>
+internal sealed class Play : BasePlaylistCommand<Play.Settings>
 {
     private readonly int _remotePort;
     private readonly Mpv _mpv;
@@ -20,7 +21,7 @@ internal sealed class Play : AsyncCommand<Play.Settings>
     {
         [Description("Input file")]
         [CommandArgument(0, "[input]")]
-        [FileExists(IsOptional = true)]
+        [PathExists(AllowEmpty = true)]
         public string InputFile { get; init; }
 
         [Description("Use DLNA for browsing")]
@@ -50,34 +51,6 @@ internal sealed class Play : AsyncCommand<Play.Settings>
     {
         _remotePort = configAccessor.GetMpvRemotePort() ?? 12345;
         _mpv = new Mpv(configAccessor);
-    }
-
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(settings.InputFile))
-            {
-                string file = string.Empty;
-
-                file = settings.Dlna
-                    ? await DoDlnaBrowse()
-                    : await DoFileSelection();
-
-                await RunMpv(file, settings.EnableRemote);
-
-                return ExitCodes.Success;
-            }
-
-            await RunMpv(settings.InputFile, settings.EnableRemote);
-
-            return ExitCodes.Success;
-        }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
-        }
     }
 
     private async Task RunMpv(string fileName, bool enableRemote)
@@ -136,5 +109,37 @@ internal sealed class Play : AsyncCommand<Play.Settings>
         Item selectedItem = await selector.SelectItemAsync(consoleCancel.Token);
 
         return $"\"{selectedItem.FullPath}\"";
+    }
+
+    private async Task<string> CreatePlaylist(string directoryName)
+    {
+        Playlist result = new();
+        var file = Path.Combine(directoryName, Path.ChangeExtension(Path.GetFileName(directoryName), ".m3u"));
+        result.AddRange(RandomSelectorProvider.ScanSupportedFiles(directoryName, false));
+        await SaveToFile(result, file, true);
+        return file;
+    }
+
+    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, Settings settings)
+    {
+        if (string.IsNullOrWhiteSpace(settings.InputFile))
+        {
+            string file = string.Empty;
+
+            file = settings.Dlna
+                ? await DoDlnaBrowse()
+                : await DoFileSelection();
+
+            await RunMpv(file, settings.EnableRemote);
+        }
+        else if (Directory.Exists(settings.InputFile))
+        {
+            string playlist = await CreatePlaylist(settings.InputFile);
+            await RunMpv(playlist, settings.EnableRemote);
+        }
+        else
+        {
+            await RunMpv(settings.InputFile, settings.EnableRemote);
+        }
     }
 }

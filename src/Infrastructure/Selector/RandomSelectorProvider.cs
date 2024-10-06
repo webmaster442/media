@@ -13,11 +13,11 @@ namespace Media.Infrastructure.Selector;
 
 internal sealed class RandomSelectorProvider : IItemProvider<Item, string>
 {
-    public static IEnumerable<string> ScanSupportedFiles(string parentFolder)
+    public static IEnumerable<string> ScanSupportedFiles(string parentFolder, bool recursive = true)
     {
         var files = Directory.EnumerateFiles(parentFolder, "*.*", new EnumerationOptions
         {
-            RecurseSubdirectories = true,
+            RecurseSubdirectories = recursive,
             AttributesToSkip = FileAttributes.System | FileAttributes.Hidden | FileAttributes.Temporary,
             IgnoreInaccessible = true,
         });
