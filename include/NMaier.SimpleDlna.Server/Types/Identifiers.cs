@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Security.Cryptography;
+using System.Text;
+
+using Microsoft.Extensions.Logging;
 
 using NMaier.SimpleDlna.Server.Comparers;
 using NMaier.SimpleDlna.Server.Interfaces;
@@ -67,9 +70,10 @@ public sealed class Identifiers : Logging
         string id;
         if (!paths.ContainsKey(path))
         {
-            while (ids.ContainsKey(id = Random.Shared.Next(1000, int.MaxValue).ToString("X8")))
+            id = GenerateId(path);
+            /*while (ids.ContainsKey(id = Random.Shared.Next(1000, int.MaxValue).ToString("X8")))
             {
-            }
+            }*/
             paths[path] = id;
         }
         else
@@ -79,6 +83,12 @@ public sealed class Identifiers : Logging
         ids[id] = new WeakReference(item);
 
         item.Id = id;
+    }
+
+    private static string GenerateId(string path)
+    {
+        byte[] bytes = SHA256.HashData(Encoding.UTF8.GetBytes(path));
+        return Convert.ToHexString(bytes);
     }
 
     public void AddView(string name)

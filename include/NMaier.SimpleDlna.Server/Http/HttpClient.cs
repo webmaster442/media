@@ -307,12 +307,11 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
                 Read();
                 return;
             }
-            using (_readStream)
-            {
-                Body = Encoding.UTF8.GetString(_readStream.ToArray());
-                Logger.LogDebug(Body);
-                Logger.LogDebug(Headers.ToString());
-            }
+
+            Body = Encoding.UTF8.GetString(_readStream.ToArray());
+            Logger.LogDebug(Body);
+            Logger.LogDebug(Headers.ToString());
+
             SetupResponse();
         }
         catch (Exception ex)

@@ -49,6 +49,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
       new Timer(1000);
 
     private bool _running = true;
+    private bool _disposed;
 
     public SsdpHandler(ILoggerFactory loggerFactory) : base(loggerFactory)
     {
@@ -99,6 +100,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
         _queueTimer.Dispose();
         _client.Dispose();
         _datagramPosted.Dispose();
+        _disposed = true;
     }
 
     private void ProcessQueue(object? sender, ElapsedEventArgs e)
@@ -127,17 +129,14 @@ internal sealed class SsdpHandler : Logging, IDisposable
 
     private void Receive()
     {
-        try
-        {
-            _client.BeginReceive(ReceiveCallback, null);
-        }
-        catch (ObjectDisposedException)
-        {
-        }
+        if (_disposed) return;
+        _client.BeginReceive(ReceiveCallback, null);
     }
 
     private void ReceiveCallback(IAsyncResult result)
     {
+        if (_disposed) return;
+
         try
         {
             IPEndPoint? endpoint = new IPEndPoint(IPAddress.None, SSDP_PORT);
