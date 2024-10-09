@@ -4,10 +4,11 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Dto.Internals;
+using Media.Infrastructure.Selector;
 
 using Spectre.Console;
 
-namespace Media.Infrastructure.Selector;
+namespace Media.Infrastructure.SelectorItemProviders;
 
 internal sealed class FileSystemItemProvider : IItemProvider<Item, string>
 {
@@ -72,14 +73,14 @@ internal sealed class FileSystemItemProvider : IItemProvider<Item, string>
         }
     }
 
-    private static string GetPreviousPath(string currentPath)
-    {
-        var parts = currentPath.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
-        return string.Join(Path.DirectorySeparatorChar, parts.Take(parts.Length - 1));
-    }
-
     private List<Item> GetFileSystemItems(string currentPath)
     {
+        static string GetPreviousPath(string currentPath)
+        {
+            var parts = currentPath.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(Path.DirectorySeparatorChar, parts.Take(parts.Length - 1));
+        }
+
         List<Item> results = new();
 
         var directoryInfo = new DirectoryInfo(currentPath);

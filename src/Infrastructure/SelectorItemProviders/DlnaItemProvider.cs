@@ -5,10 +5,11 @@
 
 using Media.Dto.Internals;
 using Media.Infrastructure.Dlna;
+using Media.Infrastructure.Selector;
 
 using Spectre.Console;
 
-namespace Media.Infrastructure.Selector;
+namespace Media.Infrastructure.SelectorItemProviders;
 
 public sealed class DlnaItemProvider : IItemProvider<DlnaItem, DlnaItemProvider.CurrentPath>, IDisposable
 {

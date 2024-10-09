@@ -7,6 +7,7 @@ using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Infrastructure.Selector;
+using Media.Infrastructure.SelectorItemProviders;
 using Media.Infrastructure.Validation;
 using Media.Interop;
 

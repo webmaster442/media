@@ -4,12 +4,12 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Dto.Internals;
-
+using Media.Infrastructure.Selector;
 using Media.Interop;
 
 using Spectre.Console;
 
-namespace Media.Infrastructure.Selector;
+namespace Media.Infrastructure.SelectorItemProviders;
 
 internal sealed class RandomSelectorProvider : IItemProvider<Item, string>
 {
