@@ -1,4 +1,6 @@
-﻿namespace NMaier.SimpleDlna.Server.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+
+namespace NMaier.SimpleDlna.Server.Interfaces;
 
 internal interface IHandler
 {

@@ -1,10 +1,12 @@
-﻿using NMaier.SimpleDlna.FileMediaServer.Properties;
+﻿using Microsoft.Extensions.Logging;
+
+using NMaier.SimpleDlna.FileMediaServer.Properties;
 using NMaier.SimpleDlna.Server.Types;
 using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.FileMediaServer;
 
-public sealed class ThumbnailMaker : Logging
+public sealed class ThumbnailMaker
 {
     private byte[] GetThumbnailInternal(DlnaMediaTypes type)
     {

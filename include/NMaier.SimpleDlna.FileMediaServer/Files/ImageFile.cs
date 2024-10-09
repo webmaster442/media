@@ -1,5 +1,7 @@
 ﻿using System.Runtime.Serialization;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Types;
 
@@ -24,8 +26,8 @@ internal sealed class ImageFile :
     private int? width,
       height;
 
-    internal ImageFile(FileServer server, FileInfo aFile, DlnaMime aType)
-      : base(server, aFile, aType, DlnaMediaTypes.Image)
+    internal ImageFile(FileServer server, FileInfo aFile, DlnaMime aType, ILoggerFactory loggerFactory)
+      : base(server, aFile, aType, DlnaMediaTypes.Image, loggerFactory)
     {
     }
 
@@ -134,7 +136,7 @@ internal sealed class ImageFile :
                 }
                 catch (Exception ex)
                 {
-                    Debug("Failed to transpose Properties props", ex);
+                    Logger.LogDebug(ex, "Failed to transpose Properties props");
                 }
 
                 try
@@ -158,7 +160,7 @@ internal sealed class ImageFile :
                 }
                 catch (Exception ex)
                 {
-                    Debug("Failed to transpose Tag props", ex);
+                    Logger.LogDebug(ex, "Failed to transpose Tag props");
                 }
             }
 
@@ -166,21 +168,17 @@ internal sealed class ImageFile :
         }
         catch (CorruptFileException ex)
         {
-            Debug(
-              "Failed to read meta data via taglib for file " + Item.FullName, ex);
+            Logger.LogDebug(ex, "Failed to read meta data via taglib for file {path}", Item.FullName);
             initialized = true;
         }
         catch (UnsupportedFormatException ex)
         {
-            Debug(
-              "Failed to read meta data via taglib for file " + Item.FullName, ex);
+            Logger.LogDebug(ex, "Failed to read meta data via taglib for file {path}", Item.FullName);
             initialized = true;
         }
         catch (Exception ex)
         {
-            Warn(
-              "Unhandled exception reading meta data for file " + Item.FullName,
-              ex);
+            Logger.LogWarning(ex, "Unhandled exception reading meta data for file {path}", Item.FullName);
         }
     }
 }

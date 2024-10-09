@@ -1,4 +1,6 @@
-﻿using NMaier.SimpleDlna.Server.Http;
+﻿using Microsoft.Extensions.Logging;
+
+using NMaier.SimpleDlna.Server.Http;
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 using NMaier.SimpleDlna.Server.Types;
@@ -12,8 +14,8 @@ internal sealed class ItemResponse : Logging, IResponse
 
     private readonly IMediaResource _item;
 
-    public ItemResponse(string prefix, IRequest request, IMediaResource item,
-      string transferMode = "Streaming")
+    public ItemResponse(string prefix, IRequest request, IMediaResource item, ILoggerFactory loggerFactory, string transferMode = "Streaming")
+        :base(loggerFactory)
     {
         this._item = item;
         _headers = new ResponseHeaders(item is not IMediaCoverResource);
@@ -48,7 +50,7 @@ internal sealed class ItemResponse : Logging, IResponse
             {
                 var surl =
                   $"http://{request.LocalEndPoint.Address}:{request.LocalEndPoint.Port}{prefix}subtitle/{item.Id}/st.srt";
-                DebugFormat("Sending subtitles {0}", surl);
+                Logger.LogDebug("Sending subtitles {surl}", surl);
                 _headers.Add("CaptionInfo.sec", surl);
             }
         }
@@ -65,7 +67,7 @@ internal sealed class ItemResponse : Logging, IResponse
         }
         _headers.Add("transferMode.dlna.org", transferMode);
 
-        Debug(_headers);
+        Logger.LogDebug(_headers.ToString());
     }
 
     public Stream Body => _item.CreateContentStream();

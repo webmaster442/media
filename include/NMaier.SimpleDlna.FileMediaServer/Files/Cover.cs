@@ -1,5 +1,7 @@
 ﻿using System.Runtime.Serialization;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 using NMaier.SimpleDlna.Server.Types;
@@ -23,7 +25,7 @@ internal sealed class Cover
 
     private int _width = 384;
 
-    internal Cover(FileInfo aFile, Stream aStream)
+    internal Cover(FileInfo aFile, Stream aStream, ILoggerFactory loggerFactory) : base(loggerFactory)
     {
         _file = aFile;
         var thumb = thumber.GetThumbnail(aFile.FullName,
@@ -36,7 +38,7 @@ internal sealed class Cover
         _width = thumb.Width;
     }
 
-    public Cover(FileInfo aFile)
+    public Cover(FileInfo aFile, ILoggerFactory loggerFactory) : base(loggerFactory)
     {
         _file = aFile;
     }
@@ -170,18 +172,18 @@ internal sealed class Cover
         }
         catch (NotSupportedException ex)
         {
-            Debug("Failed to load thumb for " + _file.FullName, ex);
+            Logger.LogDebug(ex, "Failed to load thumb for {fileName}", _file.FullName);
         }
         catch (Exception ex)
         {
             if (!_warned)
             {
-                Warn("Failed to load thumb for " + _file.FullName, ex);
+                Logger.LogWarning(ex, "Failed to load thumb for {fileName}", _file.FullName);
                 _warned = true;
             }
             else
             {
-                Debug("Failed to load thumb for " + _file.FullName, ex);
+                Logger.LogDebug(ex, "Failed to load thumb for {fileName}", _file.FullName);
             }
             return null;
         }

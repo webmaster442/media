@@ -2,6 +2,8 @@
 using System.Net.Sockets;
 using System.Text;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server.Ssdp;
@@ -17,7 +19,7 @@ internal sealed class Datagram : Logging
     public readonly bool Sticky;
 
     public Datagram(IPEndPoint endPoint, IPAddress localAddress,
-      string message, bool sticky)
+      string message, bool sticky, ILoggerFactory loggerFactory) : base(loggerFactory)
     {
         EndPoint = endPoint;
         LocalAddress = localAddress;
@@ -45,7 +47,7 @@ internal sealed class Datagram : Logging
                 }
                 catch (Exception ex)
                 {
-                    Debug(ex);
+                    Logger.LogDebug(ex, ex.Message);
                 }
                 finally
                 {
@@ -55,7 +57,7 @@ internal sealed class Datagram : Logging
                     }
                     catch (Exception ex)
                     {
-                        Warn(ex);
+                        Logger.LogWarning(ex, ex.Message);
                         // ignored
                     }
                 }
@@ -63,7 +65,7 @@ internal sealed class Datagram : Logging
         }
         catch (Exception ex)
         {
-            Error(ex);
+            Logger.LogError(ex, ex.Message);
         }
         ++SendCount;
     }

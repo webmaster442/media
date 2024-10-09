@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Timers;
 
-using log4net;
+using Microsoft.Extensions.Logging;
 
 using NMaier.SimpleDlna.Server.Handlers;
 using NMaier.SimpleDlna.Server.Interfaces;
@@ -16,7 +16,7 @@ namespace NMaier.SimpleDlna.Server.Http;
 
 public sealed class HttpServer : Logging, IDisposable
 {
-    public static readonly string Signature = GenerateServerSignature();
+    public static string Signature = string.Empty;
 
     private readonly ConcurrentDictionary<HttpClient, DateTime> _clients =
       new();
@@ -36,24 +36,26 @@ public sealed class HttpServer : Logging, IDisposable
 
     private readonly System.Timers.Timer _timeouter = new(10 * 1000);
 
-    public HttpServer()
-      : this(0)
+    public HttpServer(ILoggerFactory loggerFactory)
+      : this(0, loggerFactory)
     {
     }
 
-    public HttpServer(int port)
+    public HttpServer(int port, ILoggerFactory loggerFactory) : base(loggerFactory)
     {
+        Signature = GenerateServerSignature();
+
         _prefixes.TryAdd(
           "/favicon.ico",
           new StaticHandler(
-            new ResourceResponse(HttpCode.Ok, "image/icon", "favicon"))
+            new ResourceResponse(HttpCode.Ok, "image/icon", "favicon", loggerFactory))
           );
         _prefixes.TryAdd(
           "/static/browse.css",
           new StaticHandler(
-            new ResourceResponse(HttpCode.Ok, "text/css", "browse_css"))
+            new ResourceResponse(HttpCode.Ok, "text/css", "browse_css", loggerFactory))
           );
-        RegisterHandler(new IconHandler());
+        RegisterHandler(new IconHandler(loggerFactory));
 
         _listener = new TcpListener(new IPEndPoint(IPAddress.Any, port));
         _listener.Server.Ttl = 32;
@@ -61,9 +63,7 @@ public sealed class HttpServer : Logging, IDisposable
 
         RealPort = ((IPEndPoint)_listener.LocalEndpoint).Port;
 
-        NoticeFormat(
-          "Running HTTP Server: {0} on port {1}", Signature, RealPort);
-        _ssdpServer = new SsdpHandler();
+        Logger.LogDebug("Running HTTP Server: {signature} on port {port}", Signature, RealPort);
 
         _timeouter.Elapsed += TimeouterCallback;
         _timeouter.Enabled = true;
@@ -88,7 +88,7 @@ public sealed class HttpServer : Logging, IDisposable
 
     public void Dispose()
     {
-        Debug("Disposing HTTP");
+        Logger.LogDebug("Disposing HTTP");
         _timeouter.Enabled = false;
         foreach (var s in _servers.Values.ToList())
         {
@@ -122,7 +122,7 @@ public sealed class HttpServer : Logging, IDisposable
         }
         catch (Exception ex)
         {
-            Fatal("Failed to accept", ex);
+            Logger.LogError(ex, "Failed to accept");
         }
     }
 
@@ -131,11 +131,11 @@ public sealed class HttpServer : Logging, IDisposable
         try
         {
             var tcpclient = _listener.EndAcceptTcpClient(result);
-            var client = new HttpClient(this, tcpclient);
+            var client = new HttpClient(this, tcpclient, LoggerFactory);
             try
             {
                 _clients.AddOrUpdate(client, DateTime.Now, (k, v) => DateTime.Now);
-                DebugFormat("Accepted client {0}", client);
+                Logger.LogDebug("Accepted client {client}", client);
                 client.Start();
             }
             catch (Exception)
@@ -149,7 +149,7 @@ public sealed class HttpServer : Logging, IDisposable
         }
         catch (Exception ex)
         {
-            Error("Failed to accept a client", ex);
+            Logger.LogError(ex, "Failed to accept a client");
         }
         finally
         {
@@ -157,7 +157,7 @@ public sealed class HttpServer : Logging, IDisposable
         }
     }
 
-    private static string GenerateServerSignature()
+    private string GenerateServerSignature()
     {
         var os = Environment.OSVersion;
         var pstring = os.Platform.ToString();
@@ -176,7 +176,7 @@ public sealed class HttpServer : Logging, IDisposable
                 }
                 catch (Exception ex)
                 {
-                    LogManager.GetLogger(typeof(HttpServer)).Debug("Failed to get uname", ex);
+                    Logger.LogDebug(ex, "Failed to get uname");
                 }
                 break;
         }
@@ -191,7 +191,7 @@ public sealed class HttpServer : Logging, IDisposable
         {
             if (c.Key.IsATimeout)
             {
-                DebugFormat("Collected timeout client {0}", c);
+                Logger.LogDebug("Collected timeout client: {c}", c);
                 c.Key.Close();
             }
         }
@@ -250,7 +250,7 @@ public sealed class HttpServer : Logging, IDisposable
         {
             throw new ArgumentException("Invalid preifx; already taken");
         }
-        DebugFormat("Registered Handler for {0}", prefix);
+        Logger.LogDebug("Registered Handler for {prefix}", prefix);
     }
 
     internal void RemoveClient(HttpClient client)
@@ -262,7 +262,7 @@ public sealed class HttpServer : Logging, IDisposable
     {
         if (_prefixes.TryRemove(handler.Prefix, out IPrefixHandler? ignored))
         {
-            DebugFormat("Unregistered Handler for {0}", handler.Prefix);
+            Logger.LogDebug("Unregistered Handler for {prefix}", handler.Prefix);
         }
     }
 
@@ -276,13 +276,13 @@ public sealed class HttpServer : Logging, IDisposable
         }
 
         var end = (IPEndPoint)_listener.LocalEndpoint;
-        var mount = new MediaMount(server);
+        var mount = new MediaMount(server, LoggerFactory);
         _servers[guid] = mount;
         RegisterHandler(mount);
 
         foreach (var address in IP.ExternalIPAddresses)
         {
-            DebugFormat("Registering device for {0}", address);
+            Logger.LogDebug("Registering device for {adress}", address);
             var deviceGuid = Guid.NewGuid();
             var list = _devicesForServers.GetOrAdd(guid, new List<Guid>());
             lock (list)
@@ -295,7 +295,8 @@ public sealed class HttpServer : Logging, IDisposable
             {
                 _ssdpServer.RegisterNotification(deviceGuid, uri, address);
             }
-            NoticeFormat("New mount at: {0}", uri);
+
+            Logger.LogInformation("New mount at: {uri}", uri);
         }
     }
 
@@ -323,7 +324,7 @@ public sealed class HttpServer : Logging, IDisposable
 
         if (_servers.TryRemove(server.UUID, out MediaMount? ignored))
         {
-            InfoFormat("Unregistered Media Server {0}", server.UUID);
+            Logger.LogInformation("Unregistered Media Server {uuid}", server.UUID);
         }
     }
 }

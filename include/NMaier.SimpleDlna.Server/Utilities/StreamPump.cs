@@ -1,4 +1,4 @@
-﻿using log4net;
+﻿using Microsoft.Extensions.Logging;
 
 namespace NMaier.SimpleDlna.Server.Utilities;
 
@@ -8,14 +8,16 @@ public sealed class StreamPump : IDisposable
     private bool _disposed;
 
     private readonly SemaphoreSlim _sem;
+    private readonly ILogger _log;
 
-    public StreamPump(Stream inputStream, Stream outputStream, int bufferSize)
+    public StreamPump(Stream inputStream, Stream outputStream, int bufferSize, ILogger log)
     {
         _sem = new SemaphoreSlim(0, 1);
         _disposed = false;
         _buffer = new byte[bufferSize];
         Input = inputStream;
         Output = outputStream;
+        _log = log;
     }
 
     public Stream Input { get; }
@@ -43,7 +45,7 @@ public sealed class StreamPump : IDisposable
         }
         catch (Exception ex)
         {
-            LogManager.GetLogger(typeof(StreamPump)).Error(ex.Message, ex);
+            _log.LogError(ex, "Exception: {ex}", ex.Message);
         }
     }
 

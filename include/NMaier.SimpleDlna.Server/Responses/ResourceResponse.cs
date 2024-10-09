@@ -1,5 +1,7 @@
 ﻿using System.Resources;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Http;
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Properties;
@@ -11,19 +13,20 @@ internal sealed class ResourceResponse : Logging, IResponse
 {
     private readonly byte[] _resource = Array.Empty<byte>();
 
-    public ResourceResponse(HttpCode aStatus, string type, string aResource)
-      : this(aStatus, type, Resources.ResourceManager, aResource)
+    public ResourceResponse(HttpCode aStatus, string type, string aResource, ILoggerFactory loggerFactory)
+      : this(aStatus, type, Resources.ResourceManager, aResource, loggerFactory)
     {
     }
 
-    public ResourceResponse(HttpCode aStatus, string type, ResourceManager aResourceManager, string aResource)
+    public ResourceResponse(HttpCode aStatus, string type, ResourceManager aResourceManager, string aResource, ILoggerFactory loggerFactory)
+        : base(loggerFactory)
     {
         Status = aStatus;
         try
         {
             if (aResourceManager.GetObject(aResource) is not byte[] obj)
             {
-                Error("Resource " + aResource + " not found");
+                Logger.LogError("Resource {aResource} not found", aResource);
                 throw new InvalidOperationException(aResource);
             }
             _resource = obj;
@@ -33,7 +36,7 @@ internal sealed class ResourceResponse : Logging, IResponse
         }
         catch (Exception ex)
         {
-            Error("Failed to prepare resource " + aResource, ex);
+            Logger.LogError(ex, "Failed to prepare resource {resource}", aResource);
             throw;
         }
     }

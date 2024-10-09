@@ -1,5 +1,7 @@
 using System.Linq;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Types;
 using NMaier.SimpleDlna.Server.Utilities;
@@ -8,6 +10,10 @@ namespace NMaier.SimpleDlna.Server.Views;
 
 internal abstract class BaseView : Logging, IView
 {
+    protected BaseView(ILoggerFactory loggerFactory) : base(loggerFactory)
+    {
+    }
+
     public abstract string Description { get; }
 
     public abstract string Name { get; }

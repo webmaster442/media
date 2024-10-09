@@ -1,5 +1,7 @@
 ﻿using System.Net;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Utilities;
 
@@ -10,7 +12,7 @@ public sealed class IPAddressAuthorizer : Logging, IHttpAuthorizationMethod
     private readonly Dictionary<IPAddress, object?> _ips =
       new Dictionary<IPAddress, object?>();
 
-    public IPAddressAuthorizer(IEnumerable<IPAddress> addresses)
+    public IPAddressAuthorizer(IEnumerable<IPAddress> addresses, ILoggerFactory loggerFactory) : base(loggerFactory)
     {
         ArgumentNullException.ThrowIfNull(addresses);
         foreach (var ip in addresses)
@@ -19,8 +21,8 @@ public sealed class IPAddressAuthorizer : Logging, IHttpAuthorizationMethod
         }
     }
 
-    public IPAddressAuthorizer(IEnumerable<string> addresses)
-      : this(from a in addresses select IPAddress.Parse(a))
+    public IPAddressAuthorizer(IEnumerable<string> addresses, ILoggerFactory loggerFactory)
+      : this(from a in addresses select IPAddress.Parse(a), loggerFactory)
     {
     }
 
@@ -32,7 +34,7 @@ public sealed class IPAddressAuthorizer : Logging, IHttpAuthorizationMethod
             return false;
         }
         var rv = _ips.ContainsKey(addr);
-        DebugFormat(!rv ? "Rejecting {0}. Not in IP whitelist" : "Accepted {0} via IP whitelist", addr);
+        Logger.LogDebug(!rv ? "Rejecting {addr}. Not in IP whitelist" : "Accepted {addr} via IP whitelist", addr);
         return rv;
     }
 }

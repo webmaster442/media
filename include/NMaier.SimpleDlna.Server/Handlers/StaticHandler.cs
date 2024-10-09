@@ -1,4 +1,6 @@
-﻿using NMaier.SimpleDlna.Server.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+
+using NMaier.SimpleDlna.Server.Interfaces;
 
 namespace NMaier.SimpleDlna.Server.Handlers;
 

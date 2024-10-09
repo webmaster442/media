@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 
-using log4net;
+using Microsoft.Extensions.Logging;
 
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Utilities;
@@ -11,10 +11,6 @@ namespace NMaier.SimpleDlna.Server.Types;
 [Serializable]
 public sealed class Subtitle : IMediaResource
 {
-    [NonSerialized]
-    private static readonly ILog Logger =
-      LogManager.GetLogger(typeof(Subtitle));
-
     [NonSerialized]
     private static readonly string[] Exts =
     {
@@ -29,19 +25,23 @@ public sealed class Subtitle : IMediaResource
     private byte[]? _encodedText;
 
     private string? _text;
+    private readonly ILogger<Subtitle> _logger;
 
-    public Subtitle()
+    public Subtitle(ILoggerFactory loggerFactory)
     {
+        _logger = loggerFactory.CreateLogger<Subtitle>();
     }
 
-    public Subtitle(FileInfo file)
+    public Subtitle(FileInfo file, ILoggerFactory loggerFactory)
     {
         Load(file);
+        _logger = loggerFactory.CreateLogger<Subtitle>();
     }
 
-    public Subtitle(string text)
+    public Subtitle(string text, ILoggerFactory loggerFactory)
     {
         _text = text;
+        _logger = loggerFactory.CreateLogger<Subtitle>();
     }
 
     public bool HasSubtitle => !string.IsNullOrWhiteSpace(_text);
@@ -156,34 +156,34 @@ public sealed class Subtitle : IMediaResource
                     {
                         continue;
                     }
-                    _text = FFmpeg.GetSubtitleSubrip(sti);
-                    Logger.DebugFormat("Loaded subtitle from {0}", sti.FullName);
+                    _text = FFmpeg.GetSubtitleSubrip(sti, _logger);
+                    _logger.LogDebug("Loaded subtitle from {file}", sti.FullName);
                 }
                 catch (NotSupportedException)
                 {
                 }
                 catch (Exception ex)
                 {
-                    Logger.Debug($"Failed to get subtitle from {sti.FullName}", ex);
+                    _logger.LogDebug("Failed to get subtitle from {filename}, Exception: {ex}", sti.FullName, ex);
                 }
             }
             try
             {
-                _text = FFmpeg.GetSubtitleSubrip(file);
-                Logger.DebugFormat("Loaded subtitle from {0}", file.FullName);
+                _text = FFmpeg.GetSubtitleSubrip(file, _logger);
+                _logger.LogDebug("Loaded subtitle from {file}", file.FullName);
             }
             catch (NotSupportedException ex)
             {
-                Logger.Debug($"Subtitle not supported {file.FullName}", ex);
+                _logger.LogDebug("Failed to get subtitle from {filename}, Exception: {ex}", file.FullName, ex);
             }
             catch (Exception ex)
             {
-                Logger.Debug($"Failed to get subtitle from {file.FullName}", ex);
+                _logger.LogDebug("Failed to get subtitle from {filename}, Exception: {ex}", file.FullName, ex);
             }
         }
         catch (Exception ex)
         {
-            Logger.Error($"Failed to load subtitle for {file.FullName}", ex);
+            _logger.LogError("Failed to get subtitle from {filename}, Exception: {ex}", file.FullName, ex);
         }
     }
 }

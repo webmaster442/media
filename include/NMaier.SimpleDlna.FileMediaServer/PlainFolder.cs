@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.FileMediaServer.Files;
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Interfaces.Metadata;
@@ -35,7 +37,7 @@ internal class PlainFolder : VirtualFolder, IMetaInfo
             }
             catch (Exception ex)
             {
-                server.Warn(f, ex);
+                server.Logger.LogWarning(ex, f.FullName);
             }
         }
         Resources.AddRange(files);
@@ -66,7 +68,7 @@ internal class PlainFolder : VirtualFolder, IMetaInfo
         {
             if (!d.Name.Equals("System Volume Information"))
             {
-                server.Warn("Failed to access folder", ex);
+                server.Logger.LogWarning(ex, "Failed to access folder");
             }
             return null;
         }

@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Handlers;
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Responses;
@@ -76,7 +78,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
 
     private HttpStates _state;
 
-    public HttpClient(HttpServer aOwner, TcpClient aClient)
+    public HttpClient(HttpServer aOwner, TcpClient aClient, ILoggerFactory loggerFactory) : base(loggerFactory)
     {
         State = HttpStates.Accepted;
         _lastActivity = DateTime.Now;
@@ -150,7 +152,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
         }
         catch (Exception ex)
         {
-            Warn(ex);
+            Logger.LogWarning(ex, "GetContentLengthFromStream failed");
             // ignored
         }
         return contentLength;
@@ -207,7 +209,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
         }
         catch (Exception ex)
         {
-            Warn($"{this} - Failed to process range request!", ex);
+            Logger.LogWarning(ex, $"{this} - Failed to process range request!");
         }
         return responseBody;
     }
@@ -220,7 +222,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
         }
         catch (IOException ex)
         {
-            Warn($"{this} - Failed to BeginRead", ex);
+            Logger.LogWarning(ex, $"{this} - Failed to BeginRead");
             Close();
         }
     }
@@ -242,7 +244,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
             {
                 throw new HttpException("Client did not send anything");
             }
-            DebugFormat("{0} - Read {1} bytes", this, read);
+            Logger.LogDebug("{this} - Read {read} bytes", this, read);
             _readStream.Write(_buffer, 0, read);
             _lastActivity = DateTime.Now;
         }
@@ -250,7 +252,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
         {
             if (!IsATimeout)
             {
-                WarnFormat("{0} - Failed to read data", this);
+                Logger.LogWarning("{this} - Failed to read data", this);
                 Close();
             }
             return;
@@ -280,7 +282,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
                             }
                             var ascii = Encoding.ASCII.GetBytes(reader.ReadToEnd());
                             _readStream.Write(ascii, 0, ascii.Length);
-                            DebugFormat("Must read body bytes {0}", _bodyBytes);
+                            Logger.LogDebug("Must read body bytes {bodyBytes}", _bodyBytes);
                         }
                         break;
                     }
@@ -289,7 +291,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
                         var parts = line.Split(new[] { ' ' }, 3);
                         Method = parts[0].Trim().ToUpperInvariant();
                         Path = parts[1].Trim();
-                        DebugFormat("{0} - {1} request for {2}", this, Method, Path);
+                        Logger.LogDebug("{this} - {method} request for {path}", this, Method, Path);
                     }
                     else
                     {
@@ -300,22 +302,22 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
             }
             if (_bodyBytes != 0 && _bodyBytes > _readStream.Length)
             {
-                DebugFormat(
-                  "{0} - Bytes to go {1}", this, _bodyBytes - _readStream.Length);
+                Logger.LogDebug(
+                  "{this} - Bytes to go {count}", this, _bodyBytes - _readStream.Length);
                 Read();
                 return;
             }
             using (_readStream)
             {
                 Body = Encoding.UTF8.GetString(_readStream.ToArray());
-                Debug(Body);
-                Debug(Headers);
+                Logger.LogDebug(Body);
+                Logger.LogDebug(Headers.ToString());
             }
             SetupResponse();
         }
         catch (Exception ex)
         {
-            Warn($"{this} - Failed to process request", ex);
+            Logger.LogWarning(ex, $"{this} - Failed to process request");
             _response = Error500.HandleRequest(this);
             SendResponse();
         }
@@ -361,16 +363,16 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
                 responseStream.AddStream(responseBody);
                 responseBody = null;
             }
-            InfoFormat("{0} - {1} response for {2}", this, (uint)statusCode, Path);
+            Logger.LogInformation("{this} - {statuscode} response for {path}", this, (uint)statusCode, Path);
             _state = HttpStates.Writing;
-            using var sp = new StreamPump(responseStream, _stream, BUFFER_SIZE);
+            using var sp = new StreamPump(responseStream, _stream, BUFFER_SIZE, Logger);
             sp.Pump((pump, result) =>
             {
                 pump.Input.Close();
                 pump.Input.Dispose();
                 if (result == StreamPumpResult.Delivered)
                 {
-                    DebugFormat("{0} - Done writing response", this);
+                    Logger.LogDebug("{this} - Done writing response", this);
 
                     if (Headers.TryGetValue("connection", out string? conn)
                     && conn.Equals("KEEP-ALIVE", StringComparison.InvariantCultureIgnoreCase))
@@ -381,7 +383,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
                 }
                 else
                 {
-                    DebugFormat("{0} - Client aborted connection", this);
+                    Logger.LogDebug("{this} - Client aborted connection", this);
                 }
                 Close();
             });
@@ -424,11 +426,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
         }
         catch (HttpStatusException ex)
         {
-#if DEBUG
-            Warn(string.Format("{0} - Got a {2}: {1}", this, Path, ex.Code), ex);
-#else
-    InfoFormat("{0} - Got a {2}: {1}", this, Path, ex.Code);
-#endif
+            Logger.LogWarning("{this} - Got a {path}: {code}", this, Path, ex.Code);
             switch (ex.Code)
             {
                 case HttpCode.NotFound:
@@ -454,7 +452,7 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
         }
         catch (Exception ex)
         {
-            Warn($"{this} - Failed to process response", ex);
+            Logger.LogWarning(ex, $"{this} - Failed to process response");
             _response = Error500.HandleRequest(this);
         }
         SendResponse();
@@ -464,14 +462,14 @@ internal sealed partial class HttpClient : Logging, IRequest, IDisposable
     {
         State = HttpStates.Closed;
 
-        DebugFormat("{0} - Closing connection after {1} requests", this, requestCount);
+        Logger.LogDebug("{this} - Closing connection after {requestCount} requests", this, requestCount);
         try
         {
             _client.Close();
         }
         catch (Exception ex)
         {
-            Warn(ex);
+            Logger.LogWarning(ex, "Close failed");
             // ignored
         }
         _owner.RemoveClient(this);

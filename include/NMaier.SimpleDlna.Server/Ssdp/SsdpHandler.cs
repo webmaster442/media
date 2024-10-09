@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Timers;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Http;
 using NMaier.SimpleDlna.Server.Types;
 using NMaier.SimpleDlna.Server.Utilities;
@@ -48,7 +50,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
 
     private bool _running = true;
 
-    public SsdpHandler()
+    public SsdpHandler(ILoggerFactory loggerFactory) : base(loggerFactory)
     {
         _notificationTimer.Elapsed += Tick;
         _notificationTimer.Enabled = true;
@@ -63,7 +65,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
         _client.ExclusiveAddressUse = false;
         _client.Client.Bind(new IPEndPoint(IPAddress.Any, SSDP_PORT));
         _client.JoinMulticastGroup(SsdpIP, 10);
-        Notice("SSDP service started");
+        Logger.LogInformation("SSDP service started");
         Receive();
     }
 
@@ -82,7 +84,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
 
     public void Dispose()
     {
-        Debug("Disposing SSDP");
+        Logger.LogDebug("Disposing SSDP");
         _running = false;
         while (!_messageQueue.IsEmpty)
         {
@@ -185,11 +187,11 @@ internal sealed class SsdpHandler : Logging, IDisposable
         }
         catch (IOException ex)
         {
-            Debug("Failed to read SSDP message", ex);
+            Logger.LogDebug(ex, "Failed to read SSDP message");
         }
         catch (Exception ex)
         {
-            Warn("Failed to read SSDP message", ex);
+            Logger.LogWarning(ex, "Failed to read SSDP message");
         }
         Receive();
     }
@@ -201,7 +203,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
         {
             return;
         }
-        var dgram = new Datagram(endpoint, address, message, sticky);
+        var dgram = new Datagram(endpoint, address, message, sticky, LoggerFactory);
         if (_messageQueue.IsEmpty)
         {
             dgram.Send();
@@ -229,21 +231,21 @@ internal sealed class SsdpHandler : Logging, IDisposable
           $"HTTP/1.1 200 OK\r\n{headers.HeaderBlock}\r\n",
           false
           );
-        InfoFormat(
+        Logger.LogInformation(
           "{2}, {1} - Responded to a {0} request", dev.Type, endpoint,
           dev.Address);
     }
 
     private void Tick(object? sender, ElapsedEventArgs e)
     {
-        Debug("Sending SSDP notifications!");
+        Logger.LogDebug("Sending SSDP notifications!");
         _notificationTimer.Interval = Random.Shared.Next(60000, 120000);
         NotifyAll();
     }
 
     internal void NotifyAll()
     {
-        Debug("NotifyAll");
+        Logger.LogDebug("NotifyAll");
         foreach (var d in Devices)
         {
             NotifyDevice(d, "alive", false);
@@ -252,7 +254,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
 
     internal void NotifyDevice(UpnpDevice dev, string type, bool sticky)
     {
-        Debug("NotifyDevice");
+        Logger.LogDebug("NotifyDevice");
         var headers = new RawHeaders
   {
     {"HOST", "239.255.255.250:1900"},
@@ -278,7 +280,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
           $"NOTIFY * HTTP/1.1\r\n{headers.HeaderBlock}\r\n",
           sticky
           );
-        DebugFormat("{0} said {1}", dev.USN, type);
+        Logger.LogDebug("{usn} said {type}", dev.USN, type);
     }
 
     internal void RegisterNotification(Guid uuid, Uri descriptor,
@@ -300,7 +302,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
         }.Select(t => new UpnpDevice(uuid, t, descriptor, address)));
 
         NotifyAll();
-        DebugFormat("Registered mount {0}, {1}", uuid, address);
+        Logger.LogDebug("Registered mount {uuid}, {address}", uuid, address);
     }
 
     internal void RespondToSearch(IPEndPoint endpoint, string? req)
@@ -310,7 +312,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
             req = null;
         }
 
-        DebugFormat("RespondToSearch {0} {1}", endpoint, req);
+        Logger.LogDebug("RespondToSearch {endpoint} {req}", endpoint, req);
         foreach (var d in Devices)
         {
             if (!string.IsNullOrEmpty(req) && req != d.Type)
@@ -336,6 +338,6 @@ internal sealed class SsdpHandler : Logging, IDisposable
         {
             NotifyDevice(d, "byebye", true);
         }
-        DebugFormat("Unregistered mount {0}", uuid);
+        Logger.LogDebug("Unregistered mount {uuid}", uuid);
     }
 }

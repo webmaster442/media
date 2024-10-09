@@ -1,5 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Utilities;
 
@@ -9,6 +11,10 @@ internal class FilterView : FilteringView, IConfigurable
 {
     private static readonly string[] Escapes = "\\.+|[]{}()$#^".Select(c => new string(c, 1)).ToArray();
     private Regex? filter;
+
+    public FilterView(ILoggerFactory loggerFactory) : base(loggerFactory)
+    {
+    }
 
     public override string Description => "Show only files matching a specific filter";
 
@@ -53,7 +59,7 @@ internal class FilterView : FilteringView, IConfigurable
           string.Join("|", filters),
           RegexOptions.Compiled | RegexOptions.IgnoreCase
           );
-        NoticeFormat("Using filter {0}", filter.ToString());
+        Logger.LogInformation("Using filter {filter}", filter.ToString());
     }
 
     public override IMediaFolder Transform(IMediaFolder oldRoot)

@@ -1,4 +1,6 @@
-using log4net;
+using System.Diagnostics;
+
+using Microsoft.Extensions.Logging;
 
 using NMaier.SimpleDlna.Server.Utilities;
 
@@ -9,9 +11,6 @@ namespace NMaier.SimpleDlna.FileMediaServer.Files;
 internal static class FileStreamCache
 {
     private static readonly Ticker ticker = new Ticker();
-
-    private static readonly ILog logger =
-      LogManager.GetLogger(typeof(FileReadStream));
 
     private static readonly LeastRecentlyUsedDictionary<string, CacheItem> streams =
       new LeastRecentlyUsedDictionary<string, CacheItem>(15);
@@ -44,7 +43,7 @@ internal static class FileStreamCache
         }
     }
 
-    internal static FileReadStream Get(FileInfo info)
+    internal static FileReadStream Get(FileInfo info, ILogger logger)
     {
         var key = info.FullName;
         lock (streams)
@@ -53,12 +52,12 @@ internal static class FileStreamCache
             if (streams.TryGetValue(key, out rv))
             {
                 streams.Remove(key);
-                logger.DebugFormat("Retrieved file stream {0} from cache", key);
+                Debug.WriteLine("Retrieved file stream {0} from cache", key);
                 return rv.Stream;
             }
         }
-        logger.DebugFormat("Constructing file stream {0}", key);
-        return new FileReadStream(info);
+        Debug.WriteLine("Constructing file stream {0}", key);
+        return new FileReadStream(info, logger);
     }
 
     internal static void Recycle(FileReadStream stream)
@@ -70,7 +69,7 @@ internal static class FileStreamCache
             if (!streams.TryGetValue(key, out ignore) ||
                 Equals(ignore.Stream, stream))
             {
-                logger.DebugFormat("Recycling {0}", key);
+                Debug.WriteLine("Recycling {0}", key);
                 stream.Seek(0, SeekOrigin.Begin);
                 var removed = streams.AddAndPop(key, new CacheItem(stream));
                 removed?.Stream.Kill();

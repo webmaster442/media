@@ -1,10 +1,16 @@
-﻿using NMaier.SimpleDlna.Server.Interfaces;
+﻿using Microsoft.Extensions.Logging;
+
+using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Types;
 
 namespace NMaier.SimpleDlna.Server.Views;
 
 internal sealed class FlattenView : BaseView
 {
+    public FlattenView(ILoggerFactory loggerFactory) : base(loggerFactory)
+    {
+    }
+
     public override string Description => "Removes empty intermediate folders and flattens folders with only few files";
 
     public override string Name => "flatten";

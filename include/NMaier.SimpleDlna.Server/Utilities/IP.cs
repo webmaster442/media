@@ -1,16 +1,13 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-
-using log4net;
 
 namespace NMaier.SimpleDlna.Server.Utilities;
 
 public static class IP
 {
-    private static readonly ILog logger = LogManager.GetLogger(typeof(IP));
-
-    private static bool warned;
+    private static bool _warned;
 
     public static IEnumerable<IPAddress> AllIPAddresses
     {
@@ -22,12 +19,10 @@ public static class IP
             }
             catch (Exception ex)
             {
-                if (!warned)
+                if (!_warned)
                 {
-                    logger.Warn(
-                      "Failed to retrieve IP addresses the usual way, falling back to naive mode",
-                      ex);
-                    warned = true;
+                    Debug.WriteLine("Failed to retrieve IP addresses the usual way, falling back to naive mode: {0}", ex);
+                    _warned = true;
                 }
                 return GetIPsFallback();
             }
@@ -49,19 +44,19 @@ public static class IP
                            select true;
             if (!gateways.Any())
             {
-                logger.DebugFormat("Skipping {0}. No gateways", props);
+                Debug.WriteLine("Skipping {0}. No gateways", props);
                 continue;
             }
-            logger.DebugFormat("Using {0}", props);
+            Debug.WriteLine("Using {0}", props);
             foreach (var uni in props.UnicastAddresses)
             {
                 var address = uni.Address;
                 if (address.AddressFamily != AddressFamily.InterNetwork)
                 {
-                    logger.DebugFormat("Skipping {0}. Not IPv4", address);
+                    Debug.WriteLine("Skipping {0}. Not IPv4", address);
                     continue;
                 }
-                logger.DebugFormat("Found {0}", address);
+                Debug.WriteLine("Found {0}", address);
                 returned = true;
                 yield return address;
             }
@@ -79,7 +74,6 @@ public static class IP
         {
             if (i.AddressFamily == AddressFamily.InterNetwork)
             {
-                logger.DebugFormat("Found {0}", i);
                 returned = true;
                 yield return i;
             }

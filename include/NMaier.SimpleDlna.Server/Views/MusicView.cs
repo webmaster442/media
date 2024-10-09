@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
 using System.Linq;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Types;
 using NMaier.SimpleDlna.Server.Utilities;
@@ -9,6 +11,10 @@ namespace NMaier.SimpleDlna.Server.Views;
 
 internal sealed class MusicView : BaseView
 {
+    public MusicView(ILoggerFactory loggerFactory) : base(loggerFactory)
+    {
+    }
+
     public override string Description => "Reorganizes files into a proper music collection";
 
     public override string Name => "music";

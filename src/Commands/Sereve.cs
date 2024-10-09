@@ -1,12 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-using log4net;
-using log4net.Appender;
-using log4net.Config;
-using log4net.Repository;
-
 using Media.Infrastructure;
 using Media.Infrastructure.Validation;
+
+using Microsoft.Extensions.Logging;
 
 using NMaier.SimpleDlna.FileMediaServer;
 using NMaier.SimpleDlna.Server.Comparers;
@@ -36,17 +33,21 @@ internal sealed class Sereve : Command<Sereve.Settings>
     {
         try
         {
-            using var server = new HttpServer(_dlnaServerPort);
-            server.Logger.IsEnabledFor(log4net.Core.Level.Error);
+            using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
+            {
+                builder.ClearProviders();
+                builder.AddConsole();
+                builder.AddFilter(loglevel => loglevel >= LogLevel.Information);
+            });
 
-            ILoggerRepository repository = LogManager.GetRepository();
-            BasicConfigurator.Configure(repository, new ConsoleAppender());
+
+            using var server = new HttpServer(_dlnaServerPort, loggerFactory);
 
             DirectoryInfo directory = new(settings.Folder);
 
             using var fileServer = new FileServer(DlnaMediaTypes.All,
-                                                  new Identifiers(new TitleComparer(), false),
-                                                  directory);
+                                                  new Identifiers(new TitleComparer(), loggerFactory, false),
+                                                  loggerFactory, directory);
             fileServer.Load();
             server.RegisterMediaServer(fileServer);
 

@@ -1,4 +1,6 @@
-﻿using NMaier.SimpleDlna.Server.Comparers;
+﻿using Microsoft.Extensions.Logging;
+
+using NMaier.SimpleDlna.Server.Comparers;
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Utilities;
 using NMaier.SimpleDlna.Server.Views;
@@ -34,7 +36,7 @@ public sealed class Identifiers : Logging
 
     private readonly ViewRepository _viewRepository = new();
 
-    public Identifiers(IItemComparer comparer, bool order)
+    public Identifiers(IItemComparer comparer, ILoggerFactory loggerFactory, bool order) : base(loggerFactory)
     {
         this.comparer = comparer;
         this.order = order;
@@ -93,7 +95,7 @@ public sealed class Identifiers : Logging
         }
         catch (Exception ex)
         {
-            Error("Failed to add view", ex);
+            Logger.LogError(ex, "Failed to add view");
             throw;
         }
     }
@@ -116,7 +118,7 @@ public sealed class Identifiers : Logging
             }
         }
         paths = npaths;
-        DebugFormat("Cleanup complete: ids (evicted) {0} ({1}), paths {2} ({3})", ids.Count, ic - ids.Count, paths.Count,
+        Logger.LogDebug("Cleanup complete: ids (evicted) {count} ({removedids}), paths {paths} ({removed})", ids.Count, ic - ids.Count, paths.Count,
                     pc - paths.Count);
     }
 

@@ -1,12 +1,20 @@
-﻿using NMaier.SimpleDlna.Server.Http;
+﻿using Microsoft.Extensions.Logging;
+
+using NMaier.SimpleDlna.Server.Http;
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Responses;
+using NMaier.SimpleDlna.Server.Utilities;
 
 namespace NMaier.SimpleDlna.Server.Handlers;
 
-internal sealed class IconHandler : IPrefixHandler
+internal sealed class IconHandler : Logging, IPrefixHandler
 {
     public string Prefix => "/icon/";
+
+    public IconHandler(ILoggerFactory loggerFactory)  : base(loggerFactory)
+    {
+
+    }
 
     public IResponse HandleRequest(IRequest req)
     {
@@ -16,7 +24,7 @@ internal sealed class IconHandler : IPrefixHandler
         return new ResourceResponse(
           HttpCode.Ok,
           isPNG ? "image/png" : "image/jpeg",
-          resource
-          );
+          resource,
+          LoggerFactory);
     }
 }

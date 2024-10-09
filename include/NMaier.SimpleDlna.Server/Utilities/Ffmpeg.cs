@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Text.RegularExpressions;
 
+using Microsoft.Extensions.Logging;
+
 namespace NMaier.SimpleDlna.Server.Utilities;
 
 using InfoCache = LeastRecentlyUsedDictionary<FileInfo, IDictionary<string, string>>;
@@ -40,7 +42,7 @@ public static class FFmpeg
     }
 
     private static IDictionary<string, string> IdentifyFileInternal(
-      FileInfo file)
+      FileInfo file, ILogger logger)
     {
         if (FFmpegExecutable == null)
         {
@@ -56,7 +58,7 @@ public static class FFmpeg
         }
         try
         {
-            return IdentifyInternalFromProcess(file);
+            return IdentifyInternalFromProcess(file, logger);
         }
         catch (Exception ex)
         {
@@ -65,7 +67,7 @@ public static class FFmpeg
     }
 
     private static IDictionary<string, string> IdentifyInternalFromProcess(
-      FileInfo file)
+      FileInfo file, ILogger logger)
     {
         using (var p = new Process())
         {
@@ -82,8 +84,7 @@ public static class FFmpeg
 
             using (var reader = new StreamReader(StreamManager.GetStream()))
             {
-                using (var pump = new StreamPump(
-                  p.StandardError.BaseStream, reader.BaseStream, 4096))
+                using (var pump = new StreamPump(p.StandardError.BaseStream, reader.BaseStream, 4096, logger))
                 {
                     pump.Pump(null);
                     if (!p.WaitForExit(3000))
@@ -138,36 +139,7 @@ public static class FFmpeg
         }
     }
 
-    public static (int w, int h) GetFileDimensions(FileInfo file)
-    {
-        if (IdentifyFile(file).TryGetValue("VIDEO_WIDTH", out string? sw)
-            && IdentifyFile(file).TryGetValue("VIDEO_HEIGHT", out string? sh)
-            && int.TryParse(sw, out int w)
-            && int.TryParse(sh, out int h)
-            && w > 0 && h > 0)
-        {
-            return new(w, h);
-        }
-        throw new NotSupportedException();
-    }
-
-    public static double GetFileDuration(FileInfo file)
-    {
-        if (IdentifyFile(file).TryGetValue("LENGTH", out string? sl))
-        {
-            double dur;
-            var valid = double.TryParse(
-              sl, NumberStyles.AllowDecimalPoint,
-              CultureInfo.GetCultureInfo("en-US", "en"), out dur);
-            if (valid && dur > 0)
-            {
-                return dur;
-            }
-        }
-        throw new NotSupportedException();
-    }
-
-    public static string GetSubtitleSubrip(FileInfo file)
+    public static string GetSubtitleSubrip(FileInfo file, ILogger logger)
     {
         if (FFmpegExecutable == null)
         {
@@ -194,8 +166,7 @@ public static class FFmpeg
                 var lastPosition = 0L;
                 using (var reader = new StreamReader(StreamManager.GetStream()))
                 {
-                    using (var pump = new StreamPump(
-                      p.StandardOutput.BaseStream, reader.BaseStream, 100))
+                    using (var pump = new StreamPump(p.StandardOutput.BaseStream, reader.BaseStream, 100, logger))
                     {
                         pump.Pump(null);
                         while (!p.WaitForExit(20000))
@@ -236,11 +207,11 @@ public static class FFmpeg
           "File does not contain a valid subtitle");
     }
 
-    public static IDictionary<string, string> IdentifyFile(FileInfo file)
+    public static IDictionary<string, string> IdentifyFile(FileInfo file, ILogger logger)
     {
         if (FFmpegExecutable != null)
         {
-            return IdentifyFileInternal(file);
+            return IdentifyFileInternal(file, logger);
         }
         throw new NotSupportedException();
     }

@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Xml;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Http;
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Interfaces.Metadata;
@@ -23,7 +25,7 @@ internal sealed partial class MediaMount
 
     private uint _systemID = 1;
 
-    public MediaMount(IMediaServer aServer)
+    public MediaMount(IMediaServer aServer, ILoggerFactory loggerFactory) : base(loggerFactory)
     {
         _server = aServer;
         Prefix = $"/mm-{++s_mount}/";
@@ -60,7 +62,7 @@ internal sealed partial class MediaMount
         }
 
         var path = request.Path.Substring(Prefix.Length);
-        Debug(path);
+        Logger.LogDebug(path);
         if (path == "description.xml")
         {
             return new StringResponse(
@@ -74,24 +76,24 @@ internal sealed partial class MediaMount
             return new ResourceResponse(
               HttpCode.Ok,
               "text/xml",
-              "contentdirectory"
-              );
+              "contentdirectory",
+              LoggerFactory);
         }
         if (path == "connectionManager.xml")
         {
             return new ResourceResponse(
               HttpCode.Ok,
               "text/xml",
-              "connectionmanager"
-              );
+              "connectionmanager",
+              LoggerFactory);
         }
         if (path == "MSMediaReceiverRegistrar.xml")
         {
             return new ResourceResponse(
               HttpCode.Ok,
               "text/xml",
-              "MSMediaReceiverRegistrar"
-              );
+              "MSMediaReceiverRegistrar",
+              LoggerFactory);
         }
         if (path == "control")
         {
@@ -100,26 +102,26 @@ internal sealed partial class MediaMount
         if (path.StartsWith("file/", StringComparison.Ordinal))
         {
             var id = path.Split('/')[1];
-            InfoFormat("Serving file {0}", id);
+            Logger.LogInformation("Serving file {id}", id);
             var item = GetItem(id) as IMediaResource ?? throw new HttpStatusException(HttpCode.NotFound);
-            return new ItemResponse(Prefix, request, item);
+            return new ItemResponse(Prefix, request, item, LoggerFactory);
         }
         if (path.StartsWith("cover/", StringComparison.Ordinal))
         {
             var id = path.Split('/')[1];
-            InfoFormat("Serving cover {0}", id);
+            Logger.LogInformation("Serving cover {id}", id);
             var item = GetItem(id) as IMediaCover ?? throw new HttpStatusException(HttpCode.NotFound);
-            return new ItemResponse(Prefix, request, item.Cover, "Interactive");
+            return new ItemResponse(Prefix, request, item.Cover, LoggerFactory, "Interactive");
         }
         if (path.StartsWith("subtitle/", StringComparison.Ordinal))
         {
             var id = path.Split('/')[1];
-            InfoFormat("Serving subtitle {0}", id);
+            Logger.LogInformation("Serving subtitle {id}", id);
             if (GetItem(id) is not IMetaVideoItem item)
             {
                 throw new HttpStatusException(HttpCode.NotFound);
             }
-            return new ItemResponse(Prefix, request, item.Subtitle, "Background");
+            return new ItemResponse(Prefix, request, item.Subtitle, LoggerFactory, "Background");
         }
 
         if (string.IsNullOrEmpty(path) || path == "index.html")
@@ -143,14 +145,14 @@ internal sealed partial class MediaMount
         {
             return new StringResponse(HttpCode.Ok, string.Empty);
         }
-        WarnFormat("Did not understand {0} {1}", request.Method, path);
+        Logger.LogWarning("Did not understand {method} {path}", request.Method, path);
         throw new HttpStatusException(HttpCode.NotFound);
     }
 
     private void ChangedServer(object? sender, EventArgs e)
     {
         SoapCache.Clear();
-        InfoFormat("Rescanned mount {0}", UUID);
+        Logger.LogInformation("Rescanned mount {uuid}", UUID);
         _systemID++;
     }
 

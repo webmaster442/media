@@ -1,5 +1,7 @@
 ﻿using System.Runtime.Serialization;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Types;
 
@@ -34,8 +36,8 @@ internal sealed class VideoFile
 
     private int? width;
 
-    internal VideoFile(FileServer server, FileInfo aFile, DlnaMime aType)
-      : base(server, aFile, aType, DlnaMediaTypes.Video)
+    internal VideoFile(FileServer server, FileInfo aFile, DlnaMime aType, ILoggerFactory loggerFactory)
+      : base(server, aFile, aType, DlnaMediaTypes.Video, loggerFactory)
     {
     }
 
@@ -153,13 +155,13 @@ internal sealed class VideoFile
             {
                 if (subTitle == null)
                 {
-                    subTitle = new Subtitle(Item);
+                    subTitle = new Subtitle(Item, LoggerFactory);
                 }
             }
             catch (Exception ex)
             {
-                Error("Failed to look up subtitle", ex);
-                subTitle = new Subtitle();
+                Logger.LogDebug(ex, "Failed to look up subtitle");
+                subTitle = new Subtitle(LoggerFactory);
             }
             return subTitle;
         }
@@ -219,7 +221,7 @@ internal sealed class VideoFile
                 }
                 catch (Exception ex)
                 {
-                    Debug("Failed to transpose Properties props", ex);
+                    Logger.LogDebug(ex, "Failed to transpose Properties props");
                 }
 
                 try
@@ -249,7 +251,7 @@ internal sealed class VideoFile
                 }
                 catch (Exception ex)
                 {
-                    Debug("Failed to transpose Tag props", ex);
+                    Logger.LogDebug(ex, "Failed to transpose Tag props");
                 }
             }
 
@@ -257,21 +259,17 @@ internal sealed class VideoFile
         }
         catch (CorruptFileException ex)
         {
-            Debug(
-              "Failed to read meta data via taglib for file " + Item.FullName, ex);
+            Logger.LogDebug(ex, "Failed to read meta data via taglib for file {file}", Item.FullName);
             initialized = true;
         }
         catch (UnsupportedFormatException ex)
         {
-            Debug(
-              "Failed to read meta data via taglib for file " + Item.FullName, ex);
+            Logger.LogDebug(ex, "Failed to read meta data via taglib for file {file}", Item.FullName);
             initialized = true;
         }
         catch (Exception ex)
         {
-            Warn(
-              "Unhandled exception reading meta data for file " + Item.FullName,
-              ex);
+            Logger.LogWarning(ex, "Unhandled exception reading meta data for file {file}", Item.FullName);
         }
     }
 }

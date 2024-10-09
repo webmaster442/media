@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Interfaces.Metadata;
 using NMaier.SimpleDlna.Server.Types;
@@ -25,7 +27,8 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
     protected BaseFile(FileServer server,
                        FileInfo file,
                        DlnaMime type,
-                       DlnaMediaTypes mediaType)
+                       DlnaMediaTypes mediaType,
+                       ILoggerFactory loggerFactory) : base(loggerFactory)
     {
         Id = string.Empty;
         if (server == null)
@@ -81,7 +84,7 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
     {
         get
         {
-            CachedCover = new Cover(Item);
+            CachedCover = new Cover(Item, LoggerFactory);
             return CachedCover;
         }
     }
@@ -115,7 +118,7 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
             }
             catch (Exception ex)
             {
-                Debug("Failed to access CachedCover", ex);
+                Logger.LogDebug(ex, "Failed to access CachedCover");
             }
             return rv;
         }
@@ -138,23 +141,23 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
     {
         try
         {
-            return FileStreamCache.Get(Item);
+            return FileStreamCache.Get(Item, Logger);
         }
         catch (FileNotFoundException ex)
         {
-            Error("Failed to access: " + Item.FullName, ex);
+            Logger.LogError(ex, "Failed to access: {item}", Item.FullName);
             Server.DelayedRescan(WatcherChangeTypes.Deleted);
             throw;
         }
         catch (UnauthorizedAccessException ex)
         {
-            Error("Failed to access: " + Item.FullName, ex);
+            Logger.LogError(ex, "Failed to access: {item}", Item.FullName);
             Server.DelayedRescan(WatcherChangeTypes.Changed);
             throw;
         }
         catch (IOException ex)
         {
-            Error("Failed to access: " + Item.FullName, ex);
+            Logger.LogError(ex, "Failed to access: {item}", Item.FullName);
             Server.DelayedRescan(WatcherChangeTypes.Changed);
             throw;
         }
@@ -197,14 +200,15 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
     internal static BaseFile GetFile(PlainFolder parentFolder,
                                      FileInfo file,
                                      DlnaMime type,
-                                     DlnaMediaTypes mediaType)
+                                     DlnaMediaTypes mediaType,
+                                     ILoggerFactory loggerFactory)
     {
         return mediaType switch
         {
-            DlnaMediaTypes.Video => new VideoFile(parentFolder.Server, file, type),
-            DlnaMediaTypes.Audio => new AudioFile(parentFolder.Server, file, type),
-            DlnaMediaTypes.Image => new ImageFile(parentFolder.Server, file, type),
-            _ => new BaseFile(parentFolder.Server, file, type, mediaType),
+            DlnaMediaTypes.Video => new VideoFile(parentFolder.Server, file, type, loggerFactory),
+            DlnaMediaTypes.Audio => new AudioFile(parentFolder.Server, file, type, loggerFactory),
+            DlnaMediaTypes.Image => new ImageFile(parentFolder.Server, file, type, loggerFactory),
+            _ => new BaseFile(parentFolder.Server, file, type, mediaType, loggerFactory),
         };
     }
 
@@ -219,7 +223,7 @@ internal class BaseFile : Logging, IMediaResource, IMetaInfo
         {
             return;
         }
-        CachedCover = new Cover(Item);
+        CachedCover = new Cover(Item, LoggerFactory);
         CachedCover.ForceLoad();
         CachedCover = null;
     }

@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Types;
 using NMaier.SimpleDlna.Server.Utilities;
@@ -7,6 +9,10 @@ namespace NMaier.SimpleDlna.Server.Views;
 internal abstract class CascadedView : BaseView, IConfigurable
 {
     private bool cascade = true;
+
+    protected CascadedView(ILoggerFactory loggerFactory) : base(loggerFactory)
+    {
+    }
 
     protected abstract void SortFolder(IMediaFolder folder,
       SimpleKeyedVirtualFolder series);
@@ -21,8 +27,8 @@ internal abstract class CascadedView : BaseView, IConfigurable
         var root = new VirtualClonedFolder(oldRoot);
         var sorted = new SimpleKeyedVirtualFolder(root, Name);
         SortFolder(root, sorted);
-        DebugFormat("sort {0} - {1}", sorted.ChildFolders.Count(), sorted.ChildItems.Count());
-        DebugFormat("root {0} - {1}", root.ChildFolders.Count(), root.ChildItems.Count());
+        Logger.LogDebug("sort {childfolders} - {childitems}", sorted.ChildFolders.Count(), sorted.ChildItems.Count());
+        Logger.LogDebug("root {childfolders} - {childitems}", root.ChildFolders.Count(), root.ChildItems.Count());
         foreach (var f in sorted.ChildFolders.ToList())
         {
             if (f.ChildCount < 2)
@@ -40,9 +46,9 @@ internal abstract class CascadedView : BaseView, IConfigurable
         {
             root.AddResource(f);
         }
-        DebugFormat("merg {0} - {1}", root.ChildFolders.Count(), root.ChildItems.Count());
+        Logger.LogDebug("merg {childfolders} - {childitems}", root.ChildFolders.Count(), root.ChildItems.Count());
         MergeFolders(root, root);
-        DebugFormat("done {0} - {1}", root.ChildFolders.Count(), root.ChildItems.Count());
+        Logger.LogDebug("done {childfolders} - {childitems}", root.ChildFolders.Count(), root.ChildItems.Count());
 
         if (!cascade || root.ChildFolders.LongCount() <= 50)
         {

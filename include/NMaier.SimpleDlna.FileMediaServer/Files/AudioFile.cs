@@ -8,6 +8,7 @@ using TagLib;
 
 using File = TagLib.File;
 using NMaier.SimpleDlna.FileMediaServer.Files;
+using Microsoft.Extensions.Logging;
 
 namespace NMaier.SimpleDlna.FileMediaServer.Files;
 
@@ -33,8 +34,8 @@ internal sealed class AudioFile
 
     private int? _track;
 
-    internal AudioFile(FileServer server, FileInfo aFile, DlnaMime aType)
-      : base(server, aFile, aType, DlnaMediaTypes.Audio)
+    internal AudioFile(FileServer server, FileInfo aFile, DlnaMime aType, ILoggerFactory loggerFactory)
+      : base(server, aFile, aType, DlnaMediaTypes.Audio, loggerFactory)
     {
     }
 
@@ -46,7 +47,7 @@ internal sealed class AudioFile
             {
                 MaybeInit();
             }
-            return CachedCover ?? new Cover(base.Item);
+            return CachedCover ?? new Cover(base.Item, LoggerFactory);
         }
     }
 
@@ -212,11 +213,11 @@ internal sealed class AudioFile
         {
             try
             {
-                CachedCover = new Cover(Item, pic.Data.ToStream());
+                CachedCover = new Cover(Item, pic.Data.ToStream(), LoggerFactory);
             }
             catch (Exception ex)
             {
-                Debug("Failed to generate thumb for " + Item.FullName, ex);
+                Logger.LogDebug(ex, "Failed to generate thumb for {path}", Item.FullName);
             }
         }
     }
@@ -242,7 +243,7 @@ internal sealed class AudioFile
                 }
                 catch (Exception ex)
                 {
-                    Debug("Failed to transpose Properties props", ex);
+                    Logger.LogDebug(ex, "Failed to transpose Properties props");
                 }
 
                 try
@@ -253,7 +254,7 @@ internal sealed class AudioFile
                 }
                 catch (Exception ex)
                 {
-                    Debug("Failed to transpose Tag props", ex);
+                    Logger.LogDebug(ex, "Failed to transpose Tag props");
                 }
             }
 
@@ -261,21 +262,17 @@ internal sealed class AudioFile
         }
         catch (CorruptFileException ex)
         {
-            Debug(
-              "Failed to read meta data via taglib for file " + Item.FullName, ex);
+            Logger.LogDebug(ex, "Failed to read meta data via taglib for file {filename}", Item.FullName);
             _initialized = true;
         }
         catch (UnsupportedFormatException ex)
         {
-            Debug(
-              "Failed to read meta data via taglib for file " + Item.FullName, ex);
+            Logger.LogDebug(ex, "Failed to read meta data via taglib for file {filename}", Item.FullName);
             _initialized = true;
         }
         catch (Exception ex)
         {
-            Warn(
-              "Unhandled exception reading meta data for file " + Item.FullName,
-              ex);
+            Logger.LogWarning(ex, "Unhandled exception reading meta data for file {filename}", Item.FullName);
         }
     }
 

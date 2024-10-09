@@ -1,5 +1,7 @@
 ﻿using System.Net;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Utilities;
 
@@ -10,7 +12,7 @@ public sealed class UserAgentAuthorizer : Logging, IHttpAuthorizationMethod
     private readonly Dictionary<string, object?> userAgents =
       new Dictionary<string, object?>();
 
-    public UserAgentAuthorizer(IEnumerable<string> userAgents)
+    public UserAgentAuthorizer(IEnumerable<string> userAgents, ILoggerFactory loggerFactory) : base(loggerFactory)
     {
         ArgumentNullException.ThrowIfNull(userAgents);
         foreach (var u in userAgents)
@@ -35,7 +37,7 @@ public sealed class UserAgentAuthorizer : Logging, IHttpAuthorizationMethod
             return false;
         }
         var rv = userAgents.ContainsKey(ua);
-        DebugFormat(!rv ? "Rejecting {0}. Not in User-Agent whitelist" : "Accepted {0} via User-Agent whitelist", ua);
+        Logger.LogDebug(!rv ? "Rejecting {ua}. Not in User-Agent whitelist" : "Accepted {ua} via User-Agent whitelist", ua);
         return rv;
     }
 }

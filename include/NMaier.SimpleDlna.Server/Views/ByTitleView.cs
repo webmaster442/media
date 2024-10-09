@@ -1,5 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Types;
 
@@ -7,6 +9,10 @@ namespace NMaier.SimpleDlna.Server.Views;
 
 internal sealed class ByTitleView : BaseView
 {
+    public ByTitleView(ILoggerFactory loggerFactory) : base(loggerFactory)
+    {
+    }
+
     public override string Description => "Reorganizes files into folders by title";
 
     public override string Name => "bytitle";
@@ -98,7 +104,7 @@ internal sealed class ByTitleView : BaseView
         {
             if (i.ChildCount > 100)
             {
-                DebugFormat("Partioning folder {0}", i.Title);
+                Logger.LogDebug("Partioning folder {title}", i.Title);
                 using (var prefixer = new Prefixer())
                 {
                     var virtualFolder = i as VirtualFolder ?? throw new InvalidOperationException("Can't cast to Virtual Folder");

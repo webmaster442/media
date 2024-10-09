@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using System.Xml;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Http;
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Interfaces.Metadata;
@@ -104,7 +106,7 @@ internal partial class MediaMount
         }
         catch (Exception ex)
         {
-            Warn(ex);
+            Logger.LogWarning(ex, "Addcover failed");
             // ignored
         }
     }
@@ -209,7 +211,7 @@ internal partial class MediaMount
         }
         catch (Exception ex)
         {
-            Warn(ex);
+            Logger.LogWarning(ex, "AddVideoProperties failed");
         }
     }
 
@@ -386,7 +388,7 @@ internal partial class MediaMount
         }
         catch (Exception ex)
         {
-            Debug("Not all params provided", ex);
+            Logger.LogDebug(ex, "Not all params provided");
         }
 
         if (GetItem(id) is not IMediaFolder root)
@@ -585,8 +587,8 @@ internal partial class MediaMount
               "<detail><UPnPError xmlns=\"urn:schemas-upnp-org:control-1-0\"><errorCode>401</errorCode><errorDescription>Invalid Action</errorDescription></UPnPError></detail>";
             fault.AppendChild(detail);
             rbody.AppendChild(fault);
-            WarnFormat(
-              "Invalid call: Action: {0}, Params: {1}, Problem {2}",
+            Logger.LogWarning(
+              "Invalid call: Action: {action}, Params: {params}, Problem {problem}",
               method.LocalName, sparams, ex.Message);
         }
 

@@ -3,6 +3,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Timers;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.FileMediaServer.Files;
 using NMaier.SimpleDlna.Server.Http;
 using NMaier.SimpleDlna.Server.Interfaces;
@@ -59,8 +61,8 @@ public sealed class FileServer
 
     // FileStore store;
 
-    public FileServer(DlnaMediaTypes types, Identifiers ids,
-      params DirectoryInfo[] directories)
+    public FileServer(DlnaMediaTypes types, Identifiers ids, ILoggerFactory loggerFactory,
+      params DirectoryInfo[] directories) : base(loggerFactory)
     {
         this.types = types;
         this.ids = ids;
@@ -186,17 +188,17 @@ public sealed class FileServer
             FileInfo info = new FileInfo(fullPath);
             if (ids.GetItemByPath(info.FullName) is IMediaResource item)
             {
-                DebugFormat("Did find an existing {0}", info.FullName);
+                Logger.LogDebug("Did find an existing {filename}", info.FullName);
             }
             if (ids.GetItemByPath(info.Directory?.FullName ?? "") is not PlainFolder folder)
             {
-                DebugFormat("Did not find folder for {0}", info.Directory?.FullName);
+                Logger.LogDebug("Did not find folder for {directoryname}", info.Directory?.FullName);
                 return false;
             }
             item = GetFile(folder, info);
             if (item == null)
             {
-                DebugFormat("Failed to create new item for {0} - {1}", folder.Path, info.FullName);
+                Logger.LogDebug("Failed to create new item for {folder} - {info}", folder.Path, info.FullName);
                 return false;
             }
             if (!Allowed(item))
@@ -204,7 +206,7 @@ public sealed class FileServer
                 return true;
             }
             folder.AddResource(item);
-            DebugFormat("Added {0} to corpus", item.Path);
+            Logger.LogDebug("Added {path} to corpus", item.Path);
             return true;
         }
     }
@@ -235,13 +237,13 @@ public sealed class FileServer
             }
             if (!Filter.Filtered(ext))
             {
-                DebugFormat(
-                  "Skipping name {0} {1}",
+                Logger.LogDebug(
+                  "Skipping name {name} {extension}",
                   e.Name, Path.GetExtension(e.FullPath));
                 return;
             }
-            DebugFormat(
-              "File System changed ({1}): {0}", e.FullPath, e.ChangeType);
+            Logger.LogDebug(
+              "File System changed ({fullpath}): {changetype}", e.FullPath, e.ChangeType);
             lock (ids)
             {
                 var master = ids.GetItemById(Identifiers.GENERAL_ROOT) as VirtualFolder;
@@ -282,7 +284,7 @@ public sealed class FileServer
         }
         catch (Exception ex)
         {
-            Error("OnChanged failed", ex);
+            Logger.LogError(ex, "OnChanged failed");
         }
     }
 
@@ -304,13 +306,13 @@ public sealed class FileServer
             }
             if (!Filter.Filtered(ext) && !Filter.Filtered(ext2))
             {
-                DebugFormat(
-                  "Skipping name {0} {1} {2}",
+                Logger.LogDebug(
+                  "Skipping name {name} {ext} {ext2}",
                   e.Name, ext, ext2);
                 return;
             }
-            DebugFormat(
-              "File System changed (rename, {2}): {0} from {1}", e.FullPath, e.OldFullPath, e.ChangeType);
+            Logger.LogDebug(
+              "File System changed (rename, {changetype}): {fullpath} from {oldfullpath}", e.FullPath, e.OldFullPath, e.ChangeType);
             if (ids != null)
             {
                 lock (ids)
@@ -343,7 +345,7 @@ public sealed class FileServer
         }
         catch (Exception ex)
         {
-            Error("OnRenamed failed", ex);
+            Logger.LogError(ex, "OnRenamed failed");
         }
     }
 
@@ -391,13 +393,13 @@ public sealed class FileServer
         {
             if (!rescanning)
             {
-                Debug("Rescanning disabled");
+                Logger.LogDebug("Rescanning disabled");
                 return;
             }
 
             if (isRescanning)
             {
-                Debug("Already rescanning");
+                Logger.LogDebug("Already rescanning");
             }
             isRescanning = true;
         }
@@ -409,13 +411,13 @@ public sealed class FileServer
 
                 try
                 {
-                    NoticeFormat("Rescanning {0}...", FriendlyName);
+                    Logger.LogInformation("Rescanning {FriendlyName}...", FriendlyName);
                     DoRoot();
-                    NoticeFormat("Done rescanning {0}...", FriendlyName);
+                    Logger.LogInformation("Done rescanning {FriendlyName}...", FriendlyName);
                 }
                 catch (Exception ex)
                 {
-                    Error(ex);
+                    Logger.LogError(ex, "Rescan failed");
                 }
                 Changed?.Invoke(this, EventArgs.Empty);
             }
@@ -469,10 +471,10 @@ public sealed class FileServer
               TimeSpan.FromSeconds(20).TotalMilliseconds,
               changeTimer.Interval
               );
-            InfoFormat("Avoid thrashing {0}", changeTimer.Interval);
+            Logger.LogInformation("Avoid thrashing {interval}", changeTimer.Interval);
         }
-        DebugFormat(
-          "Change in {0} on {1}",
+        Logger.LogDebug(
+          "Change in {interval} on {friendlyname}",
           changeTimer.Interval,
           FriendlyName
           );
@@ -501,7 +503,7 @@ public sealed class FileServer
         var type = DlnaMaps.Ext2Dlna[ext];
         var mediaType = DlnaMaps.Ext2Media[ext];
 
-        var rv = BaseFile.GetFile(aParent, info, type, mediaType);
+        var rv = BaseFile.GetFile(aParent, info, type, mediaType, LoggerFactory);
         pendingFiles.Enqueue(new WeakReference(rv));
         return rv;
     }

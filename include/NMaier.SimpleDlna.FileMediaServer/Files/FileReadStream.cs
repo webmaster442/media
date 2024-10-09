@@ -1,29 +1,27 @@
-using log4net;
+using Microsoft.Extensions.Logging;
 
 namespace NMaier.SimpleDlna.FileMediaServer.Files;
 
 internal sealed class FileReadStream : FileStream
 {
-    private static readonly ILog logger =
-      LogManager.GetLogger(typeof(FileReadStream));
-
     private readonly FileInfo info;
-
+    private readonly ILogger _logger;
     private bool killed;
 
-    public FileReadStream(FileInfo info)
+    public FileReadStream(FileInfo info, ILogger logger)
       : base(info.FullName, FileMode.Open,
              FileAccess.Read, FileShare.ReadWrite | FileShare.Delete,
              1,
              FileOptions.Asynchronous | FileOptions.SequentialScan)
     {
         this.info = info;
-        logger.DebugFormat("Opened file {0}", this.info.FullName);
+        _logger = logger;
+        _logger.LogDebug("Opened file {filename}", this.info.FullName);
     }
 
     public void Kill()
     {
-        logger.DebugFormat("Killed file {0}", info.FullName);
+        _logger.LogDebug("Killed file {filename}", info.FullName);
         killed = true;
         Close();
         Dispose();
@@ -37,7 +35,7 @@ internal sealed class FileReadStream : FileStream
             return;
         }
         base.Close();
-        logger.DebugFormat("Closed file {0}", info.FullName);
+        _logger.LogDebug("Closed file {filename}", info.FullName);
     }
 
     protected override void Dispose(bool disposing)

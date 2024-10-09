@@ -1,5 +1,7 @@
 ﻿using System.Net;
 
+using Microsoft.Extensions.Logging;
+
 using NMaier.SimpleDlna.Server.Interfaces;
 using NMaier.SimpleDlna.Server.Utilities;
 
@@ -13,7 +15,7 @@ public sealed class HttpAuthorizer
 
     private readonly HttpServer server;
 
-    public HttpAuthorizer(HttpServer server)
+    public HttpAuthorizer(HttpServer server, ILoggerFactory loggerFactory) : base(loggerFactory)
     {
         ArgumentNullException.ThrowIfNull(server);
         this.server = server;
@@ -40,7 +42,7 @@ public sealed class HttpAuthorizer
         }
         catch (Exception ex)
         {
-            Error("Failed to authorize", ex);
+            Logger.LogError(ex, "Failed to authorize");
             return false;
         }
     }
