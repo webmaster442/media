@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 using Spectre.Console.Cli;
 
-namespace Media.Core.AutoComplete.Internals;
+namespace Media.ShellAutoComplete.AutoComplete.Internals;
 
 internal class MappedCompletionContext : ICompletionContext
 {

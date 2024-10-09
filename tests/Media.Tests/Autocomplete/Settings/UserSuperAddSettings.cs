@@ -1,4 +1,4 @@
-using Media.Core.AutoComplete;
+using Media.ShellAutoComplete.AutoComplete;
 
 namespace Media.Tests.Autocomplete.Settings;
 

@@ -7,7 +7,7 @@ using JKToolKit.Spectre.AutoCompletion.Completion.Internals;
 
 using Spectre.Console.Cli;
 
-namespace Media.Core.AutoComplete;
+namespace Media.ShellAutoComplete.AutoComplete;
 
 public static class Extensions
 {

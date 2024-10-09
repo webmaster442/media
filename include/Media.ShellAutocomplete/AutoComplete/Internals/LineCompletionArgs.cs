@@ -3,7 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Core.AutoComplete.Internals;
+namespace Media.ShellAutoComplete.AutoComplete.Internals;
 
 internal class TabCompletionArgs
 {

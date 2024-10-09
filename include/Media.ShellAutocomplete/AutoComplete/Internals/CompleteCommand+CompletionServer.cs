@@ -5,7 +5,7 @@
 
 using System.Text.Json;
 
-using Media.Core.AutoComplete.Internals;
+using Media.ShellAutoComplete.AutoComplete.Internals;
 
 using Spectre.Console.Rendering;
 

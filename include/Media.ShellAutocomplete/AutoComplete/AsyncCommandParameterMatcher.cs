@@ -8,7 +8,7 @@ using System.Reflection;
 
 using Spectre.Console.Cli;
 
-namespace Media.Core.AutoComplete;
+namespace Media.ShellAutoComplete.AutoComplete;
 
 /*
  Usage:

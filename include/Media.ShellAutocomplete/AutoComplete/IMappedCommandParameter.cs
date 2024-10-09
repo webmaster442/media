@@ -3,20 +3,22 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Core.AutoComplete;
+using Spectre.Console.Cli;
+
+namespace Media.ShellAutoComplete.AutoComplete;
 
 /// <summary>
-/// Represents a mapped command parameter.
+/// Defines a mapped command parameter.
 /// </summary>
-public interface IOriginalCommandInfo
+public interface IMappedCommandParameter
 {
     /// <summary>
-    /// Gets the original command.
+    /// Gets the parameter information for the command.
     /// </summary>
-    string OriginalCommand { get; }
+    ICommandParameterInfo Parameter { get; }
 
     /// <summary>
-    /// Gets the original command.
+    /// Gets the value of the command parameter.
     /// </summary>
-    int? Position { get; }
+    string? Value { get; }
 }

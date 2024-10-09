@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Media.Core;
+namespace Media.Database;
 
 /// <summary>
 /// A simple document store that uses a zip file as a backing store.

@@ -3,7 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Core.AutoComplete;
+namespace Media.ShellAutoComplete.AutoComplete;
 
 /// <summary>
 /// Represents a completion result.

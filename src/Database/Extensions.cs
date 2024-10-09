@@ -1,4 +1,4 @@
-﻿namespace Media.Core;
+﻿namespace Media.Database;
 
 /// <summary>
 /// Extensions for <see cref="JsonDocumentStore"/>.

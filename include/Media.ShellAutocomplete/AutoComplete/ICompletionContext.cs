@@ -5,7 +5,7 @@
 
 using Spectre.Console.Cli;
 
-namespace Media.Core.AutoComplete;
+namespace Media.ShellAutoComplete.AutoComplete;
 
 /// <summary>
 /// Defines the context for command completion.

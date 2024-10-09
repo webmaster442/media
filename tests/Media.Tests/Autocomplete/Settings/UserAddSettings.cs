@@ -1,6 +1,6 @@
 using JKToolKit.Spectre.AutoCompletion.Completion;
 
-using Media.Core.AutoComplete;
+using Media.ShellAutoComplete.AutoComplete;
 
 namespace Media.Tests.Autocomplete.Settings;
 

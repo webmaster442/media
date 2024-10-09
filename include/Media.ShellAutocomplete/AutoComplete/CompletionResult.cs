@@ -5,7 +5,7 @@
 
 using Spectre.Console;
 
-namespace Media.Core.AutoComplete;
+namespace Media.ShellAutoComplete.AutoComplete;
 
 /// <summary>
 /// Represents a completion result item.

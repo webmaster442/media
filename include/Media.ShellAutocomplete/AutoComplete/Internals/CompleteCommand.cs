@@ -6,8 +6,8 @@
 using System.ComponentModel;
 using System.Reflection;
 
-using Media.Core.AutoComplete;
-using Media.Core.AutoComplete.Internals;
+using Media.ShellAutoComplete.AutoComplete;
+using Media.ShellAutoComplete.AutoComplete.Internals;
 
 using Spectre.Console;
 using Spectre.Console.Cli;

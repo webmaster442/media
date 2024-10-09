@@ -5,7 +5,7 @@
 
 using System.Text;
 
-namespace Media.Core.AutoComplete.Internals;
+namespace Media.ShellAutoComplete.AutoComplete.Internals;
 
 internal class HighjackedTextWriter : TextWriter
 {

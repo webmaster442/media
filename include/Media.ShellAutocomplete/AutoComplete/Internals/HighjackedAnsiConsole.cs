@@ -6,7 +6,7 @@
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-namespace Media.Core.AutoComplete.Internals;
+namespace Media.ShellAutoComplete.AutoComplete.Internals;
 
 internal class HighjackedAnsiConsole : IAnsiConsole
 {

@@ -54,7 +54,7 @@
     <Content Include="..\LICENSE" Link="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <ProjectReference Include="..\include\Media.Core\Media.Core.csproj" />
+    <ProjectReference Include="..\include\Media.ShellAutocomplete\Media.ShellAutoComplete.csproj" />
     <ProjectReference Include="..\include\NMaier.SimpleDlna.FileMediaServer\NMaier.SimpleDlna.FileMediaServer.csproj" />
     <ProjectReference Include="..\include\NMaier.SimpleDlna.Server\NMaier.SimpleDlna.Server.csproj" />
 	  <None Update="install.ps1">

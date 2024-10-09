@@ -5,7 +5,7 @@
 
 using Spectre.Console.Cli;
 
-namespace Media.Core.Integrations;
+namespace Media.ShellAutoComplete.Integrations;
 
 public static class Extensions
 {

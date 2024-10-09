@@ -5,8 +5,8 @@
 
 using Media;
 using Media.Commands;
-using Media.Core.AutoComplete;
-using Media.Core.Integrations;
+using Media.ShellAutoComplete.AutoComplete;
+using Media.ShellAutoComplete.Integrations;
 using Media.Infrastructure;
 
 var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar(isDryRunEnabled: false));

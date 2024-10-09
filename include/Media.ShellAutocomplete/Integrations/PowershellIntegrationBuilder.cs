@@ -5,7 +5,7 @@
 
 using System.Text;
 
-using Media.Core.Properties;
+using Media.ShellAutoComplete.Properties;
 
 public class StartArgs
 {
