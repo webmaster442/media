@@ -64,6 +64,7 @@ public sealed class HttpServer : Logging, IDisposable
         RealPort = ((IPEndPoint)_listener.LocalEndpoint).Port;
 
         Logger.LogDebug("Running HTTP Server: {signature} on port {port}", Signature, RealPort);
+        _ssdpServer = new SsdpHandler(loggerFactory);
 
         _timeouter.Elapsed += TimeouterCallback;
         _timeouter.Enabled = true;
