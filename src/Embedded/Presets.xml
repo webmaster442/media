@@ -10,8 +10,9 @@
 Presets XML file for the encode presets command
 -->
 <Presets>
+  <!-- Audio Presets -->
   <!-- 30FPS Presets -->
-  <Preset Name="hevc-nvidia-hd30-mp4" Extension=".mp4">
+  <Preset Name="hevc-nvidia-hd30-mp4" Extension=".mp4" Category="Video">
     <CommandLine>
       -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v hevc_nvenc -preset slow -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
@@ -24,7 +25,7 @@ Presets XML file for the encode presets command
       ]]>
     </Description>
   </Preset>
-  <Preset Name="hevc-nvidia-hd30-mp4-aac" Extension=".mp4">
+  <Preset Name="hevc-nvidia-hd30-mp4-aac" Extension=".mp4" Category="Video">
     <CommandLine>
       -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v hevc_nvenc -preset slow -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
@@ -37,7 +38,7 @@ Presets XML file for the encode presets command
       ]]>
     </Description>
   </Preset>
-  <Preset Name="h264-nvidia-hd30-mp4" Extension=".mp4">
+  <Preset Name="h264-nvidia-hd30-mp4" Extension=".mp4" Category="Video">
     <CommandLine>
       -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v h264_nvenc -preset p4 -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
@@ -50,7 +51,7 @@ Presets XML file for the encode presets command
       ]]>
     </Description>
   </Preset>
-  <Preset Name="h264-nvidia-hd30-mp4-aac" Extension=".mp4">
+  <Preset Name="h264-nvidia-hd30-mp4-aac" Extension=".mp4" Category="Video">
     <CommandLine>
       -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v h264_nvenc -preset p4 -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
@@ -69,7 +70,7 @@ Presets XML file for the encode presets command
   No framerate limit presets
   *****************************************************************************
   -->
-  <Preset Name="hevc-nvidia-hd-mp4" Extension=".mp4">
+  <Preset Name="hevc-nvidia-hd-mp4" Extension=".mp4" Category="Video">
     <CommandLine>
       -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v hevc_nvenc -preset slow -vf "scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
@@ -93,7 +94,7 @@ Presets XML file for the encode presets command
       ]]>
     </Description>
   </Preset>
-  <Preset Name="h264-nvidia-hd-mp4" Extension=".mp4">
+  <Preset Name="h264-nvidia-hd-mp4" Extension=".mp4" Category="Video">
     <CommandLine>
       -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v h264_nvenc -preset p4 -vf "scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
@@ -105,7 +106,7 @@ Presets XML file for the encode presets command
       ]]>
     </Description>
   </Preset>
-  <Preset Name="h264-nvidia-hd-mp4-aac" Extension=".mp4">
+  <Preset Name="h264-nvidia-hd-mp4-aac" Extension=".mp4" Category="Video">
     <CommandLine>
       -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v h264_nvenc -preset p4 -vf "scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>

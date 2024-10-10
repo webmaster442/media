@@ -24,6 +24,10 @@ public class Preset
     [NotEmptyOrWiteSpace]
     public required string Extension { get; set; }
 
+    [XmlAttribute("Category")]
+    [NotEmptyOrWiteSpace]
+    public required string Category { get; set; }
+
     [XmlElement("Description")]
     [NotEmptyOrWiteSpace]
     public required CData Description { get; set; }

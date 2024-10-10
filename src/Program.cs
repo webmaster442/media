@@ -112,36 +112,6 @@ mainApp.Configure(config =>
         convert.AddCommand<ConvertPreset>("preset")
             .WithDescription("Convert a file using a preset");
     });
-    config.AddBranch("bach", bach =>
-    {
-        bach.SetDescription("Batch process audio/video files");
-
-        bach.AddCommand<BachNew>("new")
-            .WithAlias("create")
-            .WithDescription("Create a new batch project file");
-
-        bach.AddCommand<BachAdd>("add")
-            .WithDescription("Add files to a batch project file");
-
-        bach.AddCommand<BachRemove>("remove")
-            .WithDescription("Remove files from a batch project file");
-
-        bach.AddCommand<BachClear>("clear")
-            .WithAlias("reset")
-            .WithDescription("Clear all files from a batch project file");
-
-        bach.AddBranch("set", set =>
-        {
-            set.AddCommand<BachSetOutputDir>("output")
-               .WithDescription("Set the output directory for the batch project file");
-
-            set.AddCommand<BachSetConversion>("conversion")
-               .WithDescription("Set the output conversion for the batch project file");
-        });
-
-        bach.AddCommand<BachCompile>("compile")
-            .WithDescription("Compile the batch project file to a shell script");
-    });
     config.AddBranch("extract", extract =>
     {
         extract.SetDescription("Extract audio/video stream from files");
