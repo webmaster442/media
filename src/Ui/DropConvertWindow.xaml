@@ -8,21 +8,69 @@
     Title="Media DropConvert"
     Width="350"
     Height="350"
+    Loaded="Window_Loaded"
+    ResizeMode="NoResize"
     Topmost="True"
     WindowStyle="ToolWindow"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Image
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock
             Grid.Row="0"
+            Grid.Column="0"
+            Style="{StaticResource Small}"
+            Text="Preset:" />
+        <ComboBox
+            x:Name="CbPresetSelector"
+            Grid.Row="0"
+            Grid.Column="1"
+            Grid.ColumnSpan="2">
+            <ComboBox.GroupStyle>
+                <GroupStyle />
+            </ComboBox.GroupStyle>
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock
+                        Style="{StaticResource Small}"
+                        Text="{Binding Name}"
+                        ToolTip="{Binding Description}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Text="Output:" />
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="1"
+            Text="CurrentDir"
+            x:Name="TbCurrentDir"/>
+        <Button
+            x:Name="BtnBrowse"
+            Grid.Row="1"
+            Grid.Column="2"
+            Click="BtnBrowse_Click"
+            Content="..." />
+        <Image
+            Grid.Row="2"
+            Grid.ColumnSpan="3"
             Source="/Embedded/icon-512.png"
             StretchDirection="DownOnly" />
         <TextBlock
-            Grid.Row="1"
-            TextAlignment="Center"
-            Text="Drag &amp; Drop files here to convert" />
+            Grid.Row="3"
+            Grid.ColumnSpan="3"
+            Text="Drag &amp; Drop files here to convert"
+            TextAlignment="Center" />
     </Grid>
 </Window>

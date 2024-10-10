@@ -21,7 +21,7 @@ mainApp.Configure(config =>
     config.AddCommand<Cut>("cut")
           .WithDescription("Cut a file without reencoding");
 
-    config.AddCommand<DropConvertCommand>("dropconvert");
+    config.AddCommand<DropConvert>("dropconvert");
 
     config.AddCommand<Media.Commands.Version>("version")
             .WithDescription("Print program version");

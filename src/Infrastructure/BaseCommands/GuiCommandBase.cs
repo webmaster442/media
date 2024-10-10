@@ -8,12 +8,12 @@ internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window
 {
     protected virtual INotifyPropertyChanged? CreateDataContext() => null;
 
-    protected virtual Point? GetWindowStartLocation(Size screen, Size Window)
+    protected virtual Point? GetWindowStartLocation(Size screen, Size window)
     {
         return new Point
         {
-            X = (screen.Width - Window.Width) / 2,
-            Y = (screen.Height - Window.Height) / 2
+            X = (screen.Width - window.Width) / 2,
+            Y = (screen.Height - window.Height) / 2
         };
     }
 

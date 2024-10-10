@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Presets" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xs:element name="Presets" msdata:IsDataSet="true" msdata:Locale="en-US">
+    <xs:complexType>
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
+        <xs:element name="Preset">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CommandLine" type="xs:string" minOccurs="1" maxOccurs="1" msdata:Ordinal="0" />
+              <xs:element name="Description" type="xs:string" minOccurs="1" maxOccurs="1" msdata:Ordinal="1" />
+            </xs:sequence>
+            <xs:attribute name="Name" type="xs:string" />
+            <xs:attribute name="Extension" type="xs:string" />
+            <xs:attribute name="Category" type="xs:string" />
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -9,7 +9,7 @@ internal static class EmbeddedResources
 {
     public const string UpdatePS1 = "Update.ps1";
     public const string TestImage = "testimg.png";
-    public const string Presets = "presets.xml";
+    public const string Presets = "Presets.xml";
     public const string Icon192Png = "icon192.png";
     public const string Icon48Png = "icon48.png";
     public const string Icon192Jpg = "icon192.jpg";
