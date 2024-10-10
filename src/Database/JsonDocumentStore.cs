@@ -1,5 +1,4 @@
 ﻿using System.IO.Compression;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Media.Database;
@@ -42,6 +41,7 @@ public sealed class JsonDocumentStore
         }
         _zipFile = zipFile;
     }
+
     /// <summary>
     /// Store an object in the document store.
     /// </summary>
@@ -117,7 +117,7 @@ public sealed class JsonDocumentStore
             List<T> currentChunk = new List<T>(ChunkSize);
             foreach (var item in items)
             {
-                if (currentChunk.Count< ChunkSize)
+                if (currentChunk.Count < ChunkSize)
                 {
                     currentChunk.Add(item);
                     ++counter;
@@ -147,7 +147,7 @@ public sealed class JsonDocumentStore
         using (var zip = ZipFile.Open(_zipFile, ZipArchiveMode.Read))
         {
             var info = await GetCollectionInfo(zip, key);
-            for (int i=0; i<info.Chunks; i++)
+            for (int i = 0; i < info.Chunks; i++)
             {
                 var entryKey = $"{key}\\{i}";
                 var entry = zip.GetEntry(entryKey);
@@ -163,7 +163,6 @@ public sealed class JsonDocumentStore
                         }
                     }
                 }
-
             }
         }
     }
@@ -230,7 +229,7 @@ public sealed class JsonDocumentStore
             return new CollectionInfo(0, 0);
         }
         await using var stream = entry.Open();
-        return await JsonSerializer.DeserializeAsync<CollectionInfo>(stream, _options) 
+        return await JsonSerializer.DeserializeAsync<CollectionInfo>(stream, _options)
             ?? throw new IOException("File is corrupted");
     }
 

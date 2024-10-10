@@ -6,9 +6,8 @@ using Media.Dto;
 using Media.Infrastructure;
 using Media.Interop;
 
-using NMaier.SimpleDlna.Server.Utilities;
-
 namespace Media.Ui;
+
 /// <summary>
 /// Interaction logic for DropConvert.xaml
 /// </summary>

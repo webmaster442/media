@@ -58,7 +58,7 @@
             Grid.Row="1"
             Grid.Column="1"
             Text="CurrentDir"
-            x:Name="TbCurrentDir"/>
+            x:Name="TbCurrentDir" />
         <Button
             x:Name="BtnBrowse"
             Grid.Row="1"

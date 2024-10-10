@@ -32,7 +32,7 @@ public static class Extensions
     /// <returns>An awaitable task</returns>
     public static async Task<HashSet<T>> DeserializeCollectionAsHashSet<T>(this JsonDocumentStore db, string key) where T : notnull
     {
-        var (_, length) =  await db.GetCollectionCount(key);
+        var (_, length) = await db.GetCollectionCount(key);
         HashSet<T> result = new(length);
         await foreach (var item in db.DeserializeCollection<T>(key))
         {

@@ -65,9 +65,7 @@ internal static class EntityFactory
                 {
                     logger.LogWarning("Video file read error: {ex}", ex);
                 }
-
             }
-
         }
         return await context.SaveChangesAsync();
     }
@@ -91,7 +89,6 @@ internal static class EntityFactory
         context.Genres.Add(toAdd);
 
         return toAdd;
-
     }
 
     private static async Task<Album> GetOrCreateAlbum(TagLib.File f, MediaDatabaseContext context)
