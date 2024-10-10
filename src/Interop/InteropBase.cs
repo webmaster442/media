@@ -6,8 +6,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-using Media.Infrastructure;
-
 namespace Media.Interop;
 
 public abstract class InteropBase
@@ -61,6 +59,16 @@ public abstract class InteropBase
                 RedirectStandardError = redirectStderr,
             }
         };
+    }
+
+    public string GetCommandText(string commandLine)
+    {
+        if (!TryGetInstalledPath(out string? toolPath))
+        {
+            throw new InvalidOperationException($"{_programName} not found.");
+        }
+
+        return $"{toolPath} {commandLine}";
     }
 
     public void Start(string commandLine)

@@ -12,6 +12,9 @@
     ResizeMode="NoResize"
     Topmost="True"
     WindowStyle="ToolWindow"
+    DragEnter="Window_DragEnter"
+    DragOver="Window_DragOver"
+    Drop="Window_Drop"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
