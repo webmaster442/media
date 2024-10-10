@@ -31,14 +31,11 @@ public abstract class InteropBase
             return true;
         }
 
-        if (PlarformCheck.IsWindows())
+        var appBundledPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _programName);
+        if (File.Exists(appBundledPath))
         {
-            var appBundledPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, _programName);
-            if (File.Exists(appBundledPath))
-            {
-                toolPath = appBundledPath;
-                return true;
-            }
+            toolPath = appBundledPath;
+            return true;
         }
 
         toolPath = null;

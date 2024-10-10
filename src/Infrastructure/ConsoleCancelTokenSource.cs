@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Threading;
+
 namespace Media.Infrastructure;
 
 internal sealed class ConsoleCancelTokenSource : IDisposable

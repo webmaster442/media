@@ -110,7 +110,7 @@ internal class DefaultCommand : Command
     {
         bool shellStarted = WasItStartedByAShell();
 
-        if (PlarformCheck.IsWindows() && !shellStarted)
+        if (!shellStarted)
         {
             StartInPowerShell();
         }

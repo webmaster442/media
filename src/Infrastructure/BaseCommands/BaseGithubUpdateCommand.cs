@@ -58,8 +58,6 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
-        PlarformCheck.EnsureThatPlatformIs(System.Runtime.InteropServices.OSPlatform.Windows);
-
         try
         {
             Terminal.GreenText($"Checking for {ProgramName} update...");

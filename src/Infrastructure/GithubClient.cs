@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Net.Http;
+
 using Media.Dto.Github;
 
 namespace Media.Infrastructure;

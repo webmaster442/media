@@ -5,6 +5,7 @@
 
 using System.Diagnostics;
 using System.Net.Mime;
+using System.Threading;
 
 using Media.Embedded;
 using Media.Infrastructure;

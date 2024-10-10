@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Threading;
+
 namespace Media.Infrastructure.Selector;
 
 internal interface IItemProvider<TItem, TPath> where TItem : IITem
