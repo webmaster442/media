@@ -13,7 +13,7 @@ Presets XML file for the encode presets command
   <!-- 30FPS Presets -->
   <Preset Name="hevc-nvidia-hd30-mp4" Extension=".mp4">
     <CommandLine>
-      -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v hevc_nvenc -preset slow -vf "fps=min(30, fps),scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
+      -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v hevc_nvenc -preset slow -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
       <![CDATA[
@@ -26,7 +26,7 @@ Presets XML file for the encode presets command
   </Preset>
   <Preset Name="hevc-nvidia-hd30-mp4-aac" Extension=".mp4">
     <CommandLine>
-      -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v hevc_nvenc -preset slow -vf "fps=min(30, fps),scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
+      -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v hevc_nvenc -preset slow -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
       <![CDATA[
@@ -39,7 +39,7 @@ Presets XML file for the encode presets command
   </Preset>
   <Preset Name="h264-nvidia-hd30-mp4" Extension=".mp4">
     <CommandLine>
-      -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v h264_nvenc -preset p4 -vf "fps=min(30, fps),scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
+      -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v h264_nvenc -preset p4 -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
       <![CDATA[
@@ -52,7 +52,7 @@ Presets XML file for the encode presets command
   </Preset>
   <Preset Name="h264-nvidia-hd30-mp4-aac" Extension=".mp4">
     <CommandLine>
-      -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v h264_nvenc -preset p4 -vf "fps=min(30, fps),scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
+      -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v h264_nvenc -preset p4 -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
       <![CDATA[
