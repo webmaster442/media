@@ -57,6 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="..\branding\icon-512.png" Link="Embedded\icon-512.png" />
     <Content Include="..\LICENSE" Link="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
