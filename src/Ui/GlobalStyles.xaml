@@ -2,6 +2,10 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <Style TargetType="Window">
+        <Setter Property="Background" Value="#282C34"/>
+    </Style>
+    
     <Style TargetType="ComboBox">
         <Setter Property="Margin" Value="4" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -11,17 +15,16 @@
         <Setter Property="Margin" Value="4" />
     </Style>
 
-    <Style TargetType="TextBlock">
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="20" />
+    <Style TargetType="Button">
         <Setter Property="Margin" Value="4" />
-        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Background" Value="#2E2E2E"/>
+        <Setter Property="Foreground" Value="#FFFFFF"/>
     </Style>
 
-    <Style x:Key="Small" TargetType="TextBlock">
+    <Style TargetType="TextBlock">
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="16" />
         <Setter Property="Margin" Value="4" />
         <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Foreground" Value="#FFFFFF"/>
     </Style>
 </ResourceDictionary>

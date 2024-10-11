@@ -79,6 +79,8 @@ public partial class DropConvertWindow : Window
             return;
         }
 
+        List<string> skipped = new();
+
         if (e.Data.GetData(DataFormats.FileDrop) is string[] files)
         {
             var scriptFile = Path.Combine(_selectedPath, Path.ChangeExtension(Path.GetFileName(_selectedPath), ".cmd"));
@@ -86,10 +88,24 @@ public partial class DropConvertWindow : Window
             {
                 foreach (var file in files)
                 {
-                    string cmdLine = CreateCommandLine(file);
-                    writer.WriteLine(cmdLine);
+                    if (File.Exists(file)
+                        && _fFMpeg.SupportedFormats.Contains(Path.GetExtension(file)))
+                    {
+                        string cmdLine = CreateCommandLine(file);
+                        writer.WriteLine(cmdLine);
+                    }
+                    else
+                    {
+                        skipped.Add(Path.GetFileName(file));
+                    }
                 }
             }
+
+            if (skipped.Count > 0)
+            {
+                MessageBox.Show($"Skipped files:\r\n{string.Join("\r\n", skipped)}", "Skipped files", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+
             var shouldRun = MessageBox.Show("Do you want to run the generated script?", "Run?", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (shouldRun == MessageBoxResult.Yes)
             {
