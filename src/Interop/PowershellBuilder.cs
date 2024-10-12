@@ -3,11 +3,9 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using Media.Interfaces;
-
 namespace Media.Interop;
 
-internal class PowershellBuilder : IShellBuilder
+internal class PowershellBuilder
 {
     private readonly StringBuilder _scriptBuilder;
 
@@ -41,5 +39,10 @@ internal class PowershellBuilder : IShellBuilder
     public void WithWindowTitle(string title)
     {
         _scriptBuilder.AppendLine($"$Host.UI.RawUI.WindowTitle = \"{title}\"");
+    }
+
+    public void WithCommandLine(string cmdLine)
+    {
+        _scriptBuilder.AppendLine(cmdLine);
     }
 }

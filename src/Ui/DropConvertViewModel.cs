@@ -4,7 +4,6 @@
 // -----------------------------------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -41,7 +40,7 @@ internal partial class DropConvertViewModel : ObservableObject, IViewModel
         _fFMpeg = new FFMpeg(configAccessor);
         _selectedPath = Environment.CurrentDirectory;
         _selectedPathDisplay = Path.GetFileName(_selectedPath);
-        PresetCollection = new ObservableCollection<Preset>();
+        PresetCollection = new ObservableCollection<Preset>(); 
     }
 
     public async void Initialize()
@@ -97,23 +96,25 @@ internal partial class DropConvertViewModel : ObservableObject, IViewModel
         List<string> skipped = new();
 
         var scriptFile = Path.Combine(SelectedPath, Path.ChangeExtension(Path.GetFileName(SelectedPath), ".cmd"));
-        using (var writer = File.CreateText(scriptFile))
+        var builder = new PowershellBuilder();
+        builder.WithUtf8Enabled();
+        builder.WithWindowTitle(Path.GetFileNameWithoutExtension(SelectedPath));
+
+        foreach (var file in files)
         {
-            foreach (var file in files)
+            if (File.Exists(file)
+                && _fFMpeg.SupportedFormats.Contains(Path.GetExtension(file)))
             {
-                if (File.Exists(file)
-                    && _fFMpeg.SupportedFormats.Contains(Path.GetExtension(file)))
-                {
-                    string cmdLine = CreateCommandLine(file);
-                    writer.WriteLine(cmdLine);
-                }
-                else
-                {
-                    skipped.Add(Path.GetFileName(file));
-                }
+                string cmdLine = CreateCommandLine(file);
+                builder.WithCommandLine(cmdLine);
+            }
+            else
+            {
+                skipped.Add(Path.GetFileName(file));
             }
         }
 
+        File.WriteAllText(scriptFile, builder.Build());
 
         if (skipped.Count > 0)
         {
@@ -123,11 +124,8 @@ internal partial class DropConvertViewModel : ObservableObject, IViewModel
         bool shouldRun = _uiFunctions.QuestionMessage("Do you want to run the generated script?", "Run script?");
         if (shouldRun)
         {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "cmd.exe",
-                Arguments = $"/c \"{scriptFile}\"",
-            });
+            var powerShell = new Powershell();
+            powerShell.RunScript(scriptFile);
         }
 
     }

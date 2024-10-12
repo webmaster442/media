@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.Versioning;
 
-using Media.Infrastructure;
+using Media.Interop;
 
 using Spectre.Console;
 
@@ -72,47 +72,19 @@ internal class DefaultCommand : Command
         return shells.Contains(parent.ProcessName);
     }
 
-    private void StartInPowerShell()
-    {
-        static string? FindPowershellCore()
-        {
-            string? pathVariable = Environment.GetEnvironmentVariable("PATH");
-            if (pathVariable != null)
-            {
-                string[] paths = pathVariable.Split(';');
-                foreach (string path in paths)
-                {
-                    string pwshPath = Path.Combine(path, "pwsh.exe");
-                    if (File.Exists(pwshPath))
-                    {
-                        return pwshPath;
-                    }
-                }
-            }
-            return null;
-        }
-
-        var powershell = FindPowershellCore() ?? "powershell.exe";
-        using var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = powershell,
-                Arguments = $"-NoExit -Command \"& {{\"{AppContext.BaseDirectory}\\Media.exe\" completion powershell | Out-String | Invoke-Expression; \"{AppContext.BaseDirectory}\\Media.exe\"}}",
-                UseShellExecute = false,
-            }
-        };
-        process.Start();
-    }
-
     [SupportedOSPlatform("windows")]
     public override int Execute(CommandContext context)
     {
         bool shellStarted = WasItStartedByAShell();
 
+        Powershell powershell = new();
         if (!shellStarted)
         {
-            StartInPowerShell();
+            powershell.RunCommands(new string[]
+            {
+                $"\"{AppContext.BaseDirectory}\\Media.exe\" completion powershell | Out-String | Invoke-Expression",
+                $"\"{AppContext.BaseDirectory}\\Media.exe\""
+            });
         }
         else
         {
