@@ -24,9 +24,9 @@ internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window
 
     private void UiThreadCode()
     {
-        Application app = new();
+        App app = new();
+        app.InitializeComponent();
         app.DispatcherUnhandledException += OnException;
-        app.Resources.MergedDictionaries.Add(new ResourceDictionary {  Source = new("pack://application:,,,/Media;component/Ui/GlobalStyles.xaml") });
         app.ShutdownMode = ShutdownMode.OnMainWindowClose;
         app.MainWindow = new TWindow();
 
