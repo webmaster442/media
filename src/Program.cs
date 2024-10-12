@@ -5,9 +5,9 @@
 
 using Media;
 using Media.Commands;
+using Media.Infrastructure;
 using Media.ShellAutoComplete.AutoComplete;
 using Media.ShellAutoComplete.Integrations;
-using Media.Infrastructure;
 
 var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar(isDryRunEnabled: false));
 
@@ -20,8 +20,6 @@ mainApp.Configure(config =>
 
     config.AddCommand<Cut>("cut")
           .WithDescription("Cut a file without reencoding");
-
-    config.AddCommand<ConvertDragDrop>("dropconvert");
 
     config.AddCommand<Media.Commands.Version>("version")
             .WithDescription("Print program version");
@@ -79,6 +77,7 @@ mainApp.Configure(config =>
         //Note: when adding a new command also add it to the BachCompile class
 
         convert.SetDescription("Convert audio/video files");
+
         convert.AddCommand<ConvertToAlac>("alac")
                .WithDescription("Convert audio to Apple Lossless Audio Codec (ALAC)");
 
@@ -111,6 +110,9 @@ mainApp.Configure(config =>
 
         convert.AddCommand<ConvertPreset>("preset")
             .WithDescription("Convert a file using a preset");
+
+        convert.AddCommand<ConvertDragDrop>("drop")
+            .WithDescription("Convert multiple file using a drag & drop window");
     });
     config.AddBranch("extract", extract =>
     {

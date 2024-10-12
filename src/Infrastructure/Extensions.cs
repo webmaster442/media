@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.Dto;
 using Media.Dto.Internals;
 
 namespace Media.Infrastructure;
@@ -37,5 +38,12 @@ public static class Extensions
             'S' => FFMpegEncoderInfo.EncoderType.Subtitle,
             _ => throw new ArgumentOutOfRangeException(nameof(c), c, "Unknown encoder type"),
         };
+    }
+
+    public static string GetCommandLine(this Preset preset, string inputFile, string outputFile)
+    {
+        return preset.CommandLine.Trim()
+            .Replace(Preset.InputPlaceHolder, $"\"{inputFile}\"")
+            .Replace(Preset.OutputPlaceHolder, $"\"{outputFile}\"");
     }
 }

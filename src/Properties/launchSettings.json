@@ -39,9 +39,9 @@
       "commandName": "Project",
       "commandLineArgs": "play c:\\"
     },
-    "dropconvert": {
+    "convert drop": {
       "commandName": "Project",
-      "commandLineArgs": "dropconvert"
+      "commandLineArgs": "convert drop"
     }
   }
 }

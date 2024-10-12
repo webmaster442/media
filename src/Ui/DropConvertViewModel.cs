@@ -49,6 +49,7 @@ internal partial class DropConvertViewModel : ObservableObject, IViewModel
         foreach (var preset in presets)
         {
             PresetCollection.Add(preset);
+            SelectedPreset = PresetCollection[0];
         }
         _fFMpeg.TryGetInstalledPath(out string? path);
         if (string.IsNullOrEmpty(path))
@@ -75,14 +76,9 @@ internal partial class DropConvertViewModel : ObservableObject, IViewModel
             throw new InvalidOperationException("No preset selected");
         }
 
-        if (file.Contains('%'))
-        {
-            //cmd.exe fix
-            file = file.Replace("%", "%%");
-        }
         var outputFile = Path.Combine(SelectedPath, Path.ChangeExtension(Path.GetFileName(file), SelectedPreset.Extension));
-        var cmdLine = SelectedPreset.CommandLine.Replace(Preset.InputPlaceHolder, file);
-        return _fFMpeg.GetCommandText(cmdLine.Replace(Preset.OutputPlaceHolder, outputFile));
+        var args = SelectedPreset.GetCommandLine(file, outputFile);
+        return _fFMpeg.GetCommandText(args);
     }
 
     public void HandleDrop(string[] files)
@@ -95,24 +91,26 @@ internal partial class DropConvertViewModel : ObservableObject, IViewModel
 
         List<string> skipped = new();
 
-        var scriptFile = Path.Combine(SelectedPath, Path.ChangeExtension(Path.GetFileName(SelectedPath), ".cmd"));
-        var builder = new PowershellBuilder();
-        builder.WithUtf8Enabled();
-        builder.WithWindowTitle(Path.GetFileNameWithoutExtension(SelectedPath));
+        var scriptFile = Path.Combine(SelectedPath, Path.ChangeExtension(Path.GetFileName(SelectedPath), ".ps1"));
+        var builder = new PowershellBuilder()
+            .WithUtf8Enabled()
+            .WithWindowTitle(Path.GetFileNameWithoutExtension(SelectedPath))
+            .WithClear();
 
         foreach (var file in files)
         {
             if (File.Exists(file)
                 && _fFMpeg.SupportedFormats.Contains(Path.GetExtension(file)))
             {
-                string cmdLine = CreateCommandLine(file);
-                builder.WithCommandLine(cmdLine);
+                builder.WithCommand(CreateCommandLine(file));
             }
             else
             {
                 skipped.Add(Path.GetFileName(file));
             }
         }
+
+        builder.WithMessage("Finished");
 
         File.WriteAllText(scriptFile, builder.Build());
 

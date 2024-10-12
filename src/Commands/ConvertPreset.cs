@@ -67,8 +67,7 @@ internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
                 return ExitCodes.Error;
             }
 
-            var cmdline = CreateCommandLine(settings, preset);
-
+            var cmdline = preset.GetCommandLine(settings.InputFile, settings.OutputFile);
 
             if (_dryRunResultAcceptor.Enabled)
             {
@@ -87,11 +86,5 @@ internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
             Terminal.DisplayException(ex);
             return ExitCodes.Exception;
         }
-    }
-
-    private static string CreateCommandLine(Settings settings, Preset preset)
-    {
-        var cmdLine = preset.CommandLine.Replace(Preset.InputPlaceHolder, settings.InputFile);
-        return cmdLine.Replace(Preset.OutputPlaceHolder, settings.OutputFile);
     }
 }

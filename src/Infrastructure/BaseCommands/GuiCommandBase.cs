@@ -93,11 +93,6 @@ internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window
 
         app.MainWindow.ShowDialog();
         app.DispatcherUnhandledException -= OnException;
-        if (app.MainWindow.DataContext is IDisposable disposable)
-        {
-            disposable.Dispose();
-            app.MainWindow.DataContext = null;
-        }
     }
 
     private void OnException(object sender, DispatcherUnhandledExceptionEventArgs e)

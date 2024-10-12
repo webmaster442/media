@@ -19,30 +19,41 @@ internal class PowershellBuilder
         return _scriptBuilder.ToString();
     }
 
-    public void WithClear()
+    public PowershellBuilder WithClear()
     {
         _scriptBuilder.AppendLine("Clear-Host");
+        return this;
     }
 
-    public void WithCommandIfFileNotExists(string filePath, string command)
+    public PowershellBuilder WithCommandIfFileNotExists(string filePath, string command)
     {
         _scriptBuilder.AppendLine($"if (-not (Test-Path '{filePath}')) {{");
         _scriptBuilder.AppendLine($"    {command}");
         _scriptBuilder.AppendLine("}");
+        return this;
     }
 
-    public void WithUtf8Enabled()
+    public PowershellBuilder WithUtf8Enabled()
     {
         _scriptBuilder.AppendLine("[Console]::OutputEncoding = [System.Text.Encoding]::UTF8");
+        return this;
     }
 
-    public void WithWindowTitle(string title)
+    public PowershellBuilder WithWindowTitle(string title)
     {
         _scriptBuilder.AppendLine($"$Host.UI.RawUI.WindowTitle = \"{title}\"");
+        return this;
     }
 
-    public void WithCommandLine(string cmdLine)
+    public PowershellBuilder WithCommand(string command)
     {
-        _scriptBuilder.AppendLine(cmdLine);
+        _scriptBuilder.AppendLine(command);
+        return this;
+    }
+
+    public PowershellBuilder WithMessage(string msg)
+    {
+        _scriptBuilder.AppendLine($"Write-Host \"{msg}\"");
+        return this;
     }
 }
