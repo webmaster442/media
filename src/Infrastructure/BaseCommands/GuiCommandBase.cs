@@ -7,11 +7,52 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 
+using Media.Interfaces;
+
 namespace Media.Infrastructure.BaseCommands;
 
 internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window, new()
 {
-    protected virtual INotifyPropertyChanged? CreateDataContext() => null;
+    internal class UiFunctionsImplementation : IUiFunctions
+    {
+        public void ErrorMessage(string message, string title)
+        {
+            Terminal.RedText(message);
+            MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public void Exit(int exitCode)
+        {
+            Application.Current.Shutdown(exitCode);
+        }
+
+        public void InfoMessage(string message, string title)
+            => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
+
+        public bool QuestionMessage(string message, string title)
+        {
+            var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
+            return result == MessageBoxResult.Yes;
+        }
+
+        public string? SelectFolderDialog(string? startFolder)
+        {
+            var selector = new Microsoft.Win32.OpenFolderDialog();
+            if (!string.IsNullOrWhiteSpace(startFolder))
+                selector.DefaultDirectory = startFolder;
+            if (selector.ShowDialog() == true)
+            {
+                return selector.FolderName;
+            }
+            return null;
+        }
+
+        public void WarningMessage(string message, string title)
+            => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
+    }
+
+
+    protected virtual IViewModel? CreateDataContext(IUiFunctions uiFunctions) => null;
 
     protected virtual Point? GetWindowStartLocation(Size screen, Size window)
     {
@@ -30,9 +71,12 @@ internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window
         app.ShutdownMode = ShutdownMode.OnMainWindowClose;
         app.MainWindow = new TWindow();
 
-        var dataContext = CreateDataContext();
+        var dataContext = CreateDataContext(new UiFunctionsImplementation());
         if (dataContext != null)
+        {
             app.MainWindow.DataContext = dataContext;
+            dataContext.Initialize();
+        }
 
         app.MainWindow.SnapsToDevicePixels = true;
         app.MainWindow.UseLayoutRounding = true;
@@ -49,6 +93,11 @@ internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window
 
         app.MainWindow.ShowDialog();
         app.DispatcherUnhandledException -= OnException;
+        if (app.MainWindow.DataContext is IDisposable disposable)
+        {
+            disposable.Dispose();
+            app.MainWindow.DataContext = null;
+        }
     }
 
     private void OnException(object sender, DispatcherUnhandledExceptionEventArgs e)

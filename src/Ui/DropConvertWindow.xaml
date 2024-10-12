@@ -8,14 +8,23 @@
     Title="Media DropConvert"
     Width="350"
     Height="350"
+    AllowDrop="True"
     DragEnter="Window_DragEnter"
     DragOver="Window_DragOver"
     Drop="Window_Drop"
-    Loaded="Window_Loaded"
     ResizeMode="NoResize"
     Topmost="True"
     WindowStyle="ToolWindow"
     mc:Ignorable="d">
+    <Window.Resources>
+        <CollectionViewSource
+            x:Key="ViewSource"
+            Source="{Binding PresetCollection}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Category" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -33,10 +42,11 @@
             Grid.Column="0"
             Text="Preset:" />
         <ComboBox
-            x:Name="CbPresetSelector"
             Grid.Row="0"
             Grid.Column="1"
-            Grid.ColumnSpan="2">
+            Grid.ColumnSpan="2"
+            ItemsSource="{Binding Source={StaticResource ViewSource}}"
+            SelectedItem="{Binding SelectedPreset}">
             <ComboBox.GroupStyle>
                 <GroupStyle />
             </ComboBox.GroupStyle>
@@ -56,12 +66,12 @@
             x:Name="TbCurrentDir"
             Grid.Row="1"
             Grid.Column="1"
-            Text="CurrentDir" />
+            Text="{Binding SelectedPathDisplay}"
+            ToolTip="{Binding SelectedPath}" />
         <Button
-            x:Name="BtnBrowse"
             Grid.Row="1"
             Grid.Column="2"
-            Click="BtnBrowse_Click"
+            Command="{Binding BrowseCommand}"
             Content="..." />
         <Image
             Grid.Row="2"

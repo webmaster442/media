@@ -5,12 +5,14 @@
 
 using System.Windows;
 
+using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
+using Media.Interfaces;
 using Media.Ui;
 
 namespace Media.Commands;
 
-internal class DropConvert : GuiCommandBase<DropConvertWindow>
+internal class ConvertDragDrop : GuiCommandBase<DropConvertWindow>
 {
     protected override Point? GetWindowStartLocation(Size screen, Size window)
     {
@@ -20,4 +22,7 @@ internal class DropConvert : GuiCommandBase<DropConvertWindow>
             Y = (screen.Height - window.Height) - 10
         };
     }
+
+    protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions)
+        => new DropConvertViewModel(uiFunctions, new ConfigAccessor());
 }

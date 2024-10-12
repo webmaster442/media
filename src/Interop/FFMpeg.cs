@@ -39,14 +39,14 @@ internal sealed class FFMpeg : InteropBase
     public FFMpeg(ConfigAccessor configAccessor) : base(FfmpegBinary)
     {
         _configAccessor = configAccessor;
-        SupportedFormats = new HashSet<string>
+        SupportedFormats = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             // Video formats
-            "mp4", "mov", "avi", "mkv", "webm", "flv", "wmv", "mpeg", "mpg", "ogv",
-            "3gp", "m4v", "mts", "m2ts", "vob", "ts",
+            ".mp4", ".mov", ".avi", ".mkv", ".webm", ".flv", ".wmv", ".mpeg", ".mpg", ".ogv",
+            ".3gp", ".m4v", ".mts", ".m2ts", ".vob", ".ts",
             // Audio formats
-            "mp3", "aac", "wav", "flac", "ogg", "opus", "m4a", "wma", "alac",
-            "ac3", "aiff", "amr", "au", "dts", "mp2"
+            ".mp3", ".aac", ".wav", ".flac", ".ogg", ".opus", ".m4a", ".wma", ".alac",
+            ".ac3", ".aiff", ".amr", ".au", ".dts", ".mp2"
         };
     }
 

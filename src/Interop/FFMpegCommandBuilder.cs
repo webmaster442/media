@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.Interfaces;
+
 namespace Media.Interop;
 
 internal sealed class FFMpegCommandBuilder : IBuilder<string>
