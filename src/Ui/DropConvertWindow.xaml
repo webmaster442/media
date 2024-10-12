@@ -13,7 +13,6 @@
     Drop="Window_Drop"
     Loaded="Window_Loaded"
     ResizeMode="NoResize"
-    Style="{StaticResource {x:Type Window}}"
     Topmost="True"
     WindowStyle="ToolWindow"
     mc:Ignorable="d">

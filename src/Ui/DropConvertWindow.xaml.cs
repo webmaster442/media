@@ -29,6 +29,7 @@ public partial class DropConvertWindow : Window
         _fFMpeg = new FFMpeg(new ConfigAccessor());
         _selectedPath = Environment.CurrentDirectory;
         TbCurrentDir.Text = Path.GetFileName(_selectedPath);
+        TbCurrentDir.ToolTip = _selectedPath;
     }
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -48,6 +49,7 @@ public partial class DropConvertWindow : Window
         {
             _selectedPath = selector.FolderName;
             TbCurrentDir.Text = Path.GetFileName(_selectedPath);
+            TbCurrentDir.ToolTip = _selectedPath;
         }
     }
 
