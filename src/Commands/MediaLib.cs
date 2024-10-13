@@ -4,10 +4,10 @@ using Media.Ui;
 
 namespace Media.Commands;
 
-internal sealed class LibCommand : GuiCommandBase<LibWindow>
+internal sealed class MediaLib : GuiCommandBase<LibWindow>
 {
     protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions)
     {
-        return new LibWindowViewModel();
+        return new LibWindowViewModel(uiFunctions);
     }
 }

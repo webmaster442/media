@@ -17,10 +17,10 @@ internal sealed class MediaDbSerives : IDisposable
     private readonly MediaDatabaseContext _context;
     private readonly ILogger _logger;
 
-    public MediaDbSerives(MediaDatabaseContext context, ILogger logger)
+    public MediaDbSerives(MediaDatabaseContext context, ILoggerFactory logger)
     {
         _context = context;
-        _logger = logger;
+        _logger = logger.CreateLogger<MediaDbSerives>();
     }
 
     public void Dispose()

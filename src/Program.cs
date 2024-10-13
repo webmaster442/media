@@ -159,6 +159,16 @@ mainApp.Configure(config =>
         mux.AddCommand<MuxAddSubtitle>("add-subtitle")
            .WithDescription("Add subtitle stream to a video file");
     });
+    config.AddBranch("lib", lib =>
+    {
+        lib.SetDescription("Media libary related commands");
+
+        lib.AddCommand<MediaLib>("gui")
+           .WithDescription("Open the media library GUI");
+
+        lib.AddCommand<MediaLibAdd>("add")
+           .WithDescription("Add a folder to the media library");
+    });
 });
 
 await mainApp.RunAsync(args);

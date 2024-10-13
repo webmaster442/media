@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.Database;
 using Media.Infrastructure;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -26,8 +27,11 @@ internal static class ProgramFactory
     {
         var services = new ServiceCollection();
 
+        services.AddLogging();
         services.AddSingleton<ConfigAccessor>();
         services.AddSingleton<IDryRunResultAcceptor>(dryRunResultAcceptor);
+        services.AddScoped<MediaDatabaseContext>();
+        services.AddScoped<MediaDbSerives>();
         var registar = new TypeRegistrar(services);
         registar.Build();
         return registar;
