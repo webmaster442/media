@@ -17,6 +17,11 @@ internal class MediaDatabaseContext : DbContext
     public DbSet<Genre> Genres { get; set; }
     public DbSet<VideoFile> Video { get; set; }
 
+    public MediaDatabaseContext(DbContextOptions<MediaDatabaseContext> options)
+        : base(options)
+    {
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         Configure(modelBuilder.Entity<MusicFile>());

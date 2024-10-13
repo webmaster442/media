@@ -6,6 +6,7 @@
 using Media.Database;
 using Media.Infrastructure;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using System.Security.AccessControl;
@@ -30,7 +31,7 @@ internal static class ProgramFactory
         services.AddLogging();
         services.AddSingleton<ConfigAccessor>();
         services.AddSingleton<IDryRunResultAcceptor>(dryRunResultAcceptor);
-        services.AddScoped<MediaDatabaseContext>();
+        services.AddDbContext<MediaDatabaseContext>(options => options.UseSqlite("Data Source=media.db"));
         services.AddScoped<MediaDbSerives>();
         var registar = new TypeRegistrar(services);
         registar.Build();

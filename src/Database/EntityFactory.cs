@@ -18,8 +18,15 @@ internal static class EntityFactory
     {
         foreach (var file in files)
         {
+            uint id = CalculateId(file);
             if (IsMusicFile(file))
             {
+                if (context.Music.AsNoTracking().Where(m => m.Id == id).Any())
+                {
+                    logger.LogInformation("Skipping {file}, allready in db", file);
+                    continue;
+                }
+
                 try
                 {
                     using TagLib.File f = TagLib.File.Create(file);
@@ -29,7 +36,7 @@ internal static class EntityFactory
 
                     context.Music.Add(new MusicFile
                     {
-                        Id = CalculateId(file),
+                        Id = id,
                         AddedDate = DateTime.UtcNow,
                         Artist = f.Tag.FirstPerformer.ToTitleCase("Unknown artitst"),
                         Title = f.Tag.Title.ToTitleCase(Path.GetFileNameWithoutExtension(file)),
@@ -50,13 +57,19 @@ internal static class EntityFactory
             }
             else if (IsVideoFile(file))
             {
+                if (context.Video.AsNoTracking().Where(v => v.Id == id).Any())
+                {
+                    logger.LogInformation("Skipping {file}, allready in db", file);
+                    continue;
+                }
+
                 try
                 {
                     using TagLib.File f = TagLib.File.Create(file);
 
                     context.Video.Add(new VideoFile
                     {
-                        Id = CalculateId(file),
+                        Id = id,
                         Path = file,
                         AddedDate = DateTime.UtcNow,
                         Size = f.Length,
@@ -70,6 +83,10 @@ internal static class EntityFactory
                 {
                     logger.LogWarning("Video file read error: {ex}", ex);
                 }
+            }
+            else
+            {
+                logger.LogInformation("Skipping {file}", file);
             }
         }
         return await context.SaveChangesAsync();

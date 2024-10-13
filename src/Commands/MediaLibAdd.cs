@@ -27,8 +27,17 @@ internal class MediaLibAdd : AsyncCommand<MediaLibAdd.Settings>
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        string[] files = Directory.GetFiles(settings.Path, "*.*", settings.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-        await _dbSerives.AddFiles(files);
-        return ExitCodes.Success;
+        try
+        {
+            string[] files = Directory.GetFiles(settings.Path, "*.*", settings.Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            int count = await _dbSerives.AddFiles(files);
+            Terminal.InfoText($"Added {count} files to the library");
+            return ExitCodes.Success;
+        }
+        catch (Exception ex)
+        {
+            Terminal.DisplayException(ex);
+            return ExitCodes.Error;
+        }
     }
 }
