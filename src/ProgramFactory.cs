@@ -7,6 +7,9 @@ using Media.Infrastructure;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using System.Security.AccessControl;
+using System.Security.Principal;
+
 namespace Media;
 
 internal static class ProgramFactory
@@ -28,5 +31,22 @@ internal static class ProgramFactory
         var registar = new TypeRegistrar(services);
         registar.Build();
         return registar;
+    }
+
+    public static bool CanWriteAppFolder()
+    {
+        DirectoryInfo di = new DirectoryInfo(AppContext.BaseDirectory);
+        var acl = di.GetAccessControl(AccessControlSections.All);
+        foreach (AuthorizationRule rule in acl.GetAccessRules(true, true, typeof(NTAccount)))
+        {
+            if (rule.IdentityReference.Value.Equals(Environment.UserName, StringComparison.CurrentCultureIgnoreCase)
+                && rule is FileSystemAccessRule filesystemAccessRule
+                && (filesystemAccessRule.FileSystemRights & FileSystemRights.WriteData) > 0
+                && filesystemAccessRule.AccessControlType != AccessControlType.Deny)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

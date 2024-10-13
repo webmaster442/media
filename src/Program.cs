@@ -9,6 +9,12 @@ using Media.Infrastructure;
 using Media.ShellAutoComplete.AutoComplete;
 using Media.ShellAutoComplete.Integrations;
 
+if (!ProgramFactory.CanWriteAppFolder())
+{
+    Terminal.RedText("Application folder is not writable. Exiting...");
+    return;
+}
+
 var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar(isDryRunEnabled: false));
 
 Terminal.EnableUTF8Output();
