@@ -46,6 +46,10 @@
     "lib add": {
       "commandName": "Project",
       "commandLineArgs": "lib add -r d:\\video"
+    },
+    "lib gui": {
+      "commandName": "Project",
+      "commandLineArgs": "lib gui"
     }
   }
 }

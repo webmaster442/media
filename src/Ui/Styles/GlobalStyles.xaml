@@ -11,17 +11,22 @@
         Color="#2E2E2E" />
     <SolidColorBrush
         x:Key="UiOver"
-        Color="#383838"/>
+        Color="#383838" />
     <SolidColorBrush
         x:Key="Text"
         Color="WhiteSmoke" />
 
-    <Style TargetType="ToolTip">
-        <Setter Property="Background" Value="{StaticResource UiBackground}" />
-    </Style>
 
     <Style TargetType="ui:DropConvertWindow">
         <Setter Property="Background" Value="{StaticResource BackgroundColor}" />
+    </Style>
+
+    <Style TargetType="ui:LibWindow">
+        <Setter Property="Background" Value="{StaticResource BackgroundColor}" />
+    </Style>
+
+    <Style TargetType="ToolTip">
+        <Setter Property="Background" Value="{StaticResource UiBackground}" />
     </Style>
 
     <Style TargetType="ComboBox">
@@ -41,11 +46,11 @@
     </Style>
 
     <Style TargetType="Menu">
-        <Setter Property="Background" Value="{StaticResource BackgroundColor}"/>
+        <Setter Property="Background" Value="{StaticResource BackgroundColor}" />
     </Style>
 
     <Style TargetType="MenuItem">
-        <Setter Property="Background" Value="{StaticResource UiBackground}"/>
+        <Setter Property="Background" Value="{StaticResource UiBackground}" />
     </Style>
-    
+
 </ResourceDictionary>

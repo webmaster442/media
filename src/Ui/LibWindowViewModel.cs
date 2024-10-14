@@ -33,6 +33,16 @@ internal sealed partial class LibWindowViewModel : ObservableObject, IViewModel
     }
 
     [RelayCommand]
+    private async Task NavigateBack()
+    {
+        if (_navigationHistory.Count > 0)
+        {
+            CurrentUrl = _navigationHistory.Pop();
+            ContentItem = await GetViewModel(CurrentUrl);
+        }
+    }
+
+    [RelayCommand]
     private async Task NavigateTo(string url)
     {
         _navigationHistory.Push(CurrentUrl);

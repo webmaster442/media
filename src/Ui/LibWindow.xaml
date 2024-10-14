@@ -39,7 +39,7 @@
                         <Button
                             Width="256"
                             Height="256"
-                            Background="{Binding Title, Converter=converters:TextToColorConverter}"
+                            Background="{Binding Title, Converter={converters:TextToColorConverter}}"
                             Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.NavigateToCommand}"
                             CommandParameter="{Binding Url}"
                             Content="{Binding Title}" />
@@ -77,8 +77,10 @@
             Grid.Column="1"
             Grid.ColumnSpan="2"
             Orientation="Horizontal">
-            <Button Content="Back" />
-            <TextBlock Text="url" />
+            <Button
+                Command="{Binding NavigateBackCommand}"
+                Content="Back" />
+            <TextBlock Text="{Binding CurrentUrl}" />
         </StackPanel>
         <StackPanel
             Grid.Row="0"
@@ -113,6 +115,7 @@
             Fill="#241b2f" />
         <ContentPresenter
             Grid.Row="1"
-            Grid.Column="2" />
+            Grid.Column="2"
+            Content="{Binding ContentItem}" />
     </Grid>
 </Window>
