@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+
 using Media.Dto.MediaDb;
 
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ internal class MediaDatabaseContext : DbContext
         Configure(modelBuilder.Entity<Album>());
         Configure(modelBuilder.Entity<Genre>());
         Configure(modelBuilder.Entity<MusicFile>());
+        Configure(modelBuilder.Entity<VideoFile>());
     }
 
     private static void Configure(EntityTypeBuilder<MusicFile> builder)
@@ -35,10 +37,10 @@ internal class MediaDatabaseContext : DbContext
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Title).IsRequired();
         builder.Property(x => x.Artist).IsRequired();
-        builder.Property(x => x.AddedDate);
+        builder.Property(x => x.AddedDate).IsRequired();
         builder.Property(x => x.Year);
         builder.Property(x => x.Path).IsRequired();
-        builder.Property(x => x.Size);
+        builder.Property(x => x.Size).IsRequired();
         builder.Property(x => x.PlayTimeInSeconds);
         builder.Property(x => x.DiscNumber);
         builder.Property(x => x.TrackNumber);
@@ -47,6 +49,23 @@ internal class MediaDatabaseContext : DbContext
         builder.HasIndex(x => x.Artist);
         builder.HasIndex(x => x.Path).IsUnique();
         builder.HasIndex(x => x.Year);
+    }
+
+    private static void Configure(EntityTypeBuilder<VideoFile> builder)
+    {
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Codecs);
+        builder.Property(x => x.AddedDate).IsRequired();
+        builder.Property(x => x.Path).IsRequired();
+        builder.Property(x => x.Size).IsRequired();
+        builder.Property(x => x.PlayTimeInSeconds);
+        builder.Property(x => x.Width);
+        builder.Property(x => x.Height);
+        builder.Property(x => x.Directory).IsRequired();
+
+        builder.HasIndex(x => x.Codecs);
+        builder.HasIndex(x => x.Path);
+        builder.HasIndex(x => x.Directory);
     }
 
     private static void Configure(EntityTypeBuilder<Album> builder)

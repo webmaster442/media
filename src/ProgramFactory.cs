@@ -8,6 +8,7 @@ using Media.Infrastructure;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 using System.Security.AccessControl;
 using System.Security.Principal;
@@ -28,7 +29,10 @@ internal static class ProgramFactory
     {
         var services = new ServiceCollection();
 
-        services.AddLogging();
+        services.AddLogging(log => {
+            log.AddConsole();
+            log.AddFilter((category, level) => level > LogLevel.Debug && !category.StartsWith("Microsoft.EntityFrameworkCore"));
+        });
         services.AddSingleton<ConfigAccessor>();
         services.AddSingleton<IDryRunResultAcceptor>(dryRunResultAcceptor);
         services.AddDbContext<MediaDatabaseContext>(options => options.UseSqlite("Data Source=media.db"));

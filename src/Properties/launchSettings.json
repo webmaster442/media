@@ -45,7 +45,7 @@
     },
     "lib add": {
       "commandName": "Project",
-      "commandLineArgs": "lib add -r d:\\0Zene\\HardCore\\"
+      "commandLineArgs": "lib add -r d:\\video"
     }
   }
 }

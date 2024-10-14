@@ -15,4 +15,5 @@ public class VideoFile
     public int Width { get; set; }
     public int Height { get; set; }
     public string Codecs { get; set; } = string.Empty;
+    public string Directory { get; set; } = string.Empty;
 }

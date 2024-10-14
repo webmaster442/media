@@ -8,6 +8,8 @@ using Media.Dto.MediaDb;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
+using TagLib;
+
 namespace Media.Database;
 
 internal static class EntityFactory
@@ -43,7 +45,7 @@ internal static class EntityFactory
                         AddedDate = DateTime.UtcNow,
                         Artist = f.Tag.FirstPerformer.ToTitleCase("Unknown artitst"),
                         Title = f.Tag.Title.ToTitleCase(Path.GetFileNameWithoutExtension(file)),
-                        Size = f.Length,
+                        Size = f.FileAbstraction.ReadStream.Length,
                         Year = f.Tag.Year,
                         TrackNumber = f.Tag.Track,
                         DiscNumber = f.Tag.Disc,
@@ -55,7 +57,7 @@ internal static class EntityFactory
                 }
                 catch (Exception ex)
                 {
-                    logger.LogWarning("Music file read error: {ex}", ex);
+                    logger.LogWarning("{file} read error: {ex}", file, ex);
                 }
             }
             else if (IsVideoFile(file))
@@ -74,17 +76,18 @@ internal static class EntityFactory
                     {
                         Id = id,
                         Path = file,
+                        Directory = Path.GetDirectoryName(file).ToTitleCase("Unknown folder"),
                         AddedDate = DateTime.UtcNow,
-                        Size = f.Length,
+                        Size = f.FileAbstraction.ReadStream.Length,
                         PlayTimeInSeconds = f.Properties.Duration.TotalSeconds,
-                        Codecs = string.Join(',', f.Properties.Codecs.Select(x => x.Description)),
+                        Codecs = GetCodecString(f.Properties.Codecs),
                         Width = f.Properties.VideoWidth,
                         Height = f.Properties.VideoHeight,
                     });
                 }
                 catch (Exception ex)
                 {
-                    logger.LogWarning("Video file read error: {ex}", ex);
+                    logger.LogWarning("{file} read error: {ex}", file, ex);
                 }
             }
             else
@@ -93,6 +96,26 @@ internal static class EntityFactory
             }
         }
         return await context.SaveChangesAsync();
+    }
+
+    private static string GetCodecString(IEnumerable<ICodec> codecs)
+    {
+        if (codecs == null)
+            return string.Empty;
+
+        StringBuilder result = new();
+        foreach (var codec in codecs)
+        {
+            if (codec == null)
+            {
+                result.AppendLine("No codec");
+            }
+            else
+            {
+                result.AppendLine(codec.Description);
+            }
+        }
+        return result.ToString();
     }
 
     private static async Task<Genre> GetOrCreateGenre(TagLib.File f,
@@ -169,7 +192,9 @@ internal static class EntityFactory
             || extension == ".flac"
             || extension == ".wav"
             || extension == ".weba"
-            || extension == "oga";
+            || extension == "oga"
+            || extension == ".opus"
+            || extension == ".weba";
     }
 
     private static bool IsVideoFile(string file)
@@ -185,15 +210,17 @@ internal static class EntityFactory
             || extension == ".mpeg"
             || extension == ".ts"
             || extension == ".m2ts"
-            || extension == ".mts";
+            || extension == ".mts"
+            || extension == ".webm"
+            || extension == ".wmv";
     }
 
-    private static string ToTitleCase(this string s, string onEmptyValue)
+    private static string ToTitleCase(this string? s, string onEmptyValue)
     {
         if (string.IsNullOrEmpty(s))
             return TextInfo.ToTitleCase(onEmptyValue);
 
-        return TextInfo.ToTitleCase(s.ToLower());
+        return TextInfo.ToTitleCase(s.ToLower().Trim());
     }
 
     private static uint CalculateId(this string s)
