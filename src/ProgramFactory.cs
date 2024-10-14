@@ -40,18 +40,29 @@ internal static class ProgramFactory
 
     public static bool CanWriteAppFolder()
     {
-        DirectoryInfo di = new DirectoryInfo(AppContext.BaseDirectory);
-        var acl = di.GetAccessControl(AccessControlSections.All);
-        foreach (AuthorizationRule rule in acl.GetAccessRules(true, true, typeof(NTAccount)))
+        try
         {
-            if (rule.IdentityReference.Value.Equals(Environment.UserName, StringComparison.CurrentCultureIgnoreCase)
-                && rule is FileSystemAccessRule filesystemAccessRule
-                && (filesystemAccessRule.FileSystemRights & FileSystemRights.WriteData) > 0
-                && filesystemAccessRule.AccessControlType != AccessControlType.Deny)
+            var appDirectory = new DirectoryInfo(AppContext.BaseDirectory);
+            var directorySecurity = appDirectory.GetAccessControl();
+            var currentUser = WindowsIdentity.GetCurrent();
+            var currentPrincipal = new WindowsPrincipal(currentUser);
+
+            foreach (FileSystemAccessRule rule in directorySecurity.GetAccessRules(includeExplicit: true,
+                                                                                   includeInherited: true,
+                                                                                   targetType: typeof(SecurityIdentifier)))
             {
-                return true;
+                if ((currentUser.User?.Equals(rule.IdentityReference) == true
+                    || currentPrincipal.IsInRole((SecurityIdentifier)rule.IdentityReference))
+                    && (rule.FileSystemRights & FileSystemRights.WriteData) != 0)
+                {
+                    return rule.AccessControlType != AccessControlType.Deny;
+                }
             }
+            return false;
         }
-        return false;
+        catch
+        {
+            return false;
+        }
     }
 }

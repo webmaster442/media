@@ -16,6 +16,9 @@ internal static class EntityFactory
 
     public static async Task<int> CreateEntities(MediaDatabaseContext context, ILogger logger, IEnumerable<string> files)
     {
+        Dictionary<uint, Album> albumCache = new();
+        Dictionary<uint, Genre> genreCache = new();
+
         foreach (var file in files)
         {
             uint id = CalculateId(file);
@@ -31,8 +34,8 @@ internal static class EntityFactory
                 {
                     using TagLib.File f = TagLib.File.Create(file);
 
-                    Album album = await GetOrCreateAlbum(f, context);
-                    Genre genre = await GetOrCreateGenre(f, context);
+                    Album album = await GetOrCreateAlbum(f, context, albumCache);
+                    Genre genre = await GetOrCreateGenre(f, context, genreCache);
 
                     context.Music.Add(new MusicFile
                     {
@@ -92,47 +95,67 @@ internal static class EntityFactory
         return await context.SaveChangesAsync();
     }
 
-    private static async Task<Genre> GetOrCreateGenre(TagLib.File f, MediaDatabaseContext context)
+    private static async Task<Genre> GetOrCreateGenre(TagLib.File f,
+                                                      MediaDatabaseContext context,
+                                                      Dictionary<uint, Genre> genreCache)
     {
         var genre = f.Tag.FirstGenre.ToTitleCase("Unknown");
-        var toAdd = new Genre
-        {
-            Id = CalculateId(genre),
-            Name = genre,
-        };
+        var id = CalculateId(genre);
 
-        Genre? found = await context.Genres.FirstOrDefaultAsync(g => g.Id == toAdd.Id);
-
-        if (found != null)
+        if (genreCache.ContainsKey(id))
         {
-            return found;
+            return genreCache[id];
         }
 
-        context.Genres.Add(toAdd);
-
-        return toAdd;
+        Genre? found = await context.Genres.FirstOrDefaultAsync(g => g.Id == id);
+        if (found != null)
+        {
+            genreCache.Add(id, found);
+            return found;
+        }
+        else
+        {
+            var g = new Genre
+            {
+                Id = id,
+                Name = genre,
+            };
+            genreCache.Add(id, g);
+            return g;
+        }
     }
 
-    private static async Task<Album> GetOrCreateAlbum(TagLib.File f, MediaDatabaseContext context)
+    private static async Task<Album> GetOrCreateAlbum(TagLib.File f, MediaDatabaseContext context, Dictionary<uint, Album> albumCache)
     {
-        Album toAdd = new Album
-        {
-            Artist = f.Tag.FirstAlbumArtist.ToTitleCase("Unknown artitst"),
-            Name = f.Tag.Album.ToTitleCase("Unknown album"),
-            Year = f.Tag.Year,
-        };
-        toAdd.Id = CalculateId($"{toAdd.Artist} - {toAdd.Id}");
+        var artist = f.Tag.FirstAlbumArtist.ToTitleCase("Unknown artitst");
+        var name = f.Tag.Album.ToTitleCase("Unknown album");
+        var year = f.Tag.Year;
+        var id = CalculateId($"{artist} - {name} - {year}");
 
-        Album? found = await context.Albums.FirstOrDefaultAsync(a => a.Id == toAdd.Id);
+        if (albumCache.ContainsKey(id))
+        {
+            return albumCache[id];
+        }
+
+        Album? found = await context.Albums.FirstOrDefaultAsync(a => a.Id == id);
 
         if (found != null)
         {
+            albumCache.Add(id, found);
             return found;
         }
-
-        context.Albums.Add(toAdd);
-
-        return toAdd;
+        else
+        {
+            var a = new Album
+            {
+                Id = id,
+                Artist = artist,
+                Name = name,
+                Year = year,
+            };
+            albumCache.Add(id, a);
+            return a;
+        }
     }
 
     private static bool IsMusicFile(string file)

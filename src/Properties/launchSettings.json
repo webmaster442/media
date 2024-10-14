@@ -42,6 +42,10 @@
     "convert drop": {
       "commandName": "Project",
       "commandLineArgs": "convert drop"
+    },
+    "lib add": {
+      "commandName": "Project",
+      "commandLineArgs": "lib add -r d:\\0Zene\\HardCore\\"
     }
   }
 }

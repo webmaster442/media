@@ -20,13 +20,14 @@ internal class MediaDatabaseContext : DbContext
     public MediaDatabaseContext(DbContextOptions<MediaDatabaseContext> options)
         : base(options)
     {
+        Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        Configure(modelBuilder.Entity<MusicFile>());
         Configure(modelBuilder.Entity<Album>());
         Configure(modelBuilder.Entity<Genre>());
+        Configure(modelBuilder.Entity<MusicFile>());
     }
 
     private static void Configure(EntityTypeBuilder<MusicFile> builder)
@@ -34,8 +35,6 @@ internal class MediaDatabaseContext : DbContext
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Title).IsRequired();
         builder.Property(x => x.Artist).IsRequired();
-        builder.Property(x => x.Album);
-        builder.Property(x => x.Genre);
         builder.Property(x => x.AddedDate);
         builder.Property(x => x.Year);
         builder.Property(x => x.Path).IsRequired();
