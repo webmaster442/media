@@ -48,17 +48,41 @@
             </ItemsControl>
         </DataTemplate>
         <DataTemplate DataType="{x:Type local:LibDetailsViewModel}">
-            <DataGrid
-                AutoGenerateColumns="True"
-                CanUserAddRows="False"
-                CanUserDeleteRows="False"
-                CanUserResizeColumns="True"
-                CanUserResizeRows="True"
-                CanUserSortColumns="True"
-                IsReadOnly="True"
-                ItemsSource="{Binding MusicFiles}"
-                SelectionMode="Extended"
-                SelectionUnit="FullRow" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <ToggleButton
+                    x:Name="ColumnsToggle"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Content="Columns" />
+                <Popup
+                    IsOpen="{Binding ElementName=ColumnsToggle, Path=IsChecked}"
+                    Placement="Relative"
+                    PlacementTarget="{Binding ElementName=ColumnsToggle}">
+                    <ItemsControl ItemsSource="{Binding ElementName=DataGrid, Path=Columns}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Content="{Binding Header}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Popup>
+                <DataGrid
+                    x:Name="DataGrid"
+                    AutoGenerateColumns="True"
+                    CanUserAddRows="False"
+                    CanUserDeleteRows="False"
+                    CanUserResizeColumns="True"
+                    CanUserResizeRows="True"
+                    CanUserSortColumns="True"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding MusicFiles}"
+                    SelectionMode="Extended"
+                    SelectionUnit="FullRow" />
+            </Grid>
         </DataTemplate>
 
     </Window.Resources>

@@ -62,7 +62,7 @@ internal sealed class Powershell
             StartInfo = new ProcessStartInfo
             {
                 FileName = _powershellExecutable,
-                Arguments = noExit 
+                Arguments = noExit
                             ? $"-executionpolicy bypass -noexit -File \"{scriptFile}\""
                             : $"-executionpolicy bypass -File \"{scriptFile}\"",
                 UseShellExecute = false,
