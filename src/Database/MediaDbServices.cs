@@ -49,6 +49,7 @@ internal sealed class MediaDbSerives : IDisposable
     {
         return await _context.Music
             .AsNoTracking()
+            .Include(x => x.Album)
             .Select(x => x.Artist)
             .Distinct()
             .ToListAsync();
@@ -58,6 +59,8 @@ internal sealed class MediaDbSerives : IDisposable
     {
         return await _context.Music
             .AsNoTracking()
+            .Include(x => x.Genre)
+            .Include(x => x.Album)
             .Select(x => x.Year)
             .Distinct()
             .ToListAsync();
@@ -67,6 +70,8 @@ internal sealed class MediaDbSerives : IDisposable
     {
         return await _context.Music
             .AsNoTracking()
+            .Include(x => x.Genre)
+            .Include(x => x.Album)
             .Where(x => x.Year == year)
             .ToListAsync();
     }
@@ -74,6 +79,8 @@ internal sealed class MediaDbSerives : IDisposable
     public async Task<List<MusicFile>> GetMusicFilesByArtist(string artist)
     {
         return await _context.Music
+            .Include(x => x.Genre)
+            .Include(x => x.Album)
             .AsNoTracking()
             .Where(x => x.Artist == artist)
             .ToListAsync();
@@ -84,16 +91,20 @@ internal sealed class MediaDbSerives : IDisposable
         return await _context.Music
             .AsNoTracking()
             .Include(x => x.Genre)
+            .Include(x => x.Album)
             .Where(x => x.Genre!.Name == genre)
             .ToListAsync();
     }
 
-    public async Task<List<MusicFile>> GetMusicFilesByAlbum(AlbumData album)
+    public async Task<List<MusicFile>> GetMusicFilesByAlbum(uint albumId)
     {
         return await _context.Music
             .AsNoTracking()
+            .Include(x => x.Genre)
             .Include(x => x.Album)
-            .Where(x => x.Album!.Id == album.Id)
+            .Where(x => x.Album!.Id == albumId)
+            .OrderBy(x => x.DiscNumber)
+            .ThenBy(x => x.TrackNumber)
             .ToListAsync();
     }
 

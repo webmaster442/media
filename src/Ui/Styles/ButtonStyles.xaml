@@ -65,4 +65,11 @@
         <Setter Property="Template" Value="{StaticResource ButtonTemplate}"/>
     </Style>
 
+    <Style TargetType="ToggleButton">
+        <Setter Property="Margin" Value="4" />
+        <Setter Property="Background" Value="{StaticResource UiBackground}" />
+        <Setter Property="Foreground" Value="{StaticResource Text}" />
+        <Setter Property="Template" Value="{StaticResource ButtonTemplate}"/>
+    </Style>
+
 </ResourceDictionary>

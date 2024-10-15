@@ -142,6 +142,6 @@ public sealed class ConfigAccessor
     public bool GetColumnVisibility(string columnName)
     {
         var key = $"Column_{columnName}";
-        return Read<bool>(key, false);
+        return Read<bool>(key, true);
     }
 }

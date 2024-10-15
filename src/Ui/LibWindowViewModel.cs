@@ -1,8 +1,8 @@
-﻿
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Media.Database;
+using Media.Dto.MediaDb;
 using Media.Interfaces;
 
 namespace Media.Ui;
@@ -21,7 +21,7 @@ internal sealed partial class LibWindowViewModel : ObservableObject, IViewModel
 
     public LibWindowViewModel(IUiFunctions uiFunctions, MediaDbSerives mediaDbSerives)
     {
-        _contentItem = new object();
+        _contentItem = "";
         _uiFunctions = uiFunctions;
         _mediaDbSerives = mediaDbSerives;
         _currentUrl = string.Empty;
@@ -56,6 +56,35 @@ internal sealed partial class LibWindowViewModel : ObservableObject, IViewModel
             return "";
 
         string[] parts = url.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 2)
+        {
+            List<MusicFile> music;
+            switch (parts[0])
+            {
+                case NavigationItem.ArtistPrefix:
+                    music = await _mediaDbSerives.GetMusicFilesByArtist(parts[1]);
+                    return new LibDetailsViewModel(music);
+                case NavigationItem.YearPrefix:
+                    if (uint.TryParse(parts[1], out uint year))
+                    {
+                        music = await _mediaDbSerives.GetMusicFilesByYear(year);
+                        return new LibDetailsViewModel(music);
+                    }
+                    return $"Can't parse {parts[1]} as year";
+                case NavigationItem.AlbumPrefix:
+                    if (uint.TryParse(parts[1], out uint albumId))
+                    {
+                        music = await _mediaDbSerives.GetMusicFilesByAlbum(albumId);
+                        return new LibDetailsViewModel(music);
+                    }
+                    return $"Can't parse {parts[1]} as album id";
+                case NavigationItem.GenrePrefix:
+                    music = await _mediaDbSerives.GetMusicFilesByGenre(parts[1]);
+                    return new LibDetailsViewModel(music);
+            }
+        }
+
         switch (parts[0])
         {
             case NavigationItem.ArtistPrefix:

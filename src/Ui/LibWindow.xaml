@@ -50,29 +50,37 @@
         <DataTemplate DataType="{x:Type local:LibDetailsViewModel}">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <ToggleButton
                     x:Name="ColumnsToggle"
+                    Grid.Row="0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Content="Columns" />
                 <Popup
                     IsOpen="{Binding ElementName=ColumnsToggle, Path=IsChecked}"
-                    Placement="Relative"
-                    PlacementTarget="{Binding ElementName=ColumnsToggle}">
-                    <ItemsControl ItemsSource="{Binding ElementName=DataGrid, Path=Columns}">
+                    Placement="Bottom"
+                    PlacementTarget="{Binding ElementName=ColumnsToggle}"
+                    PopupAnimation="Fade">
+                    <ItemsControl
+                        Background="{StaticResource UiBackground}"
+                        ItemsSource="{Binding ElementName=DataGrid, Path=Columns}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <CheckBox Content="{Binding Header}" />
+                                <CheckBox
+                                    Content="{Binding Header}"
+                                    IsChecked="{Binding Path=Visibility, Converter={converters:VisibilityToBooleanConverter}}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Popup>
                 <DataGrid
                     x:Name="DataGrid"
+                    Grid.Row="1"
                     AutoGenerateColumns="True"
+                    Background="{StaticResource BackgroundColor}"
                     CanUserAddRows="False"
                     CanUserDeleteRows="False"
                     CanUserResizeColumns="True"
