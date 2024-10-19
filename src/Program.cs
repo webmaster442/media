@@ -33,6 +33,9 @@ mainApp.Configure(config =>
     config.AddCommand<Play>("play")
         .WithDescription("Play a media file with mpv");
 
+    config.AddCommand<Volume>("volume")
+        .WithDescription("System volume settings");
+
     config.AddBranch("play", play =>
     {
         play.AddCommand<PlayRandom>("random")

@@ -42,6 +42,10 @@
     "convert drop": {
       "commandName": "Project",
       "commandLineArgs": "convert drop"
+    },
+    "volume -m": {
+      "commandName": "Project",
+      "commandLineArgs": "volume"
     }
   }
 }
