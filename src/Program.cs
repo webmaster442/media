@@ -30,17 +30,16 @@ mainApp.Configure(config =>
     config.AddCommand<Config>("config")
         .WithDescription("Edit the configuration file");
 
-    config.AddCommand<Play>("play")
-        .WithDescription("Play a media file with mpv");
-
     config.AddCommand<Volume>("volume")
         .WithDescription("System volume settings");
 
     config.AddBranch("play", play =>
     {
+        config.AddCommand<Play>("")
+            .WithDescription("Play a media file with mpv");
+
         play.AddCommand<PlayRandom>("random")
             .WithDescription("Play a random media file with mpv");
-
     });
 
     config.AddBranch("info", info =>

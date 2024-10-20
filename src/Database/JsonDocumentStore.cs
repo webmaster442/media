@@ -14,7 +14,8 @@ namespace Media.Database;
 public sealed class JsonDocumentStore
 {
     private readonly string _zipFile;
-    private readonly JsonSerializerOptions _options;
+    private readonly JsonDocumentStoreOptions _options;
+    private readonly JsonSerializerOptions _serializerOptions;
     private const string ControlDataPrefix = "control";
     private const string BlobPrefix = "blob";
     private const int ChunkSize = 25;
@@ -25,10 +26,10 @@ public sealed class JsonDocumentStore
     /// Creates a new instance of the JsonDocumentStore class.
     /// </summary>
     /// <param name="zipFile">backing zip file path</param>
-    /// <param name="additionalConverters">additional JSON converters</param>
-    public JsonDocumentStore(string zipFile, params JsonConverter[] additionalConverters)
+    public JsonDocumentStore(string zipFile, JsonDocumentStoreOptions options)
     {
-        _options = new JsonSerializerOptions()
+        _options = options;
+        _serializerOptions = new JsonSerializerOptions()
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             WriteIndented = true,
@@ -40,12 +41,14 @@ public sealed class JsonDocumentStore
                 new JsonStringEnumConverter(),
             },
         };
-        foreach (var additional in additionalConverters)
+        foreach (var additional in options.AdditionalConverters)
         {
-            _options.Converters.Add(additional);
+            _serializerOptions.Converters.Add(additional);
         }
         _zipFile = zipFile;
     }
+
+    private bool FileExists() => File.Exists(_zipFile);
 
     /// <summary>
     /// Store an object in the document store.
@@ -65,7 +68,7 @@ public sealed class JsonDocumentStore
             entry = zip.CreateEntry(key);
             await using (var stream = entry.Open())
             {
-                await JsonSerializer.SerializeAsync(stream, obj, _options);
+                await JsonSerializer.SerializeAsync(stream, obj, _serializerOptions);
             }
         }
     }
@@ -88,7 +91,7 @@ public sealed class JsonDocumentStore
             }
             await using (var stream = entry.Open())
             {
-                return await JsonSerializer.DeserializeAsync<T>(stream, _options);
+                return await JsonSerializer.DeserializeAsync<T>(stream, _serializerOptions);
             }
         }
     }
@@ -103,13 +106,13 @@ public sealed class JsonDocumentStore
     public async Task SerializeCollection<T>(string key,
                                              ICollection<T> items)
     {
-        async Task WriteChunk<T>(ZipArchive zip, string key, int chunks, List<T> currentChunk)
+        async Task WriteChunk(ZipArchive zip, string key, int chunks, List<T> currentChunk)
         {
             var entryKey = $"{key}\\{chunks}";
             var entry = zip.CreateEntry(entryKey);
             await using (var stream = entry.Open())
             {
-                await JsonSerializer.SerializeAsync(stream, currentChunk, _options);
+                await JsonSerializer.SerializeAsync(stream, currentChunk, _serializerOptions);
             }
         }
 
@@ -132,6 +135,8 @@ public sealed class JsonDocumentStore
                     await WriteChunk(zip, key, chunks, currentChunk);
                     currentChunk.Clear();
                     ++chunks;
+                    currentChunk.Add(item);
+                    ++counter;
                 }
             }
             if (currentChunk.Count > 0)
@@ -149,10 +154,16 @@ public sealed class JsonDocumentStore
     /// <returns>An async enumerable of the items</returns>
     public async IAsyncEnumerable<T> DeserializeCollection<T>(string key) where T : notnull
     {
+        if (!FileExists()
+            && _options.ReturnEmptyCollectionOnFileNotFound)
+        {
+            yield break;
+        }
+
         using (var zip = ZipFile.Open(_zipFile, ZipArchiveMode.Read))
         {
             var info = await GetCollectionInfo(zip, key);
-            for (int i = 0; i < info.Chunks; i++)
+            for (int i = 0; i <= info.Chunks; i++)
             {
                 var entryKey = $"{key}\\{i}";
                 var entry = zip.GetEntry(entryKey);
@@ -160,7 +171,7 @@ public sealed class JsonDocumentStore
                 {
                     await using (var stream = entry.Open())
                     {
-                        T[] chunk = await JsonSerializer.DeserializeAsync<T[]>(stream, _options)
+                        T[] chunk = await JsonSerializer.DeserializeAsync<T[]>(stream, _serializerOptions)
                             ?? throw new IOException("Corrupted file");
                         foreach (var item in chunk)
                         {
@@ -220,6 +231,12 @@ public sealed class JsonDocumentStore
     /// <returns>collection item count</returns>
     public async Task<(int chunks, int length)> GetCollectionCount(string key)
     {
+        if (!FileExists()
+            && _options.ReturnEmptyCollectionOnFileNotFound)
+        {
+            return (0, 0);
+        }
+
         using var zip = ZipFile.Open(_zipFile, ZipArchiveMode.Read);
         var info = await GetCollectionInfo(zip, key);
         return (info.Chunks, info.Count);
@@ -234,7 +251,7 @@ public sealed class JsonDocumentStore
             return new CollectionInfo(0, 0);
         }
         await using var stream = entry.Open();
-        return await JsonSerializer.DeserializeAsync<CollectionInfo>(stream, _options)
+        return await JsonSerializer.DeserializeAsync<CollectionInfo>(stream, _serializerOptions)
             ?? throw new IOException("File is corrupted");
     }
 
@@ -245,21 +262,19 @@ public sealed class JsonDocumentStore
         entry?.Delete();
         entry = zip.CreateEntry(entryKey);
         await using var stream = entry.Open();
-        await JsonSerializer.SerializeAsync(stream, new CollectionInfo(chunks, count), _options);
+        await JsonSerializer.SerializeAsync(stream, new CollectionInfo(chunks, count), _serializerOptions);
     }
 
     private async Task CleanupCollectionItems(ZipArchive zip, string key)
     {
         var collectionInfo = await GetCollectionInfo(zip, key);
-        if (collectionInfo.Chunks > 0)
+        for (uint i = 0; i <= collectionInfo.Chunks; i++)
         {
-            for (uint i = 0; i < collectionInfo.Chunks; i++)
-            {
-                var entryKey = $"{key}\\{i}";
-                var entry = zip.GetEntry(entryKey);
-                entry?.Delete();
-            }
+            var entryKey = $"{key}\\{i}";
+            var entry = zip.GetEntry(entryKey);
+            entry?.Delete();
         }
+
         await SetCollectionInfo(zip, key, 0, 0);
     }
 }
