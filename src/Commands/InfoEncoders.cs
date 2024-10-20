@@ -50,7 +50,9 @@ internal class InfoEncoders : Command<InfoEncoders.Settings>
             {
                 encoders = Filter(encoders, settings);
             }
-            PrintTable(encoders);
+
+            Terminal.DisplayTable(encoders);
+
             return ExitCodes.Success;
         }
         catch (Exception e)
@@ -77,17 +79,4 @@ internal class InfoEncoders : Command<InfoEncoders.Settings>
         }
         return encoders.Where(filter.Compile());
     }
-
-    private static void PrintTable(IEnumerable<FFMpegEncoderInfo> encoders)
-    {
-        var table = new Table();
-        table.AddColumns("Name", "Type", "Description");
-        foreach (var encoder in encoders)
-        {
-            table.AddRow(encoder.Name, encoder.Type.ToString(), encoder.Description);
-        }
-        AnsiConsole.Write(table);
-    }
-
-
 }
