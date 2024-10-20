@@ -5,6 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
+using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Infrastructure.BaseCommands;

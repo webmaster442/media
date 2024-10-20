@@ -3,7 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Infrastructure;
+namespace Media.Interfaces;
 
 internal interface IDryRunResultAcceptor
 {

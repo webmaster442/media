@@ -5,6 +5,7 @@
 
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
+using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Commands;

@@ -6,6 +6,7 @@
 using Media.Dto;
 using Media.Infrastructure;
 using Media.Infrastructure.Validation;
+using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Commands;
