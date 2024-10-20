@@ -46,4 +46,12 @@ public static class Extensions
             .Replace(Preset.InputPlaceHolder, $"\"{inputFile}\"")
             .Replace(Preset.OutputPlaceHolder, $"\"{outputFile}\"");
     }
+
+    public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> items)
+    {
+        foreach (var item in items)
+        {
+            collection.Add(item);
+        }
+    }
 }

@@ -35,7 +35,7 @@ mainApp.Configure(config =>
 
     config.AddBranch("play", play =>
     {
-        config.AddCommand<Play>("")
+        config.AddCommand<Play>(string.Empty)
             .WithDescription("Play a media file with mpv");
 
         play.AddCommand<PlayRandom>("random")

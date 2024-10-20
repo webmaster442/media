@@ -21,13 +21,18 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
     internal class Settings : ValidatedCommandSettings
     {
         [Description("Enable subdirectory selector")]
-        [CommandOption("-b|--browswe")]
+        [CommandOption("-b|--browse")]
         public bool SubDirectorySelection { get; init; }
 
         [DirectoryExists]
         [CommandArgument(0, "<folder>")]
         [Description("The folder to play from")]
         public string Folder { get; set; } = Environment.CurrentDirectory;
+
+        [Range(1, 100)]
+        [Description("Number of files to select. In range of 1 to 100")]
+        [CommandArgument(1, "[count]")]
+        public int SelectionCount { get; set; } = 1;
     }
 
     internal record class DirectoryEntry(string Name, string Path);
@@ -56,30 +61,34 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 
             Item selectedItem = await selector.SelectItemAsync(consoleCancel.Token);
 
-            var file = RandomSelectorProvider.ScanSupportedFiles(selectedItem.FullPath)
+            var files = RandomSelectorProvider.ScanSupportedFiles(selectedItem.FullPath)
+                .Except(_documentStore.PlayedFiles)
                 .OrderBy(_ => Random.Shared.Next())
-                .FirstOrDefault();
+                .Take(settings.SelectionCount);
 
 
-            if (!string.IsNullOrEmpty(file))
+            if (files.Any())
             {
-                builder.WithInputFile(file);
+                _documentStore.PlayedFiles.AddRange(files);
+                await _documentStore.Save();
+
+                builder.WithInputFiles(files);
                 _mpv.Start(builder);
             }
         }
         else
         {
-            var file = RandomSelectorProvider.ScanSupportedFiles(settings.Folder)
-                .Where(file => !_documentStore.PlayedFiles.Contains(file))
+            var files = RandomSelectorProvider.ScanSupportedFiles(settings.Folder)
+                .Except(_documentStore.PlayedFiles)
                 .OrderBy(_ => Random.Shared.Next())
-                .FirstOrDefault();
+                .Take(settings.SelectionCount);
 
-            if (!string.IsNullOrEmpty(file))
+            if (files.Any())
             {
-                _documentStore.PlayedFiles.Add(file);
+                _documentStore.PlayedFiles.AddRange(files);
                 await _documentStore.Save();
 
-                builder.WithInputFile(file);
+                builder.WithInputFiles(files);
                 _mpv.Start(builder);
             }
         }

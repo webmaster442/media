@@ -106,9 +106,9 @@ public sealed class JsonDocumentStore
     public async Task SerializeCollection<T>(string key,
                                              ICollection<T> items)
     {
-        async Task WriteChunk(ZipArchive zip, string key, int chunks, List<T> currentChunk)
+        async Task WriteChunk(ZipArchive zip, string key, int chunk, List<T> currentChunk)
         {
-            var entryKey = $"{key}\\{chunks}";
+            var entryKey = $"{key}\\{chunk}";
             var entry = zip.CreateEntry(entryKey);
             await using (var stream = entry.Open())
             {
@@ -119,25 +119,20 @@ public sealed class JsonDocumentStore
         using (var zip = ZipFile.Open(_zipFile, ZipArchiveMode.Update))
         {
             int counter = 0;
-            int chunks = 0;
+            int chunks = 1;
             await CleanupCollectionItems(zip, key);
 
             List<T> currentChunk = new List<T>(ChunkSize);
             foreach (var item in items)
             {
-                if (currentChunk.Count < ChunkSize)
-                {
-                    currentChunk.Add(item);
-                    ++counter;
-                }
-                else
+                if (currentChunk.Count >= ChunkSize)
                 {
                     await WriteChunk(zip, key, chunks, currentChunk);
                     currentChunk.Clear();
                     ++chunks;
-                    currentChunk.Add(item);
-                    ++counter;
                 }
+                currentChunk.Add(item);
+                ++counter;
             }
             if (currentChunk.Count > 0)
                 await WriteChunk(zip, key, chunks, currentChunk);
@@ -163,7 +158,7 @@ public sealed class JsonDocumentStore
         using (var zip = ZipFile.Open(_zipFile, ZipArchiveMode.Read))
         {
             var info = await GetCollectionInfo(zip, key);
-            for (int i = 0; i <= info.Chunks; i++)
+            for (int i = 0; i < info.Chunks; i++)
             {
                 var entryKey = $"{key}\\{i}";
                 var entry = zip.GetEntry(entryKey);
@@ -268,7 +263,7 @@ public sealed class JsonDocumentStore
     private async Task CleanupCollectionItems(ZipArchive zip, string key)
     {
         var collectionInfo = await GetCollectionInfo(zip, key);
-        for (uint i = 0; i <= collectionInfo.Chunks; i++)
+        for (uint i = 0; i < collectionInfo.Chunks; i++)
         {
             var entryKey = $"{key}\\{i}";
             var entry = zip.GetEntry(entryKey);

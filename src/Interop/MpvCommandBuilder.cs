@@ -5,6 +5,8 @@
 
 using Media.Interfaces;
 
+using Microsoft.AspNetCore.Components.Forms;
+
 namespace Media.Interop;
 
 internal class MpvCommandBuilder : IBuilder<string>
@@ -48,12 +50,31 @@ internal class MpvCommandBuilder : IBuilder<string>
 
     public MpvCommandBuilder WithInputFile(string inputFile)
     {
-        if (inputFile.StartsWith("http://"))
+        if (IsNetworkStream(inputFile))
         {
             SetArgument(ArgumentPriority.CacheSeconds, $"--cache-secs=30");
         }
         SetArgument(ArgumentPriority.InputFile, $"\"{inputFile}\"");
         return this;
+    }
+
+    public MpvCommandBuilder WithInputFiles(IEnumerable<string> inputFiles)
+    {
+        if (inputFiles.Any(f => IsNetworkStream(f)))
+        {
+            SetArgument(ArgumentPriority.CacheSeconds, $"--cache-secs=30");
+        }
+
+        SetArgument(ArgumentPriority.InputFile, $"{string.Join(' ', inputFiles.Select(f => $"\"{f}\""))}");
+        return this;
+    }
+
+    private static bool IsNetworkStream(string inputFile)
+    {
+        return inputFile.StartsWith("http://")
+            || inputFile.StartsWith("https://")
+            || inputFile.StartsWith("ftp://")
+            || inputFile.StartsWith("\\\\");
     }
 
     public string Build()
