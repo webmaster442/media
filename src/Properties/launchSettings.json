@@ -24,6 +24,18 @@
       "commandName": "Project",
       "commandLineArgs": "play -r"
     },
+    "play c:\\": {
+      "commandName": "Project",
+      "commandLineArgs": "play c:\\"
+    },
+    "play random h:\\": {
+      "commandName": "Project",
+      "commandLineArgs": "play random h:\\"
+    },
+    "info encoders": {
+      "commandName": "Project",
+      "commandLineArgs": "info encoders"
+    },
     "info hw-encoders": {
       "commandName": "Project",
       "commandLineArgs": "info hw-encoders"
@@ -34,14 +46,6 @@
     },
     "default": {
       "commandName": "Project"
-    },
-    "play c:\\": {
-      "commandName": "Project",
-      "commandLineArgs": "play c:\\"
-    },
-    "play random h:\\": {
-      "commandName": "Project",
-      "commandLineArgs": "play random h:\\"
     },
     "convert drop": {
       "commandName": "Project",

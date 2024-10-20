@@ -56,7 +56,7 @@ internal sealed class Play : BasePlaylistCommand<Play.Settings>
         _mpv = new Mpv(configAccessor);
     }
 
-    private async Task RunMpv(string fileName, bool enableRemote)
+    private async Task RunMpv(bool enableRemote, params string[] files)
     {
         var pipeName = $"mpvsocket-{GetRandomId()}";
         var builder = new MpvCommandBuilder();
@@ -64,7 +64,7 @@ internal sealed class Play : BasePlaylistCommand<Play.Settings>
         if (enableRemote)
             builder.WithIpcServer(pipeName);
 
-        builder.WithInputFile(fileName);
+        builder.WithInputFiles(files);
 
         using var process = _mpv.CreateProcess(builder.Build(),
                                                redirectStdIn: false,
@@ -114,15 +114,6 @@ internal sealed class Play : BasePlaylistCommand<Play.Settings>
         return $"\"{selectedItem.FullPath}\"";
     }
 
-    private async Task<string> CreatePlaylist(string directoryName)
-    {
-        Playlist result = new();
-        var file = Path.Combine(directoryName, Path.ChangeExtension(Path.GetFileName(directoryName), ".m3u"));
-        result.AddRange(RandomSelectorProvider.ScanSupportedFiles(directoryName, false));
-        await SaveToFile(result, file, true);
-        return file;
-    }
-
     protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, Settings settings)
     {
         if (string.IsNullOrWhiteSpace(settings.InputFile))
@@ -133,16 +124,17 @@ internal sealed class Play : BasePlaylistCommand<Play.Settings>
                 ? await DoDlnaBrowse()
                 : await DoFileSelection();
 
-            await RunMpv(file, settings.EnableRemote);
+            await RunMpv(settings.EnableRemote, file);
         }
         else if (Directory.Exists(settings.InputFile))
         {
-            string playlist = await CreatePlaylist(settings.InputFile);
-            await RunMpv(playlist, settings.EnableRemote);
+            var files = RandomSelectorProvider.ScanSupportedFiles(settings.InputFile, false).ToArray();
+
+            await RunMpv(settings.EnableRemote, files);
         }
         else
         {
-            await RunMpv(settings.InputFile, settings.EnableRemote);
+            await RunMpv(settings.EnableRemote, settings.InputFile);
         }
     }
 }
