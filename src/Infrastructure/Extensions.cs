@@ -54,4 +54,17 @@ public static class Extensions
             collection.Add(item);
         }
     }
+
+    public static string ToHumanReadableSize(this long size)
+    {
+        string[] sizes = { "B", "KiB", "MiB", "GiB", "TiB", "PiB" };
+        int order = 0;
+        while (size >= 1024 && order < sizes.Length - 1)
+        {
+            order++;
+            size = size / 1024;
+        }
+
+        return $"{size:0.##} {sizes[order]}";
+    }
 }

@@ -40,6 +40,10 @@
       "commandName": "Project",
       "commandLineArgs": "info hw-encoders"
     },
+    "info drives": {
+      "commandName": "Project",
+      "commandLineArgs": "info drives"
+    },
     "serve": {
       "commandName": "Project",
       "commandLineArgs": "serve d:\\video"

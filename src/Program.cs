@@ -55,6 +55,9 @@ mainApp.Configure(config =>
 
         info.AddCommand<InfoPresets>("presets")
             .WithDescription("List available presets");
+
+        info.AddCommand<InfoDrives>("drives")
+            .WithDescription("Print drive informations");
     });
 
     config.AddBranch("cd", cd =>
