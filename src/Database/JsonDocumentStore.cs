@@ -119,7 +119,7 @@ public sealed class JsonDocumentStore
         using (var zip = ZipFile.Open(_zipFile, ZipArchiveMode.Update))
         {
             int counter = 0;
-            int chunks = 1;
+            int chunks = 0;
             await CleanupCollectionItems(zip, key);
 
             List<T> currentChunk = new List<T>(ChunkSize);
@@ -158,7 +158,7 @@ public sealed class JsonDocumentStore
         using (var zip = ZipFile.Open(_zipFile, ZipArchiveMode.Read))
         {
             var info = await GetCollectionInfo(zip, key);
-            for (int i = 0; i < info.Chunks; i++)
+            for (int i = 0; i <= info.Chunks; i++)
             {
                 var entryKey = $"{key}\\{i}";
                 var entry = zip.GetEntry(entryKey);
@@ -263,7 +263,7 @@ public sealed class JsonDocumentStore
     private async Task CleanupCollectionItems(ZipArchive zip, string key)
     {
         var collectionInfo = await GetCollectionInfo(zip, key);
-        for (uint i = 0; i < collectionInfo.Chunks; i++)
+        for (uint i = 0; i <= collectionInfo.Chunks; i++)
         {
             var entryKey = $"{key}\\{i}";
             var entry = zip.GetEntry(entryKey);
