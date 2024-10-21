@@ -10,6 +10,7 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Convert a file to Aplle losless", "media convert input.wav output.m4a")]
 internal sealed class ConvertToAlac : BaseFFMpegCommand<ConvertToAlac.Settings>
 {
     public ConvertToAlac(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)

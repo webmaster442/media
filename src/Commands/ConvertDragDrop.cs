@@ -12,6 +12,7 @@ using Media.Ui;
 
 namespace Media.Commands;
 
+[Example("Open a window to convert a file by drag and drop", "media convert drop")]
 internal class ConvertDragDrop : GuiCommandBase<DropConvertWindow>
 {
     protected override Point? GetWindowStartLocation(Size screen, Size window)

@@ -10,6 +10,7 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Convert a video to a contact sheet", "media contactsheet --rows 5 --cols 5 input.mp4 output.jpg")]
 internal sealed class ConvertContactSheet : BaseFFMpegCommand<ConvertContactSheet.Settings>
 {
     public ConvertContactSheet(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)

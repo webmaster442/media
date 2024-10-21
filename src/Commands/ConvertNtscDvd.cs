@@ -10,6 +10,9 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Convert a video file to NTSC DVD compatible MPEG2 with an AC3 audio and 192k audio bitrate", "media convert dvd-ntsc input.mp4 output.mpg -b 192k")]
+[Example("Convert a video file to NTSC DVD compatible MPEG2 with letterbox (4:3) aspect", "media convert dvd-ntsc input.mp4 output.mpg -b 192k -l")]
+
 internal sealed class ConvertNtscDvd : BaseFFMpegCommand<ConvertNtscDvd.Settings>
 {
     public ConvertNtscDvd(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)

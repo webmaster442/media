@@ -11,6 +11,8 @@ using Media.Infrastructure.BaseCommands;
 using Spectre.Console;
 
 namespace Media.Commands;
+
+[Example("Copy files from a playlist to a directory", @"media playlist copy -p test.m3u c:\target")]
 internal class PlaylistCopy : BasePlaylistCommand<PlaylistCopy.Settings>
 {
     public class Settings : BasePlalistSettings

@@ -11,6 +11,7 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Convert a media file using a preset", "media convert preset presetname input.mp4 output.mkv")]
 internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
 {
     private readonly FFMpeg _ffmpeg;

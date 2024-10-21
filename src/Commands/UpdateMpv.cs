@@ -11,6 +11,7 @@ using SharpCompress.Archives.SevenZip;
 
 namespace Media.Commands;
 
+[Example("Update mpv", "media update mpv")]
 internal sealed class UpdateMpv : BaseGithubUpdateCommand
 {
     private readonly ConfigAccessor _configAccessor;

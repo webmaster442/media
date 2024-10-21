@@ -11,6 +11,7 @@ using Spectre.Console;
 
 namespace Media.Commands;
 
+[Example("Show ffmpeg hardware encoder information for current system", "media info hwencoders")]
 internal sealed class InfoHwEncoders : AsyncCommand
 {
     private readonly FFMpeg _ffMpeg;

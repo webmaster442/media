@@ -9,6 +9,7 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Show information about a media file", "media info file video.mp4")]
 internal class InfoFile : AsyncCommand<InfoFile.Settings>
 {
     public class Settings : CommandSettings

@@ -11,6 +11,7 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Cut a video file segment without reencode", "media cut input.mp4 output.mp4 --start 00:00:00 --end 00:01:00")]
 internal sealed class Cut : Command<Cut.Settings>
 {
     private readonly FFMpeg _ffMpeg;

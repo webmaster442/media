@@ -8,6 +8,7 @@ using Media.Infrastructure;
 
 namespace Media.Commands;
 
+[Example("Show information about drives", "media info drives")]
 internal sealed class InfoDrives : Command
 {
     private static string Get(DriveInfo drive, Func<DriveInfo, string> selector)

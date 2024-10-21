@@ -33,6 +33,9 @@ mainApp.Configure(config =>
     config.AddCommand<Volume>("volume")
         .WithDescription("System volume settings");
 
+    config.AddCommand<Website>("website")
+        .WithDescription("Open the project website");
+
     config.AddBranch("play", play =>
     {
         config.AddCommand<Play>(string.Empty)
@@ -40,6 +43,24 @@ mainApp.Configure(config =>
 
         play.AddCommand<PlayRandom>("random")
             .WithDescription("Play a random media file with mpv");
+    });
+
+    config.AddBranch("playlist", playlist =>
+    {
+        playlist.AddCommand<PlaylistNew>("new")
+            .WithDescription("Create a new playlist");
+
+        playlist.AddCommand<PlaylistAdd>("add")
+            .WithDescription("Add a file to a playlist");
+
+        playlist.AddCommand<PlaylistRemove>("remove")
+            .WithDescription("Remove a file from a playlist");
+
+        playlist.AddCommand<PlaylistClear>("clear")
+            .WithDescription("Clear a playlist");
+
+        playlist.AddCommand<PlaylistCopy>("copy")
+            .WithDescription("Copy files from a playlist to a directory");
     });
 
     config.AddBranch("info", info =>
@@ -79,8 +100,6 @@ mainApp.Configure(config =>
 
     config.AddBranch("convert", convert =>
     {
-        //Note: when adding a new command also add it to the BachCompile class
-
         convert.SetDescription("Convert audio/video files");
 
         convert.AddCommand<ConvertToAlac>("alac")

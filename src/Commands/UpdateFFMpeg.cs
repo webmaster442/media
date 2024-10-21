@@ -11,6 +11,7 @@ using Media.Infrastructure.BaseCommands;
 
 namespace Media.Commands;
 
+[Example("Update ffmpeg", "media update ffmpeg")]
 internal sealed class UpdateFFMpeg : BaseGithubUpdateCommand
 {
     private readonly ConfigAccessor _configAccessor;

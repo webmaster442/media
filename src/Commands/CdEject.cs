@@ -8,6 +8,7 @@ using Media.Interop.CdRip;
 
 namespace Media.Commands;
 
+[Example("Eject cd drive d:", @"media cdeject D:\")]
 internal sealed class CdEject : AsyncCommand<BaseCdSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, BaseCdSettings settings)

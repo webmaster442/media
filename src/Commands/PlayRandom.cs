@@ -12,6 +12,10 @@ using Media.Infrastructure.Validation;
 using Media.Interop;
 
 namespace Media.Commands;
+
+[Example("Play a random file from a directory", @"media play random d:\")]
+[Example("Play random 15 filse from a directory", @"media play random d:\ 15")]
+[Example("Play a random file from a directory with subdir selector", @"media play random d:\ --browse")]
 internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 {
     private readonly Mpv _mpv;

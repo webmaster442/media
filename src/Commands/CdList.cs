@@ -10,6 +10,7 @@ using Spectre.Console;
 
 namespace Media.Commands;
 
+[Example("List cd tracks", @"media cdlist D:\")]
 internal sealed class CdList : AsyncCommand<BaseCdSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, BaseCdSettings settings)

@@ -13,6 +13,11 @@ using Spectre.Console;
 
 namespace Media.Commands;
 
+[Example("Show all available ffmpeg encoders", "media info encoders")]
+[Example("Show available ffmpeg audio encoders", "media info encoders --audio")]
+[Example("Show available ffmpeg video encoders", "media info encoders --video")]
+[Example("Show available ffmpeg subtitle encoders", "media info encoders --subtitle")]
+[Example("Show available ffmpeg audio & video encoders", "media info encoders --audio --video")]
 internal class InfoEncoders : Command<InfoEncoders.Settings>
 {
     public class Settings : ValidatedCommandSettings

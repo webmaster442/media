@@ -10,6 +10,7 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Convert an audio file to DVD compatible wav", "media convert dvdwav input.mp3 output.wav")]
 internal sealed class ConvertToDVDWav : BaseFFMpegCommand<ConvertToDVDWav.Settings>
 {
     public ConvertToDVDWav(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)

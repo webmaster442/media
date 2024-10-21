@@ -10,6 +10,7 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Convert a file to mp3 with 320k bitrate", "media convert mp3 input.wav output.mp3 -b 320k")]
 internal sealed class ConvertToMp3 : BaseFFMpegCommand<ConvertToMp3.Settings>
 {
     public ConvertToMp3(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)

@@ -8,6 +8,7 @@ using Media.Infrastructure.BaseCommands;
 
 namespace Media.Commands;
 
+[Example("Create a new playlist", "media playlist new -p test.m3u")]
 internal sealed class PlaylistNew : BasePlaylistCommand<PlaylistNew.Settings>
 {
     internal class Settings : ValidatedCommandSettings

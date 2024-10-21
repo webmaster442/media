@@ -11,6 +11,7 @@ using Spectre.Console;
 
 namespace Media.Commands;
 
+[Example("Rip cd tracks from drive d: to a directory", @"media cdrip D:\ C:\temp")]
 internal sealed class CdRip : AsyncCommand<CdRip.Settings>
 {
     public class Settings : BaseCdSettings

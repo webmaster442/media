@@ -9,6 +9,7 @@ using Media.Infrastructure;
 
 namespace Media.Commands;
 
+[Example("Open the config file in the default editor", "media config")]
 internal sealed class Config : AsyncCommand
 {
     private readonly ConfigAccessor _configAccessor;

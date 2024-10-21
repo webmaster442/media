@@ -12,36 +12,4 @@ In the background it uses:
 * yt-dlp - https://github.com/yt-dlp/yt-dlp
 * mpv - https://mpv.io/
 
-Subcommand layout
-
-media
-  ├── cut
-  ├── info
-  ├── play
-  └── version
-
-media          media       media         media
-  └─bach        └─cd        └─convert     └─extract    
-     ├── add       ├── close   ├─ ac3        ├─ audio
-     ├── clear     ├── eject   ├─ alac       └─ stereo-m4a
-     ├── compile   ├── list    ├─ cdwav
-     ├── new       └── ripp    ├─ dvdwav
-     ├── remove                ├─ dvd-pal
-     └── set                   ├─ dvd-ntsc  
-                               ├─ flac
-                               ├─ m4a
-                               └─ mp3
-
-media               media         media
-  └─mux               └─playlist   └─update
-     ├── add-audio       ├── add      ├─ all 
-     └── add-subtitle    ├── clear    ├─ ffmpeg
-                         ├── new      ├─ media
-                         └── remove   ├─ mpv
-                                      └─ yt-dlp
-
-To get detaild help start the program with the -h or --help flag.
-
-The help flag can beused with any subcommand to get detailed help for that. 
-
-Example: media convert -h
+Example usage:

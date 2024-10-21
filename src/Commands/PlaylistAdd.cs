@@ -8,6 +8,8 @@ using Media.Infrastructure.BaseCommands;
 
 namespace Media.Commands;
 
+[Example("Add files to a playlist", "media playlist add -p test.m3u audio.mp3")]
+[Example("Add multiple files to a playlist", "media playlist add -p test.m3u track*.mp3")]
 internal sealed class PlaylistAdd : BasePlaylistCommand<PlaylistAdd.Settings>
 {
     public class Settings : BasePlalistSettings

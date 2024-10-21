@@ -10,6 +10,7 @@ using Spectre.Console;
 
 namespace Media.Commands;
 
+[Example("List available presets", "media info presets")]
 public class InfoPresets : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext context)

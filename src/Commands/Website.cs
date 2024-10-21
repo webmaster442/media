@@ -3,22 +3,19 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using Media.Infrastructure;
+using System.Diagnostics;
 
 namespace Media.Commands;
 
-[Example("Show version information", "media version")]
-internal sealed class Version : Command
+internal sealed class Website : Command
 {
     public override int Execute(CommandContext context)
     {
-        var currentVersion = typeof(Program).Assembly.GetName().Version;
-        if (currentVersion == null)
+        Process.Start(new ProcessStartInfo
         {
-            Terminal.RedText("Version was not set during build");
-            return ExitCodes.Error;
-        }
-        Terminal.GreenText($"Version: {currentVersion}");
+            UseShellExecute = true,
+            FileName = "https://github.com/webmaster442/media"
+        });
         return ExitCodes.Success;
     }
 }

@@ -8,6 +8,7 @@ using Media.Interop.CdRip;
 
 namespace Media.Commands;
 
+[Example("Close cd drive d:", @"media cdclose D:\")]
 internal sealed class CdClose : AsyncCommand<BaseCdSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, BaseCdSettings settings)

@@ -8,6 +8,7 @@ using Media.Infrastructure.BaseCommands;
 
 namespace Media.Commands;
 
+[Example("Remove a file from a playlist", "media playlist remove -p test.m3u file.mp3")]
 internal sealed class PlaylistRemove : BasePlaylistCommand<PlaylistRemove.Settings>
 {
     public class Settings : BasePlalistSettings

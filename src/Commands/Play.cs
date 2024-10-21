@@ -15,6 +15,10 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Play a media file with mpv", "media play video.mp4")]
+[Example("Play a media folder with mpv", @"media play d:\folder")]
+[Example("Play a media file with DLNA file browser selection", "media play --dlna")]
+[Example("Play a media file with http remote enabled", "media play video.mp4 --remote")]
 internal sealed class Play : BasePlaylistCommand<Play.Settings>
 {
     private readonly int _remotePort;

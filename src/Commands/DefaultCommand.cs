@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.Versioning;
 
+using Media.Infrastructure;
 using Media.Interop;
 
 using Spectre.Console;
@@ -26,12 +27,16 @@ internal class DefaultCommand : Command
         var content = reader.ReadToEnd();
 
         AnsiConsole.WriteLine(content);
+
+        var exampleGenerator = new ExampleGenerator();
+        foreach (var example in exampleGenerator.GenerateExamples())
+        {
+            AnsiConsole.MarkupLine(example);
+        }
     }
 
-    [SupportedOSPlatform("windows")]
     private static bool WasItStartedByAShell()
     {
-        [SupportedOSPlatform("windows")]
         static Process? GetParentProcess()
         {
             try

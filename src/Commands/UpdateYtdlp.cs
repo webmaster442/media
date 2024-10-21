@@ -9,6 +9,7 @@ using Media.Infrastructure.BaseCommands;
 
 namespace Media.Commands;
 
+[Example("Update yt-dlp", "media update ytdlp")]
 internal class UpdateYtdlp : BaseGithubUpdateCommand
 {
     private readonly ConfigAccessor _configAccessor;

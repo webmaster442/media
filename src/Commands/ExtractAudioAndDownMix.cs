@@ -10,6 +10,8 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Extract audio stream from a video and convert it to a stereo m4a", "media extract stereo-m4a video.mp4 output.m4a -b 256k")]
+[Example("Extract the 2nd audio stream from a video and convert it to a stereo m4a", "media extract stereo-m4a video.mp4 output.m4a -b 256k -a 1")]
 internal class ExtractAudioStereoM4a : BaseFFMpegCommand<ExtractAudioStereoM4a.Settings>
 {
     public ExtractAudioStereoM4a(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)

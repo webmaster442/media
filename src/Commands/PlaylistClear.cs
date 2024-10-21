@@ -8,6 +8,7 @@ using Media.Infrastructure.BaseCommands;
 
 namespace Media.Commands;
 
+[Example("Clear a playlist", "media playlist clear -p test.m3u")]
 internal sealed class PlaylistClear : BasePlaylistCommand<BasePlalistSettings>
 {
     protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, BasePlalistSettings settings)

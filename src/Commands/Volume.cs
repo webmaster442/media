@@ -8,6 +8,9 @@ using Media.Infrastructure.Validation;
 using Media.Interop;
 
 namespace Media.Commands;
+
+[Example("Set system audio volume to 50%", "media volume 50")]
+[Example("Mute or unmute system audio", "media volume --mute")]
 internal class Volume : Command<Volume.Arguments>
 {
     internal class Arguments : ValidatedCommandSettings

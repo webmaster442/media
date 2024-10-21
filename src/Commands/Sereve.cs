@@ -17,6 +17,7 @@ using NMaier.SimpleDlna.Server.Types;
 
 namespace Media.Commands;
 
+[Example("Start a DLNA server", @"media sereve d:\")]
 internal sealed class Sereve : Command<Sereve.Settings>
 {
     private readonly int _dlnaServerPort;

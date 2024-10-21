@@ -8,10 +8,12 @@ using System.IO.Compression;
 
 using Media.Dto.Github;
 using Media.Embedded;
+using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 
 namespace Media.Commands;
 
+[Example("Update media", "media update media")]
 internal sealed class UpdateMedia : BaseGithubUpdateCommand
 {
     public UpdateMedia()

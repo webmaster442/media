@@ -7,6 +7,7 @@ using Media.Infrastructure;
 
 namespace Media.Commands;
 
+[Example("Update all tools", "media update all")]
 internal sealed class UpdateAll : AsyncCommand
 {
     private readonly ConfigAccessor _configAccessor;

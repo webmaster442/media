@@ -8,6 +8,7 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Download a video from youtube in HD 1080p (if available)", "media ytdload http://youtu.be/id -q Hd1080Mp4")]
 internal class YtDload : AsyncCommand<YtDload.Settings>
 {
     private readonly YtDlp _ytdlp;

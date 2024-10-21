@@ -10,6 +10,8 @@ using Media.Interop;
 
 namespace Media.Commands;
 
+[Example("Convert a file to flac", "media convert input.wav output.flac")]
+[Example("Convert a file to flac with maximal compression", "media convert input.wav output.flac -c 12")]
 internal sealed class ConvertToFlac : BaseFFMpegCommand<ConvertToFlac.Settings>
 {
     public ConvertToFlac(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
