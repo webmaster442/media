@@ -46,11 +46,11 @@ internal partial class DropConvertViewModel : ObservableObject, IViewModel
     public async void Initialize()
     {
         var presets = await Presets.LoadPresetArray();
-        foreach (var preset in presets)
+        foreach (var preset in presets.OrderBy(x => x.Category).ThenBy(x => x.Name))
         {
             PresetCollection.Add(preset);
-            SelectedPreset = PresetCollection[0];
         }
+        SelectedPreset = PresetCollection[0];
         _fFMpeg.TryGetInstalledPath(out string? path);
         if (string.IsNullOrEmpty(path))
         {

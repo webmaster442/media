@@ -23,7 +23,7 @@ internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window
 
         public void Exit(int exitCode)
         {
-            Application.Current.Shutdown(exitCode);
+            Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown(exitCode));
         }
 
         public void InfoMessage(string message, string title)

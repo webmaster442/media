@@ -178,7 +178,7 @@ Presets XML file for the encode presets command
       ]]>
     </Description>
   </Preset>
-  <Preset Name="hevc-nvidia-hd-mp4-aac" Extension=".mp4">
+  <Preset Name="hevc-nvidia-hd-mp4-aac" Extension=".mp4" Category="Video">
     <CommandLine>
       -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v hevc_nvenc -preset slow -vf "scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
