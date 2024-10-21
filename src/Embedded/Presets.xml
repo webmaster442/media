@@ -10,6 +10,40 @@
 Presets XML file for the encode presets command
 -->
 <Presets>
+  <!-- Lossless audio formatas -->
+  <Preset Name="Flac" Extension=".flac" Category="Lossless Audio">
+    <CommandLine>
+      -i {input} -vn -c:a flac {output}
+    </CommandLine>
+    <Description>
+      <![CDATA[
+      Encodes an input file to lossless FLAC format.
+      If the input file is a video, the audio stream is extracted only.
+      ]]>
+    </Description>
+  </Preset>
+  <Preset Name="Alac" Extension=".m4a" Category="Lossless Audio">
+    <CommandLine>
+      -i {input} -vn -c:a alac {output}
+    </CommandLine>
+    <Description>
+      <![CDATA[
+      Encodes an input file to lossless ALAC format.
+      If the input file is a video, the audio stream is extracted only.
+      ]]>
+    </Description>
+  </Preset>
+  <Preset Name="WavPack" Extension=".wv" Category="Lossless Audio">
+    <CommandLine>
+      -i {input} -vn -c:a wavpack {output}
+    </CommandLine>
+    <Description>
+      <![CDATA[
+      Encodes an input file to lossless WavPack format.
+      If the input file is a video, the audio stream is extracted only.
+      ]]>
+    </Description>
+  </Preset>
   <!-- Audio MP3 Presets -->
   <Preset Name="mp3-192k" Extension=".mp3" Category="Audio">
     <CommandLine>
@@ -44,7 +78,6 @@ Presets XML file for the encode presets command
       ]]>
     </Description>
   </Preset>
-
   <!-- Audio M4A Presets -->
   <Preset Name="mp4-192k" Extension=".m4a" Category="Audio">
     <CommandLine>
@@ -132,9 +165,7 @@ Presets XML file for the encode presets command
       ]]>
     </Description>
   </Preset>
-  
   <!-- No framerate limit presets  -->
-  
   <Preset Name="hevc-nvidia-hd-mp4" Extension=".mp4" Category="Video">
     <CommandLine>
       -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v hevc_nvenc -preset slow -vf "scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
