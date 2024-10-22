@@ -5,7 +5,6 @@
 
 using System.Threading;
 using System.Windows;
-using System.Windows.Threading;
 
 using Media.Interfaces;
 
@@ -65,41 +64,40 @@ internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window
 
     private void UiThreadCode()
     {
-        App app = new();
-        app.InitializeComponent();
-        app.DispatcherUnhandledException += OnException;
-        app.ShutdownMode = ShutdownMode.OnMainWindowClose;
-        app.MainWindow = new TWindow();
-
-        var dataContext = CreateDataContext(new UiFunctionsImplementation());
-        if (dataContext != null)
+        try
         {
-            app.MainWindow.DataContext = dataContext;
-            dataContext.Initialize();
+            App app = new();
+            app.InitializeComponent();
+            app.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            app.MainWindow = new TWindow();
+
+            var dataContext = CreateDataContext(new UiFunctionsImplementation());
+            if (dataContext != null)
+            {
+                app.MainWindow.DataContext = dataContext;
+                dataContext.Initialize();
+            }
+
+            app.MainWindow.SnapsToDevicePixels = true;
+            app.MainWindow.UseLayoutRounding = true;
+
+            Point? position = GetWindowStartLocation(new Size(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height),
+                                                    new Size(app.MainWindow.Width, app.MainWindow.Height));
+
+            if (position != null)
+            {
+                app.MainWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+                app.MainWindow.Left = position.Value.X;
+                app.MainWindow.Top = position.Value.Y;
+            }
+
+            app.MainWindow.ShowDialog();
         }
-
-        app.MainWindow.SnapsToDevicePixels = true;
-        app.MainWindow.UseLayoutRounding = true;
-
-        Point? position = GetWindowStartLocation(new Size(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height),
-                                                new Size(app.MainWindow.Width, app.MainWindow.Height));
-
-        if (position != null)
+        catch (Exception ex)
         {
-            app.MainWindow.WindowStartupLocation = WindowStartupLocation.Manual;
-            app.MainWindow.Left = position.Value.X;
-            app.MainWindow.Top = position.Value.Y;
+            MessageBox.Show(ex.Message, "Unhandled exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            GlobalExceptionHandler.HandleExcpetion(ex);
         }
-
-        app.MainWindow.ShowDialog();
-        app.DispatcherUnhandledException -= OnException;
-    }
-
-    private void OnException(object sender, DispatcherUnhandledExceptionEventArgs e)
-    {
-        GlobalExceptionHandler.HandleExcpetion(e.Exception);
-        MessageBox.Show(e.Exception.Message, "Unhandled exception", MessageBoxButton.OK, MessageBoxImage.Error);
-        Environment.Exit(ExitCodes.Exception);
     }
 
     public override int Execute(CommandContext context)
