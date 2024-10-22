@@ -118,7 +118,7 @@ internal sealed class Play : BasePlaylistCommand<Play.Settings>
         return $"\"{selectedItem.FullPath}\"";
     }
 
-    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         if (string.IsNullOrWhiteSpace(settings.InputFile))
         {
@@ -140,5 +140,6 @@ internal sealed class Play : BasePlaylistCommand<Play.Settings>
         {
             await RunMpv(settings.EnableRemote, settings.InputFile);
         }
+        return ExitCodes.Success;
     }
 }

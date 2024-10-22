@@ -74,11 +74,10 @@ internal sealed class CdRip : AsyncCommand<CdRip.Settings>
             await drive.UnLockAsync();
             return ExitCodes.Success;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             await drive.UnLockAsync();
-            Terminal.DisplayException(ex);
-            return ExitCodes.Exception;
+            throw;
         }
     }
 }

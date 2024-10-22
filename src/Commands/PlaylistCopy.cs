@@ -64,7 +64,7 @@ internal class PlaylistCopy : BasePlaylistCommand<PlaylistCopy.Settings>
         }
     }
 
-    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         var list = await LoadFromFile(settings.PlaylistName);
 
@@ -112,5 +112,7 @@ internal class PlaylistCopy : BasePlaylistCommand<PlaylistCopy.Settings>
                 }
             }
         });
+
+        return ExitCodes.Success;
     }
 }

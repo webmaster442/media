@@ -52,41 +52,32 @@ internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        try
+        Dictionary<string, Preset> presets = await Presets.LoadPresetsAsync();
+
+        if (!presets.TryGetValue(settings.PresetName, out Preset? preset))
         {
-            Dictionary<string, Preset> presets = await Presets.LoadPresetsAsync();
-
-            if (!presets.TryGetValue(settings.PresetName, out Preset? preset))
-            {
-                Terminal.RedText($"Preset {settings.PresetName} not found");
-                return ExitCodes.Error;
-            }
-
-            var outputExtension = Path.GetExtension(settings.OutputFile);
-            if (!string.Equals(outputExtension, preset.Extension, StringComparison.OrdinalIgnoreCase))
-            {
-                Terminal.RedText($"Output file extension must be {preset.Extension}");
-                return ExitCodes.Error;
-            }
-
-            var cmdline = preset.GetCommandLine(settings.InputFile, settings.OutputFile);
-
-            if (_dryRunResultAcceptor.Enabled)
-            {
-                _dryRunResultAcceptor.Result = cmdline;
-            }
-            else
-            {
-                _ffmpeg.Start(cmdline);
-            }
-
-            return ExitCodes.Success;
-
+            Terminal.RedText($"Preset {settings.PresetName} not found");
+            return ExitCodes.Error;
         }
-        catch (Exception ex)
+
+        var outputExtension = Path.GetExtension(settings.OutputFile);
+        if (!string.Equals(outputExtension, preset.Extension, StringComparison.OrdinalIgnoreCase))
         {
-            Terminal.DisplayException(ex);
-            return ExitCodes.Exception;
+            Terminal.RedText($"Output file extension must be {preset.Extension}");
+            return ExitCodes.Error;
         }
+
+        var cmdline = preset.GetCommandLine(settings.InputFile, settings.OutputFile);
+
+        if (_dryRunResultAcceptor.Enabled)
+        {
+            _dryRunResultAcceptor.Result = cmdline;
+        }
+        else
+        {
+            _ffmpeg.Start(cmdline);
+        }
+
+        return ExitCodes.Success;
     }
 }

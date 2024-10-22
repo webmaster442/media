@@ -40,38 +40,29 @@ internal sealed class InfoHwEncoders : AsyncCommand
 
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
-        try
+        await EmbeddedResources.ExtractAsync(EmbeddedResources.TestImage);
+
+        var encoders = _ffMpeg
+            .GetEncoders()
+            .Where(e => e.Type == Dto.Internals.FFMpegEncoderInfo.EncoderType.Video
+                   && (e.Name.EndsWith("_amf") || e.Name.EndsWith("_nvenc") || e.Name.EndsWith("_qsv")))
+            .OrderBy(x => x.Name);
+
+        var table = new Table();
+        table.AddColumns("Name", "Type", "Description", "Hardware availabe");
+
+        foreach (var encoder in encoders)
         {
-            await EmbeddedResources.ExtractAsync(EmbeddedResources.TestImage);
-
-            var encoders = _ffMpeg
-                .GetEncoders()
-                .Where(e => e.Type == Dto.Internals.FFMpegEncoderInfo.EncoderType.Video
-                       && (e.Name.EndsWith("_amf") || e.Name.EndsWith("_nvenc") || e.Name.EndsWith("_qsv")))
-                .OrderBy(x => x.Name);
-
-            var table = new Table();
-            table.AddColumns("Name", "Type", "Description", "Hardware availabe");
-
-            foreach (var encoder in encoders)
-            {
-                Terminal.InfoText($"Testing {encoder.Name}...");
-                var supported = await IsSupported(encoder.Name);
-                var icon = supported
-                    ? $"{Emoji.Known.CheckMark} yes"
-                    : $"{Emoji.Known.CrossMark} no";
-                table.AddRow(encoder.Name, encoder.Type.ToString(), encoder.Description, icon);
-            }
-
-            AnsiConsole.Write(table);
-
-            return ExitCodes.Success;
-        }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
+            Terminal.InfoText($"Testing {encoder.Name}...");
+            var supported = await IsSupported(encoder.Name);
+            var icon = supported
+                ? $"{Emoji.Known.CheckMark} yes"
+                : $"{Emoji.Known.CrossMark} no";
+            table.AddRow(encoder.Name, encoder.Type.ToString(), encoder.Description, icon);
         }
 
+        AnsiConsole.Write(table);
+
+        return ExitCodes.Success;
     }
 }

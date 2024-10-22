@@ -97,7 +97,7 @@ internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window
 
     private void OnException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
-        Terminal.DisplayException(e.Exception);
+        GlobalExceptionHandler.HandleExcpetion(e.Exception);
         MessageBox.Show(e.Exception.Message, "Unhandled exception", MessageBoxButton.OK, MessageBoxImage.Error);
         Environment.Exit(ExitCodes.Exception);
     }

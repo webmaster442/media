@@ -11,7 +11,7 @@ namespace Media.Commands;
 [Example("Clear a playlist", "media playlist clear -p test.m3u")]
 internal sealed class PlaylistClear : BasePlaylistCommand<BasePlalistSettings>
 {
-    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, BasePlalistSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, BasePlalistSettings settings)
     {
         var list = await LoadFromFile(settings.PlaylistName);
 
@@ -21,5 +21,7 @@ internal sealed class PlaylistClear : BasePlaylistCommand<BasePlalistSettings>
         await SaveToFile(list, settings.PlaylistName, false);
 
         Terminal.GreenText($"Removed {count} files from playlist {settings.PlaylistName}");
+
+        return ExitCodes.Success;
     }
 }

@@ -20,7 +20,7 @@ internal sealed class PlaylistAdd : BasePlaylistCommand<PlaylistAdd.Settings>
         public string FileToAdd { get; set; } = string.Empty;
     }
 
-    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         var list = await LoadFromFile(settings.PlaylistName);
         var files = GetFiles(settings.FileToAdd);
@@ -30,5 +30,7 @@ internal sealed class PlaylistAdd : BasePlaylistCommand<PlaylistAdd.Settings>
         await SaveToFile(list, settings.PlaylistName, false);
 
         Terminal.GreenText($"Added {count} files to playlist {settings.PlaylistName}");
+
+        return ExitCodes.Success;
     }
 }

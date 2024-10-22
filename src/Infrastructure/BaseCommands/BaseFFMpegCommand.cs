@@ -26,31 +26,23 @@ internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
 
     public override int Execute([NotNull] CommandContext context, [NotNull] TBaseFFMpegSettings settings)
     {
-        try
+        FFMpegCommandBuilder builder = new();
+        BuildCommandLine(builder, settings);
+
+        var cmdLine = builder.Build();
+
+        if (_dryRunResultAcceptor.Enabled)
         {
-            FFMpegCommandBuilder builder = new();
-            BuildCommandLine(builder, settings);
-
-            var cmdLine = builder.Build();
-
-            if (_dryRunResultAcceptor.Enabled)
-            {
-                _dryRunResultAcceptor.Result = cmdLine;
-            }
-            else
-            {
-                Terminal.InfoText("Generated arguments:");
-                Terminal.InfoText(cmdLine);
-                _ffMpeg.Start(cmdLine);
-            }
-
-            return ExitCodes.Success;
+            _dryRunResultAcceptor.Result = cmdLine;
         }
-        catch (Exception e)
+        else
         {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
+            Terminal.InfoText("Generated arguments:");
+            Terminal.InfoText(cmdLine);
+            _ffMpeg.Start(cmdLine);
         }
+
+        return ExitCodes.Success;
     }
 
     protected abstract void BuildCommandLine(FFMpegCommandBuilder builder, TBaseFFMpegSettings settings);

@@ -28,20 +28,12 @@ internal class InfoFile : AsyncCommand<InfoFile.Settings>
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        try
-        {
-            var result = await FFProbe.GetFFProbeResult(settings.InputFile);
+        var result = await FFProbe.GetFFProbeResult(settings.InputFile);
 
-            var relevantInformations = FFProbe.Transform(result);
+        var relevantInformations = FFProbe.Transform(result);
 
-            Terminal.DisplayObject(relevantInformations);
+        Terminal.DisplayObject(relevantInformations);
 
-            return ExitCodes.Success;
-        }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
-        }
+        return ExitCodes.Success;
     }
 }

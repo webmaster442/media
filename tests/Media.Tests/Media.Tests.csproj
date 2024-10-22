@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\include\Media.Core\Media.Core.csproj" />
+    <ProjectReference Include="..\..\include\Media.ShellAutocomplete\Media.ShellAutoComplete.csproj" />
     <ProjectReference Include="..\..\src\Media.csproj" />
     <ProjectReference Include="..\Media.MockExecutable\Media.MockExecutable.csproj" />
   </ItemGroup>

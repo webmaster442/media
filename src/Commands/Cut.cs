@@ -80,27 +80,19 @@ internal sealed class Cut : Command<Cut.Settings>
             return 1;
         }
 
-        try
-        {
-            FFMpegCommandBuilder builder = new();
-            builder.WithInputFile(settings.Input)
-                .WithOutputFile(settings.OutputFile)
-                .WithAudioCodec("copy")
-                .WithVideoCodec("copy")
-                .WithStartTimeInSeconds(startTime)
-                .WithDurationInSeconds(endTime - startTime);
+        FFMpegCommandBuilder builder = new();
+        builder.WithInputFile(settings.Input)
+            .WithOutputFile(settings.OutputFile)
+            .WithAudioCodec("copy")
+            .WithVideoCodec("copy")
+            .WithStartTimeInSeconds(startTime)
+            .WithDurationInSeconds(endTime - startTime);
 
-            var cmdLine = builder.Build();
-            Terminal.InfoText("Generated arguments:");
-            Terminal.InfoText(cmdLine);
+        var cmdLine = builder.Build();
+        Terminal.InfoText("Generated arguments:");
+        Terminal.InfoText(cmdLine);
 
-            _ffMpeg.Start(cmdLine);
-            return ExitCodes.Success;
-        }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
-        }
+        _ffMpeg.Start(cmdLine);
+        return ExitCodes.Success;
     }
 }

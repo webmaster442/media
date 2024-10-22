@@ -14,20 +14,12 @@ internal sealed class CdClose : AsyncCommand<BaseCdSettings>
     public override async Task<int> ExecuteAsync(CommandContext context, BaseCdSettings settings)
     {
         using var drive = CdDrive.Create(settings.DriveLetter);
-        try
+        var discInDrive = await drive.IsCdInDriveAsync();
+        if (discInDrive)
         {
-            var discInDrive = await drive.IsCdInDriveAsync();
-            if (discInDrive)
-            {
-                return ExitCodes.Success;
-            }
-            await drive.CloseAsync();
             return ExitCodes.Success;
         }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
-        }
+        await drive.CloseAsync();
+        return ExitCodes.Success;
     }
 }

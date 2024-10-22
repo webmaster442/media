@@ -31,12 +31,14 @@ internal sealed class PlaylistNew : BasePlaylistCommand<PlaylistNew.Settings>
         }
     }
 
-    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         var list = new Playlist();
 
         await SaveToFile(list, settings.PlaylistName, false);
 
         Terminal.GreenText($"Created playlist {settings.PlaylistName}");
+
+        return ExitCodes.Success;
     }
 }

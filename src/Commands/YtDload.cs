@@ -32,19 +32,11 @@ internal class YtDload : AsyncCommand<YtDload.Settings>
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        try
-        {
-            string formatTable = await _ytdlp.ExtractFromatTable(settings.Url);
-            IEnumerable<Dto.Internals.YtDlpFormat> table = Parsers.ParseFormats(formatTable);
-            var arguments = YtDlp.CreateDownloadArguments(table, settings.Quality, settings.Url);
-            _ytdlp.Start(arguments);
+        string formatTable = await _ytdlp.ExtractFromatTable(settings.Url);
+        IEnumerable<Dto.Internals.YtDlpFormat> table = Parsers.ParseFormats(formatTable);
+        var arguments = YtDlp.CreateDownloadArguments(table, settings.Quality, settings.Url);
+        _ytdlp.Start(arguments);
 
-            return ExitCodes.Success;
-        }
-        catch (Exception ex)
-        {
-            Terminal.DisplayException(ex);
-            return ExitCodes.Exception;
-        }
+        return ExitCodes.Success;
     }
 }

@@ -15,17 +15,10 @@ public class InfoPresets : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
-        try
-        {
-            var loaded = await Presets.LoadPresetsAsync();
-            PrintPresets(loaded);
-            return ExitCodes.Success;
-        }
-        catch (Exception ex)
-        {
-            Terminal.DisplayException(ex);
-            return ExitCodes.Exception;
-        }
+
+        var loaded = await Presets.LoadPresetsAsync();
+        PrintPresets(loaded);
+        return ExitCodes.Success;
     }
 
     private static void PrintPresets(Dictionary<string, Preset> presets)

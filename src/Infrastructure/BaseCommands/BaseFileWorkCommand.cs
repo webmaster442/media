@@ -29,20 +29,4 @@ internal abstract class BaseFileWorkCommand<T> : AsyncCommand<T> where T : Valid
             yield return file;
         }
     }
-
-    protected abstract Task CoreTaskWithoutExcepionHandling(CommandContext context, T settings);
-
-    public override async Task<int> ExecuteAsync(CommandContext context, T settings)
-    {
-        try
-        {
-            await CoreTaskWithoutExcepionHandling(context, settings);
-            return ExitCodes.Success;
-        }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
-        }
-    }
 }

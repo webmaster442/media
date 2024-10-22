@@ -21,26 +21,20 @@ internal sealed class Config : AsyncCommand
 
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
-        try
-        {
-            await _configAccessor.ForceSave();
 
-            using var process = new Process
+        await _configAccessor.ForceSave();
+
+        using var process = new Process
+        {
+            StartInfo = new ProcessStartInfo
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = _configAccessor.ConfigPath,
-                    UseShellExecute = true,
-                },
-            };
-            process.Start();
+                FileName = _configAccessor.ConfigPath,
+                UseShellExecute = true,
+            },
+        };
+        process.Start();
 
-            return ExitCodes.Success;
-        }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Error;
-        }
+        return ExitCodes.Success;
+
     }
 }

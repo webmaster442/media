@@ -19,7 +19,7 @@ internal sealed class PlaylistRemove : BasePlaylistCommand<PlaylistRemove.Settin
         public string FileToRemove { get; set; } = string.Empty;
     }
 
-    protected override async Task CoreTaskWithoutExcepionHandling(CommandContext context, Settings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         var list = await LoadFromFile(settings.PlaylistName);
         var files = GetFiles(settings.FileToRemove);
@@ -36,5 +36,7 @@ internal sealed class PlaylistRemove : BasePlaylistCommand<PlaylistRemove.Settin
         await SaveToFile(list, settings.PlaylistName, false);
 
         Terminal.GreenText($"Removed {count} files from playlist {settings.PlaylistName}");
+
+        return ExitCodes.Success;
     }
 }

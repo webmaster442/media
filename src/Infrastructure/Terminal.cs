@@ -40,14 +40,6 @@ internal static class Terminal
         AnsiConsole.Write(widget);
     }
 
-    public static void DisplayException(Exception e)
-    {
-        if (e is OperationCanceledException)
-            AnsiConsole.MarkupLine("[yellow]Operation canceled[/]");
-        else
-            AnsiConsole.WriteException(e);
-    }
-
     public static void EnableUTF8Output()
         => Console.OutputEncoding = Encoding.UTF8;
 

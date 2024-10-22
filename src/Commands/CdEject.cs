@@ -14,20 +14,12 @@ internal sealed class CdEject : AsyncCommand<BaseCdSettings>
     public override async Task<int> ExecuteAsync(CommandContext context, BaseCdSettings settings)
     {
         using var drive = CdDrive.Create(settings.DriveLetter);
-        try
+        var discInDrive = await drive.IsCdInDriveAsync();
+        if (discInDrive)
         {
-            var discInDrive = await drive.IsCdInDriveAsync();
-            if (discInDrive)
-            {
-                await drive.UnLockAsync();
-            }
-            await drive.EjectAsync();
-            return ExitCodes.Success;
+            await drive.UnLockAsync();
         }
-        catch (Exception e)
-        {
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
-        }
+        await drive.EjectAsync();
+        return ExitCodes.Success;
     }
 }

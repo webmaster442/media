@@ -55,11 +55,10 @@ internal sealed class CdList : AsyncCommand<BaseCdSettings>
             await drive.UnLockAsync();
             return ExitCodes.Success;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             await drive.UnLockAsync();
-            Terminal.DisplayException(e);
-            return ExitCodes.Exception;
+            throw;
         }
     }
 }

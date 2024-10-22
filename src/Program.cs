@@ -15,8 +15,10 @@ Terminal.EnableUTF8Output();
 
 mainApp.Configure(config =>
 {
-    config.SetApplicationName("FFCmd");
+    config.SetApplicationName("Media");
+    config.PropagateExceptions();
     config.AddAutoCompletion(config => config.AddPowershell());
+    config.SetExceptionHandler(GlobalExceptionHandler.Console);
 
     config.AddCommand<Cut>("cut")
           .WithDescription("Cut a file without reencoding");
