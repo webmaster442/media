@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace Media.Infrastructure.Dlna;
 
-internal sealed class XmlStringSerializer<T> where T: class
+internal sealed class XmlStringSerializer<T> where T : class
 {
     private readonly XmlSerializer _serializer;
 

@@ -40,7 +40,7 @@ internal partial class DropConvertViewModel : ObservableObject, IViewModel
         _fFMpeg = new FFMpeg(configAccessor);
         _selectedPath = Environment.CurrentDirectory;
         _selectedPathDisplay = Path.GetFileName(_selectedPath);
-        PresetCollection = new ObservableCollection<Preset>(); 
+        PresetCollection = new ObservableCollection<Preset>();
     }
 
     public async void Initialize()

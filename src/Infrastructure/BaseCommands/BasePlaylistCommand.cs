@@ -51,16 +51,16 @@ internal abstract class BasePlaylistCommand<T> : BaseFileWorkCommand<T> where T 
                                        string relativeBasePath)
     {
         writer.WriteLine("[playlist]");
-        for (int i=0; i<playlist.Count; i++)
+        for (int i = 0; i < playlist.Count; i++)
         {
             if (!relativePaths)
             {
-                await writer.WriteLineAsync($"File{i+1}={playlist[i]}");
+                await writer.WriteLineAsync($"File{i + 1}={playlist[i]}");
             }
             else
             {
                 var path = GetRelativePath(relativeBasePath, playlist[i]);
-                await writer.WriteLineAsync($"File{i+1}={path}");
+                await writer.WriteLineAsync($"File{i + 1}={path}");
             }
         }
     }

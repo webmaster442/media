@@ -15,7 +15,7 @@ internal sealed class PathExistsAttribute : ValidationAttribute
         if (value is string filePath)
         {
             if (Directory.Exists(filePath)
-                || File.Exists(filePath) 
+                || File.Exists(filePath)
                 || (AllowEmpty && string.IsNullOrEmpty(filePath)))
             {
                 return ValidationResult.Success;

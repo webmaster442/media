@@ -4,7 +4,6 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Infrastructure;
-using Media.Infrastructure.Validation;
 using Media.Interop;
 
 namespace Media.Commands;

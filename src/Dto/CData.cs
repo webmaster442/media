@@ -22,18 +22,18 @@ public class CData : IXmlSerializable
         _value = value;
     }
 
-    public static implicit operator CData(string value) 
+    public static implicit operator CData(string value)
         => new CData(value);
 
     public static implicit operator string(CData cdata)
         => cdata._value;
 
-    public XmlSchema? GetSchema() 
+    public XmlSchema? GetSchema()
         => null;
 
-    public void ReadXml(XmlReader reader) 
+    public void ReadXml(XmlReader reader)
         => _value = reader.ReadElementString();
 
-    public void WriteXml(XmlWriter writer) 
+    public void WriteXml(XmlWriter writer)
         => writer.WriteCData(_value);
 }

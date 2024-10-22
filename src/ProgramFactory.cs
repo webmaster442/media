@@ -5,7 +5,6 @@
 
 using Media.Database;
 using Media.Infrastructure;
-using Media.Interfaces;
 
 using Microsoft.Extensions.DependencyInjection;
 
