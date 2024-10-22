@@ -5,7 +5,6 @@
 
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
-using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Commands;
@@ -13,8 +12,8 @@ namespace Media.Commands;
 [Example("Convert a file to Dolby Digital AC-3 with 256k bitrate", "media convert ac3 input.wav output.ac3 -b 256k")]
 internal sealed class ConvertToAc3 : BaseFFMpegCommand<ConvertToAc3.Settings>
 {
-    public ConvertToAc3(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
-        : base(configAccessor, dryRunResultAcceptor)
+    public ConvertToAc3(ConfigAccessor configAccessor)
+        : base(configAccessor)
     {
     }
 

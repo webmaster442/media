@@ -9,7 +9,7 @@ using Media.Infrastructure;
 using Media.ShellAutoComplete.AutoComplete;
 using Media.ShellAutoComplete.Integrations;
 
-var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar(isDryRunEnabled: false));
+var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar());
 
 Terminal.EnableUTF8Output();
 

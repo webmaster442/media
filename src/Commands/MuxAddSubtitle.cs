@@ -6,7 +6,6 @@
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Infrastructure.Validation;
-using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Commands;
@@ -14,8 +13,8 @@ namespace Media.Commands;
 [Example("Add a subtitle track to an existing file", "media mux add-subtitle existing.mkv output.mkv -s subtitle.srt")]
 internal sealed class MuxAddSubtitle : BaseFFMpegCommand<MuxAddSubtitle.Settings>
 {
-    public MuxAddSubtitle(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
-        : base(configAccessor, dryRunResultAcceptor)
+    public MuxAddSubtitle(ConfigAccessor configAccessor)
+        : base(configAccessor)
     {
     }
 

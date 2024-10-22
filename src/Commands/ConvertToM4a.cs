@@ -5,7 +5,6 @@
 
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
-using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Commands;
@@ -13,8 +12,8 @@ namespace Media.Commands;
 [Example("Convert a file to m4a with 320k bitrate", "media convert m4a input.wav output.m4a -b 320k")]
 internal sealed class ConvertToM4a : BaseFFMpegCommand<ConvertToM4a.Settings>
 {
-    public ConvertToM4a(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
-        : base(configAccessor, dryRunResultAcceptor)
+    public ConvertToM4a(ConfigAccessor configAccessor)
+        : base(configAccessor)
     {
     }
 

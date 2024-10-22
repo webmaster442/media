@@ -5,7 +5,6 @@
 
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
-using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Commands;
@@ -15,8 +14,8 @@ namespace Media.Commands;
 
 internal sealed class ConvertNtscDvd : BaseFFMpegCommand<ConvertNtscDvd.Settings>
 {
-    public ConvertNtscDvd(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
-        : base(configAccessor, dryRunResultAcceptor)
+    public ConvertNtscDvd(ConfigAccessor configAccessor)
+        : base(configAccessor)
     {
     }
 

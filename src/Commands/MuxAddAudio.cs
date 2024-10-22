@@ -6,7 +6,6 @@
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Infrastructure.Validation;
-using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Commands;
@@ -14,8 +13,8 @@ namespace Media.Commands;
 [Example("Add an audio track to an existing file", "media mux add-audio existing.mkv output.mkv -a audio.m4a")]
 internal sealed class MuxAddAudio : BaseFFMpegCommand<MuxAddAudio.Settings>
 {
-    public MuxAddAudio(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
-        : base(configAccessor, dryRunResultAcceptor)
+    public MuxAddAudio(ConfigAccessor configAccessor)
+        : base(configAccessor)
     {
     }
 

@@ -6,7 +6,6 @@
 using Media.Dto;
 using Media.Infrastructure;
 using Media.Infrastructure.Validation;
-using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Commands;
@@ -15,7 +14,6 @@ namespace Media.Commands;
 internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
 {
     private readonly FFMpeg _ffmpeg;
-    private readonly IDryRunResultAcceptor _dryRunResultAcceptor;
 
     public class Settings : ValidatedCommandSettings
     {
@@ -44,10 +42,9 @@ internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
         }
     }
 
-    public ConvertPreset(ConfigAccessor configAccessor, IDryRunResultAcceptor acceptor)
+    public ConvertPreset(ConfigAccessor configAccessor)
     {
         _ffmpeg = new FFMpeg(configAccessor);
-        _dryRunResultAcceptor = acceptor;
     }
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
@@ -69,14 +66,7 @@ internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
 
         var cmdline = preset.GetCommandLine(settings.InputFile, settings.OutputFile);
 
-        if (_dryRunResultAcceptor.Enabled)
-        {
-            _dryRunResultAcceptor.Result = cmdline;
-        }
-        else
-        {
-            _ffmpeg.Start(cmdline);
-        }
+        _ffmpeg.Start(cmdline);
 
         return ExitCodes.Success;
     }

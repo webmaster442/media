@@ -9,19 +9,13 @@ namespace Media.Tests.SystemTest;
 public abstract class FFMpegCommandSystemTest
 {
     private CommandApp _testApp;
-    private DryRunResultAcceptor _acceptor;
     private List<string> _mockedFiles;
 
     [SetUp]
     public void SetupBase()
     {
         _mockedFiles = new List<string>();
-        _acceptor = new DryRunResultAcceptor
-        {
-            Enabled = false
-        };
-
-        _testApp = new CommandApp(ProgramFactory.CreateTypeRegistar(_acceptor));
+        _testApp = new CommandApp(ProgramFactory.CreateTypeRegistar());
 
         Setup();
     }

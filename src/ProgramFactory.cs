@@ -13,20 +13,11 @@ namespace Media;
 
 internal static class ProgramFactory
 {
-    public static TypeRegistrar CreateTypeRegistar(bool isDryRunEnabled)
-    {
-        return CreateTypeRegistar(new DryRunResultAcceptor
-        {
-            Enabled = isDryRunEnabled
-        });
-    }
-
-    public static TypeRegistrar CreateTypeRegistar(IDryRunResultAcceptor dryRunResultAcceptor)
+    public static TypeRegistrar CreateTypeRegistar()
     {
         var services = new ServiceCollection();
 
         services.AddSingleton<ConfigAccessor>();
-        services.AddSingleton<IDryRunResultAcceptor>(dryRunResultAcceptor);
         services.AddSingleton<MediaDocumentStore>();
         var registar = new TypeRegistrar(services);
         registar.Build();

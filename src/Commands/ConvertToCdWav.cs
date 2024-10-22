@@ -5,7 +5,6 @@
 
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
-using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Commands;
@@ -13,8 +12,8 @@ namespace Media.Commands;
 [Example("Convert an audio file to CD compatible wav", "media convert cdwav input.mp3 output.wav")]
 internal sealed class ConvertToCdWav : BaseFFMpegCommand<ConvertToCdWav.Settings>
 {
-    public ConvertToCdWav(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
-        : base(configAccessor, dryRunResultAcceptor)
+    public ConvertToCdWav(ConfigAccessor configAccessor)
+        : base(configAccessor)
     {
     }
 

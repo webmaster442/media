@@ -5,7 +5,6 @@
 
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
-using Media.Interfaces;
 using Media.Interop;
 
 namespace Media.Commands;
@@ -14,8 +13,8 @@ namespace Media.Commands;
 [Example("Convert a video file to PAL DVD compatible MPEG2 with letterbox (4:3) aspect", "media convert dvd-pal input.mp4 output.mpg -b 192k -l")]
 internal sealed class ConvertPalDvd : BaseFFMpegCommand<ConvertPalDvd.Settings>
 {
-    public ConvertPalDvd(ConfigAccessor configAccessor, IDryRunResultAcceptor dryRunResultAcceptor)
-        : base(configAccessor, dryRunResultAcceptor)
+    public ConvertPalDvd(ConfigAccessor configAccessor)
+        : base(configAccessor)
     {
     }
 
