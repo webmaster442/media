@@ -7,18 +7,18 @@ using System.Text.RegularExpressions;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-using Media.Dto;
-
 namespace Media.Ui.Converters;
-internal partial class CdataConverter : MarkupExtension, IValueConverter
+
+internal sealed partial class TrimConverter : MarkupExtension, IValueConverter
 {
+    [GeneratedRegex("( ){2,}")]
+    internal static partial Regex DoubleSpaceMatcher();
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is CData cData)
+        if (value is string str)
         {
-            return DoubleOrMoreWhiteSpace()
-                .Replace(cData, "")
-                .Trim();
+            return DoubleSpaceMatcher().Replace(str, "").Trim();
         }
         return Binding.DoNothing;
     }
@@ -27,14 +27,11 @@ internal partial class CdataConverter : MarkupExtension, IValueConverter
     {
         if (value is string str)
         {
-            return new CData(str);
+            return str.Trim();
         }
         return Binding.DoNothing;
     }
 
     public override object ProvideValue(IServiceProvider serviceProvider)
         => this;
-
-    [GeneratedRegex("( ){2,}")]
-    private static partial Regex DoubleOrMoreWhiteSpace();
 }

@@ -7,6 +7,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Ui/Styles/GlobalStyles.xaml"/>
+                <ResourceDictionary Source="/Ui/Styles/Icons.xaml"/>
                 <ResourceDictionary Source="/Ui/Styles/ButtonStyles.xaml"/>
                 <ResourceDictionary Source="/Ui/Styles/ComboBoxStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>

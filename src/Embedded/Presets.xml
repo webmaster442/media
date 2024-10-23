@@ -5,10 +5,6 @@
  This code is licensed under MIT license (see LICENSE for details)
 ***********************************************************************************************
 -->
-
-<!--
-Presets XML file for the encode presets command
--->
 <Presets>
   <!-- Lossless audio formatas -->
   <Preset Name="Flac" Extension=".flac" Category="Lossless Audio">
@@ -16,10 +12,8 @@ Presets XML file for the encode presets command
       -i {input} -vn -c:a flac {output}
     </CommandLine>
     <Description>
-      <![CDATA[
       Encodes an input file to lossless FLAC format.
       If the input file is a video, the audio stream is extracted only.
-      ]]>
     </Description>
   </Preset>
   <Preset Name="Alac" Extension=".m4a" Category="Lossless Audio">
@@ -27,10 +21,8 @@ Presets XML file for the encode presets command
       -i {input} -vn -c:a alac {output}
     </CommandLine>
     <Description>
-      <![CDATA[
       Encodes an input file to lossless ALAC format.
       If the input file is a video, the audio stream is extracted only.
-      ]]>
     </Description>
   </Preset>
   <Preset Name="WavPack" Extension=".wv" Category="Lossless Audio">
@@ -38,10 +30,8 @@ Presets XML file for the encode presets command
       -i {input} -vn -c:a wavpack {output}
     </CommandLine>
     <Description>
-      <![CDATA[
       Encodes an input file to lossless WavPack format.
       If the input file is a video, the audio stream is extracted only.
-      ]]>
     </Description>
   </Preset>
   <!-- Audio MP3 Presets -->
@@ -50,10 +40,8 @@ Presets XML file for the encode presets command
       -i {input} -vn -b:a 192k {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes an input file to MP3 format with a bitrate of 320k
-      If the input file is a video, the audio stream is extracted only
-      ]]>
+      Encodes an input file to MP3 format with a bitrate of 320k.
+      If the input file is a video, the audio stream is extracted only.
     </Description>
   </Preset>
   <Preset Name="mp3-256k" Extension=".mp3" Category="Audio">
@@ -61,10 +49,8 @@ Presets XML file for the encode presets command
       -i {input} -vn -b:a 256k {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes an input file to MP3 format with a bitrate of 256k
-      If the input file is a video, the audio stream is extracted only
-      ]]>
+      Encodes an input file to MP3 format with a bitrate of 256k.
+      If the input file is a video, the audio stream is extracted only.
     </Description>
   </Preset>
   <Preset Name="mp3-320k" Extension=".mp3" Category="Audio">
@@ -72,10 +58,8 @@ Presets XML file for the encode presets command
       -i {input} -vn -b:a 320k {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes an input file to MP3 format with a bitrate of 320k
-      If the input file is a video, the audio stream is extracted only
-      ]]>
+      Encodes an input file to MP3 format with a bitrate of 320k.
+      If the input file is a video, the audio stream is extracted only.
     </Description>
   </Preset>
   <!-- Audio M4A Presets -->
@@ -84,10 +68,8 @@ Presets XML file for the encode presets command
       -i {input} -vn -c:a aac -b:a 192k {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes an input file to M4A format with a bitrate of 192k
-      If the input file is a video, the audio stream is extracted only
-      ]]>
+      Encodes an input file to M4A format with a bitrate of 192k.
+      If the input file is a video, the audio stream is extracted only.
     </Description>
   </Preset>
   <Preset Name="mp4-256k" Extension=".m4a" Category="Audio">
@@ -95,10 +77,8 @@ Presets XML file for the encode presets command
       -i {input} -vn -c:a aac -b:a 256k {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes an input file to M4A format with a bitrate of 256k
-      If the input file is a video, the audio stream is extracted only
-      ]]>
+      Encodes an input file to M4A format with a bitrate of 256k.
+      If the input file is a video, the audio stream is extracted only.
     </Description>
   </Preset>
   <Preset Name="mp4-320k" Extension=".m4a" Category="Audio">
@@ -106,10 +86,8 @@ Presets XML file for the encode presets command
       -i {input} -vn -c:a aac -b:a 192k {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes an input file to M4A format with a bitrate of 320k
-      If the input file is a video, the audio stream is extracted only
-      ]]>
+      Encodes an input file to M4A format with a bitrate of 320k.
+      If the input file is a video, the audio stream is extracted only.
     </Description>
   </Preset>
   <!-- Video presets -->
@@ -118,12 +96,9 @@ Presets XML file for the encode presets command
       -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v hevc_nvenc -preset slow -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes video to H.265 with NVidia Hardware acceleration to MP4 format
-      The audio is copied as is
-      The video is encoded using H.265 with NVidia hardware acceleration
-      The frame rate is set to 30fps or less
-      ]]>
+      Encodes video to H.265 with NVidia Hardware acceleration to MP4 format.
+      The audio is copied as is, the video is encoded using H.265 with NVidia hardware acceleration.
+      The frame rate is set to 30fps or less.
     </Description>
   </Preset>
   <Preset Name="hevc-nvidia-hd30-mp4-aac" Extension=".mp4" Category="Video">
@@ -131,12 +106,9 @@ Presets XML file for the encode presets command
       -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v hevc_nvenc -preset slow -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes video to H.265 with NVidia Hardware acceleration to MP4 format
-      The audio is recoded to aac with a bitrate of 256k
-      The video is encoded using H.265 with NVidia hardware acceleration
-      The frame rate is set to 30fps or less
-      ]]>
+      Encodes video to H.265 with NVidia Hardware acceleration to MP4 format.
+      The audio is recoded to aac with a bitrate of 256k, the video is encoded using H.265 with NVidia hardware acceleration.
+      The frame rate is set to 30fps or less.
     </Description>
   </Preset>
   <Preset Name="h264-nvidia-hd30-mp4" Extension=".mp4" Category="Video">
@@ -144,12 +116,9 @@ Presets XML file for the encode presets command
       -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v h264_nvenc -preset p4 -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes video to H.264 with NVidia Hardware acceleration to MP4 format
-      The audio is copied as is
-      The video is encoded using H.2654 with NVidia hardware acceleration
-      The frame rate is set to 30fps or less
-      ]]>
+      Encodes video to H.264 with NVidia Hardware acceleration to MP4 format.
+      The audio is copied as is, the video is encoded using H.2654 with NVidia hardware acceleration.
+      The frame rate is set to 30fps or less.
     </Description>
   </Preset>
   <Preset Name="h264-nvidia-hd30-mp4-aac" Extension=".mp4" Category="Video">
@@ -157,12 +126,9 @@ Presets XML file for the encode presets command
       -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v h264_nvenc -preset p4 -vf "fps='min(30, source_fps)',scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes video to H.264 with NVidia Hardware acceleration to MP4 format
-      The audio is recoded to aac with a bitrate of 256k
-      The video is encoded using H.264 with NVidia hardware acceleration
-      The frame rate is set to 30fps or less
-      ]]>
+      Encodes video to H.264 with NVidia Hardware acceleration to MP4 format.
+      The audio is recoded to aac with a bitrate of 256k, The video is encoded using H.264 with NVidia hardware acceleration.
+      The frame rate is set to 30fps or less.
     </Description>
   </Preset>
   <!-- No framerate limit presets  -->
@@ -171,11 +137,8 @@ Presets XML file for the encode presets command
       -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v hevc_nvenc -preset slow -vf "scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes video to H.265 with NVidia Hardware acceleration to MP4 format
-      The audio is copied as is
-      The video is encoded using H.265 with NVidia hardware acceleration
-      ]]>
+      Encodes video to H.265 with NVidia Hardware acceleration to MP4 format.
+      The audio is copied as is, the video is encoded using H.265 with NVidia hardware acceleration.
     </Description>
   </Preset>
   <Preset Name="hevc-nvidia-hd-mp4-aac" Extension=".mp4" Category="Video">
@@ -183,11 +146,8 @@ Presets XML file for the encode presets command
       -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v hevc_nvenc -preset slow -vf "scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes video to H.265 with NVidia Hardware acceleration to MP4 format
-      The audio is recoded to aac with a bitrate of 256k
-      The video is encoded using H.265 with NVidia hardware acceleration
-      ]]>
+      Encodes video to H.265 with NVidia Hardware acceleration to MP4 format.
+      The audio is recoded to aac with a bitrate of 256k, the video is encoded using H.265 with NVidia hardware acceleration.
     </Description>
   </Preset>
   <Preset Name="h264-nvidia-hd-mp4" Extension=".mp4" Category="Video">
@@ -195,11 +155,8 @@ Presets XML file for the encode presets command
       -vsync 0 -hwaccel nvdec -i {input} -c:a copy -c:v h264_nvenc -preset p4 -vf "scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes video to H.264 with NVidia Hardware acceleration to MP4 format
-      The audio is copied as is
-      The video is encoded using H.265 with NVidia hardware acceleration
-      ]]>
+      Encodes video to H.264 with NVidia Hardware acceleration to MP4 format.
+      The audio is copied as is, the video is encoded using H.265 with NVidia hardware acceleration.
     </Description>
   </Preset>
   <Preset Name="h264-nvidia-hd-mp4-aac" Extension=".mp4" Category="Video">
@@ -207,11 +164,8 @@ Presets XML file for the encode presets command
       -vsync 0 -hwaccel nvdec -i {input} -c:a aac -b:a 256k -c:v h264_nvenc -preset p4 -vf "scale='min(1920,iw)':min'(1080,ih)':force_original_aspect_ratio=decrease" {output}
     </CommandLine>
     <Description>
-      <![CDATA[
-      Encodes video to H.264 with NVidia Hardware acceleration to MP4 format
-      The audio is recoded to aac with a bitrate of 256k
-      The video is encoded using H.265 with NVidia hardware acceleration
-      ]]>
+      Encodes video to H.264 with NVidia Hardware acceleration to MP4 format.
+      The audio is recoded to aac with a bitrate of 256k, the video is encoded using H.265 with NVidia hardware acceleration.
     </Description>
   </Preset>
 </Presets>
