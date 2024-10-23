@@ -15,7 +15,7 @@ using Media.Interop;
 
 namespace Media.Ui;
 
-internal partial class DropConvertViewModel : ObservableObject, IViewModel
+internal sealed partial class DropConvertViewModel : ObservableObject, IViewModel
 {
     private readonly IUiFunctions _uiFunctions;
     private readonly FFMpeg _fFMpeg;
