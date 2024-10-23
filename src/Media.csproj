@@ -14,6 +14,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Embedded\TransitionEffect.ps" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="..\include\MpvRemoteFrontend\style.css" Link="Embedded\style.css" />
     <EmbeddedResource Include="..\include\MpvRemoteFrontend\mpv-logo-128.png" Link="Embedded\mpv-logo-128.png" />
     <EmbeddedResource Include="..\include\MpvRemoteFrontend\mpvcontroller.html" Link="Embedded\mpvcontroller.html" />
@@ -24,6 +28,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Embedded\testimg.png" />
+    <EmbeddedResource Include="Embedded\TransitionEffect.ps" />
     <EmbeddedResource Include="Embedded\Update.ps1" />
   </ItemGroup>
 
