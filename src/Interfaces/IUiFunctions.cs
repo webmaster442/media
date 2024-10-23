@@ -5,7 +5,7 @@
 
 namespace Media.Interfaces;
 
-internal interface IUiFunctions
+internal interface IUiFunctions : IProgress<double>
 {
     bool QuestionMessage(string message, string title);
     void WarningMessage(string message, string title);
@@ -13,4 +13,6 @@ internal interface IUiFunctions
     void ErrorMessage(string message, string title);
     string? SelectFolderDialog(string? startFolder);
     void Exit(int exitCode);
+    void SetProgressState(ProgressState state);
+
 }

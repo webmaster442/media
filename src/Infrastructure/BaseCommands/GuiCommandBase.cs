@@ -3,8 +3,10 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Diagnostics;
 using System.Threading;
 using System.Windows;
+using System.Windows.Shell;
 
 using Media.Interfaces;
 
@@ -21,9 +23,7 @@ internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window
         }
 
         public void Exit(int exitCode)
-        {
-            Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown(exitCode));
-        }
+            => Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown(exitCode));
 
         public void InfoMessage(string message, string title)
             => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
@@ -46,10 +46,46 @@ internal abstract class GuiCommandBase<TWindow> : Command where TWindow : Window
             return null;
         }
 
+        public void Report(double value)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var mainWin = App.Current.MainWindow;
+                if (mainWin.TaskbarItemInfo == null)
+                    mainWin.TaskbarItemInfo = new TaskbarItemInfo();
+
+                mainWin.TaskbarItemInfo.ProgressValue = value;
+            });
+        }
+
+        public void SetProgressState(ProgressState state)
+        {
+            static TaskbarItemProgressState Map(ProgressState state)
+            {
+                return state switch
+                {
+                    ProgressState.None => TaskbarItemProgressState.None,
+                    ProgressState.Indeterminate => TaskbarItemProgressState.Indeterminate,
+                    ProgressState.Normal => TaskbarItemProgressState.Normal,
+                    ProgressState.Error => TaskbarItemProgressState.Error,
+                    ProgressState.Paused => TaskbarItemProgressState.Paused,
+                    _ => throw new UnreachableException("Can't map Progress state"),
+                };
+            }
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var mainWin = App.Current.MainWindow;
+                if (mainWin.TaskbarItemInfo == null)
+                    mainWin.TaskbarItemInfo = new TaskbarItemInfo();
+
+                mainWin.TaskbarItemInfo.ProgressState = Map(state);
+            });
+        }
+
         public void WarningMessage(string message, string title)
             => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
     }
-
 
     protected virtual IViewModel? CreateDataContext(IUiFunctions uiFunctions) => null;
 

@@ -1,2 +1,4 @@
 - [ ] Release on github
 - [ ] Stability tests
+- [ ] Image viewer
+- [x] Shell progress bar functions to UIFunctions
