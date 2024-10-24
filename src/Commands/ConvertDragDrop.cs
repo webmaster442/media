@@ -13,16 +13,25 @@ using Media.Ui;
 namespace Media.Commands;
 
 [Example("Open a window to convert a file by drag and drop", "media convert drop")]
-internal class ConvertDragDrop : GuiCommandBase<DropConvertWindow>
+internal class ConvertDragDrop : GuiCommand<DropConvertWindow>
 {
-    protected override Point? GetWindowStartLocation(Size screen, Size window)
+    internal class DropWindowManipulator : IWindowManipulator
     {
-        return new Point
+        public Size GetWindowSize(Size xamlDefinedWindowSize)
+            => xamlDefinedWindowSize;
+
+        public Point GetWindowStartupLocation(Size workArea, Size windowSize)
         {
-            X = (screen.Width - window.Width) - 10,
-            Y = (screen.Height - window.Height) - 10
-        };
+            return new Point
+            {
+                X = (workArea.Width - windowSize.Width) - 10,
+                Y = (workArea.Height - windowSize.Height) - 10
+            };
+        }
     }
+
+    protected override IWindowManipulator? CreateWindowManipulator()
+        => new DropWindowManipulator();
 
     protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions)
         => new DropConvertViewModel(uiFunctions, new ConfigAccessor());

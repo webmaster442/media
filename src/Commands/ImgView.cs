@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Media.Infrastructure;
+﻿using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Infrastructure.Validation;
 using Media.Interfaces;
@@ -12,7 +6,7 @@ using Media.Ui;
 
 namespace Media.Commands;
 
-internal class ImgView : GuiCommandBase<ImageViewerWindow>
+internal class ImgView : GuiCommand<ImageViewerWindow, ImgView.Settings>
 {
     internal class Settings : ValidatedCommandSettings
     {
@@ -21,4 +15,7 @@ internal class ImgView : GuiCommandBase<ImageViewerWindow>
         [Description("The folder to play from")]
         public string Folder { get; set; } = Environment.CurrentDirectory;
     }
+
+    protected override IViewModel? CreateDataContext(Settings settings, IUiFunctions uiFunctions)
+        => new ImageViewerViewModel(settings.Folder);
 }
