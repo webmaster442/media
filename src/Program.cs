@@ -38,6 +38,9 @@ mainApp.Configure(config =>
     config.AddCommand<Website>("website")
         .WithDescription("Open the project website");
 
+    config.AddCommand<ImgView>("imgview")
+        .WithDescription("View images in a folder");
+
     config.AddBranch("play", play =>
     {
         config.AddCommand<Play>(string.Empty)

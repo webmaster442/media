@@ -17,5 +17,5 @@ internal class ImgView : GuiCommand<ImageViewerWindow, ImgView.Settings>
     }
 
     protected override IViewModel? CreateDataContext(Settings settings, IUiFunctions uiFunctions)
-        => new ImageViewerViewModel(settings.Folder);
+        => new ImageViewerViewModel(settings.Folder, uiFunctions);
 }

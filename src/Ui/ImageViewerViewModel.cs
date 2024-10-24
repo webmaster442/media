@@ -14,6 +14,8 @@ namespace Media.Ui;
 internal sealed partial class ImageViewerViewModel : ObservableObject, IViewModel
 {
     private readonly string _folder;
+    private readonly IUiFunctions _uiFunctions;
+
     private int _currentImageIndex;
 
     public ObservableRangeCollection<string> ImageFiles { get; }
@@ -21,12 +23,25 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
     [ObservableProperty]
     private string _currentImage;
 
-    public ImageViewerViewModel(string folder)
+    partial void OnCurrentImageChanged(string value)
     {
-        _currentImageIndex = 0;
-        CurrentImage = string.Empty;
-        ImageFiles = new ObservableRangeCollection<string>();
+        if (ImageFiles.Count < 1) return;
+        _currentImageIndex = ImageFiles.IndexOf(value);
+        double progress = (double)_currentImageIndex / ImageFiles.Count;
+        _uiFunctions.Report(progress);
+    }
+
+    [ObservableProperty]
+    private string _windowTitle;
+
+    public ImageViewerViewModel(string folder, IUiFunctions uiFunctions)
+    {
         _folder = folder;
+        _uiFunctions = uiFunctions;
+        _windowTitle = $"Image Viewer - {Path.GetFileName(_folder)}";
+        _currentImageIndex = 0;
+        ImageFiles = new ObservableRangeCollection<string>();
+        CurrentImage = string.Empty;
     }
 
     private static bool IsImageFile(string filePath)
@@ -41,12 +56,17 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
             .Where(file => IsImageFile(file));
 
         ImageFiles.AddRange(files);
+        
+        if (ImageFiles.Count > 0)
+            CurrentImage = ImageFiles[0];
+
+        NextCommand.NotifyCanExecuteChanged();
     }
 
     private bool CanNextExecute()
         => ImageFiles.Count > 0 && ((_currentImageIndex + 1) < ImageFiles.Count);
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanNextExecute))]
     private void Next()
     {
         if ((_currentImageIndex + 1) < ImageFiles.Count)
@@ -54,10 +74,12 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
             _currentImageIndex++;
             CurrentImage = ImageFiles[_currentImageIndex];
         }
+        PreviousCommand.NotifyCanExecuteChanged();
+        NextCommand.NotifyCanExecuteChanged();
     }
 
     private bool CanPreviousExecute()
-        => (ImageFiles.Count > 0) && (_currentImageIndex >= 1);
+        => (ImageFiles.Count > 0) && ((_currentImageIndex - 1) >= 0);
 
     [RelayCommand(CanExecute = nameof(CanPreviousExecute))]
     private void Previous()
@@ -67,5 +89,7 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
             _currentImageIndex--;
             CurrentImage = ImageFiles[_currentImageIndex];
         }
+        PreviousCommand.NotifyCanExecuteChanged();
+        NextCommand.NotifyCanExecuteChanged();
     }
 }

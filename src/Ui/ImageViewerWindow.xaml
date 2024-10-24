@@ -2,11 +2,12 @@
     x:Class="Media.Ui.ImageViewerWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviours="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:controls="clr-namespace:Media.Ui.Controls"
     xmlns:converters="clr-namespace:Media.Ui.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Image Viewer"
+    Title="{Binding WindowTitle}"
     Width="1280"
     Height="720"
     Background="{StaticResource BackgroundColor}"
@@ -18,28 +19,47 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="350" />
         </Grid.ColumnDefinitions>
         <ScrollViewer
             x:Name="Viewer"
             Grid.Row="0"
-            Grid.ColumnSpan="2">
+            Grid.ColumnSpan="2"
+            Margin="0,0,40,0"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto">
             <controls:ImageDisplayControl
                 ContainerHeight="{Binding ElementName=Viewer, Path=ActualHeight}"
                 ContainerWidth="{Binding ElementName=Viewer, Path=ActualWidth}"
+                ImagePath="{Binding CurrentImage}"
                 SizeMode="{Binding ElementName=SizeCombo, Path=SelectedIndex, Converter={converters:IndexToSizeModeConverter}}" />
         </ScrollViewer>
         <Expander
             Grid.Row="0"
             Grid.Column="1"
+            MinWidth="40"
             HorizontalAlignment="Right"
             Panel.ZIndex="99"
             Background="{StaticResource UiBackground}"
             ExpandDirection="Right"
             Header="Files">
             <ListBox
+                Background="{StaticResource UiBackground}"
                 ItemsSource="{Binding ImageFiles}"
-                Background="{StaticResource UiBackground}" />
+                SelectedItem="{Binding CurrentImage, Mode=TwoWay}">
+                <behaviours:Interaction.Behaviors>
+                    <controls:ScrollIntoViewBehavior />
+                </behaviours:Interaction.Behaviors>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Image
+                            Width="270"
+                            Source="{Binding}"
+                            Stretch="Uniform"
+                            StretchDirection="DownOnly" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </Expander>
         <Border
             Grid.Row="1"
@@ -47,47 +67,52 @@
             Background="{StaticResource UiBackground}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="150" />
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="15" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
-                    <ColumnDefinition Width="100" />
+                    <ColumnDefinition Width="150" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
-                <Button
+                <TextBlock
                     Grid.Row="0"
+                    Grid.ColumnSpan="88"
+                    Text="{Binding CurrentImage, Converter={converters:FileNameConverter}}"
+                    TextAlignment="Center" />
+                <Button
+                    Grid.Row="1"
                     Grid.RowSpan="4"
                     Grid.Column="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Command="{Binding NextCommand}">
-                    <TextBlock
-                        FontFamily="Wingdings"
-                        FontSize="72"
-                        Text="ç" />
-                </Button>
-                <Button
-                    Grid.Row="0"
-                    Grid.RowSpan="4"
-                    Grid.Column="4"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Command="{Binding PreviousCommand}">
                     <TextBlock
                         FontFamily="Wingdings"
                         FontSize="72"
+                        Text="ç" />
+                </Button>
+                <Button
+                    Grid.Row="1"
+                    Grid.RowSpan="4"
+                    Grid.Column="4"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Command="{Binding NextCommand}">
+                    <TextBlock
+                        FontFamily="Wingdings"
+                        FontSize="72"
                         Text="è" />
                 </Button>
-
                 <TextBlock
-                    Grid.RowSpan="4"
+                    Grid.RowSpan="5"
                     Grid.Column="5"
                     HorizontalAlignment="Right"
                     FontFamily="Webdings"
@@ -95,7 +120,7 @@
                     Text="L" />
                 <ComboBox
                     x:Name="SizeCombo"
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Grid.Column="6"
                     SelectedIndex="0">
                     <ComboBoxItem>Fit</ComboBoxItem>

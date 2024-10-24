@@ -72,8 +72,8 @@ internal sealed class ImageDisplayControl : Control
         var imgData = new BitmapImage(new Uri(ImagePath));
         ImageControl.Source = imgData;
 
-        int pictureWidth =  imgData.DecodePixelWidth;
-        int pictureHeight = imgData.DecodePixelHeight;
+        int pictureWidth =  imgData.PixelWidth;
+        int pictureHeight = imgData.PixelHeight;
 
         (int resultWidth, int resultHegiht) = ComputeSize(pictureWidth, pictureHeight);
 

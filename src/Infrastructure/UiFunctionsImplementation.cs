@@ -46,6 +46,7 @@ internal class UiFunctionsImplementation : IUiFunctions
             if (mainWin.TaskbarItemInfo == null)
                 mainWin.TaskbarItemInfo = new TaskbarItemInfo();
 
+            mainWin.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
             mainWin.TaskbarItemInfo.ProgressValue = value;
         });
     }

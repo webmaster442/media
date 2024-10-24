@@ -8,6 +8,8 @@ using System.Windows;
 
 using Media.Interfaces;
 
+using Spectre.Console;
+
 namespace Media.Infrastructure.BaseCommands;
 
 internal abstract class GuiCommand<TWindow, TSettings> : Command<TSettings>
@@ -45,6 +47,7 @@ internal abstract class GuiCommand<TWindow, TSettings> : Command<TSettings>
 
     public override int Execute(CommandContext context, TSettings settings)
     {
+        AnsiConsole.Clear();
         Terminal.InfoText($"Starting Ui Thread...");
         Thread uiThread = new(ThreadCode);
         uiThread.SetApartmentState(ApartmentState.STA);
