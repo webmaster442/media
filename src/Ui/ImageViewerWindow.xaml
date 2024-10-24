@@ -2,6 +2,8 @@
     x:Class="Media.Ui.ImageViewerWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Media.Ui.Controls"
+    xmlns:converters="clr-namespace:Media.Ui.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Image Viewer"
@@ -18,21 +20,26 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Image
+        <ScrollViewer
+            x:Name="Viewer"
             Grid.Row="0"
-            Grid.ColumnSpan="2"
-            Stretch="None" />
+            Grid.ColumnSpan="2">
+            <controls:ImageDisplayControl
+                ContainerHeight="{Binding ElementName=Viewer, Path=ActualHeight}"
+                ContainerWidth="{Binding ElementName=Viewer, Path=ActualWidth}"
+                SizeMode="{Binding ElementName=SizeCombo, Path=SelectedIndex, Converter={converters:IndexToSizeModeConverter}}" />
+        </ScrollViewer>
         <Expander
             Grid.Row="0"
             Grid.Column="1"
-            MaxWidth="300"
             HorizontalAlignment="Right"
             Panel.ZIndex="99"
             Background="{StaticResource UiBackground}"
             ExpandDirection="Right"
-            Header="Files"
-            IsExpanded="True">
-            <ListBox Background="{StaticResource UiBackground}" />
+            Header="Files">
+            <ListBox
+                ItemsSource="{Binding ImageFiles}"
+                Background="{StaticResource UiBackground}" />
         </Expander>
         <Border
             Grid.Row="1"
@@ -86,26 +93,16 @@
                     FontFamily="Webdings"
                     FontSize="48"
                     Text="L" />
-                <RadioButton
-                    Grid.Row="0"
-                    Grid.Column="6"
-                    VerticalAlignment="Center"
-                    Content="Fit" />
-                <RadioButton
+                <ComboBox
+                    x:Name="SizeCombo"
                     Grid.Row="1"
                     Grid.Column="6"
-                    VerticalAlignment="Center"
-                    Content="Fit Width" />
-                <RadioButton
-                    Grid.Row="2"
-                    Grid.Column="6"
-                    VerticalAlignment="Center"
-                    Content="Fit Height" />
-                <RadioButton
-                    Grid.Row="3"
-                    Grid.Column="6"
-                    VerticalAlignment="Center"
-                    Content="Original Size" />
+                    SelectedIndex="0">
+                    <ComboBoxItem>Fit</ComboBoxItem>
+                    <ComboBoxItem>Fit Width</ComboBoxItem>
+                    <ComboBoxItem>Fit Height</ComboBoxItem>
+                    <ComboBoxItem>Original Size</ComboBoxItem>
+                </ComboBox>
 
             </Grid>
         </Border>

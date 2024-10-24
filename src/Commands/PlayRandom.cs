@@ -29,7 +29,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
         public bool SubDirectorySelection { get; init; }
 
         [DirectoryExists]
-        [CommandArgument(0, "<folder>")]
+        [CommandArgument(0, "[folder]")]
         [Description("The folder to play from")]
         public string Folder { get; set; } = Environment.CurrentDirectory;
 
