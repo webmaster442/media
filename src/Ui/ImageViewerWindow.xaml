@@ -63,9 +63,9 @@
             Grid.Row="1"
             Grid.ColumnSpan="2">
             <Border.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="{StaticResource DarkBackgroundColor}"/>
-                    <GradientStop Color="{StaticResource WindowBackgroundColor}" Offset="1"/>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="{StaticResource DarkBackgroundColor}" />
+                    <GradientStop Offset="1" Color="{StaticResource WindowBackgroundColor}" />
                 </LinearGradientBrush>
             </Border.Background>
             <Grid>
@@ -94,10 +94,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Command="{Binding PreviousCommand}">
-                    <TextBlock
-                        FontFamily="Wingdings"
-                        FontSize="48"
-                        Text="ç" />
+                    <controls:FontIcon Glyph="Previous" />
                 </Button>
                 <Button
                     Grid.Row="1"
@@ -106,10 +103,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Command="{Binding NextCommand}">
-                    <TextBlock
-                        FontFamily="Wingdings"
-                        FontSize="48"
-                        Text="è" />
+                    <controls:FontIcon Glyph="Next" />
                 </Button>
                 <StackPanel
                     Grid.Row="1"
@@ -119,11 +113,9 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
-                    <TextBlock
-                        HorizontalAlignment="Right"
-                        FontFamily="Webdings"
-                        FontSize="48"
-                        Text="L" />
+                    <controls:FontIcon
+                        Foreground="{StaticResource ForegroundBrush}"
+                        Glyph="Zoom" />
                     <ComboBox
                         x:Name="SizeCombo"
                         VerticalAlignment="Center"
