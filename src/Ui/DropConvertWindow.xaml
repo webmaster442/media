@@ -14,9 +14,8 @@
     DragOver="Window_DragOver"
     Drop="Window_Drop"
     ResizeMode="CanMinimize"
-    SnapsToDevicePixels="True"
+    Style="{StaticResource {x:Type Window}}"
     Topmost="True"
-    UseLayoutRounding="True"
     mc:Ignorable="d">
     <Window.Resources>
         <CollectionViewSource
@@ -95,14 +94,6 @@
             <StackPanel.Effect>
                 <DropShadowEffect />
             </StackPanel.Effect>
-            <Viewbox
-                Width="32"
-                Height="32"
-                Child="{StaticResource IconInfo}" />
-            <TextBlock
-                FontStyle="Italic"
-                FontWeight="Bold"
-                Text="Preset info" />
         </StackPanel>
         <TextBlock
             Grid.Row="3"

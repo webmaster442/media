@@ -5,19 +5,6 @@
     xmlns:ui="clr-namespace:Media.Ui">
 
     <SolidColorBrush
-        x:Key="BackgroundColor"
-        Color="#282C34" />
-    <SolidColorBrush
-        x:Key="UiBackground"
-        Color="#2E2E2E" />
-    <SolidColorBrush
-        x:Key="UiOver"
-        Color="#383838" />
-    <SolidColorBrush
-        x:Key="Text"
-        Color="#CCCCCC" />
-
-    <SolidColorBrush
         x:Key="Blue"
         Color="#0037DA" />
     <SolidColorBrush
@@ -36,39 +23,6 @@
         x:Key="Yellow"
         Color="#C19C00" />
 
-    <Style TargetType="ToolTip">
-        <Setter Property="Background" Value="{StaticResource UiBackground}" />
-    </Style>
-
-    <Style TargetType="ui:DropConvertWindow">
-        <Setter Property="Background" Value="{StaticResource BackgroundColor}" />
-    </Style>
-
-    <Style TargetType="ComboBox">
-        <Setter Property="Margin" Value="4" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-    </Style>
-
-    <Style TargetType="Image">
-        <Setter Property="Margin" Value="4" />
-    </Style>
-
-    <Style TargetType="TextBlock">
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Margin" Value="4" />
-        <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="Foreground" Value="{StaticResource Text}" />
-    </Style>
-
-    <Style TargetType="Menu">
-        <Setter Property="Background" Value="{StaticResource BackgroundColor}" />
-        <Setter Property="Foreground" Value="{StaticResource UiBackground}"/>
-    </Style>
-
-    <Style TargetType="MenuItem">
-        <Setter Property="Background" Value="{StaticResource UiBackground}" />
-    </Style>
-
     <Style TargetType="controls:ImageDisplayControl">
         <Setter Property="Template">
             <Setter.Value>
@@ -77,6 +31,16 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="Margin" Value="3"/>
+        <Setter Property="MinWidth" Value="32"/>
+        <Setter Property="MinHeight" Value="32"/>
+    </Style>
+
+    <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="Margin" Value="3"/>
     </Style>
 
 </ResourceDictionary>

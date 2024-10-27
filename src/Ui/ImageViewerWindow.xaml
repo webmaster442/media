@@ -10,7 +10,7 @@
     Title="{Binding WindowTitle}"
     Width="1280"
     Height="720"
-    Background="{StaticResource BackgroundColor}"
+    Style="{StaticResource {x:Type Window}}"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -40,11 +40,9 @@
             MinWidth="40"
             HorizontalAlignment="Right"
             Panel.ZIndex="99"
-            Background="{StaticResource UiBackground}"
             ExpandDirection="Right"
             Header="Files">
             <ListBox
-                Background="{StaticResource UiBackground}"
                 ItemsSource="{Binding ImageFiles}"
                 SelectedItem="{Binding CurrentImage, Mode=TwoWay}">
                 <behaviours:Interaction.Behaviors>
@@ -63,8 +61,13 @@
         </Expander>
         <Border
             Grid.Row="1"
-            Grid.ColumnSpan="2"
-            Background="{StaticResource UiBackground}">
+            Grid.ColumnSpan="2">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="{StaticResource DarkBackgroundColor}"/>
+                    <GradientStop Color="{StaticResource WindowBackgroundColor}" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="150" />
