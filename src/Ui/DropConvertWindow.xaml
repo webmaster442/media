@@ -2,6 +2,7 @@
     x:Class="Media.Ui.DropConvertWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Media.Ui.Controls"
     xmlns:converters="clr-namespace:Media.Ui.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Media.Ui"
@@ -85,7 +86,7 @@
             Grid.ColumnSpan="3"
             Margin="7"
             HorizontalAlignment="Right"
-            VerticalAlignment="Top">
+            VerticalAlignment="Bottom">
             <StackPanel.ToolTip>
                 <TextBlock
                     FontStyle="Italic"
@@ -94,6 +95,12 @@
             <StackPanel.Effect>
                 <DropShadowEffect />
             </StackPanel.Effect>
+            <controls:FontIcon
+                HorizontalAlignment="Center"
+                Foreground="{StaticResource Green}"
+                FontSize="32"
+                Glyph="Info" />
+            <TextBlock Text="Preset Info"/>
         </StackPanel>
         <TextBlock
             Grid.Row="3"
