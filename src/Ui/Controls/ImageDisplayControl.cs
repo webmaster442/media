@@ -12,6 +12,8 @@ namespace Media.Ui.Controls;
 
 internal sealed class ImageDisplayControl : Control
 {
+    private const int ScrollBarSize = 25;
+
     public string ImagePath
     {
         get { return (string)GetValue(ImagePathProperty); }
@@ -102,7 +104,7 @@ internal sealed class ImageDisplayControl : Control
                                                                  int pictureHeight,
                                                                  double pictureAspectRatio)
     {
-        int height =  pictureHeight > ContainerHeight ? (int)ContainerHeight : pictureHeight;
+        int height =  pictureHeight > ContainerHeight ? (int)ContainerHeight - ScrollBarSize : pictureHeight;
         int width = (int)(height * pictureAspectRatio);
         return (width, height);
     }
@@ -111,7 +113,7 @@ internal sealed class ImageDisplayControl : Control
                                                                 int pictureHeight,
                                                                 double pictureAspectRatio)
     {
-        int width = pictureWidth > ContainerWidth ? (int)ContainerWidth : pictureWidth;
+        int width = pictureWidth > ContainerWidth ? (int)ContainerWidth - ScrollBarSize : pictureWidth;
         int height = (int)(width / pictureAspectRatio);
         return (width, height);
     }

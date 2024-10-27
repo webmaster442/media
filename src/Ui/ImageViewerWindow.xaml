@@ -15,7 +15,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="120" />
+            <RowDefinition Height="100" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -76,10 +76,7 @@
                     <ColumnDefinition Width="150" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock
@@ -96,7 +93,7 @@
                     Command="{Binding PreviousCommand}">
                     <TextBlock
                         FontFamily="Wingdings"
-                        FontSize="72"
+                        FontSize="48"
                         Text="ç" />
                 </Button>
                 <Button
@@ -108,27 +105,32 @@
                     Command="{Binding NextCommand}">
                     <TextBlock
                         FontFamily="Wingdings"
-                        FontSize="72"
+                        FontSize="48"
                         Text="è" />
                 </Button>
-                <TextBlock
-                    Grid.RowSpan="5"
+                <StackPanel
+                    Grid.Row="1"
                     Grid.Column="5"
+                    Grid.ColumnSpan="2"
+                    Margin="10,0"
                     HorizontalAlignment="Right"
-                    FontFamily="Webdings"
-                    FontSize="48"
-                    Text="L" />
-                <ComboBox
-                    x:Name="SizeCombo"
-                    Grid.Row="2"
-                    Grid.Column="6"
-                    SelectedIndex="0">
-                    <ComboBoxItem>Fit</ComboBoxItem>
-                    <ComboBoxItem>Fit Width</ComboBoxItem>
-                    <ComboBoxItem>Fit Height</ComboBoxItem>
-                    <ComboBoxItem>Original Size</ComboBoxItem>
-                </ComboBox>
-
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        FontFamily="Webdings"
+                        FontSize="48"
+                        Text="L" />
+                    <ComboBox
+                        x:Name="SizeCombo"
+                        VerticalAlignment="Center"
+                        SelectedIndex="0">
+                        <ComboBoxItem>Fit</ComboBoxItem>
+                        <ComboBoxItem>Fit Width</ComboBoxItem>
+                        <ComboBoxItem>Fit Height</ComboBoxItem>
+                        <ComboBoxItem>Original Size</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

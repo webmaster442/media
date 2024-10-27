@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 using Microsoft.Xaml.Behaviors;
 
@@ -10,23 +9,21 @@ internal sealed class ScrollIntoViewBehavior : Behavior<ListBox>
     protected override void OnAttached()
     {
         ListBox listBox = AssociatedObject;
-        ((INotifyCollectionChanged)listBox.Items).CollectionChanged += OnListBox_CollectionChanged;
+        listBox.SelectionChanged += OnListBox_SelectionChanged;
     }
 
     protected override void OnDetaching()
     {
         ListBox listBox = AssociatedObject;
-        ((INotifyCollectionChanged)listBox.Items).CollectionChanged -= OnListBox_CollectionChanged;
+        listBox.SelectionChanged -= OnListBox_SelectionChanged;
     }
 
-    private void OnListBox_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void OnListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        ListBox listBox = AssociatedObject;
-        if (e.Action == NotifyCollectionChangedAction.Add
-            && e.NewItems?.Count > 0)
+        if (sender is ListBox listBox 
+            && e.AddedItems?.Count > 0)
         {
-            // scroll the new item into view   
-            listBox.ScrollIntoView(e.NewItems[0]);
+            listBox.ScrollIntoView(e.AddedItems[0]);
         }
     }
 }

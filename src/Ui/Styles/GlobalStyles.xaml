@@ -62,6 +62,7 @@
 
     <Style TargetType="Menu">
         <Setter Property="Background" Value="{StaticResource BackgroundColor}" />
+        <Setter Property="Foreground" Value="{StaticResource UiBackground}"/>
     </Style>
 
     <Style TargetType="MenuItem">
