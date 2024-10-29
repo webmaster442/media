@@ -62,6 +62,10 @@
     "imgview": {
       "commandName": "Project",
       "commandLineArgs": "imgview d:\\0Kepek\\Hátterek\\desktop-fhd\\"
+    },
+    "gui": {
+      "commandName": "Project",
+      "commandLineArgs": "gui"
     }
   }
 }

@@ -41,6 +41,9 @@ mainApp.Configure(config =>
     config.AddCommand<ImgView>("imgview")
         .WithDescription("View images in a folder");
 
+    config.AddCommand<Gui>("gui")
+        .WithDescription("Start the graphical user interface");
+
     config.AddBranch("play", play =>
     {
         config.AddCommand<Play>(string.Empty)
