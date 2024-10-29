@@ -51,6 +51,18 @@
         </Setter>
     </Style>
 
+    <Style TargetType="controls:GuiParameterRenderer">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:GuiParameterRenderer">
+                    <ScrollViewer>
+                        <StackPanel x:Name="PART_PANEL"/>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style
         BasedOn="{StaticResource {x:Type Button}}"
         TargetType="Button">
