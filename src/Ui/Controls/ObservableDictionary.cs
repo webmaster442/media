@@ -4,7 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Media.Ui.Controls;
 
-internal sealed class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged where TKey: notnull
+internal sealed class ObservableDictionary<TKey, TValue> : 
+    IDictionary<TKey, TValue>,
+    INotifyPropertyChanged,
+    INotifyCollectionChanged where TKey: notnull
 {
     private readonly Dictionary<TKey, TValue> _dictionary = new();
 
@@ -15,6 +18,7 @@ internal sealed class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TVa
         {
             _dictionary[key] = value;
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, key));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
         }
     }
 
@@ -31,11 +35,14 @@ internal sealed class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TVa
         => false;
 
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
+
 
     public void Add(TKey key, TValue value)
     {
         _dictionary.Add(key, value);
         CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, key));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
     }
 
     public void Add(KeyValuePair<TKey, TValue> item)
@@ -45,6 +52,7 @@ internal sealed class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TVa
     {
         _dictionary.Clear();
         CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
     }
 
     public bool Contains(KeyValuePair<TKey, TValue> item)
@@ -70,6 +78,7 @@ internal sealed class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TVa
         if (value)
         {
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, key));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
         }
         return value;
     }

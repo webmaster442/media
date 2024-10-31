@@ -15,6 +15,8 @@ public static class ConfigKeys
     public const string ExternalYtdlpPath = "ExternalYtdlpPath";
     public const string MpvRemotePort = "MpvRemotePort";
     public const string DlnaServerPort = "DlnaServerPort";
+    public const string ExitOnLaunch = "ExitOnLaunch";
+    public const string AlwaysOnTop = "AlwaysOnTop";
 
     public static readonly Dictionary<string, string> CurrentVersionDefaults = new()
     {
@@ -25,6 +27,8 @@ public static class ConfigKeys
         { ExternalMpvPath, string.Empty },
         { ExternalYtdlpPath, string.Empty },
         { MpvRemotePort, 12345.ToString() },
-        { DlnaServerPort, 8085.ToString() }
+        { DlnaServerPort, 8085.ToString() },
+        { ExitOnLaunch, true.ToString() },
+        { AlwaysOnTop, false.ToString() },
     };
 }

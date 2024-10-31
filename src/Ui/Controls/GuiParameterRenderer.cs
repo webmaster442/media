@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -13,6 +8,9 @@ namespace Media.Ui.Controls;
 
 internal sealed class GuiParameterRenderer : Control
 {
+    private const string DirectorySelectTag = "directory";
+    private const string FileSelectTag = "file";
+
     public GuiCommandPart[]? CommandParts
     {
         get { return (GuiCommandPart[])GetValue(CommandPartsProperty); }
@@ -21,6 +19,15 @@ internal sealed class GuiParameterRenderer : Control
 
     public static readonly DependencyProperty CommandPartsProperty =
         DependencyProperty.Register("CommandParts", typeof(GuiCommandPart[]), typeof(GuiParameterRenderer), new PropertyMetadata(null, PartsChanged));
+
+    public ObservableDictionary<string, string> EditorPartValues
+    {
+        get { return (ObservableDictionary<string, string>)GetValue(EditorPartValuesProperty); }
+        set { SetValue(EditorPartValuesProperty, value); }
+    }
+
+    public static readonly DependencyProperty EditorPartValuesProperty =
+        DependencyProperty.Register("EditorPartValues", typeof(ObservableDictionary<string, string>), typeof(GuiParameterRenderer), new PropertyMetadata(new ObservableDictionary<string, string>()));
 
     private static void PartsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -49,8 +56,11 @@ internal sealed class GuiParameterRenderer : Control
         foreach (var part in CommandParts)
         {
             var control = CreateEditor(part.Editor, part.Name);
-            var label = new Label { Content = part.Name, ToolTip = part.Description };
-            stackPanel.Children.Add(label);
+            var text = new TextBlock
+            {
+                Text = $"{part.Name} ({part.Description})"
+            };
+            stackPanel.Children.Add(text);
             stackPanel.Children.Add(control);
         }
     }
@@ -61,9 +71,11 @@ internal sealed class GuiParameterRenderer : Control
         {
             if (child is TextBox textBox)
             {
+                textBox.LostFocus -= OnTextboxUpdate;
             }
             else if (child is Button button)
             {
+                button.Click -= OnButtonClick;
             }
         }
     }
@@ -73,13 +85,62 @@ internal sealed class GuiParameterRenderer : Control
         switch (editor)
         {
             case GuiCommandPartEditor.Directory:
+                var btn = new Button();
+                btn.Name = name;
+                btn.Tag = DirectorySelectTag;
+                btn.Content = "Select Directory";
+                btn.Click += OnButtonClick;
+                return btn;
+            case GuiCommandPartEditor.File:
+                var fileBtn = new Button();
+                fileBtn.Name = name;
+                fileBtn.Tag = FileSelectTag;
+                fileBtn.Content = "Select File";
+                fileBtn.Click += OnButtonClick;
+                return fileBtn;
             case GuiCommandPartEditor.Text:
                 var textBox = new TextBox();
                 textBox.Name = name;
                 textBox.Tag = name;
+                textBox.LostFocus += OnTextboxUpdate;
                 return textBox;
             default:
                 throw new UnreachableException($"Editor {editor} is not supported");
         }
+    }
+
+    private void OnButtonClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button button)
+            return;
+
+        if (DirectorySelectTag.Equals(button.Tag))
+        {
+            var directorySelector = new Microsoft.Win32.OpenFolderDialog();
+            if (directorySelector.ShowDialog() == true)
+            {
+                EditorPartValues[button.Name] = directorySelector.FolderName;
+                button.Content = $"{Path.GetFileName(directorySelector.FolderName)} ...";
+                button.ToolTip = directorySelector.FolderName;
+            }
+        }
+        else if (FileSelectTag.Equals(button.Tag))
+        {
+            var fileSelector = new Microsoft.Win32.OpenFileDialog();
+            if (fileSelector.ShowDialog() == true)
+            {
+                EditorPartValues[button.Name] = fileSelector.FileName;
+                button.Content = $"{Path.GetFileName(fileSelector.FileName)} ...";
+                button.ToolTip = fileSelector.FileName;
+            }
+        }
+    }
+
+    private void OnTextboxUpdate(object sender, RoutedEventArgs e)
+    {
+        if (sender is not TextBox textBox)
+            return;
+
+        EditorPartValues[textBox.Name] = textBox.Text;
     }
 }

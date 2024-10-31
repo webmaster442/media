@@ -27,6 +27,11 @@ public sealed class ConfigAccessor
         _config.Settings[key] = value.ToString(null, CultureInfo.InvariantCulture);
     }
 
+    private void Write(string key, bool value)
+    {
+        _config.Settings[key] = value.ToString(CultureInfo.InvariantCulture);
+    }
+
     private ConfigObject LoadConfig()
     {
         using var stream = File.OpenRead(ConfigPath);
@@ -39,12 +44,23 @@ public sealed class ConfigAccessor
         return loaded;
     }
 
-    private async Task SaveConfig()
+    private async Task SaveConfigAsync()
     {
         var temp = Path.GetTempFileName();
         await using (var stream = File.Create(temp))
         {
             await JsonSerializer.SerializeAsync(stream, _config, _options);
+        }
+        File.Move(temp, ConfigPath, true);
+        File.Delete(temp);
+    }
+
+    private void SaveConfig()
+    {
+        var temp = Path.GetTempFileName();
+        using (var stream = File.Create(temp))
+        {
+            JsonSerializer.Serialize(stream, _config, _options);
         }
         File.Move(temp, ConfigPath, true);
         File.Delete(temp);
@@ -73,7 +89,7 @@ public sealed class ConfigAccessor
 
     public string ConfigPath { get; }
 
-    public Task ForceSave() => SaveConfig();
+    public Task ForceSave() => SaveConfigAsync();
 
     public DateTimeOffset? GetFFMPegVesion()
         => Read<DateTimeOffset>(ConfigKeys.FFMpegVersion);
@@ -81,7 +97,7 @@ public sealed class ConfigAccessor
     public async Task SetFFMpegVersion(DateTimeOffset publishedAt)
     {
         Write(ConfigKeys.FFMpegVersion, publishedAt);
-        await SaveConfig();
+        await SaveConfigAsync();
     }
 
     public DateTimeOffset? GetMpvVesion()
@@ -90,7 +106,7 @@ public sealed class ConfigAccessor
     public async Task SetMpvVersion(DateTimeOffset publishedAt)
     {
         Write(ConfigKeys.MpvVersion, publishedAt);
-        await SaveConfig();
+        await SaveConfigAsync();
     }
 
     public DateTimeOffset? GetYtdlpVesion()
@@ -99,8 +115,26 @@ public sealed class ConfigAccessor
     public async Task SetYtdlpVersion(DateTimeOffset publishedAt)
     {
         Write(ConfigKeys.YtdlpVersion, publishedAt);
-        await SaveConfig();
+        await SaveConfigAsync();
     }
+
+    public void SetAlwaysOnTop(bool value)
+    {
+        Write(ConfigKeys.AlwaysOnTop, value);
+        SaveConfig();
+    }
+
+    public void SetExitOnLaunch(bool value)
+    {
+        Write(ConfigKeys.ExitOnLaunch, value);
+        SaveConfig();
+    }
+
+    public bool GetAlwaysOnTop()
+        => Read<bool>(ConfigKeys.AlwaysOnTop, false);
+
+    public bool GetExitOnLaunch()
+        => Read<bool>(ConfigKeys.ExitOnLaunch, true);
 
     public string? GetExternalFFMpegPath()
         => Read<string>(ConfigKeys.ExternalFfMpegPath);

@@ -9,10 +9,10 @@ internal static class GuiCommands
         get
         {
             yield return new GuiCommand
-            { 
+            {
                 ButtonText = "Open Image Viewer",
                 Description = "Open the image viewer window",
-                CommandLine= "imgview {folder}",
+                CommandLine = "imgview {folder}",
                 Editors = new[]
                 {
                     new GuiCommandPart
@@ -22,6 +22,34 @@ internal static class GuiCommands
                         Editor = GuiCommandPartEditor.Directory
                     }
                 }
+            };
+            yield return new GuiCommand
+            {
+                ButtonText = "Update ffmpeg",
+                Description = "Update the ffmpeg binaries",
+                CommandLine = "update ffmpeg",
+                Editors = Array.Empty<GuiCommandPart>()
+            };
+            yield return new GuiCommand
+            {
+                ButtonText = "Update mpv",
+                Description = "Update mpv player",
+                CommandLine = "update mpv",
+                Editors = Array.Empty<GuiCommandPart>()
+            };
+            yield return new GuiCommand
+            {
+                ButtonText = "Update yt-dlp",
+                Description = "Update yt-dlp downloader",
+                CommandLine = "update yt-dlp",
+                Editors = Array.Empty<GuiCommandPart>()
+            };
+            yield return new GuiCommand
+            {
+                ButtonText = "Update all",
+                Description = "Update all compnents (media+ffmpeg+yt-dlp+mpv)",
+                CommandLine = "update all",
+                Editors = Array.Empty<GuiCommandPart>()
             };
         }
     }
