@@ -23,7 +23,7 @@ internal sealed class RandomSelectorProvider : IItemProvider<Item, string>
             AttributesToSkip = FileAttributes.System | FileAttributes.Hidden | FileAttributes.Temporary,
             IgnoreInaccessible = true,
         });
-        var supported = new HashSet<string>(Mpv.GetSupportedExtensions(), StringComparer.OrdinalIgnoreCase);
+        var supported = new HashSet<string>(FileRecognizer.GetMpvSupportedExtensions(), StringComparer.OrdinalIgnoreCase);
         foreach (var file in files)
         {
             var extension = Path.GetExtension(file);

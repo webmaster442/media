@@ -109,7 +109,7 @@ internal sealed class Play : BasePlaylistCommand<Play.Settings>
         using var consoleCancel = new ConsoleCancelTokenSource();
 
         var selector = new ItemSelector<Item, string>(
-            itemProvider: new FileSystemItemProvider(Mpv.GetSupportedExtensions()),
+            itemProvider: new FileSystemItemProvider(FileRecognizer.GetMpvSupportedExtensions()),
             title: "Select a file",
             defaultPath: string.Empty);
 

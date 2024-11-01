@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Media.Interfaces;
+using Media.Interop;
 using Media.Ui.Controls;
 
 namespace Media.Ui;
@@ -44,16 +45,10 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
         CurrentImage = string.Empty;
     }
 
-    private static bool IsImageFile(string filePath)
-    {
-        var extension = Path.GetExtension(filePath).ToLower();
-        return extension is ".jpg" or ".jpeg" or ".png" or ".bmp" or ".gif" or ".webp";
-    }
-
     public void Initialize()
     {
         var files = Directory.EnumerateFiles(_folder)
-            .Where(file => IsImageFile(file));
+            .Where(file => FileRecognizer.GetFileType(file) == FileRecognizer.FileType.Image);
 
         ImageFiles.AddRange(files);
         

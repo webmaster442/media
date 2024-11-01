@@ -100,7 +100,7 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
         foreach (var file in files)
         {
             if (File.Exists(file)
-                && _fFMpeg.SupportedFormats.Contains(Path.GetExtension(file)))
+                && FileRecognizer.IsDropConvertSupported(file))
             {
                 builder.WithCommand(CreateCommandLine(file));
             }
