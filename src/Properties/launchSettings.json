@@ -67,6 +67,10 @@
       "commandName": "Project",
       "commandLineArgs": "gui"
     },
+    "xmldoc": {
+      "commandName": "Project",
+      "commandLineArgs": "cli xmldoc"
+    },
     "unknown": {
       "commandName": "Project",
       "commandLineArgs": "unknowncommand"

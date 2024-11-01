@@ -1,4 +1,9 @@
-﻿using System.Diagnostics;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Diagnostics;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -13,16 +18,17 @@ internal static class CliModelProvider
         {
             StartInfo = new ProcessStartInfo
             {
-                FileName = Process.GetCurrentProcess().MainModule?.FileName ?? throw new UnreachableException(),
+                FileName = Path.Combine(AppContext.BaseDirectory, "media.exe"),
                 Arguments = "cli xmldoc",
                 RedirectStandardOutput = true,
                 CreateNoWindow = true,
-                UseShellExecute = false,
+                StandardOutputEncoding = Encoding.UTF8,
             },
         };
 
         process.Start();
-        string xml =  process.StandardOutput.ReadToEnd();
+
+        string xml = process.StandardOutput.ReadToEnd();
 
         using XmlReader XmlReader = XmlReader.Create(new StringReader(xml));
 

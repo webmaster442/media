@@ -3,19 +3,33 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-
 using System.Xml.Serialization;
 
 namespace Media.Dto.Cli;
 
+[Serializable]
 [XmlType(AnonymousType = true)]
-public record ModelCommand(
-    string Description,
-    ModelCommandParameters Parameters,
-    [property: XmlElement("Command")] ModelCommandCommand[] Command,
-    [property: XmlAttribute()] string Name,
-    [property: XmlAttribute()] bool IsBranch,
-    [property: XmlAttribute()] bool IsDefault,
-    [property: XmlIgnore()] bool IsDefaultSpecified,
-    [property: XmlAttribute()] string ClrType,
-    [property: XmlAttribute()] string Settings);
+public class ModelCommand
+{
+    [XmlElement]
+    public string Description { get; set; }
+
+    [XmlElement("Command")]
+    public ModelCommand[] Commands { get; set; }
+
+    [XmlAttribute]
+    public string Name { get; set; }
+
+    [XmlAttribute]
+    public bool IsBranch { get; set; }
+
+    [XmlAttribute]
+    public bool IsDefault { get; set; }
+
+    public ModelCommand()
+    {
+        Description = string.Empty;
+        Commands = Array.Empty<ModelCommand>();
+        Name = string.Empty;
+    }
+}
