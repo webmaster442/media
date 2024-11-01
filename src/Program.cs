@@ -187,4 +187,12 @@ mainApp.Configure(config =>
     });
 });
 
-await mainApp.RunAsync(args);
+try
+{
+    await mainApp.RunAsync(args);
+}
+catch (CommandParseException e)
+{
+    Terminal.RedText(e.Message);
+    Environment.Exit(ExitCodes.Error);
+}

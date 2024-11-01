@@ -66,6 +66,10 @@
     "gui": {
       "commandName": "Project",
       "commandLineArgs": "gui"
+    },
+    "unknown": {
+      "commandName": "Project",
+      "commandLineArgs": "unknowncommand"
     }
   }
 }
