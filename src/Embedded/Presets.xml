@@ -5,6 +5,7 @@
  This code is licensed under MIT license (see LICENSE for details)
 ***********************************************************************************************
 -->
+
 <Presets>
   <!-- Lossless audio formatas -->
   <Preset Name="Flac" Extension=".flac" Category="Lossless Audio">

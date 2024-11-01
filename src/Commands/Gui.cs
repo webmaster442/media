@@ -1,4 +1,9 @@
-﻿using Media.Infrastructure.BaseCommands;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using Media.Infrastructure.BaseCommands;
 using Media.Interfaces;
 using Media.Ui;
 
