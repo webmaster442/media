@@ -15,7 +15,7 @@ public class ModelCommand
     public string Description { get; set; }
 
     [XmlElement("Command")]
-    public ModelCommand[] Commands { get; set; }
+    public ModelCommand[]? Commands { get; set; }
 
     [XmlAttribute]
     public string Name { get; set; }
@@ -29,7 +29,6 @@ public class ModelCommand
     public ModelCommand()
     {
         Description = string.Empty;
-        Commands = Array.Empty<ModelCommand>();
         Name = string.Empty;
     }
 }

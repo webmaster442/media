@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.Versioning;
 
+using Media.Dto.Cli;
 using Media.Infrastructure;
 using Media.Interop;
 
@@ -16,7 +17,7 @@ namespace Media.Commands;
 
 internal class DefaultCommand : Command
 {
-    private static void PrintReleaseNotes()
+    private static void PrintReleaseNotes(string tree)
     {
         var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Media.Notes.txt");
         if (stream == null)
@@ -27,6 +28,11 @@ internal class DefaultCommand : Command
         var content = reader.ReadToEnd();
 
         AnsiConsole.WriteLine(content);
+
+        AnsiConsole.WriteLine("Available commands: \r\n");
+        AnsiConsole.MarkupLine($"[yellow]{tree}[/]");
+
+        AnsiConsole.WriteLine("\r\nExamples: ");
 
         var exampleGenerator = new ExampleGenerator();
         foreach (var example in exampleGenerator.GenerateExamples())
@@ -77,13 +83,59 @@ internal class DefaultCommand : Command
         return shells.Contains(parent.ProcessName);
     }
 
+    private static string BuildTree(Model mdl)
+    {
+        static char GetTreeChar(int length, int i)
+        {
+            if (length == 1 || i == (length - 1))
+                return '└';
+
+            return '├';
+        }
+
+        StringBuilder sb = new(256 + 512);
+
+        var sorted = mdl.Commands.OrderBy(c => c.Name).ToArray();
+
+        sb.AppendLine("Media");
+
+        for (int i = 0; i < sorted.Length; i++)
+        {
+            if (sorted[i].IsDefault)
+                continue;
+
+            sb.Append("  ");
+            sb.Append(GetTreeChar(sorted.Length, i));
+            sb.Append(' ');
+            sb.AppendLine(sorted[i].Name);
+
+            var subCommands = sorted[i].Commands;
+
+            if (subCommands != null)
+            {
+                for (int j = 0; j < subCommands.Length; j++)
+                {
+                    sb.Append("  ");
+                    sb.Append("│ ");
+                    sb.Append(GetTreeChar(subCommands.Length, j));
+                    sb.Append(' ');
+                    sb.AppendLine(subCommands[j].Name);
+                }
+            }
+        }
+        return sb.ToString();
+    }
+
     [SupportedOSPlatform("windows")]
     public override int Execute(CommandContext context)
     {
-        bool shellStarted = WasItStartedByAShell();
+        var mdl = CliModelProvider.GetModel();
 
+        string tree = BuildTree(mdl);
+
+        bool shellStarted = WasItStartedByAShell();
         Powershell powershell = new();
-        if (!shellStarted)
+        if (!shellStarted && !Debugger.IsAttached)
         {
             powershell.RunCommands(new string[]
             {
@@ -93,7 +145,7 @@ internal class DefaultCommand : Command
         }
         else
         {
-            PrintReleaseNotes();
+            PrintReleaseNotes(tree);
         }
 
         return ExitCodes.Success;
