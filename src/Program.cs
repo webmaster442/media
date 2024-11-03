@@ -6,6 +6,7 @@
 using Media;
 using Media.Commands;
 using Media.Infrastructure;
+using Media.Interop;
 using Media.ShellAutoComplete.AutoComplete;
 using Media.ShellAutoComplete.Integrations;
 
@@ -18,7 +19,6 @@ mainApp.Configure(config =>
     config.SetApplicationName("Media");
     config.PropagateExceptions();
     config.AddAutoCompletion(config => config.AddPowershell());
-    config.SetExceptionHandler(GlobalExceptionHandler.Console);
 
     config.AddCommand<Cut>("cut")
           .WithDescription("Cut a file without reencoding");
@@ -46,7 +46,9 @@ mainApp.Configure(config =>
 
     config.AddBranch("play", play =>
     {
-        play.AddCommand<Play>(string.Empty)
+        play.SetDescription("Play related commands");
+
+        play.AddCommand<Play>("file")
             .WithDescription("Play a media file with mpv");
 
         play.AddCommand<PlayRandom>("random")
@@ -55,6 +57,8 @@ mainApp.Configure(config =>
 
     config.AddBranch("playlist", playlist =>
     {
+        playlist.SetDescription("Playlist related commands");
+
         playlist.AddCommand<PlaylistNew>("new")
             .WithDescription("Create a new playlist");
 
@@ -73,6 +77,8 @@ mainApp.Configure(config =>
 
     config.AddBranch("info", info =>
     {
+        info.SetDescription("Information related commands");
+
         info.AddCommand<InfoFile>("file")
             .WithDescription("Get information about a media file");
 
@@ -191,8 +197,16 @@ try
 {
     await mainApp.RunAsync(args);
 }
-catch (CommandParseException e)
+catch (Exception e)
 {
-    Terminal.RedText(e.Message);
-    Environment.Exit(ExitCodes.Error);
+    if (e is CommandParseException
+        or CommandRuntimeException
+        or ToolDependencyException
+        or OperationCanceledException)
+    {
+        Terminal.RedText(e.Message);
+        Environment.Exit(ExitCodes.Error);
+    }
+    GlobalExceptionHandler.HandleExcpetion(e);
+    Environment.Exit(ExitCodes.Exception);
 }

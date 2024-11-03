@@ -21,7 +21,11 @@ public static class Extensions
     {
         configurator.AddBranch("completion", complete =>
         {
-            complete.AddCommand<CompleteCommand>("complete").IsHidden();
+            complete.SetDescription("Auto completion commands");
+
+            complete.AddCommand<CompleteCommand>("complete")
+                .WithDescription("Complete a command input")
+                .IsHidden();
 
             if (action is not null)
             {

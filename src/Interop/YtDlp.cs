@@ -91,7 +91,7 @@ internal sealed class YtDlp : InteropBase
 
         if (!TryGetInstalledPath(out string? ytDlpPath))
         {
-            throw new InvalidOperationException("Yt-dlp not found.");
+            throw new ToolDependencyException("Yt-dlp not found.");
         }
 
         using var process = CreateProcess(ytDlpPath,

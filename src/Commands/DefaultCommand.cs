@@ -107,7 +107,7 @@ internal class DefaultCommand : Command
             sb.Append("  ");
             sb.Append(GetTreeChar(sorted.Length, i));
             sb.Append(' ');
-            sb.AppendLine(sorted[i].Name);
+            sb.AppendLine($"{sorted[i].Name.PadRight(10)} ({sorted[i].Description})");
 
             var subCommands = sorted[i].Commands;
 
@@ -119,7 +119,7 @@ internal class DefaultCommand : Command
                     sb.Append("│ ");
                     sb.Append(GetTreeChar(subCommands.Length, j));
                     sb.Append(' ');
-                    sb.AppendLine(subCommands[j].Name);
+                    sb.AppendLine($"{subCommands[j].Name.PadRight(10)} ({subCommands[j].Description})");
                 }
             }
         }

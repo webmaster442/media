@@ -6,6 +6,8 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
+using Media.Infrastructure;
+
 namespace Media.Interop;
 
 public abstract class InteropBase
@@ -44,7 +46,7 @@ public abstract class InteropBase
     {
         if (!TryGetInstalledPath(out string? toolPath))
         {
-            throw new InvalidOperationException($"{_programName} not found.");
+            throw new ToolDependencyException($"{_programName} not found. Install it with update subcommands.");
         }
 
         return new Process
@@ -65,7 +67,7 @@ public abstract class InteropBase
     {
         if (!TryGetInstalledPath(out string? toolPath))
         {
-            throw new InvalidOperationException($"{_programName} not found.");
+            throw new ToolDependencyException($"{_programName} not found. Install it with update subcommands.");
         }
 
         return $"{toolPath} {commandLine}";

@@ -16,17 +16,17 @@
       "commandName": "Project",
       "commandLineArgs": "update all"
     },
-    "play -d": {
+    "play file -d": {
       "commandName": "Project",
-      "commandLineArgs": "play -d"
+      "commandLineArgs": "play file -d"
     },
-    "play -r": {
+    "play file -r": {
       "commandName": "Project",
-      "commandLineArgs": "play -r"
+      "commandLineArgs": "play file -r"
     },
-    "play c:\\": {
+    "play file c:\\": {
       "commandName": "Project",
-      "commandLineArgs": "play c:\\"
+      "commandLineArgs": "play file c:\\"
     },
     "play random h:\\": {
       "commandName": "Project",

@@ -22,7 +22,7 @@ public static class Extensions
             Console.WriteLine(result);
 
             return 0;
-        });
+        }).WithDescription("Powershell autocomplete integration");
 
         return settings;
     }

@@ -9,11 +9,6 @@ namespace Media;
 
 internal static class GlobalExceptionHandler
 {
-    internal static void Console(Exception exception, ITypeResolver? resolver)
-    {
-        HandleExcpetion(exception);
-    }
-
     internal static void HandleExcpetion(Exception exception)
     {
         if (exception is OperationCanceledException)

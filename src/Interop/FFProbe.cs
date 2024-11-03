@@ -24,7 +24,7 @@ internal static class FFProbe
     {
         if (!TryGetFFProbePath(out string ffprobePath))
         {
-            throw new InvalidOperationException("FFProbe not found.");
+            throw new ToolDependencyException("FFProbe not found.");
         }
 
         using var process = new Process()
