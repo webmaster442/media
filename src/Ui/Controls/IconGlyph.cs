@@ -18,4 +18,9 @@ internal enum IconGlyph
     Info = 0xE946,
     Error = 0xE783,
     Warning = 0xE7BA,
+    Photo2 = 0xEB9F,
+    Video = 0xE714,
+    BulletedList = 0xE8FD,
+    MusicNote = 0xEC4F,
+    OpenFile = 0xE8E5,
 }

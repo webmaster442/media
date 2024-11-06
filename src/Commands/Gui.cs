@@ -12,6 +12,6 @@ internal sealed class Gui : GuiCommand<GuiWindow>
 {
     protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions)
     {
-        return new GuiViewModel(uiFunctions, new Infrastructure.ConfigAccessor());
+        return new GuiViewModel(uiFunctions);
     }
 }
