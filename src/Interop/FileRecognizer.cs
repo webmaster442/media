@@ -67,6 +67,13 @@ internal static class FileRecognizer
             .Concat(PlaylistFiles);
     }
 
+    public static bool IsMpvSupportedType(this FileType fileType)
+    {
+        return fileType == FileType.Audio
+            || fileType == FileType.Video
+            || fileType == FileType.Playlist;
+    }
+
     public static bool IsDropConvertSupported(string file)
     {
         var type = GetFileType(file);

@@ -10,13 +10,14 @@ internal class GuiViewModel : ObservableObject, IViewModel
     private readonly IUiFunctions _uiFunctions;
 
     public FilesViewModel FilesViewModel { get; }
-    public LogViewModel LogViewModel { get; }
+
+    public SystemMenuViewModel System { get; }
 
     public GuiViewModel(IUiFunctions uiFunctions)
     {
         _uiFunctions = uiFunctions;
         FilesViewModel = new FilesViewModel(uiFunctions);
-        LogViewModel = new LogViewModel();
+        System = new SystemMenuViewModel();
     }
 
     public void Initialize()

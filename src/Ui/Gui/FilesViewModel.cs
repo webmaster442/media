@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
 using Media.Interfaces;
+using Media.Interop;
 using Media.Ui.Controls;
 using Media.Ui.Converters;
 
@@ -56,7 +57,6 @@ internal partial class FilesViewModel : ObservableObject
             }
             catch (Exception e)
             {
-                WeakReferenceMessenger.Default.Send(e);
                 _uiFunctions.ErrorMessage("Error", e.Message);
             }
         }
@@ -75,6 +75,9 @@ internal partial class FilesViewModel : ObservableObject
     {
         if (string.IsNullOrEmpty(path))
             return;
+
+        if (!path.EndsWith('\\'))
+            path += '\\';
 
         _currentPath = path;
         PathParts.Clear();
@@ -118,10 +121,26 @@ internal partial class FilesViewModel : ObservableObject
         }
         catch (Exception e)
         {
-            WeakReferenceMessenger.Default.Send(e);
             _uiFunctions.ErrorMessage("Error", e.Message);
         }
 
+    }
+
+    [RelayCommand]
+    private void DoubleClick(FolderItem item)
+    {
+        if (item.IsDirectory)
+        {
+            Navigate(item.FullPath);
+        }
+        else if (item.FileType.IsMpvSupportedType())
+        {
+            SelfInterop.Play(item.FullPath);
+        }
+        else
+        {
+            Windows.ShellExecute(item.FullPath);
+        }
     }
 
     private IEnumerable<PathPartModel> CreatePathParts(string path)
@@ -134,7 +153,7 @@ internal partial class FilesViewModel : ObservableObject
             currentPath = Path.Combine(currentPath, part);
             result.Add(new PathPartModel
             {
-                DisplayName = part,
+                DisplayName = $"{part}\\",
                 FullPath = currentPath
             });
         }

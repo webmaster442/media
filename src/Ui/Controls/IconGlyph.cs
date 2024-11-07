@@ -23,4 +23,5 @@ internal enum IconGlyph
     BulletedList = 0xE8FD,
     MusicNote = 0xEC4F,
     OpenFile = 0xE8E5,
+    FolderOpen = 0xE838,
 }

@@ -17,7 +17,7 @@ internal class ConvertDragDrop : GuiCommand<DropConvertWindow>
 {
     internal class DropWindowManipulator : IWindowManipulator
     {
-        public Size GetWindowSize(Size xamlDefinedWindowSize)
+        public Size GetWindowSize(Size xamlDefinedWindowSize, Size workArea)
             => xamlDefinedWindowSize;
 
         public Point GetWindowStartupLocation(Size workArea, Size windowSize)
