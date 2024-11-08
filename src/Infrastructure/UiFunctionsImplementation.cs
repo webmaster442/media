@@ -5,9 +5,12 @@
 
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shell;
 
 using Media.Interfaces;
+using Media.Ui.Controls;
 
 namespace Media.Infrastructure;
 
@@ -83,4 +86,49 @@ internal class UiFunctionsImplementation : IUiFunctions
 
     public void WarningMessage(string message, string title)
         => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
+
+    public void BlockUi()
+    {
+        var blocker = FindElement<AsyncBlocker>(App.Current.MainWindow);
+        if (blocker != null)
+        {
+            blocker.Show();
+        }
+        else
+        {
+            var grid = FindElement<Grid>(App.Current.MainWindow);
+            if (grid != null)
+            {
+                var ctrl = new AsyncBlocker();
+                grid.Children.Add(ctrl);
+                ctrl.Show();
+            }
+        }
+    }
+
+    public void UnblockUi()
+    {
+        var blocker = FindElement<AsyncBlocker>(App.Current.MainWindow);
+        blocker?.Hide();
+    }
+
+    private static T? FindElement<T>(DependencyObject obj)
+        where T: UIElement
+    {
+        if (obj is T casted)
+            return casted;
+
+        int count = VisualTreeHelper.GetChildrenCount(obj);
+
+        DependencyObject? foundChild = null;
+
+        for (int i=0; i<count; i++)
+        {
+            var child = VisualTreeHelper.GetChild(obj, i);
+            foundChild = FindElement<T>(child);
+            if (foundChild != null) break;
+        }
+
+        return foundChild as T;
+    }
 }

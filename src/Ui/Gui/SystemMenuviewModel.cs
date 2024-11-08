@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Windows.Automation;
+
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Media.Interop;
@@ -22,6 +24,4 @@ internal sealed partial class SystemMenuViewModel : ObservableObject
     [RelayCommand]
     private void DisplayClone() =>
         Windows.DisplaySwitch(Windows.DisplaySwitchMode.Clone);
-
-
 }

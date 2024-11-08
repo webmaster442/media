@@ -65,6 +65,30 @@
         <Setter Property="Margin" Value="3" />
     </Style>
 
+    <Style TargetType="controls:AsyncBlocker">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:AsyncBlocker}">
+                    <Grid Background="#fd000000">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <ProgressBar
+                            x:Name="PART_PROGRESS"
+                            Grid.Row="0"
+                            IsIndeterminate="True"
+                            VerticalAlignment="Bottom" />
+                        <TextBlock
+                            VerticalAlignment="Top"
+                            Text="Processing..." />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
     <Style
         x:Key="HorizontalItemsControl"
         TargetType="ItemsControl">

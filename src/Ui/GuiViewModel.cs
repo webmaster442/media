@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
+using Media.Infrastructure;
 using Media.Interfaces;
 using Media.Ui.Gui;
 
@@ -11,6 +12,8 @@ internal class GuiViewModel : ObservableObject, IViewModel
 
     public FilesViewModel FilesViewModel { get; }
 
+    public RadioStationsViewModel RadioStationsViewModel { get; }
+
     public SystemMenuViewModel System { get; }
 
     public GuiViewModel(IUiFunctions uiFunctions)
@@ -18,10 +21,12 @@ internal class GuiViewModel : ObservableObject, IViewModel
         _uiFunctions = uiFunctions;
         FilesViewModel = new FilesViewModel(uiFunctions);
         System = new SystemMenuViewModel();
+        RadioStationsViewModel = new RadioStationsViewModel(new RadioStationsClient(), uiFunctions);
     }
 
     public void Initialize()
     {
         FilesViewModel.RefreshDriveList();
+        RadioStationsViewModel.Initialize();
     }
 }
