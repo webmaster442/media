@@ -20,7 +20,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 {
     private readonly Mpv _mpv;
     private readonly RandomSelectorProvider _randomSelectorProvider;
-    private readonly MediaDocumentStore _documentStore;
+    private readonly MediaDocumentStoreAdapter _documentStore;
 
     internal class Settings : ValidatedCommandSettings
     {
@@ -41,7 +41,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 
     internal record class DirectoryEntry(string Name, string Path);
 
-    public PlayRandom(ConfigAccessor configAccessor, MediaDocumentStore documentStore)
+    public PlayRandom(ConfigAccessor configAccessor, MediaDocumentStoreAdapter documentStore)
     {
         _mpv = new Mpv(configAccessor);
         _randomSelectorProvider = new();
