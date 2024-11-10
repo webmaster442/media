@@ -1,6 +1,4 @@
-﻿using System.Windows.Automation;
-
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Media.Interop;
@@ -24,4 +22,28 @@ internal sealed partial class SystemMenuViewModel : ObservableObject
     [RelayCommand]
     private void DisplayClone() =>
         Windows.DisplaySwitch(Windows.DisplaySwitchMode.Clone);
+
+    [RelayCommand]
+    private void Lock()
+    => Windows.Lock();
+
+    [RelayCommand]
+    private void Sleep()
+        => Windows.Sleep();
+
+    [RelayCommand]
+    private void Shutdown()
+        => Windows.Shutdown();
+
+    [RelayCommand]
+    private void Restart()
+        => Windows.Restart();
+
+    [RelayCommand]
+    private void Logout()
+        => Windows.Logoff();
+
+    [RelayCommand]
+    private void Hibernate()
+        => Windows.Hibernate();
 }

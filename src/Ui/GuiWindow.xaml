@@ -17,45 +17,15 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition  />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Menu
             Grid.Row="0"
-            Grid.Column="0">
-            <MenuItem Header="Files">
-                <MenuItem
-                    Click="SetCorrectTabFromTag"
-                    Command="{Binding FilesViewModel.RefreshDriveListCommand}"
-                    Header="Refresh drive list"
-                    Tag="0" />
-                <Separator />
-                <MenuItem
-                    Click="SetCorrectTabFromTag"
-                    Header="Show hidden files"
-                    IsCheckable="True"
-                    IsChecked="{Binding FilesViewModel.ShowHidden}"
-                    Tag="0" />
-            </MenuItem>
-        </Menu>
-        <Menu
+            Grid.Column="0" />
+        <Gui:MenuView
             Grid.Row="0"
-            Grid.Column="1">
-            <MenuItem Header="Projector">
-                <MenuItem
-                    Command="{Binding System.DisplayInternalCommand}"
-                    Header="Internal" />
-                <MenuItem
-                    Command="{Binding System.DisplayCloneCommand}"
-                    Header="Clone" />
-                <MenuItem
-                    Command="{Binding System.DisplayExtendCommand}"
-                    Header="Extend" />
-                <MenuItem
-                    Command="{Binding System.DisplayExernalCommand}"
-                    Header="External" />
-            </MenuItem>
-        </Menu>
+            Grid.Column="1" />
         <TabControl
             x:Name="Tabs"
             Grid.Row="1"
@@ -65,7 +35,7 @@
                 <Gui:FilesView DataContext="{Binding FilesViewModel}" />
             </TabItem>
             <TabItem Header="Radio Stations">
-                <Gui:RadioStations DataContext="{Binding RadioStationsViewModel}"/>
+                <Gui:RadioStations DataContext="{Binding RadioStationsViewModel}" />
             </TabItem>
         </TabControl>
     </Grid>

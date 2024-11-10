@@ -1,6 +1,9 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Threading;
+
+using CommunityToolkit.Mvvm.Messaging;
+
+using Media.Ui.Gui;
 
 namespace Media.Ui;
 /// <summary>
@@ -11,15 +14,9 @@ public partial class GuiWindow : Window
     public GuiWindow()
     {
         InitializeComponent();
+        WeakReferenceMessenger.Default.Register<MenuView.SetTabIndexMessage>(this, SetTabIndex);
     }
 
-    private void SetCorrectTabFromTag(object sender, RoutedEventArgs e)
-    {
-        if (sender is MenuItem item
-            && item.Tag is string str
-            && int.TryParse(str, out int index))
-        {
-            Dispatcher.Invoke(() => Tabs.SelectedIndex = index, DispatcherPriority.Input);
-        }
-    }
+    private void SetTabIndex(object recipient, MenuView.SetTabIndexMessage message) 
+        => Dispatcher.Invoke(() => Tabs.SelectedIndex = message.Index, DispatcherPriority.Input);
 }
