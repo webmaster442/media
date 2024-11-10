@@ -17,7 +17,7 @@ internal static class ProgramFactory
         var services = new ServiceCollection();
 
         services.AddSingleton<ConfigAccessor>();
-        services.AddSingleton<MediaDocumentStore>();
+        services.AddSingleton<MediaDocumentStoreAdapter>();
         var registar = new TypeRegistrar(services);
         registar.Build();
         return registar;
