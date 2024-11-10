@@ -36,10 +36,10 @@ internal sealed partial class RadioStationsViewModel : ObservableObject, IViewMo
     [RelayCommand]
     private async Task LoadCountry(Country selection)
     {
-        _uiFunctions.BlockUi();
-        var stations = await _radioStationsClient.GetRadioStationsByCountry(selection.Iso31661);
+        /*_uiFunctions.BlockUi();
+        var stations = await _radioStationsClient.GetRadioStations();
         Stations.Clear();
         Stations.AddRange(stations);
-        _uiFunctions.UnblockUi();
+        _uiFunctions.UnblockUi();*/
     }
 }

@@ -1,34 +1,68 @@
-﻿using Media.Dto.Radio;
+﻿using Media.Database;
+using Media.Dto.Radio;
 
 namespace Media.Infrastructure;
 
 internal class RadioStationsClient : ApiClient
 {
-    public async Task<Country[]> GetRadioStationCountries()
+    private readonly ApiCacheAdapter _cacheAdapter;
+
+    public RadioStationsClient()
     {
+        _cacheAdapter = new ApiCacheAdapter();
+    }
+
+    public async Task<IReadOnlyList<Country>> GetRadioStationCountries()
+    {
+        if (_cacheAdapter.RadioCountriesLastFetch.IsYoungerThan(TimeSpan.FromHours(24))
+            && _cacheAdapter.Countries.Count > 0)
+        {
+            return (IReadOnlyList<Country>)_cacheAdapter.Countries;
+        }
+
         string url = $"{ApiUrls.RadioBrowserApi}/countries";
         using var response = await _client.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
         var json = await response.Content.ReadAsStringAsync();
 
-        var deserialized = JsonSerializer.Deserialize<Country[]>(json);
+        List<Country>? deserialized = JsonSerializer.Deserialize<List<Country>>(json);
 
-        return deserialized ?? throw new InvalidOperationException("Data deserialize failed");
+        if (deserialized is not null)
+        {
+            _cacheAdapter.Countries.Clear();
+            _cacheAdapter.Countries.AddRange(deserialized);
+            await _cacheAdapter.Save();
+            return deserialized;
+        }
+
+        throw new InvalidOperationException("Data deserialize failed");
     }
 
-    public async Task<Station[]> GetRadioStationsByCountry(string countryCode)
+    public async Task<IReadOnlyList<Station>> GetRadioStations()
     {
-        ArgumentNullException.ThrowIfNullOrEmpty(countryCode);
+        if (_cacheAdapter.RadioStationsLastFetch.IsYoungerThan(TimeSpan.FromHours(24))
+            && _cacheAdapter.Countries.Count > 0)
+        {
+            return (IReadOnlyList<Station>)_cacheAdapter.Stations;
+        }
 
-        string url = $"{ApiUrls.RadioBrowserApi}/stations/bycountry/{countryCode}";
+        string url = $"{ApiUrls.RadioBrowserApi}/stations/bycountry/us";
         using var response = await _client.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
         var json = await response.Content.ReadAsStringAsync();
 
-        var deserialized = JsonSerializer.Deserialize<Station[]>(json);
+        var deserialized = JsonSerializer.Deserialize<List<Station>>(json);
 
-        return deserialized ?? throw new InvalidOperationException("Data deserialize failed");
+        if (deserialized is not null)
+        {
+            _cacheAdapter.Stations.Clear();
+            _cacheAdapter.Stations.AddRange(deserialized);
+            await _cacheAdapter.Save();
+            return deserialized;
+        }
+        
+        throw new InvalidOperationException("Data deserialize failed");
     }
 }
