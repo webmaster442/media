@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
+using Media.Database;
 using Media.Infrastructure;
 using Media.Interfaces;
 using Media.Ui.Gui;

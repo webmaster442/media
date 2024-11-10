@@ -3,8 +3,9 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Threading;
 
 using Media.Interfaces;
 
@@ -43,6 +44,10 @@ internal class AppRunner<TWindow> where TWindow : Window, new()
         App.MainWindow.UseLayoutRounding = true;
         App.MainWindow.WindowStartupLocation = WindowStartupLocation.Manual;
         WindowManipulator = new DefaultWindowManipulator();
+
+        //Set WPF async await dispatcher
+        if (SynchronizationContext.Current is not DispatcherSynchronizationContext)
+            SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
     }
 
     public void Run(IViewModel? dataContext)

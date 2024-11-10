@@ -65,7 +65,7 @@
                 <Gui:FilesView DataContext="{Binding FilesViewModel}" />
             </TabItem>
             <TabItem Header="Radio Stations">
-                <Gui:RadioStations DataContext="{Binding }"/>
+                <Gui:RadioStations DataContext="{Binding RadioStationsViewModel}"/>
             </TabItem>
         </TabControl>
     </Grid>

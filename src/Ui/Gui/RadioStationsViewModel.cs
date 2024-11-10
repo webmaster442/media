@@ -22,6 +22,7 @@ internal sealed partial class RadioStationsViewModel : ObservableObject, IViewMo
         Stations = new ObservableRangeCollection<Station>();
         _radioStationsClient = radioStationsClient;
         _uiFunctions = uiFunctions;
+
     }
 
     public async void Initialize()
@@ -34,12 +35,12 @@ internal sealed partial class RadioStationsViewModel : ObservableObject, IViewMo
     }
 
     [RelayCommand]
-    private async Task LoadCountry(Country selection)
+    private async Task CountrySelect(Country selection)
     {
-        /*_uiFunctions.BlockUi();
-        var stations = await _radioStationsClient.GetRadioStations();
+        _uiFunctions.BlockUi();
+        var stations = await _radioStationsClient.GetRadioStations(selection.Name);
         Stations.Clear();
         Stations.AddRange(stations);
-        _uiFunctions.UnblockUi();*/
+        _uiFunctions.UnblockUi();
     }
 }

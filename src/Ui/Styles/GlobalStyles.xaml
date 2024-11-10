@@ -69,7 +69,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:AsyncBlocker}">
-                    <Grid Background="#fd000000">
+                    <Grid
+                        Opacity="0.9"
+                        Background="{StaticResource WindowBackgroundBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
@@ -77,11 +79,16 @@
                         <ProgressBar
                             x:Name="PART_PROGRESS"
                             Grid.Row="0"
-                            IsIndeterminate="True"
-                            VerticalAlignment="Bottom" />
+                            Height="30"
+                            Margin="20"
+                            VerticalAlignment="Bottom"
+                            IsIndeterminate="True" />
                         <TextBlock
+                            Grid.Row="1"
                             VerticalAlignment="Top"
-                            Text="Processing..." />
+                            FontSize="32"
+                            Text="Processing..."
+                            TextAlignment="Center" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

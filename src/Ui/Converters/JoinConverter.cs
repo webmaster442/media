@@ -2,6 +2,7 @@
 using System.Windows.Markup;
 
 namespace Media.Ui.Converters;
+
 internal sealed class JoinConverter : MarkupExtension, IMultiValueConverter, IValueConverter
 {
     public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)

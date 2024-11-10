@@ -48,15 +48,13 @@ internal class UiFunctionsImplementation : IUiFunctions
 
     public void Report(double value)
     {
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            var mainWin = App.Current.MainWindow;
-            if (mainWin.TaskbarItemInfo == null)
-                mainWin.TaskbarItemInfo = new TaskbarItemInfo();
 
-            mainWin.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
-            mainWin.TaskbarItemInfo.ProgressValue = value;
-        });
+        var mainWin = App.Current.MainWindow;
+        if (mainWin.TaskbarItemInfo == null)
+            mainWin.TaskbarItemInfo = new TaskbarItemInfo();
+
+        mainWin.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+        mainWin.TaskbarItemInfo.ProgressValue = value;
     }
 
     public void SetProgressState(ProgressState state)
@@ -74,14 +72,12 @@ internal class UiFunctionsImplementation : IUiFunctions
             };
         }
 
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            var mainWin = App.Current.MainWindow;
-            if (mainWin.TaskbarItemInfo == null)
-                mainWin.TaskbarItemInfo = new TaskbarItemInfo();
+        var mainWin = App.Current.MainWindow;
+        if (mainWin.TaskbarItemInfo == null)
+            mainWin.TaskbarItemInfo = new TaskbarItemInfo();
 
-            mainWin.TaskbarItemInfo.ProgressState = Map(state);
-        });
+        mainWin.TaskbarItemInfo.ProgressState = Map(state);
+
     }
 
     public void WarningMessage(string message, string title)
@@ -89,14 +85,14 @@ internal class UiFunctionsImplementation : IUiFunctions
 
     public void BlockUi()
     {
-        var blocker = FindElement<AsyncBlocker>(App.Current.MainWindow);
+        var blocker = FindLogicalChildren<AsyncBlocker>(App.Current.MainWindow).FirstOrDefault();
         if (blocker != null)
         {
             blocker.Show();
         }
         else
         {
-            var grid = FindElement<Grid>(App.Current.MainWindow);
+            var grid = FindLogicalChildren<Grid>(App.Current.MainWindow).FirstOrDefault();
             if (grid != null)
             {
                 var ctrl = new AsyncBlocker();
@@ -104,31 +100,35 @@ internal class UiFunctionsImplementation : IUiFunctions
                 ctrl.Show();
             }
         }
+        SetProgressState(ProgressState.Indeterminate);
     }
 
     public void UnblockUi()
     {
-        var blocker = FindElement<AsyncBlocker>(App.Current.MainWindow);
+        var blocker = FindLogicalChildren<AsyncBlocker>(App.Current.MainWindow).FirstOrDefault();
         blocker?.Hide();
+        SetProgressState(ProgressState.None);
     }
 
-    private static T? FindElement<T>(DependencyObject obj)
-        where T: UIElement
+    private static IEnumerable<T> FindLogicalChildren<T>(DependencyObject depObj) where T : DependencyObject
     {
-        if (obj is T casted)
-            return casted;
-
-        int count = VisualTreeHelper.GetChildrenCount(obj);
-
-        DependencyObject? foundChild = null;
-
-        for (int i=0; i<count; i++)
+        if (depObj != null)
         {
-            var child = VisualTreeHelper.GetChild(obj, i);
-            foundChild = FindElement<T>(child);
-            if (foundChild != null) break;
-        }
+            foreach (object rawChild in LogicalTreeHelper.GetChildren(depObj))
+            {
+                if (rawChild is DependencyObject child)
+                {
+                    if (child is T casted)
+                    {
+                        yield return casted;
+                    }
 
-        return foundChild as T;
+                    foreach (T childOfChild in FindLogicalChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
     }
 }

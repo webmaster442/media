@@ -5,6 +5,7 @@
 
 using System.Windows;
 
+using Media.Database;
 using Media.Infrastructure.BaseCommands;
 using Media.Interfaces;
 using Media.Ui;

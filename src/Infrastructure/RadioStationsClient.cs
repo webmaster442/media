@@ -14,7 +14,7 @@ internal class RadioStationsClient : ApiClient
 
     public async Task<IReadOnlyList<Country>> GetRadioStationCountries()
     {
-        if (_cacheAdapter.RadioCountriesLastFetch.IsYoungerThan(TimeSpan.FromHours(24))
+        if (_cacheAdapter.RadioCountriesLastFetch.IsYoungerThan(TimeSpan.FromDays(7))
             && _cacheAdapter.Countries.Count > 0)
         {
             return (IReadOnlyList<Country>)_cacheAdapter.Countries;
@@ -39,15 +39,15 @@ internal class RadioStationsClient : ApiClient
         throw new InvalidOperationException("Data deserialize failed");
     }
 
-    public async Task<IReadOnlyList<Station>> GetRadioStations()
+    public async Task<IReadOnlyList<Station>> GetRadioStations(string countryCode)
     {
-        if (_cacheAdapter.RadioStationsLastFetch.IsYoungerThan(TimeSpan.FromHours(24))
-            && _cacheAdapter.Countries.Count > 0)
+        if (_cacheAdapter.RadioStationsLastFetch.IsYoungerThan(TimeSpan.FromDays(7))
+            && _cacheAdapter.Stations.ContainsKey(countryCode))
         {
-            return (IReadOnlyList<Station>)_cacheAdapter.Stations;
+            return _cacheAdapter.Stations[countryCode];
         }
 
-        string url = $"{ApiUrls.RadioBrowserApi}/stations/bycountry/us";
+        string url = $"{ApiUrls.RadioBrowserApi}/stations/bycountry/{countryCode}";
         using var response = await _client.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
@@ -57,8 +57,7 @@ internal class RadioStationsClient : ApiClient
 
         if (deserialized is not null)
         {
-            _cacheAdapter.Stations.Clear();
-            _cacheAdapter.Stations.AddRange(deserialized);
+            _cacheAdapter.Stations[countryCode] = deserialized;
             await _cacheAdapter.Save();
             return deserialized;
         }

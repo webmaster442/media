@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Runtime.CompilerServices;
+
 using Media.Dto;
 using Media.Dto.Internals;
 
@@ -66,5 +68,15 @@ public static class Extensions
         }
 
         return $"{size:0.##} {sizes[order]}";
+    }
+
+    public static bool IsYoungerThan(this DateTime cacheTime, TimeSpan maxAge, DateTime? now = null)
+    {
+        if (now == null)
+        {
+            now = DateTime.UtcNow;
+        }
+
+        return (now.Value - cacheTime) < maxAge;
     }
 }
