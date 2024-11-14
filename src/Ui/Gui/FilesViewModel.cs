@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 
 using Media.Interfaces;
 using Media.Interop;
@@ -139,7 +138,7 @@ internal partial class FilesViewModel : ObservableObject
         }
         else
         {
-            Windows.ShellExecute(item.FullPath);
+            Interop.Windows.ShellExecute(item.FullPath);
         }
     }
 
