@@ -36,6 +36,9 @@ internal static class SelfInterop
         p.Start();
     }
 
+    public static void RunMediaCommand(string cmd)
+        => RunMedia(cmd);
+
     public static void Play(string file)
         => RunMedia($"play file \"{file}\" -r");
 }

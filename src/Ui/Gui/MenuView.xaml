@@ -2,6 +2,7 @@
     x:Class="Media.Ui.Gui.MenuView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Media.Ui.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Media.Ui.Gui"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -21,8 +22,68 @@
                 IsCheckable="True"
                 IsChecked="{Binding FilesViewModel.ShowHidden}"
                 Tag="0" />
+            <Separator />
+            <MenuItem
+                Click="SetCorrectTabFromTag"
+                Header="Play a random file from this folder"
+                Tag="0" />
+            <MenuItem
+                Click="SetCorrectTabFromTag"
+                Command="{Binding ImgViewCommand}"
+                CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
+                Header="Start image viewer"
+                Tag="0" />
         </MenuItem>
-        <Separator/>
+        <Separator />
+        <MenuItem Header="Playlist">
+            <MenuItem
+                Command="{Binding PlaylistViewModel.LoadCommand}"
+                Click="SetCorrectTabFromTag"
+                Header="Load..."
+                Tag="2" />
+            <Separator />
+            <MenuItem
+                Command="{Binding PlaylistViewModel.SavePlsCommand}"
+                Click="SetCorrectTabFromTag"
+                Header="Save as PLS..."
+                Tag="2" />
+            <MenuItem
+                Command="{Binding PlaylistViewModel.SaveM3uCommand}"
+                Click="SetCorrectTabFromTag"
+                Header="Save as M3U..."
+                Tag="2" />
+            <Separator />
+            <MenuItem
+                Command="{Binding PlaylistViewModel.ClearCommand}"
+                Click="SetCorrectTabFromTag"
+                Header="Clear"
+                Tag="2" />
+        </MenuItem>
+        <Separator />
+        <MenuItem Header="Media">
+            <MenuItem
+                Command="{Binding MediaCommandCommand}"
+                CommandParameter="update ffmpeg"
+                Header="Update ffmpeg" />
+            <MenuItem
+                Command="{Binding MediaCommandCommand}"
+                CommandParameter="update ytdlp"
+                Header="Update yt-dlp" />
+            <MenuItem
+                Command="{Binding MediaCommandCommand}"
+                CommandParameter="update mpv"
+                Header="Update mpv" />
+            <Separator />
+            <MenuItem
+                Command="{Binding ServeCommand}"
+                CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
+                Header="Start dlna serverver is this folder" />
+            <MenuItem
+                Command="{Binding MediaCommandCommand}"
+                CommandParameter="convert drop"
+                Header="Start Drag &amp; Drop convert" />
+        </MenuItem>
+        <Separator />
         <MenuItem Header="Projector">
             <MenuItem
                 Command="{Binding System.DisplayInternalCommand}"

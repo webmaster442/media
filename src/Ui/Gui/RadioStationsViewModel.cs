@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using Media.Dto.Radio;
 using Media.Infrastructure;
 using Media.Interfaces;
+using Media.Interop;
 using Media.Ui.Controls;
 
 namespace Media.Ui.Gui;
@@ -42,5 +43,11 @@ internal sealed partial class RadioStationsViewModel : ObservableObject, IViewMo
         Stations.Clear();
         Stations.AddRange(stations);
         _uiFunctions.UnblockUi();
+    }
+
+    [RelayCommand]
+    private void StationSelect(Station selection)
+    {
+        SelfInterop.Play(selection.UrlResolved);
     }
 }

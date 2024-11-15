@@ -16,4 +16,6 @@ internal interface IUiFunctions : IProgress<double>
     void SetProgressState(ProgressState state);
     void BlockUi();
     void UnblockUi();
+    string? OpenFileDialog(string filterString);
+    string? SaveFileDialog(string filterString);
 }

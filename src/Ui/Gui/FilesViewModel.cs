@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Media.Interfaces;
 using Media.Interop;
@@ -32,6 +33,8 @@ internal partial class FilesViewModel : ObservableObject
         Items = new ObservableRangeCollection<FolderItem>();
         _uiFunctions = uiFunctions;
     }
+
+    public string CurrentPath => _currentPath;
 
     [RelayCommand]
     public void RefreshDriveList()
@@ -139,6 +142,27 @@ internal partial class FilesViewModel : ObservableObject
         else
         {
             Interop.Windows.ShellExecute(item.FullPath);
+        }
+    }
+
+    private bool CanPlay(FolderItem item)
+        => item?.FileType.IsMpvSupportedType() == true;
+
+    [RelayCommand(CanExecute = nameof(CanPlay))]
+    private void Play(FolderItem item)
+    {
+        if (item.FileType.IsMpvSupportedType())
+        {
+            SelfInterop.Play(item.FullPath);
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanPlay))]
+    public void SendToPlaylist(FolderItem item)
+    {
+        if (item.FileType.IsMpvSupportedType())
+        {
+            WeakReferenceMessenger.Default.Send(item);
         }
     }
 

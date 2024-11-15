@@ -6,7 +6,6 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Shell;
 
 using Media.Interfaces;
@@ -130,5 +129,31 @@ internal class UiFunctionsImplementation : IUiFunctions
                 }
             }
         }
+    }
+
+    public string? OpenFileDialog(string filterString)
+    {
+        var ofd = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = filterString
+        };
+        if (ofd.ShowDialog() == true)
+        {
+            return ofd.FileName;
+        }
+        return null;
+    }
+
+    public string? SaveFileDialog(string filterString)
+    {
+        var sfd = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter = filterString
+        };
+        if (sfd.ShowDialog() == true)
+        {
+            return sfd.FileName;
+        }
+        return null;
     }
 }

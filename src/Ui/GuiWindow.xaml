@@ -37,6 +37,9 @@
             <TabItem Header="Radio Stations">
                 <Gui:RadioStations DataContext="{Binding RadioStationsViewModel}" />
             </TabItem>
+            <TabItem Header="Playlist">
+                <Gui:PlayList DataContext="{Binding PlaylistViewModel}"/>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

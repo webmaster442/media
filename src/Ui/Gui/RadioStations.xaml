@@ -48,7 +48,14 @@
         <GroupBox
             Grid.Column="2"
             Header="Stations">
-            <ListBox ItemsSource="{Binding Stations}">
+            <ListBox ItemsSource="{Binding Stations}" x:Name="Stations">
+                <behaviours:Interaction.Triggers>
+                    <behaviours:EventTrigger EventName="MouseDoubleClick">
+                        <behaviours:InvokeCommandAction
+                            Command="{Binding StationSelectCommand}"
+                            CommandParameter="{Binding ElementName=Stations, Path=SelectedItem}" />
+                    </behaviours:EventTrigger>
+                </behaviours:Interaction.Triggers>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
