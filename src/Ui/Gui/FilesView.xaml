@@ -99,6 +99,7 @@
             CanUserAddRows="False"
             CanUserDeleteRows="False"
             ItemsSource="{Binding Items}"
+            SelectedItem="{Binding SelectedItem}"
             RowHeight="50"
             SelectionMode="Single"
             SelectionUnit="FullRow">
@@ -106,18 +107,18 @@
                 <behaviours:EventTrigger EventName="MouseDoubleClick">
                     <behaviours:InvokeCommandAction
                         Command="{Binding DoubleClickCommand}"
-                        CommandParameter="{Binding ElementName=FolderView, Path=SelectedItem}" />
+                        CommandParameter="{Binding SelectedItem}" />
                 </behaviours:EventTrigger>
             </behaviours:Interaction.Triggers>
             <DataGrid.ContextMenu>
-                <ContextMenu>
+                <ContextMenu x:Name="CtxMenu">
                     <MenuItem
                         Command="{Binding PlayCommand}"
-                        CommandParameter="{Binding ElementName=FolderView, Path=SelectedItem}"
+                        CommandParameter="{Binding SelectedItem}"
                         Header="Play with mpv" />
                     <MenuItem
                         Command="{Binding SendToPlaylistCommand}"
-                        CommandParameter="{Binding ElementName=FolderView, Path=SelectedItem}"
+                        CommandParameter="{Binding SelectedItem}"
                         Header="Add to playlist" />
                 </ContextMenu>
             </DataGrid.ContextMenu>

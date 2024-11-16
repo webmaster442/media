@@ -1,21 +1,23 @@
-﻿
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
+using Media.Infrastructure;
 using Media.Interfaces;
-using Media.Ui.Controls;
+using Media.Interop;
 
 namespace Media.Ui.Gui;
 
 internal partial class PlaylistViewModel : ObservableObject
 {
-    public ObservableRangeCollection<string> PlaylistItems;
+    public BindingList<string> PlaylistItems { get; }
+
     private readonly IUiFunctions _uiFunctions;
+    
 
     public PlaylistViewModel(IUiFunctions uiFunctions)
     {
-        PlaylistItems = new ObservableRangeCollection<string>();
+        PlaylistItems = new BindingList<string>();
         _uiFunctions = uiFunctions;
         WeakReferenceMessenger.Default.Register<FolderItem>(this, OnFolderItemRecieved);
     }
@@ -26,35 +28,66 @@ internal partial class PlaylistViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void Load()
+    private async Task Load()
     {
         string? selectedFile = _uiFunctions.OpenFileDialog("Playlist files (*.m3u, *.pls)|*.m3u;*.pls");
         if (selectedFile is not null)
         {
+            PlaylistItems.RaiseListChangedEvents = false;
+            await PlaylistItems.LoadFromFile(selectedFile);
+            PlaylistItems.RaiseListChangedEvents = true;
+            PlaylistItems.ResetBindings();
         }
     }
 
     [RelayCommand]
-    public void Clear()
+    private void Clear()
     {
         PlaylistItems.Clear();
     }
 
     [RelayCommand]
-    public void SavePls()
+    private async Task Save()
     {
-        string? selectedFile = _uiFunctions.SaveFileDialog("Playlist files (*.pls)|*.pls");
+        string? selectedFile = _uiFunctions.SaveFileDialog("pls playlist|*.pls|m3u playlist|*.m3u");
         if (selectedFile is not null)
         {
+            await PlaylistItems.SaveToFile(selectedFile, false);
         }
     }
 
     [RelayCommand]
-    public void SaveM3u()
+    private void Shuffle()
     {
-        string? selectedFile = _uiFunctions.SaveFileDialog("Playlist files (*.m3u)|*.m3u");
-        if (selectedFile is not null)
-        {
-        }
+        PlaylistItems.RaiseListChangedEvents = false;
+        PlaylistItems.Shuffle();
+        PlaylistItems.RaiseListChangedEvents = true;
+        PlaylistItems.ResetBindings();
+    }
+
+    [RelayCommand]
+    private void OrderAz()
+    {
+        PlaylistItems.RaiseListChangedEvents = false;
+
+        var ordered = PlaylistItems.Order().ToList();
+        PlaylistItems.Clear();
+        PlaylistItems.AddRange(ordered);
+
+        PlaylistItems.RaiseListChangedEvents = true;
+        PlaylistItems.ResetBindings();
+    }
+
+    [RelayCommand]
+    private void OrderZa()
+    {
+        PlaylistItems.RaiseListChangedEvents = false;
+
+        var ordered = PlaylistItems.OrderDescending().ToList();
+        PlaylistItems.Clear();
+        PlaylistItems.AddRange(ordered);
+
+        PlaylistItems.RaiseListChangedEvents = true;
+        PlaylistItems.ResetBindings();
     }
 }

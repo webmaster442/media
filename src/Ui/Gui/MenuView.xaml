@@ -37,25 +37,36 @@
         <Separator />
         <MenuItem Header="Playlist">
             <MenuItem
+                Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.LoadCommand}"
-                Click="SetCorrectTabFromTag"
-                Header="Load..."
+                Header="Load from file..."
                 Tag="2" />
             <Separator />
             <MenuItem
-                Command="{Binding PlaylistViewModel.SavePlsCommand}"
                 Click="SetCorrectTabFromTag"
-                Header="Save as PLS..."
-                Tag="2" />
-            <MenuItem
-                Command="{Binding PlaylistViewModel.SaveM3uCommand}"
-                Click="SetCorrectTabFromTag"
-                Header="Save as M3U..."
+                Command="{Binding PlaylistViewModel.SaveCommand}"
+                Header="Save to file..."
                 Tag="2" />
             <Separator />
             <MenuItem
+                Click="SetCorrectTabFromTag"
+                Command="{Binding PlaylistViewModel.OrderAzCommand}"
+                Header="Order by Name"
+                Tag="2" />
+            <MenuItem
+                Click="SetCorrectTabFromTag"
+                Command="{Binding PlaylistViewModel.OrderZaCommand}"
+                Header="Order by Name Descending"
+                Tag="2" />
+            <MenuItem
+                Click="SetCorrectTabFromTag"
+                Command="{Binding PlaylistViewModel.ShuffleCommand}"
+                Header="Shuffle"
+                Tag="2" />
+            <Separator />
+            <MenuItem
+                Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.ClearCommand}"
-                Click="SetCorrectTabFromTag"
                 Header="Clear"
                 Tag="2" />
         </MenuItem>

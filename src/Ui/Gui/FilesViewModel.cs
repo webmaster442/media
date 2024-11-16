@@ -20,6 +20,9 @@ internal partial class FilesViewModel : ObservableObject
     [ObservableProperty]
     private bool _showHidden;
 
+    [ObservableProperty]
+    private FolderItem? _selectedItem;
+
     partial void OnShowHiddenChanged(bool value)
     {
         Navigate(_currentPath);
@@ -27,6 +30,7 @@ internal partial class FilesViewModel : ObservableObject
 
     public FilesViewModel(IUiFunctions uiFunctions)
     {
+        _selectedItem = null;
         _currentPath = string.Empty;
         Drives = new ObservableRangeCollection<DriveModel>();
         PathParts = new ObservableRangeCollection<PathPartModel>();

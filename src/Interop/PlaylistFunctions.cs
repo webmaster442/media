@@ -124,4 +124,22 @@ internal static class PlaylistFunctions
         }
         throw new InvalidOperationException($"Unknown file type: {extension}");
     }
+
+    public static void Shuffle(this IList<string> playlist)
+    {
+        int n = playlist.Count;
+
+        for (int i = 0; i < n - 1; i++)
+        {
+            int j = Random.Shared.Next(i, n);
+
+            if (j != i)
+            {
+                var temp = playlist[i];
+                playlist[i] = playlist[j];
+                playlist[j] = temp;
+            }
+        }
+    }
+
 }
