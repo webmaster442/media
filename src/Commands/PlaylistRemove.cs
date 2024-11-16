@@ -5,11 +5,12 @@
 
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
+using Media.Interop;
 
 namespace Media.Commands;
 
 [Example("Remove a file from a playlist", "media playlist remove -p test.m3u file.mp3")]
-internal sealed class PlaylistRemove : BasePlaylistCommand<PlaylistRemove.Settings>
+internal sealed class PlaylistRemove : BaseFileWorkCommand<PlaylistRemove.Settings>
 {
     public class Settings : BasePlalistSettings
     {
@@ -21,7 +22,8 @@ internal sealed class PlaylistRemove : BasePlaylistCommand<PlaylistRemove.Settin
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        var list = await LoadFromFile(settings.PlaylistName);
+        var list = new List<string>();
+        await list.LoadFromFile(settings.PlaylistName);
         var files = GetFiles(settings.FileToRemove);
 
         int count = 0;
@@ -33,7 +35,7 @@ internal sealed class PlaylistRemove : BasePlaylistCommand<PlaylistRemove.Settin
             }
         }
 
-        await SaveToFile(list, settings.PlaylistName, false);
+        await list.SaveToFile(settings.PlaylistName, false);
 
         Terminal.GreenText($"Removed {count} files from playlist {settings.PlaylistName}");
 

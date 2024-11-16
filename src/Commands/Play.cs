@@ -19,7 +19,7 @@ namespace Media.Commands;
 [Example("Play a media folder with mpv", @"media play d:\folder")]
 [Example("Play a media file with DLNA file browser selection", "media play --dlna")]
 [Example("Play a media file with http remote enabled", "media play video.mp4 --remote")]
-internal sealed class Play : BasePlaylistCommand<Play.Settings>
+internal sealed class Play : BaseFileWorkCommand<Play.Settings>
 {
     private readonly int _remotePort;
     private readonly Mpv _mpv;

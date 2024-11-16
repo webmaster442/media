@@ -5,11 +5,12 @@
 
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
+using Media.Interop;
 
 namespace Media.Commands;
 
 [Example("Create a new playlist", "media playlist new -p test.m3u")]
-internal sealed class PlaylistNew : BasePlaylistCommand<PlaylistNew.Settings>
+internal sealed class PlaylistNew : BaseFileWorkCommand<PlaylistNew.Settings>
 {
     internal class Settings : ValidatedCommandSettings
     {
@@ -33,9 +34,9 @@ internal sealed class PlaylistNew : BasePlaylistCommand<PlaylistNew.Settings>
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        var list = new Playlist();
+        var list = new List<string>();
 
-        await SaveToFile(list, settings.PlaylistName, false);
+        await list.SaveToFile(settings.PlaylistName, false);
 
         Terminal.GreenText($"Created playlist {settings.PlaylistName}");
 
