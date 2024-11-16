@@ -33,14 +33,21 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
     }
 
     [RelayCommand]
-    public void MediaCommand(string cli) 
-        => SelfInterop.RunMediaCommand(cli);
+    private void MediaCommand(string cli)
+    {
+        var args = cli.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        SelfInterop.RunMediaCommand(args);
+    }
 
     [RelayCommand]
-    public void ImgView(string folder)
-        => SelfInterop.RunMediaCommand($"imgview \"{folder}\"");
+    private void ImgView(string folder)
+        => SelfInterop.RunMediaCommand("imgview", folder);
 
     [RelayCommand]
-    public void Serve(string folder)
-        => SelfInterop.RunMediaCommand($"serve \"{folder}\"");
+    private void RandomPlay(string folder)
+        => SelfInterop.RunMediaCommand("play", "random", folder);
+
+    [RelayCommand]
+    private void Serve(string folder)
+        => SelfInterop.RunMediaCommand("serve", folder);
 }

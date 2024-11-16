@@ -11,6 +11,8 @@ namespace Media.Ui.Gui;
 internal partial class FilesViewModel : ObservableObject
 {
     private readonly IUiFunctions _uiFunctions;
+
+    [ObservableProperty]
     private string _currentPath;
 
     public ObservableRangeCollection<DriveModel> Drives { get; }
@@ -25,7 +27,7 @@ internal partial class FilesViewModel : ObservableObject
 
     partial void OnShowHiddenChanged(bool value)
     {
-        Navigate(_currentPath);
+        Navigate(CurrentPath);
     }
 
     public FilesViewModel(IUiFunctions uiFunctions)
@@ -37,8 +39,6 @@ internal partial class FilesViewModel : ObservableObject
         Items = new ObservableRangeCollection<FolderItem>();
         _uiFunctions = uiFunctions;
     }
-
-    public string CurrentPath => _currentPath;
 
     [RelayCommand]
     public void RefreshDriveList()
@@ -85,7 +85,7 @@ internal partial class FilesViewModel : ObservableObject
         if (!path.EndsWith('\\'))
             path += '\\';
 
-        _currentPath = path;
+        CurrentPath = path;
         PathParts.Clear();
         PathParts.AddRange(CreatePathParts(path));
 

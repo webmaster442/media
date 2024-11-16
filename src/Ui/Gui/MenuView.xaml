@@ -20,25 +20,46 @@
                 Click="SetCorrectTabFromTag"
                 Command="{Binding FilesViewModel.RefreshDriveListCommand}"
                 Header="Refresh drive list"
-                Tag="0" />
+                Tag="0">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="ResetDrive" />
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator />
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Header="Show hidden files"
                 IsCheckable="True"
                 IsChecked="{Binding FilesViewModel.ShowHidden}"
-                Tag="0" />
+                Tag="0">
+            </MenuItem>
             <Separator />
             <MenuItem
                 Click="SetCorrectTabFromTag"
+                Command="{Binding RandomPlayCommand}"
+                CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
                 Header="Play a random file from this folder"
-                Tag="0" />
+                Tag="0">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Asterisk" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding ImgViewCommand}"
                 CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
                 Header="Start image viewer"
-                Tag="0" />
+                Tag="0">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Photo2" />
+                </MenuItem.Icon>
+            </MenuItem>
         </MenuItem>
         <Separator />
         <MenuItem Header="Playlist">

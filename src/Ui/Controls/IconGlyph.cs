@@ -39,4 +39,6 @@ internal enum IconGlyph
     RightArrowKeyTime0 = 0xEBE7,
     MusicNote = 0xEC4F,
     RestartUpdate = 0xF83E,
+    ResetDrive = 0xEBC4,
+    Asterisk = 0xEA38,
 }

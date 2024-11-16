@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+using Media.Infrastructure;
 using Media.Interop.CdRip;
 
 namespace Media.Interop;
@@ -21,7 +22,7 @@ internal static class SelfInterop
         Win32Functions.SetForegroundWindow(handle);
     }
 
-    private static void RunMedia(string args)
+    private static void RunMedia(string[] args)
     {
         BringConsoleWindowToFront();
         using var p = new Process
@@ -29,16 +30,16 @@ internal static class SelfInterop
             StartInfo = new ProcessStartInfo
             {
                 FileName = Path.Combine(AppContext.BaseDirectory, "media.exe"),
-                Arguments = args,
                 UseShellExecute = false
             }
         };
+        p.StartInfo.ArgumentList.AddRange(args);
         p.Start();
     }
 
-    public static void RunMediaCommand(string cmd)
+    public static void RunMediaCommand(params string[] cmd)
         => RunMedia(cmd);
 
     public static void Play(string file)
-        => RunMedia($"play file \"{file}\" -r");
+        => RunMediaCommand("play", "file", file, "-r");
 }

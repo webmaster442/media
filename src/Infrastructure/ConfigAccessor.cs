@@ -22,6 +22,16 @@ public sealed class ConfigAccessor
         return defaultValue;
     }
 
+    public int? Read(string key, int? defaultValue = default)
+    {
+        if (_config.Settings.TryGetValue(key, out string? value)
+            && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed))
+        {
+            return parsed;
+        }
+        return null;
+    }
+
     private void Write<T>(string key, T value) where T : IFormattable, IParsable<T>
     {
         _config.Settings[key] = value.ToString(null, CultureInfo.InvariantCulture);
@@ -146,8 +156,8 @@ public sealed class ConfigAccessor
         => Read<string>(ConfigKeys.ExternalYtdlpPath);
 
     public int? GetMpvRemotePort()
-        => Read<int>(ConfigKeys.MpvRemotePort);
+        => Read(ConfigKeys.MpvRemotePort);
 
     public int? GetDlnaServerPort()
-        => Read<int>(ConfigKeys.DlnaServerPort);
+        => Read(ConfigKeys.DlnaServerPort);
 }
