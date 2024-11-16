@@ -2,6 +2,7 @@
     x:Class="Media.Ui.Gui.MenuView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Media.Ui.Controls"
     xmlns:converters="clr-namespace:Media.Ui.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Media.Ui.Gui"
@@ -10,6 +11,11 @@
     mc:Ignorable="d">
     <Menu>
         <MenuItem Header="Files">
+            <MenuItem.Icon>
+                <controls:FontIcon
+                    FontSize="22"
+                    Glyph="FolderOpen" />
+            </MenuItem.Icon>
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding FilesViewModel.RefreshDriveListCommand}"
@@ -36,99 +42,245 @@
         </MenuItem>
         <Separator />
         <MenuItem Header="Playlist">
+            <MenuItem.Icon>
+                <controls:FontIcon
+                    FontSize="22"
+                    Glyph="ReadingList" />
+            </MenuItem.Icon>
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.LoadCommand}"
                 Header="Load from file..."
-                Tag="2" />
+                Tag="2">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="OpenFile" />
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator />
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.SaveCommand}"
                 Header="Save to file..."
-                Tag="2" />
+                Tag="2">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Save" />
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator />
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.OrderAzCommand}"
                 Header="Order by Name"
-                Tag="2" />
+                Tag="2">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Sort" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.OrderZaCommand}"
                 Header="Order by Name Descending"
-                Tag="2" />
+                Tag="2">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Sort" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.ShuffleCommand}"
                 Header="Shuffle"
-                Tag="2" />
+                Tag="2">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Shuffle" />
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator />
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.ClearCommand}"
                 Header="Clear"
-                Tag="2" />
+                Tag="2">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Clear" />
+                </MenuItem.Icon>
+            </MenuItem>
         </MenuItem>
         <Separator />
         <MenuItem Header="Media">
+            <MenuItem.Icon>
+                <controls:FontIcon
+                    FontSize="22"
+                    Glyph="CommandPrompt" />
+            </MenuItem.Icon>
             <MenuItem
                 Command="{Binding MediaCommandCommand}"
                 CommandParameter="update ffmpeg"
-                Header="Update ffmpeg" />
+                Header="Update ffmpeg">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Download" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Command="{Binding MediaCommandCommand}"
                 CommandParameter="update ytdlp"
-                Header="Update yt-dlp" />
+                Header="Update yt-dlp">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Download" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Command="{Binding MediaCommandCommand}"
                 CommandParameter="update mpv"
-                Header="Update mpv" />
+                Header="Update mpv">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Download" />
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator />
             <MenuItem
                 Command="{Binding ServeCommand}"
                 CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
-                Header="Start dlna serverver is this folder" />
+                Header="Start dlna serverver is this folder">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime1" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Command="{Binding MediaCommandCommand}"
                 CommandParameter="convert drop"
-                Header="Start Drag &amp; Drop convert" />
+                Header="Start Drag &amp; Drop convert">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime1" />
+                </MenuItem.Icon>
+            </MenuItem>
         </MenuItem>
         <Separator />
         <MenuItem Header="Projector">
+            <MenuItem.Icon>
+                <controls:FontIcon
+                    FontSize="22"
+                    Glyph="Projector" />
+            </MenuItem.Icon>
             <MenuItem
                 Command="{Binding System.DisplayInternalCommand}"
-                Header="Internal" />
+                Header="Internal">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime0" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Command="{Binding System.DisplayCloneCommand}"
-                Header="Clone" />
+                Header="Clone">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime0" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Command="{Binding System.DisplayExtendCommand}"
-                Header="Extend" />
+                Header="Extend">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime0" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Command="{Binding System.DisplayExernalCommand}"
-                Header="External" />
+                Header="External">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime0" />
+                </MenuItem.Icon>
+            </MenuItem>
         </MenuItem>
         <MenuItem Header="Windows">
+            <MenuItem.Icon>
+                <controls:FontIcon
+                    FontSize="22"
+                    Glyph="System" />
+            </MenuItem.Icon>
             <MenuItem
                 Command="{Binding System.LockCommand}"
-                Header="Lock" />
+                Header="Lock">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Lock" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Command="{Binding System.LogoutCommand}"
-                Header="Logout" />
+                Header="Logout">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="OtherUser" />
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator />
             <MenuItem
                 Command="{Binding System.SleepCommand}"
-                Header="Sleep" />
+                Header="Sleep">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime0" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Command="{Binding System.HibernateCommand}"
-                Header="Hibernate" />
+                Header="Hibernate">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime0" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Command="{Binding System.ShutdownCommand}"
-                Header="Shutdown" />
+                Header="Shutdown">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="PowerButton" />
+                </MenuItem.Icon>
+            </MenuItem>
             <MenuItem
                 Command="{Binding System.RestartCommand}"
-                Header="Restart" />
+                Header="Restart">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RestartUpdate" />
+                </MenuItem.Icon>
+            </MenuItem>
         </MenuItem>
     </Menu>
 </UserControl>
