@@ -1,8 +1,7 @@
-﻿namespace AudioSwitcher.AudioApi.CoreAudio.Interfaces
+﻿namespace AudioSwitcher.CoreAudio.Internal.Interfaces;
+
+internal enum DeviceShareMode
 {
-    internal enum DeviceShareMode
-    {
-        Shared,
-        Exclusive
-    }
+    Shared,
+    Exclusive
 }

@@ -1,6 +1,5 @@
-﻿namespace AudioSwitcher.AudioApi
+﻿namespace AudioSwitcher.AudioApi;
+
+public interface IDeviceCapability
 {
-    public interface IDeviceCapability
-    {
-    }
 }

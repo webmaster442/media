@@ -1,26 +1,25 @@
 ﻿using System.Diagnostics;
 using System.Threading;
 
-namespace AudioSwitcher.AudioApi.CoreAudio.Threading
+namespace AudioSwitcher.CoreAudio.Threading;
+
+public static class CancellationTokenExtensions
 {
-    public static class CancellationTokenExtensions
+
+    public static void CancelAfter(this CancellationTokenSource source, int milliseconds)
     {
-
-        public static void CancelAfter(this CancellationTokenSource source, int milliseconds)
+        using var timer = new Timer(state =>
         {
-            using var timer = new Timer(state =>
+            var cts = state as CancellationTokenSource ?? throw new UnreachableException();
+
+            if (!cts.IsCancellationRequested)
             {
-                var cts = state as CancellationTokenSource ?? throw new UnreachableException();
+                cts.Cancel();
+            }
 
-                if (!cts.IsCancellationRequested)
-                {
-                    cts.Cancel();
-                }
+        }, source, -1, -1);
 
-            }, source, -1, -1);
-
-            timer.Change(-1, milliseconds);
-        }
-
+        timer.Change(-1, milliseconds);
     }
+
 }

@@ -1,23 +1,22 @@
 using System;
 
-namespace AudioSwitcher.AudioApi.CoreAudio
+namespace AudioSwitcher.CoreAudio.Internal;
+
+internal interface IPropertyDictionary : IDisposable
 {
-    internal interface IPropertyDictionary : IDisposable
-    {
-        AccessMode Mode { get; }
+    AccessMode Mode { get; }
 
-        int Count { get; }
+    int Count { get; }
 
-        object this[PropertyKey key] { get; set; }
+    object this[PropertyKey key] { get; set; }
 
-        bool Contains(PropertyKey key);
-    }
+    bool Contains(PropertyKey key);
+}
 
-    [Flags]
-    internal enum AccessMode
-    {
-        Read = 1,
-        Write = 2,
-        ReadWrite = Read | Write
-    }
+[Flags]
+internal enum AccessMode
+{
+    Read = 1,
+    Write = 2,
+    ReadWrite = Read | Write
 }

@@ -1,8 +1,7 @@
-﻿namespace AudioSwitcher.AudioApi.CoreAudio.Topology
+﻿namespace AudioSwitcher.CoreAudio.Internal.Topology;
+
+internal enum PartType
 {
-    internal enum PartType
-    {
-        Connector,
-        Subunit
-    }
+    Connector,
+    Subunit
 }

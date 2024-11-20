@@ -2,78 +2,78 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using AudioSwitcher.AudioApi.CoreAudio.Interfaces;
-using AudioSwitcher.AudioApi.CoreAudio.Threading;
 
-namespace AudioSwitcher.AudioApi.CoreAudio
+using AudioSwitcher.CoreAudio.Internal.Interfaces;
+using AudioSwitcher.CoreAudio.Threading;
+
+namespace AudioSwitcher.CoreAudio.Internal;
+
+internal class MultimediaDeviceCollection : IEnumerable<IMultimediaDevice>, IDisposable
 {
-    internal class MultimediaDeviceCollection : IEnumerable<IMultimediaDevice>, IDisposable
+    private IMultimediaDeviceCollection _multimediaDeviceCollection;
+
+    /// <summary>
+    ///     Device count
+    /// </summary>
+    public int Count
     {
-        private IMultimediaDeviceCollection _multimediaDeviceCollection;
-
-        /// <summary>
-        ///     Device count
-        /// </summary>
-        public int Count
-        {
-            get
-            {
-                ComThread.Assert();
-                uint result;
-                Marshal.ThrowExceptionForHR(_multimediaDeviceCollection.GetCount(out result));
-                return Convert.ToInt32(result);
-            }
-        }
-
-        /// <summary>
-        ///     Get device by index
-        /// </summary>
-        /// <param name="index">Device index</param>
-        /// <returns>Device at the specified index</returns>
-        public IMultimediaDevice this[int index]
-        {
-            get
-            {
-                ComThread.Assert();
-                IMultimediaDevice result;
-                _multimediaDeviceCollection.Item(Convert.ToUInt32(index), out result);
-                return result;
-            }
-        }
-
-        internal MultimediaDeviceCollection(IMultimediaDeviceCollection parent)
+        get
         {
             ComThread.Assert();
-            _multimediaDeviceCollection = parent;
+            uint result;
+            Marshal.ThrowExceptionForHR(_multimediaDeviceCollection.GetCount(out result));
+            return Convert.ToInt32(result);
         }
+    }
 
-        ~MultimediaDeviceCollection()
+    /// <summary>
+    ///     Get device by index
+    /// </summary>
+    /// <param name="index">Device index</param>
+    /// <returns>Device at the specified index</returns>
+    public IMultimediaDevice this[int index]
+    {
+        get
         {
-            Dispose(false);
+            ComThread.Assert();
+            IMultimediaDevice result;
+            _multimediaDeviceCollection.Item(Convert.ToUInt32(index), out result);
+            return result;
         }
+    }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+    internal MultimediaDeviceCollection(IMultimediaDeviceCollection parent)
+    {
+        ComThread.Assert();
+        _multimediaDeviceCollection = parent;
+    }
 
-        protected void Dispose(bool disposing)
-        {
-            _multimediaDeviceCollection = null;
-        }
+    ~MultimediaDeviceCollection()
+    {
+        Dispose(false);
+    }
 
-        public IEnumerator<IMultimediaDevice> GetEnumerator()
-        {
-            for (var index = 0; index < Count; index++)
-            {
-                yield return this[index];
-            }
-        }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
+    protected void Dispose(bool disposing)
+    {
+        _multimediaDeviceCollection = null;
+    }
+
+    public IEnumerator<IMultimediaDevice> GetEnumerator()
+    {
+        for (var index = 0; index < Count; index++)
         {
-            return GetEnumerator();
+            yield return this[index];
         }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

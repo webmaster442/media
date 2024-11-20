@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace AudioSwitcher.AudioApi.Observables
-{
-    public interface IBroadcaster<T> : IBroadcaster<T, T>
-    {
-    }
+namespace AudioSwitcher.AudioApi.Observables;
 
-    public interface IBroadcaster<in TSource, out TResult> : IObserver<TSource>, IObservable<TResult>
-    {
-    }
+public interface IBroadcaster<T> : IBroadcaster<T, T>
+{
+}
+
+public interface IBroadcaster<in TSource, out TResult> : IObserver<TSource>, IObservable<TResult>
+{
 }

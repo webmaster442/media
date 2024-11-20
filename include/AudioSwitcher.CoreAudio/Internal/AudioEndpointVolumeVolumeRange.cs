@@ -22,37 +22,37 @@
 // modified for NAudio
 
 using System.Runtime.InteropServices;
-using AudioSwitcher.AudioApi.CoreAudio.Interfaces;
 
-namespace AudioSwitcher.AudioApi.CoreAudio
+using AudioSwitcher.CoreAudio.Internal.Interfaces;
+
+namespace AudioSwitcher.CoreAudio.Internal;
+
+/// <summary>
+///     Audio Endpoint VolumeChanged VolumeChanged Range
+/// </summary>
+internal class AudioEndpointVolumeVolumeRange
 {
+    private readonly float _volumeIncrementdB;
+    private readonly float _volumeMaxdB;
+    private readonly float _volumeMindB;
+
     /// <summary>
-    ///     Audio Endpoint VolumeChanged VolumeChanged Range
+    ///     Minimum Decibels
     /// </summary>
-    internal class AudioEndpointVolumeVolumeRange
+    public float MinDecibels => _volumeMindB;
+
+    /// <summary>
+    ///     Maximum Decibels
+    /// </summary>
+    public float MaxDecibels => _volumeMaxdB;
+
+    /// <summary>
+    ///     Increment Decibels
+    /// </summary>
+    public float IncrementDecibels => _volumeIncrementdB;
+
+    internal AudioEndpointVolumeVolumeRange(IAudioEndpointVolume parent)
     {
-        private readonly float _volumeIncrementdB;
-        private readonly float _volumeMaxdB;
-        private readonly float _volumeMindB;
-
-        /// <summary>
-        ///     Minimum Decibels
-        /// </summary>
-        public float MinDecibels => _volumeMindB;
-
-        /// <summary>
-        ///     Maximum Decibels
-        /// </summary>
-        public float MaxDecibels => _volumeMaxdB;
-
-        /// <summary>
-        ///     Increment Decibels
-        /// </summary>
-        public float IncrementDecibels => _volumeIncrementdB;
-
-        internal AudioEndpointVolumeVolumeRange(IAudioEndpointVolume parent)
-        {
-            Marshal.ThrowExceptionForHR(parent.GetVolumeRange(out _volumeMindB, out _volumeMaxdB, out _volumeIncrementdB));
-        }
+        Marshal.ThrowExceptionForHR(parent.GetVolumeRange(out _volumeMindB, out _volumeMaxdB, out _volumeIncrementdB));
     }
 }

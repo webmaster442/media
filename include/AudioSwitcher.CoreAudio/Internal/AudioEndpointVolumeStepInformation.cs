@@ -21,31 +21,31 @@
 */
 
 using System.Runtime.InteropServices;
-using AudioSwitcher.AudioApi.CoreAudio.Interfaces;
 
-namespace AudioSwitcher.AudioApi.CoreAudio
+using AudioSwitcher.CoreAudio.Internal.Interfaces;
+
+namespace AudioSwitcher.CoreAudio.Internal;
+
+/// <summary>
+///     Audio Endpoint VolumeChanged Step Information
+/// </summary>
+internal class AudioEndpointVolumeStepInformation
 {
+    private readonly uint _step;
+    private readonly uint _stepCount;
+
     /// <summary>
-    ///     Audio Endpoint VolumeChanged Step Information
+    ///     Step
     /// </summary>
-    internal class AudioEndpointVolumeStepInformation
+    public uint Step => _step;
+
+    /// <summary>
+    ///     StepCount
+    /// </summary>
+    public uint StepCount => _stepCount;
+
+    internal AudioEndpointVolumeStepInformation(IAudioEndpointVolume parent)
     {
-        private readonly uint _step;
-        private readonly uint _stepCount;
-
-        /// <summary>
-        ///     Step
-        /// </summary>
-        public uint Step => _step;
-
-        /// <summary>
-        ///     StepCount
-        /// </summary>
-        public uint StepCount => _stepCount;
-
-        internal AudioEndpointVolumeStepInformation(IAudioEndpointVolume parent)
-        {
-            Marshal.ThrowExceptionForHR(parent.GetVolumeStepInfo(out _step, out _stepCount));
-        }
+        Marshal.ThrowExceptionForHR(parent.GetVolumeStepInfo(out _step, out _stepCount));
     }
 }

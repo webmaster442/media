@@ -1,13 +1,12 @@
-﻿namespace AudioSwitcher.AudioApi
-{
-    public class DeviceStateChangedArgs : DeviceChangedArgs
-    {
-        public DeviceState State { get; private set; }
+﻿namespace AudioSwitcher.AudioApi;
 
-        public DeviceStateChangedArgs(IDevice dev, DeviceState state)
-            : base(dev, DeviceChangedType.StateChanged)
-        {
-            State = state;
-        }
+public class DeviceStateChangedArgs : DeviceChangedArgs
+{
+    public DeviceState State { get; private set; }
+
+    public DeviceStateChangedArgs(IDevice dev, DeviceState state)
+        : base(dev, DeviceChangedType.StateChanged)
+    {
+        State = state;
     }
 }

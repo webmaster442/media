@@ -1,21 +1,20 @@
 ﻿using System;
 
-namespace AudioSwitcher.AudioApi.CoreAudio.Threading
+namespace AudioSwitcher.CoreAudio.Threading;
+
+[Serializable]
+public sealed class InvalidThreadException : Exception
 {
-    [Serializable]
-    public sealed class InvalidThreadException : Exception
+    public InvalidThreadException(string message)
+        : base(message)
     {
-        public InvalidThreadException(string message)
-            : base(message)
-        {
-        }
+    }
 
-        public InvalidThreadException()
-        {
-        }
+    public InvalidThreadException()
+    {
+    }
 
-        public InvalidThreadException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public InvalidThreadException(string message, Exception innerException) : base(message, innerException)
+    {
     }
 }

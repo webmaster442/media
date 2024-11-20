@@ -1,9 +1,8 @@
-﻿namespace AudioSwitcher.AudioApi.Session
+﻿namespace AudioSwitcher.AudioApi.Session;
+
+public enum AudioSessionState
 {
-    public enum AudioSessionState
-    {
-        Inactive = 0,
-        Active = 1,
-        Expired = 2
-    }
+    Inactive = 0,
+    Active = 1,
+    Expired = 2
 }

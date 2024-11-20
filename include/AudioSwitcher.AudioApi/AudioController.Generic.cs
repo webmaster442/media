@@ -4,263 +4,262 @@ using System.Linq;
 using System.Threading.Tasks;
 using AudioSwitcher.AudioApi.Observables;
 
-namespace AudioSwitcher.AudioApi
+namespace AudioSwitcher.AudioApi;
+
+public abstract class AudioController<T> : IAudioController<T>, IDisposable
+    where T : class, IDevice
 {
-    public abstract class AudioController<T> : IAudioController<T>, IDisposable
-        where T : class, IDevice
+    private const DeviceState DefaultDeviceStateFilter = DeviceState.Active | DeviceState.Unplugged | DeviceState.Disabled;
+
+    private readonly Broadcaster<DeviceChangedArgs> _audioDeviceChanged;
+
+    protected AudioController()
     {
-        private const DeviceState DefaultDeviceStateFilter = DeviceState.Active | DeviceState.Unplugged | DeviceState.Disabled;
+        _audioDeviceChanged = new Broadcaster<DeviceChangedArgs>();
+    }
 
-        private readonly Broadcaster<DeviceChangedArgs> _audioDeviceChanged;
+    public virtual T DefaultPlaybackDevice => GetDefaultDevice(DeviceType.Playback, Role.Console | Role.Multimedia);
 
-        protected AudioController()
-        {
-            _audioDeviceChanged = new Broadcaster<DeviceChangedArgs>();
-        }
+    public virtual T DefaultPlaybackCommunicationsDevice => GetDefaultDevice(DeviceType.Playback, Role.Communications);
 
-        public virtual T DefaultPlaybackDevice => GetDefaultDevice(DeviceType.Playback, Role.Console | Role.Multimedia);
+    public virtual T DefaultCaptureDevice => GetDefaultDevice(DeviceType.Capture, Role.Console | Role.Multimedia);
 
-        public virtual T DefaultPlaybackCommunicationsDevice => GetDefaultDevice(DeviceType.Playback, Role.Communications);
+    public virtual T DefaultCaptureCommunicationsDevice => GetDefaultDevice(DeviceType.Capture, Role.Communications);
 
-        public virtual T DefaultCaptureDevice => GetDefaultDevice(DeviceType.Capture, Role.Console | Role.Multimedia);
+    IDevice IAudioController.DefaultPlaybackDevice => DefaultPlaybackDevice;
 
-        public virtual T DefaultCaptureCommunicationsDevice => GetDefaultDevice(DeviceType.Capture, Role.Communications);
+    IDevice IAudioController.DefaultPlaybackCommunicationsDevice => DefaultPlaybackCommunicationsDevice;
 
-        IDevice IAudioController.DefaultPlaybackDevice => DefaultPlaybackDevice;
+    IDevice IAudioController.DefaultCaptureDevice => DefaultCaptureDevice;
 
-        IDevice IAudioController.DefaultPlaybackCommunicationsDevice => DefaultPlaybackCommunicationsDevice;
+    IDevice IAudioController.DefaultCaptureCommunicationsDevice => DefaultCaptureCommunicationsDevice;
 
-        IDevice IAudioController.DefaultCaptureDevice => DefaultCaptureDevice;
+    public IObservable<DeviceChangedArgs> AudioDeviceChanged => _audioDeviceChanged.AsObservable();
 
-        IDevice IAudioController.DefaultCaptureCommunicationsDevice => DefaultCaptureCommunicationsDevice;
+    public virtual T GetDevice(Guid id)
+    {
+        return GetDevice(id, DefaultDeviceStateFilter);
+    }
 
-        public IObservable<DeviceChangedArgs> AudioDeviceChanged => _audioDeviceChanged.AsObservable();
+    public virtual Task<T> GetDeviceAsync(Guid id)
+    {
+        return Task.FromResult(GetDevice(id));
+    }
 
-        public virtual T GetDevice(Guid id)
-        {
-            return GetDevice(id, DefaultDeviceStateFilter);
-        }
+    public abstract T GetDevice(Guid id, DeviceState state);
 
-        public virtual Task<T> GetDeviceAsync(Guid id)
-        {
-            return Task.FromResult(GetDevice(id));
-        }
+    public virtual Task<T> GetDeviceAsync(Guid id, DeviceState state)
+    {
+        return Task.FromResult(GetDevice(id, state));
+    }
 
-        public abstract T GetDevice(Guid id, DeviceState state);
+    public abstract T GetDefaultDevice(DeviceType deviceType, Role role);
 
-        public virtual Task<T> GetDeviceAsync(Guid id, DeviceState state)
-        {
-            return Task.FromResult(GetDevice(id, state));
-        }
+    public virtual Task<T> GetDefaultDeviceAsync(DeviceType deviceType, Role role)
+    {
+        return Task.FromResult(GetDefaultDevice(deviceType, role));
+    }
 
-        public abstract T GetDefaultDevice(DeviceType deviceType, Role role);
+    public virtual IEnumerable<T> GetDevices()
+    {
+        return GetDevices(DefaultDeviceStateFilter);
+    }
 
-        public virtual Task<T> GetDefaultDeviceAsync(DeviceType deviceType, Role role)
-        {
-            return Task.FromResult(GetDefaultDevice(deviceType, role));
-        }
+    public virtual Task<IEnumerable<T>> GetDevicesAsync()
+    {
+        return Task.FromResult(GetDevices());
+    }
 
-        public virtual IEnumerable<T> GetDevices()
-        {
-            return GetDevices(DefaultDeviceStateFilter);
-        }
+    public virtual Task<IEnumerable<T>> GetDevicesAsync(DeviceState state)
+    {
+        return Task.FromResult(GetDevices(state));
+    }
 
-        public virtual Task<IEnumerable<T>> GetDevicesAsync()
-        {
-            return Task.FromResult(GetDevices());
-        }
+    public IEnumerable<T> GetDevices(DeviceType deviceType)
+    {
+        return GetDevices(deviceType, DefaultDeviceStateFilter);
+    }
 
-        public virtual Task<IEnumerable<T>> GetDevicesAsync(DeviceState state)
-        {
-            return Task.FromResult(GetDevices(state));
-        }
+    public Task<IEnumerable<T>> GetDevicesAsync(DeviceType deviceType)
+    {
+        return GetDevicesAsync(deviceType, DefaultDeviceStateFilter);
+    }
 
-        public IEnumerable<T> GetDevices(DeviceType deviceType)
-        {
-            return GetDevices(deviceType, DefaultDeviceStateFilter);
-        }
+    IEnumerable<IDevice> IAudioController.GetDevices(DeviceType deviceType)
+    {
+        return GetDevices(deviceType);
+    }
 
-        public Task<IEnumerable<T>> GetDevicesAsync(DeviceType deviceType)
-        {
-            return GetDevicesAsync(deviceType, DefaultDeviceStateFilter);
-        }
+    Task<IEnumerable<IDevice>> IAudioController.GetDevicesAsync(DeviceType deviceType)
+    {
+        return Task.FromResult(GetDevices(deviceType).Cast<IDevice>());
+    }
 
-        IEnumerable<IDevice> IAudioController.GetDevices(DeviceType deviceType)
-        {
-            return GetDevices(deviceType);
-        }
+    public virtual IEnumerable<T> GetDevices(DeviceState state)
+    {
+        return GetDevices(DeviceType.All, state);
+    }
 
-        Task<IEnumerable<IDevice>> IAudioController.GetDevicesAsync(DeviceType deviceType)
-        {
-            return Task.FromResult(GetDevices(deviceType).Cast<IDevice>());
-        }
+    public abstract IEnumerable<T> GetDevices(DeviceType deviceType, DeviceState state);
 
-        public virtual IEnumerable<T> GetDevices(DeviceState state)
-        {
-            return GetDevices(DeviceType.All, state);
-        }
+    public virtual Task<IEnumerable<T>> GetDevicesAsync(DeviceType deviceType, DeviceState state)
+    {
+        return Task.FromResult(GetDevices(deviceType, state));
+    }
 
-        public abstract IEnumerable<T> GetDevices(DeviceType deviceType, DeviceState state);
+    public virtual IEnumerable<T> GetPlaybackDevices()
+    {
+        return GetPlaybackDevices(DefaultDeviceStateFilter);
+    }
 
-        public virtual Task<IEnumerable<T>> GetDevicesAsync(DeviceType deviceType, DeviceState state)
-        {
-            return Task.FromResult(GetDevices(deviceType, state));
-        }
+    public virtual IEnumerable<T> GetPlaybackDevices(DeviceState state)
+    {
+        return GetDevices(DeviceType.Playback, state);
+    }
 
-        public virtual IEnumerable<T> GetPlaybackDevices()
-        {
-            return GetPlaybackDevices(DefaultDeviceStateFilter);
-        }
+    public virtual Task<IEnumerable<T>> GetPlaybackDevicesAsync()
+    {
+        return GetPlaybackDevicesAsync(DefaultDeviceStateFilter);
+    }
 
-        public virtual IEnumerable<T> GetPlaybackDevices(DeviceState state)
-        {
-            return GetDevices(DeviceType.Playback, state);
-        }
+    public virtual Task<IEnumerable<T>> GetPlaybackDevicesAsync(DeviceState deviceState)
+    {
+        return Task.FromResult(GetPlaybackDevices(deviceState));
+    }
 
-        public virtual Task<IEnumerable<T>> GetPlaybackDevicesAsync()
-        {
-            return GetPlaybackDevicesAsync(DefaultDeviceStateFilter);
-        }
+    public virtual IEnumerable<T> GetCaptureDevices()
+    {
+        return GetCaptureDevices(DefaultDeviceStateFilter);
+    }
 
-        public virtual Task<IEnumerable<T>> GetPlaybackDevicesAsync(DeviceState deviceState)
-        {
-            return Task.FromResult(GetPlaybackDevices(deviceState));
-        }
+    public virtual Task<IEnumerable<T>> GetCaptureDevicesAsync()
+    {
+        return Task.FromResult(GetCaptureDevices(DefaultDeviceStateFilter));
+    }
 
-        public virtual IEnumerable<T> GetCaptureDevices()
-        {
-            return GetCaptureDevices(DefaultDeviceStateFilter);
-        }
+    public virtual IEnumerable<T> GetCaptureDevices(DeviceState state)
+    {
+        return GetDevices(DeviceType.Capture, state);
+    }
 
-        public virtual Task<IEnumerable<T>> GetCaptureDevicesAsync()
-        {
-            return Task.FromResult(GetCaptureDevices(DefaultDeviceStateFilter));
-        }
+    public virtual Task<IEnumerable<T>> GetCaptureDevicesAsync(DeviceState deviceState)
+    {
+        return Task.FromResult(GetCaptureDevices(deviceState));
+    }
 
-        public virtual IEnumerable<T> GetCaptureDevices(DeviceState state)
-        {
-            return GetDevices(DeviceType.Capture, state);
-        }
+    Task<IDevice> IAudioController.GetDeviceAsync(Guid id)
+    {
+        return Task.FromResult(GetDevice(id) as IDevice);
+    }
 
-        public virtual Task<IEnumerable<T>> GetCaptureDevicesAsync(DeviceState deviceState)
-        {
-            return Task.FromResult(GetCaptureDevices(deviceState));
-        }
+    IDevice IAudioController.GetDevice(Guid id)
+    {
+        return GetDevice(id);
+    }
 
-        Task<IDevice> IAudioController.GetDeviceAsync(Guid id)
-        {
-            return Task.FromResult(GetDevice(id) as IDevice);
-        }
+    IDevice IAudioController.GetDevice(Guid id, DeviceState state)
+    {
+        return GetDevice(id, state);
+    }
 
-        IDevice IAudioController.GetDevice(Guid id)
-        {
-            return GetDevice(id);
-        }
+    Task<IDevice> IAudioController.GetDeviceAsync(Guid id, DeviceState state)
+    {
+        return Task.FromResult(GetDevice(id, state) as IDevice);
+    }
 
-        IDevice IAudioController.GetDevice(Guid id, DeviceState state)
-        {
-            return GetDevice(id, state);
-        }
+    IDevice IAudioController.GetDefaultDevice(DeviceType deviceType, Role role)
+    {
+        return GetDefaultDevice(deviceType, role);
+    }
 
-        Task<IDevice> IAudioController.GetDeviceAsync(Guid id, DeviceState state)
-        {
-            return Task.FromResult(GetDevice(id, state) as IDevice);
-        }
+    Task<IDevice> IAudioController.GetDefaultDeviceAsync(DeviceType deviceType, Role role)
+    {
+        return Task.FromResult(GetDefaultDevice(deviceType, role) as IDevice);
+    }
 
-        IDevice IAudioController.GetDefaultDevice(DeviceType deviceType, Role role)
-        {
-            return GetDefaultDevice(deviceType, role);
-        }
+    IEnumerable<IDevice> IAudioController.GetDevices()
+    {
+        return GetDevices();
+    }
 
-        Task<IDevice> IAudioController.GetDefaultDeviceAsync(DeviceType deviceType, Role role)
-        {
-            return Task.FromResult(GetDefaultDevice(deviceType, role) as IDevice);
-        }
+    Task<IEnumerable<IDevice>> IAudioController.GetDevicesAsync()
+    {
+        return Task.FromResult(GetDevices().Cast<IDevice>());
+    }
 
-        IEnumerable<IDevice> IAudioController.GetDevices()
-        {
-            return GetDevices();
-        }
+    IEnumerable<IDevice> IAudioController.GetDevices(DeviceState state)
+    {
+        return GetDevices(state);
+    }
 
-        Task<IEnumerable<IDevice>> IAudioController.GetDevicesAsync()
-        {
-            return Task.FromResult(GetDevices().Cast<IDevice>());
-        }
+    Task<IEnumerable<IDevice>> IAudioController.GetDevicesAsync(DeviceState state)
+    {
+        return Task.FromResult(GetDevices(state).Cast<IDevice>());
+    }
 
-        IEnumerable<IDevice> IAudioController.GetDevices(DeviceState state)
-        {
-            return GetDevices(state);
-        }
+    IEnumerable<IDevice> IAudioController.GetDevices(DeviceType deviceType, DeviceState state)
+    {
+        return GetDevices(deviceType, state);
+    }
 
-        Task<IEnumerable<IDevice>> IAudioController.GetDevicesAsync(DeviceState state)
-        {
-            return Task.FromResult(GetDevices(state).Cast<IDevice>());
-        }
+    Task<IEnumerable<IDevice>> IAudioController.GetDevicesAsync(DeviceType deviceType, DeviceState state)
+    {
+        return Task.FromResult(GetDevices(deviceType, state).Cast<IDevice>());
+    }
 
-        IEnumerable<IDevice> IAudioController.GetDevices(DeviceType deviceType, DeviceState state)
-        {
-            return GetDevices(deviceType, state);
-        }
+    IEnumerable<IDevice> IAudioController.GetPlaybackDevices()
+    {
+        return GetPlaybackDevices();
+    }
 
-        Task<IEnumerable<IDevice>> IAudioController.GetDevicesAsync(DeviceType deviceType, DeviceState state)
-        {
-            return Task.FromResult(GetDevices(deviceType, state).Cast<IDevice>());
-        }
+    IEnumerable<IDevice> IAudioController.GetPlaybackDevices(DeviceState state)
+    {
+        return GetPlaybackDevices(state);
+    }
 
-        IEnumerable<IDevice> IAudioController.GetPlaybackDevices()
-        {
-            return GetPlaybackDevices();
-        }
+    Task<IEnumerable<IDevice>> IAudioController.GetPlaybackDevicesAsync()
+    {
+        return Task.FromResult(GetPlaybackDevices().Cast<IDevice>());
+    }
 
-        IEnumerable<IDevice> IAudioController.GetPlaybackDevices(DeviceState state)
-        {
-            return GetPlaybackDevices(state);
-        }
+    Task<IEnumerable<IDevice>> IAudioController.GetPlaybackDevicesAsync(DeviceState deviceState)
+    {
+        return Task.FromResult(GetPlaybackDevices(deviceState).Cast<IDevice>());
+    }
 
-        Task<IEnumerable<IDevice>> IAudioController.GetPlaybackDevicesAsync()
-        {
-            return Task.FromResult(GetPlaybackDevices().Cast<IDevice>());
-        }
+    IEnumerable<IDevice> IAudioController.GetCaptureDevices()
+    {
+        return GetCaptureDevices();
+    }
 
-        Task<IEnumerable<IDevice>> IAudioController.GetPlaybackDevicesAsync(DeviceState deviceState)
-        {
-            return Task.FromResult(GetPlaybackDevices(deviceState).Cast<IDevice>());
-        }
+    IEnumerable<IDevice> IAudioController.GetCaptureDevices(DeviceState state)
+    {
+        return GetCaptureDevices(state);
+    }
 
-        IEnumerable<IDevice> IAudioController.GetCaptureDevices()
-        {
-            return GetCaptureDevices();
-        }
+    Task<IEnumerable<IDevice>> IAudioController.GetCaptureDevicesAsync()
+    {
+        return Task.FromResult(GetCaptureDevices().OfType<IDevice>());
+    }
 
-        IEnumerable<IDevice> IAudioController.GetCaptureDevices(DeviceState state)
-        {
-            return GetCaptureDevices(state);
-        }
+    Task<IEnumerable<IDevice>> IAudioController.GetCaptureDevicesAsync(DeviceState deviceState)
+    {
+        return Task.FromResult(GetCaptureDevices(deviceState).OfType<IDevice>());
+    }
 
-        Task<IEnumerable<IDevice>> IAudioController.GetCaptureDevicesAsync()
-        {
-            return Task.FromResult(GetCaptureDevices().OfType<IDevice>());
-        }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        Task<IEnumerable<IDevice>> IAudioController.GetCaptureDevicesAsync(DeviceState deviceState)
-        {
-            return Task.FromResult(GetCaptureDevices(deviceState).OfType<IDevice>());
-        }
+    protected virtual void OnAudioDeviceChanged(DeviceChangedArgs e)
+    {
+        _audioDeviceChanged.OnNext(e);
+    }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void OnAudioDeviceChanged(DeviceChangedArgs e)
-        {
-            _audioDeviceChanged.OnNext(e);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            _audioDeviceChanged.Dispose();
-        }
+    protected virtual void Dispose(bool disposing)
+    {
+        _audioDeviceChanged.Dispose();
     }
 }

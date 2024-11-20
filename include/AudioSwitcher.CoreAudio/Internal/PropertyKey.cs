@@ -1,55 +1,54 @@
 ﻿using System;
 
-namespace AudioSwitcher.AudioApi.CoreAudio
+namespace AudioSwitcher.CoreAudio.Internal;
+
+/// <summary>
+///     PROPERTYKEY is defined in wtypes.h
+/// </summary>
+public struct PropertyKey
 {
     /// <summary>
-    ///     PROPERTYKEY is defined in wtypes.h
+    ///     Format ID
     /// </summary>
-    public struct PropertyKey
+    public readonly Guid FormatId;
+
+    /// <summary>
+    ///     Property ID
+    /// </summary>
+    public readonly int PropertyId;
+
+    /// <summary>
+    ///     <param name="formatId"></param>
+    ///     <param name="propertyId"></param>
+    /// </summary>
+    public PropertyKey(Guid formatId, int propertyId)
     {
-        /// <summary>
-        ///     Format ID
-        /// </summary>
-        public readonly Guid FormatId;
+        FormatId = formatId;
+        PropertyId = propertyId;
+    }
 
-        /// <summary>
-        ///     Property ID
-        /// </summary>
-        public readonly int PropertyId;
+    public override bool Equals(object obj)
+    {
+        if (!(obj is PropertyKey))
+            return false;
 
-        /// <summary>
-        ///     <param name="formatId"></param>
-        ///     <param name="propertyId"></param>
-        /// </summary>
-        public PropertyKey(Guid formatId, int propertyId)
-        {
-            FormatId = formatId;
-            PropertyId = propertyId;
-        }
+        var key = (PropertyKey)obj;
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is PropertyKey))
-                return false;
+        return key.FormatId == FormatId && key.PropertyId == PropertyId;
+    }
 
-            var key = (PropertyKey) obj;
+    public static bool operator ==(PropertyKey k1, PropertyKey k2)
+    {
+        return k1.FormatId == k2.FormatId && k1.PropertyId == k2.PropertyId;
+    }
 
-            return key.FormatId == FormatId && key.PropertyId == PropertyId;
-        }
+    public static bool operator !=(PropertyKey k1, PropertyKey k2)
+    {
+        return !(k1 == k2);
+    }
 
-        public static bool operator ==(PropertyKey k1, PropertyKey k2)
-        {
-            return k1.FormatId == k2.FormatId && k1.PropertyId == k2.PropertyId;
-        }
-
-        public static bool operator !=(PropertyKey k1, PropertyKey k2)
-        {
-            return !(k1 == k2);
-        }
-
-        public override int GetHashCode()
-        {
-            return FormatId.GetHashCode()*17 + PropertyId.GetHashCode();
-        }
+    public override int GetHashCode()
+    {
+        return FormatId.GetHashCode() * 17 + PropertyId.GetHashCode();
     }
 }

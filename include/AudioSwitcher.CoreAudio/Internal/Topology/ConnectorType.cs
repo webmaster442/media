@@ -1,12 +1,11 @@
-﻿namespace AudioSwitcher.AudioApi.CoreAudio.Topology
+﻿namespace AudioSwitcher.CoreAudio.Internal.Topology;
+
+internal enum ConnectorType
 {
-    internal enum ConnectorType
-    {
-        UnknownConnector,
-        PhysicalInternal,
-        PhysicalExternal,
-        SoftwareIO,
-        SoftwareFixed,
-        Network
-    }
+    UnknownConnector,
+    PhysicalInternal,
+    PhysicalExternal,
+    SoftwareIO,
+    SoftwareFixed,
+    Network
 }

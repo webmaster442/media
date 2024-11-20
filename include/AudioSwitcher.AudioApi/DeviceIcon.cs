@@ -1,17 +1,16 @@
-﻿namespace AudioSwitcher.AudioApi
+﻿namespace AudioSwitcher.AudioApi;
+
+public enum DeviceIcon
 {
-    public enum DeviceIcon
-    {
-        DesktopMicrophone,
-        Digital,
-        Headphones,
-        Headset,
-        Kinect,
-        LineIn,
-        Phone,
-        Speakers,
-        StereoMix,
-        Monitor,
-        Unknown
-    }
+    DesktopMicrophone,
+    Digital,
+    Headphones,
+    Headset,
+    Kinect,
+    LineIn,
+    Phone,
+    Speakers,
+    StereoMix,
+    Monitor,
+    Unknown
 }

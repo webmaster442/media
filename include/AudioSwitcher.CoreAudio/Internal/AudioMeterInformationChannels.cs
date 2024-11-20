@@ -22,56 +22,56 @@
 
 using System;
 using System.Runtime.InteropServices;
-using AudioSwitcher.AudioApi.CoreAudio.Interfaces;
-using AudioSwitcher.AudioApi.CoreAudio.Threading;
 
-namespace AudioSwitcher.AudioApi.CoreAudio
+using AudioSwitcher.CoreAudio.Internal.Interfaces;
+using AudioSwitcher.CoreAudio.Threading;
+
+namespace AudioSwitcher.CoreAudio.Internal;
+
+/// <summary>
+///     Audio Meter Information Channels
+/// </summary>
+internal class AudioMeterInformationChannels
 {
+    private readonly IAudioMeterInformation _audioMeterInformation;
+
     /// <summary>
-    ///     Audio Meter Information Channels
+    ///     Metering Channel Count
     /// </summary>
-    internal class AudioMeterInformationChannels
+    public int Count
     {
-        private readonly IAudioMeterInformation _audioMeterInformation;
-
-        /// <summary>
-        ///     Metering Channel Count
-        /// </summary>
-        public int Count
+        get
         {
-            get
+            return ComThread.Invoke(() =>
             {
-                return ComThread.Invoke(() =>
-                {
-                    uint result;
-                    Marshal.ThrowExceptionForHR(_audioMeterInformation.GetMeteringChannelCount(out result));
-                    return Convert.ToInt32(result);
-                });
-            }
+                uint result;
+                Marshal.ThrowExceptionForHR(_audioMeterInformation.GetMeteringChannelCount(out result));
+                return Convert.ToInt32(result);
+            });
         }
+    }
 
-        /// <summary>
-        ///     Get Peak value
-        /// </summary>
-        /// <param name="index">Channel index</param>
-        /// <returns>Peak value</returns>
-        public float this[int index]
+    /// <summary>
+    ///     Get Peak value
+    /// </summary>
+    /// <param name="index">Channel index</param>
+    /// <returns>Peak value</returns>
+    public float this[int index]
+    {
+        get
         {
-            get
+            return ComThread.Invoke(() =>
             {
-                return ComThread.Invoke(() =>
-                {
-                    var peakValues = new float[Count];
-                    Marshal.ThrowExceptionForHR(
-                        _audioMeterInformation.GetChannelsPeakValues(Convert.ToUInt32(peakValues.Length), peakValues));
-                    return peakValues[index];
-                });
-            }
+                var peakValues = new float[Count];
+                Marshal.ThrowExceptionForHR(
+                    _audioMeterInformation.GetChannelsPeakValues(Convert.ToUInt32(peakValues.Length), peakValues));
+                return peakValues[index];
+            });
         }
+    }
 
-        internal AudioMeterInformationChannels(IAudioMeterInformation parent)
-        {
-            _audioMeterInformation = parent;
-        }
+    internal AudioMeterInformationChannels(IAudioMeterInformation parent)
+    {
+        _audioMeterInformation = parent;
     }
 }

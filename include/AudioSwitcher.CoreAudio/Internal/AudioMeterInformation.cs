@@ -22,75 +22,75 @@
 
 using System;
 using System.Runtime.InteropServices;
-using AudioSwitcher.AudioApi.CoreAudio.Interfaces;
-using AudioSwitcher.AudioApi.CoreAudio.Threading;
 
-namespace AudioSwitcher.AudioApi.CoreAudio
+using AudioSwitcher.CoreAudio.Internal.Interfaces;
+using AudioSwitcher.CoreAudio.Threading;
+
+namespace AudioSwitcher.CoreAudio.Internal;
+
+/// <summary>
+///     Audio Meter Information
+/// </summary>
+internal class AudioMeterInformation : IDisposable
 {
+    private readonly EndpointHardwareSupport _hardwareSupport;
+    private IAudioMeterInformation _audioMeterInformation;
+    private AudioMeterInformationChannels _channels;
+
     /// <summary>
-    ///     Audio Meter Information
+    ///     Peak Values
     /// </summary>
-    internal class AudioMeterInformation : IDisposable
+    public AudioMeterInformationChannels PeakValues => _channels;
+
+    /// <summary>
+    ///     Hardware Support
+    /// </summary>
+    public EndpointHardwareSupport HardwareSupport => _hardwareSupport;
+
+    /// <summary>
+    ///     Master Peak Value
+    /// </summary>
+    public float MasterPeakValue
     {
-        private readonly EndpointHardwareSupport _hardwareSupport;
-        private IAudioMeterInformation _audioMeterInformation;
-        private AudioMeterInformationChannels _channels;
-
-        /// <summary>
-        ///     Peak Values
-        /// </summary>
-        public AudioMeterInformationChannels PeakValues => _channels;
-
-        /// <summary>
-        ///     Hardware Support
-        /// </summary>
-        public EndpointHardwareSupport HardwareSupport => _hardwareSupport;
-
-        /// <summary>
-        ///     Master Peak Value
-        /// </summary>
-        public float MasterPeakValue
+        get
         {
-            get
+            return ComThread.Invoke(() =>
             {
-                return ComThread.Invoke(() =>
-                {
-                    float result;
-                    Marshal.ThrowExceptionForHR(_audioMeterInformation.GetPeakValue(out result));
-                    return result;
-                });
-            }
+                float result;
+                Marshal.ThrowExceptionForHR(_audioMeterInformation.GetPeakValue(out result));
+                return result;
+            });
         }
+    }
 
-        internal AudioMeterInformation(IAudioMeterInformation realInterface)
+    internal AudioMeterInformation(IAudioMeterInformation realInterface)
+    {
+        ComThread.Assert();
+        uint hardwareSupp;
+
+        _audioMeterInformation = realInterface;
+        Marshal.ThrowExceptionForHR(_audioMeterInformation.QueryHardwareSupport(out hardwareSupp));
+        _hardwareSupport = (EndpointHardwareSupport)hardwareSupp;
+        _channels = new AudioMeterInformationChannels(_audioMeterInformation);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    ~AudioMeterInformation()
+    {
+        Dispose(false);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            ComThread.Assert();
-            uint hardwareSupp;
-
-            _audioMeterInformation = realInterface;
-            Marshal.ThrowExceptionForHR(_audioMeterInformation.QueryHardwareSupport(out hardwareSupp));
-            _hardwareSupport = (EndpointHardwareSupport) hardwareSupp;
-            _channels = new AudioMeterInformationChannels(_audioMeterInformation);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~AudioMeterInformation()
-        {
-            Dispose(false);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _audioMeterInformation = null;
-                _channels = null;
-            }
+            _audioMeterInformation = null;
+            _channels = null;
         }
     }
 }

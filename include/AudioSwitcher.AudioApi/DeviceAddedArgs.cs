@@ -1,10 +1,9 @@
-﻿namespace AudioSwitcher.AudioApi
+﻿namespace AudioSwitcher.AudioApi;
+
+public sealed class DeviceAddedArgs : DeviceChangedArgs
 {
-    public sealed class DeviceAddedArgs : DeviceChangedArgs
+    public DeviceAddedArgs(IDevice dev)
+        : base(dev, DeviceChangedType.DeviceAdded)
     {
-        public DeviceAddedArgs(IDevice dev)
-            : base(dev, DeviceChangedType.DeviceAdded)
-        {
-        }
     }
 }

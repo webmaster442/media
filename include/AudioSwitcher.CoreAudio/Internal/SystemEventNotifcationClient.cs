@@ -1,168 +1,168 @@
 ﻿using System;
-using AudioSwitcher.AudioApi.CoreAudio.Interfaces;
-using AudioSwitcher.AudioApi.CoreAudio.Threading;
+
 using AudioSwitcher.AudioApi.Observables;
+using AudioSwitcher.CoreAudio.Internal.Interfaces;
+using AudioSwitcher.CoreAudio.Threading;
 
-namespace AudioSwitcher.AudioApi.CoreAudio
+namespace AudioSwitcher.CoreAudio.Internal;
+
+internal sealed class SystemEventNotifcationClient : IDisposable
 {
-    internal sealed class SystemEventNotifcationClient : IDisposable
+
+    private readonly Broadcaster<DeviceStateChangedArgs> _deviceStateChanged;
+    private readonly Broadcaster<DeviceAddedArgs> _deviceAdded;
+    private readonly Broadcaster<DeviceRemovedArgs> _deviceRemoved;
+    private readonly Broadcaster<DefaultChangedArgs> _defaultDeviceChanged;
+    private readonly Broadcaster<PropertyChangedArgs> _propertyChanged;
+    private ComMultimediaNotificationClient _innerClient;
+    private bool _isDisposed;
+
+    public IObservable<DeviceStateChangedArgs> DeviceStateChanged => _deviceStateChanged.AsObservable();
+
+    public IObservable<DeviceAddedArgs> DeviceAdded => _deviceAdded.AsObservable();
+
+    public IObservable<DeviceRemovedArgs> DeviceRemoved => _deviceRemoved.AsObservable();
+
+    public IObservable<DefaultChangedArgs> DefaultDeviceChanged => _defaultDeviceChanged.AsObservable();
+
+    public IObservable<PropertyChangedArgs> PropertyChanged => _propertyChanged.AsObservable();
+
+    public SystemEventNotifcationClient(Func<IMultimediaDeviceEnumerator> enumerator)
     {
+        _deviceStateChanged = new Broadcaster<DeviceStateChangedArgs>();
+        _deviceAdded = new Broadcaster<DeviceAddedArgs>();
+        _deviceRemoved = new Broadcaster<DeviceRemovedArgs>();
+        _defaultDeviceChanged = new Broadcaster<DefaultChangedArgs>();
+        _propertyChanged = new Broadcaster<PropertyChangedArgs>();
 
-        private readonly Broadcaster<DeviceStateChangedArgs> _deviceStateChanged;
-        private readonly Broadcaster<DeviceAddedArgs> _deviceAdded;
-        private readonly Broadcaster<DeviceRemovedArgs> _deviceRemoved;
-        private readonly Broadcaster<DefaultChangedArgs> _defaultDeviceChanged;
-        private readonly Broadcaster<PropertyChangedArgs> _propertyChanged;
-        private ComMultimediaNotificationClient _innerClient;
-        private bool _isDisposed;
+        _innerClient = new ComMultimediaNotificationClient(this);
+        _innerClient.RegisterEvents(enumerator);
+    }
 
-        public IObservable<DeviceStateChangedArgs> DeviceStateChanged => _deviceStateChanged.AsObservable();
+    public void Dispose()
+    {
+        if (_isDisposed)
+            return;
 
-        public IObservable<DeviceAddedArgs> DeviceAdded => _deviceAdded.AsObservable();
+        _innerClient.Unregister();
+        _deviceStateChanged.Dispose();
+        _deviceAdded.Dispose();
+        _deviceRemoved.Dispose();
+        _defaultDeviceChanged.Dispose();
+        _propertyChanged.Dispose();
 
-        public IObservable<DeviceRemovedArgs> DeviceRemoved => _deviceRemoved.AsObservable();
+        _innerClient = null;
 
-        public IObservable<DefaultChangedArgs> DefaultDeviceChanged => _defaultDeviceChanged.AsObservable();
+        _isDisposed = true;
+    }
 
-        public IObservable<PropertyChangedArgs> PropertyChanged => _propertyChanged.AsObservable();
+    internal class DeviceStateChangedArgs
+    {
+        public required string DeviceId { get; set; }
+        public EDeviceState State { get; set; }
+    }
 
-        public SystemEventNotifcationClient(Func<IMultimediaDeviceEnumerator> enumerator)
+    internal class DeviceAddedArgs
+    {
+        public required string DeviceId { get; set; }
+    }
+
+    internal class DeviceRemovedArgs
+    {
+        public required string DeviceId { get; set; }
+    }
+
+    internal class DefaultChangedArgs
+    {
+        public required string DeviceId { get; set; }
+        public EDataFlow DataFlow { get; set; }
+        public ERole DeviceRole { get; set; }
+    }
+
+    internal class PropertyChangedArgs
+    {
+        public required string DeviceId { get; set; }
+        public PropertyKey PropertyKey { get; set; }
+    }
+
+    private sealed class ComMultimediaNotificationClient : IMultimediaNotificationClient
+    {
+        private readonly SystemEventNotifcationClient _client;
+        private Func<IMultimediaDeviceEnumerator> _enumeratorFunc;
+        private bool _isRegistered;
+
+        public ComMultimediaNotificationClient(SystemEventNotifcationClient client)
         {
-            _deviceStateChanged = new Broadcaster<DeviceStateChangedArgs>();
-            _deviceAdded = new Broadcaster<DeviceAddedArgs>();
-            _deviceRemoved = new Broadcaster<DeviceRemovedArgs>();
-            _defaultDeviceChanged = new Broadcaster<DefaultChangedArgs>();
-            _propertyChanged = new Broadcaster<PropertyChangedArgs>();
-
-            _innerClient = new ComMultimediaNotificationClient(this);
-            _innerClient.RegisterEvents(enumerator);
+            _client = client;
         }
 
-        public void Dispose()
+        public void RegisterEvents(Func<IMultimediaDeviceEnumerator> enumerator)
         {
-            if (_isDisposed)
+            //Possible race condition
+            if (_isRegistered)
                 return;
 
-            _innerClient.Unregister();
-            _deviceStateChanged.Dispose();
-            _deviceAdded.Dispose();
-            _deviceRemoved.Dispose();
-            _defaultDeviceChanged.Dispose();
-            _propertyChanged.Dispose();
+            ComThread.Assert();
 
-            _innerClient = null;
+            _enumeratorFunc = enumerator;
 
-            _isDisposed = true;
+            _enumeratorFunc().RegisterEndpointNotificationCallback(this);
+
+            _isRegistered = true;
         }
 
-        internal class DeviceStateChangedArgs
+        public void Unregister()
         {
-            public required string DeviceId { get; set; }
-            public EDeviceState State { get; set; }
+            if (!_isRegistered)
+                return;
+
+            ComThread.Assert();
+
+            _enumeratorFunc().UnregisterEndpointNotificationCallback(this);
         }
 
-        internal class DeviceAddedArgs
+        void IMultimediaNotificationClient.OnDeviceStateChanged(string deviceId, EDeviceState newState)
         {
-            public required string DeviceId { get; set; }
+            _client._deviceStateChanged.OnNext(new DeviceStateChangedArgs
+            {
+                DeviceId = deviceId,
+                State = newState
+            });
         }
 
-        internal class DeviceRemovedArgs
+        void IMultimediaNotificationClient.OnDeviceAdded(string deviceId)
         {
-            public required string DeviceId { get; set; }
+            _client._deviceAdded.OnNext(new DeviceAddedArgs
+            {
+                DeviceId = deviceId
+            });
         }
 
-        internal class DefaultChangedArgs
+        void IMultimediaNotificationClient.OnDeviceRemoved(string deviceId)
         {
-            public required string DeviceId { get; set; }
-            public EDataFlow DataFlow { get; set; }
-            public ERole DeviceRole { get; set; }
+            _client._deviceRemoved.OnNext(new DeviceRemovedArgs
+            {
+                DeviceId = deviceId
+            });
         }
 
-        internal class PropertyChangedArgs
+        void IMultimediaNotificationClient.OnDefaultDeviceChanged(EDataFlow dataFlow, ERole deviceRole, string defaultDeviceId)
         {
-            public required string DeviceId { get; set; }
-            public PropertyKey PropertyKey { get; set; }
+            _client._defaultDeviceChanged.OnNext(new DefaultChangedArgs
+            {
+                DeviceId = defaultDeviceId,
+                DataFlow = dataFlow,
+                DeviceRole = deviceRole
+            });
         }
 
-        private sealed class ComMultimediaNotificationClient : IMultimediaNotificationClient
+        void IMultimediaNotificationClient.OnPropertyValueChanged(string deviceId, PropertyKey propertyKey)
         {
-            private readonly SystemEventNotifcationClient _client;
-            private Func<IMultimediaDeviceEnumerator> _enumeratorFunc;
-            private bool _isRegistered;
-
-            public ComMultimediaNotificationClient(SystemEventNotifcationClient client)
+            _client._propertyChanged.OnNext(new PropertyChangedArgs
             {
-                _client = client;
-            }
-
-            public void RegisterEvents(Func<IMultimediaDeviceEnumerator> enumerator)
-            {
-                //Possible race condition
-                if (_isRegistered)
-                    return;
-
-                ComThread.Assert();
-
-                _enumeratorFunc = enumerator;
-
-                _enumeratorFunc().RegisterEndpointNotificationCallback(this);
-
-                _isRegistered = true;
-            }
-
-            public void Unregister()
-            {
-                if (!_isRegistered)
-                    return;
-
-                ComThread.Assert();
-
-                _enumeratorFunc().UnregisterEndpointNotificationCallback(this);
-            }
-
-            void IMultimediaNotificationClient.OnDeviceStateChanged(string deviceId, EDeviceState newState)
-            {
-                _client._deviceStateChanged.OnNext(new DeviceStateChangedArgs
-                {
-                    DeviceId = deviceId,
-                    State = newState
-                });
-            }
-
-            void IMultimediaNotificationClient.OnDeviceAdded(string deviceId)
-            {
-                _client._deviceAdded.OnNext(new DeviceAddedArgs
-                {
-                    DeviceId = deviceId
-                });
-            }
-
-            void IMultimediaNotificationClient.OnDeviceRemoved(string deviceId)
-            {
-                _client._deviceRemoved.OnNext(new DeviceRemovedArgs
-                {
-                    DeviceId = deviceId
-                });
-            }
-
-            void IMultimediaNotificationClient.OnDefaultDeviceChanged(EDataFlow dataFlow, ERole deviceRole, string defaultDeviceId)
-            {
-                _client._defaultDeviceChanged.OnNext(new DefaultChangedArgs
-                {
-                    DeviceId = defaultDeviceId,
-                    DataFlow = dataFlow,
-                    DeviceRole = deviceRole
-                });
-            }
-
-            void IMultimediaNotificationClient.OnPropertyValueChanged(string deviceId, PropertyKey propertyKey)
-            {
-                _client._propertyChanged.OnNext(new PropertyChangedArgs
-                {
-                    DeviceId = deviceId,
-                    PropertyKey = propertyKey
-                });
-            }
+                DeviceId = deviceId,
+                PropertyKey = propertyKey
+            });
         }
     }
 }

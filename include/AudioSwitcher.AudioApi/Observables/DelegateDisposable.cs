@@ -1,19 +1,18 @@
 ﻿using System;
 
-namespace AudioSwitcher.AudioApi.Observables
+namespace AudioSwitcher.AudioApi.Observables;
+
+public sealed class DelegateDisposable : IDisposable
 {
-    public sealed class DelegateDisposable : IDisposable
+    private readonly Action _disposeAction;
+
+    public DelegateDisposable(Action disposeAction)
     {
-        private readonly Action _disposeAction;
+        _disposeAction = disposeAction;
+    }
 
-        public DelegateDisposable(Action disposeAction)
-        {
-            _disposeAction = disposeAction;
-        }
-
-        public void Dispose()
-        {
-            _disposeAction();
-        }
+    public void Dispose()
+    {
+        _disposeAction();
     }
 }

@@ -22,58 +22,57 @@
 
 using System;
 
-namespace AudioSwitcher.AudioApi.CoreAudio
+namespace AudioSwitcher.CoreAudio.Internal;
+
+/// <summary>
+///     Audio VolumeChanged Notification Data
+/// </summary>
+internal class AudioVolumeNotificationData
 {
+    private readonly int _channels;
+    private readonly float[] _channelVolume;
+    private readonly Guid _eventContext;
+    private readonly float _masterVolume;
+    private readonly bool _muted;
+
+    /// <summary>
+    ///     Event Context
+    /// </summary>
+    public Guid EventContext => _eventContext;
+
+    /// <summary>
+    ///     Muted
+    /// </summary>
+    public bool Muted => _muted;
+
+    /// <summary>
+    ///     Master VolumeChanged
+    /// </summary>
+    public float MasterVolume => _masterVolume;
+
+    /// <summary>
+    ///     Channels
+    /// </summary>
+    public int Channels => _channels;
+
+    /// <summary>
+    ///     Channel VolumeChanged
+    /// </summary>
+    public float[] ChannelVolume => _channelVolume;
+
     /// <summary>
     ///     Audio VolumeChanged Notification Data
     /// </summary>
-    internal class AudioVolumeNotificationData
+    /// <param name="eventContext"></param>
+    /// <param name="muted"></param>
+    /// <param name="masterVolume"></param>
+    /// <param name="channelVolume"></param>
+    public AudioVolumeNotificationData(Guid eventContext, bool muted, float masterVolume, float[] channelVolume)
     {
-        private readonly int _channels;
-        private readonly float[] _channelVolume;
-        private readonly Guid _eventContext;
-        private readonly float _masterVolume;
-        private readonly bool _muted;
-
-        /// <summary>
-        ///     Event Context
-        /// </summary>
-        public Guid EventContext => _eventContext;
-
-        /// <summary>
-        ///     Muted
-        /// </summary>
-        public bool Muted => _muted;
-
-        /// <summary>
-        ///     Master VolumeChanged
-        /// </summary>
-        public float MasterVolume => _masterVolume;
-
-        /// <summary>
-        ///     Channels
-        /// </summary>
-        public int Channels => _channels;
-
-        /// <summary>
-        ///     Channel VolumeChanged
-        /// </summary>
-        public float[] ChannelVolume => _channelVolume;
-
-        /// <summary>
-        ///     Audio VolumeChanged Notification Data
-        /// </summary>
-        /// <param name="eventContext"></param>
-        /// <param name="muted"></param>
-        /// <param name="masterVolume"></param>
-        /// <param name="channelVolume"></param>
-        public AudioVolumeNotificationData(Guid eventContext, bool muted, float masterVolume, float[] channelVolume)
-        {
-            _eventContext = eventContext;
-            _muted = muted;
-            _masterVolume = masterVolume;
-            _channels = channelVolume.Length;
-            _channelVolume = channelVolume;
-        }
+        _eventContext = eventContext;
+        _muted = muted;
+        _masterVolume = masterVolume;
+        _channels = channelVolume.Length;
+        _channelVolume = channelVolume;
     }
 }

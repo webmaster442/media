@@ -25,12 +25,10 @@ using System;
 
 #pragma warning disable 649
 
-namespace AudioSwitcher.AudioApi.CoreAudio.Interfaces
-{
-    internal struct Blob
-    {
-        internal uint Length;
-        internal IntPtr Data;
-    }
+namespace AudioSwitcher.CoreAudio.Internal.Interfaces;
 
+internal struct Blob
+{
+    internal uint Length;
+    internal nint Data;
 }
