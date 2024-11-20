@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
 
 using Media.Infrastructure;
-using Media.Interop.CdRip;
+
+using Spectre.Console;
 
 namespace Media.Interop;
 
@@ -25,6 +25,7 @@ internal static class SelfInterop
     private static void RunMedia(string[] args)
     {
         BringConsoleWindowToFront();
+        AnsiConsole.MarkupLine("[green]Executing[/] {0}...", string.Join(' ', args));
         using var p = new Process
         {
             StartInfo = new ProcessStartInfo
