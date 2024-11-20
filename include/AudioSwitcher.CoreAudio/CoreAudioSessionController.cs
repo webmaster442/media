@@ -162,6 +162,14 @@ internal sealed class CoreAudioSessionController : IAudioSessionController, IAud
         _sessionDisconnected.Dispose();
         _lock.Dispose();
 
+        if (_sessionCache != null)
+        {
+            foreach (var item in _sessionCache)
+            {
+                item.Dispose();
+            }
+        }
+
         Marshal.FinalReleaseComObject(_audioSessionManager);
     }
 
@@ -182,14 +190,18 @@ internal sealed class CoreAudioSessionController : IAudioSessionController, IAud
         {
             IAudioSessionControl session;
             enumerator.GetSession(i, out session);
+#pragma warning disable CA2000 // Dispose objects before losing scope
             var managedSession = CacheSessionWrapper(session);
+#pragma warning restore CA2000 // Dispose objects before losing scope
             OnSessionCreated(managedSession);
         }
     }
 
     private CoreAudioSession CacheSessionWrapper(IAudioSessionControl session)
     {
+#pragma warning disable CA2000 // Dispose objects before losing scope
         var managedSession = new CoreAudioSession(_device, session);
+#pragma warning restore CA2000 // Dispose objects before losing scope
 
         //There's some dumb crap in the Api that causes the sessions to still appear
         //even after the process has been terminated

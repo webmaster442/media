@@ -114,9 +114,11 @@ public sealed partial class CoreAudioDevice
             var clsGuid = new Guid(ComInterfaceIds.AUDIO_METER_INFORMATION_IID);
             object result;
             ex = Marshal.GetExceptionForHR(Device.Activate(ref clsGuid, ClassContext.Inproc, IntPtr.Zero, out result));
-            _audioMeterInformationPtr = Marshal.GetIUnknownForObject(result);
-
-            _audioMeterInformation = new ThreadLocal<IAudioMeterInformation>(() => Marshal.GetUniqueObjectForIUnknown(_audioMeterInformationPtr) as IAudioMeterInformation);
+            if (result != null)
+            {
+                _audioMeterInformationPtr = Marshal.GetIUnknownForObject(result);
+                _audioMeterInformation = new ThreadLocal<IAudioMeterInformation>(() => Marshal.GetUniqueObjectForIUnknown(_audioMeterInformationPtr) as IAudioMeterInformation);
+            }
         }
         catch (Exception e)
         {

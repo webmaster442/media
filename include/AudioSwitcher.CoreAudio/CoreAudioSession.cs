@@ -83,6 +83,7 @@ internal sealed class CoreAudioSession : IAudioSession, IAudioSessionEvents, IDi
     public void Dispose()
     {
         Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     private void Dispose(bool disposing)
@@ -99,7 +100,9 @@ internal sealed class CoreAudioSession : IAudioSession, IAudioSessionEvents, IDi
         _disconnected.Dispose();
         _volumeChanged.Dispose();
         _peakValueChanged.Dispose();
-
+        _audioSessionControl.Dispose();
+        _volumeResetEvent.Dispose();
+        _muteResetEvent.Dispose();
 
         //Run this on the com thread to ensure it's disposed correctly
         ComThread.BeginInvoke(() => AudioSessionControl.UnregisterAudioSessionNotification(this)).ContinueWith(_ => _audioSessionControl.Dispose());
