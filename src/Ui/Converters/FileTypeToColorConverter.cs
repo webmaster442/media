@@ -1,4 +1,9 @@
-﻿using System.Windows.Data;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
 

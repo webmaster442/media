@@ -1,4 +1,9 @@
-﻿using System.Windows;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Windows;
 using System.Windows.Controls;
 
 using CommunityToolkit.Mvvm.Messaging;
