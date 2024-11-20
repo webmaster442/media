@@ -3,11 +3,16 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Dto.Internals;
+using System.Windows.Controls;
 
-internal enum GuiCommandPartEditor
+namespace Media.Ui.Gui;
+/// <summary>
+/// Interaction logic for PlayList.xaml
+/// </summary>
+public partial class PlayList : UserControl
 {
-    Text,
-    File,
-    Directory
+    public PlayList()
+    {
+        InitializeComponent();
+    }
 }

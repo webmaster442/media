@@ -5,9 +5,11 @@
 
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Shell;
 
 using Media.Interfaces;
+using Media.Ui.Controls;
 
 namespace Media.Infrastructure;
 
@@ -45,15 +47,13 @@ internal class UiFunctionsImplementation : IUiFunctions
 
     public void Report(double value)
     {
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            var mainWin = App.Current.MainWindow;
-            if (mainWin.TaskbarItemInfo == null)
-                mainWin.TaskbarItemInfo = new TaskbarItemInfo();
 
-            mainWin.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
-            mainWin.TaskbarItemInfo.ProgressValue = value;
-        });
+        var mainWin = App.Current.MainWindow;
+        if (mainWin.TaskbarItemInfo == null)
+            mainWin.TaskbarItemInfo = new TaskbarItemInfo();
+
+        mainWin.TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+        mainWin.TaskbarItemInfo.ProgressValue = value;
     }
 
     public void SetProgressState(ProgressState state)
@@ -71,16 +71,89 @@ internal class UiFunctionsImplementation : IUiFunctions
             };
         }
 
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            var mainWin = App.Current.MainWindow;
-            if (mainWin.TaskbarItemInfo == null)
-                mainWin.TaskbarItemInfo = new TaskbarItemInfo();
+        var mainWin = App.Current.MainWindow;
+        if (mainWin.TaskbarItemInfo == null)
+            mainWin.TaskbarItemInfo = new TaskbarItemInfo();
 
-            mainWin.TaskbarItemInfo.ProgressState = Map(state);
-        });
+        mainWin.TaskbarItemInfo.ProgressState = Map(state);
+
     }
 
     public void WarningMessage(string message, string title)
         => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
+
+    public void BlockUi()
+    {
+        var blocker = FindLogicalChildren<AsyncBlocker>(App.Current.MainWindow).FirstOrDefault();
+        if (blocker != null)
+        {
+            blocker.Show();
+        }
+        else
+        {
+            var grid = FindLogicalChildren<Grid>(App.Current.MainWindow).FirstOrDefault();
+            if (grid != null)
+            {
+                var ctrl = new AsyncBlocker();
+                grid.Children.Add(ctrl);
+                ctrl.Show();
+            }
+        }
+        SetProgressState(ProgressState.Indeterminate);
+    }
+
+    public void UnblockUi()
+    {
+        var blocker = FindLogicalChildren<AsyncBlocker>(App.Current.MainWindow).FirstOrDefault();
+        blocker?.Hide();
+        SetProgressState(ProgressState.None);
+    }
+
+    private static IEnumerable<T> FindLogicalChildren<T>(DependencyObject depObj) where T : DependencyObject
+    {
+        if (depObj != null)
+        {
+            foreach (object rawChild in LogicalTreeHelper.GetChildren(depObj))
+            {
+                if (rawChild is DependencyObject child)
+                {
+                    if (child is T casted)
+                    {
+                        yield return casted;
+                    }
+
+                    foreach (T childOfChild in FindLogicalChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+    }
+
+    public string? OpenFileDialog(string filterString)
+    {
+        var ofd = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = filterString
+        };
+        if (ofd.ShowDialog() == true)
+        {
+            return ofd.FileName;
+        }
+        return null;
+    }
+
+    public string? SaveFileDialog(string filterString)
+    {
+        var sfd = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter = filterString
+        };
+        if (sfd.ShowDialog() == true)
+        {
+            return sfd.FileName;
+        }
+        return null;
+    }
 }

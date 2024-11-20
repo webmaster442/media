@@ -4,6 +4,11 @@
 // -----------------------------------------------------------------------------------------------
 
 using System.Windows;
+using System.Windows.Threading;
+
+using CommunityToolkit.Mvvm.Messaging;
+
+using Media.Ui.Gui;
 
 namespace Media.Ui;
 /// <summary>
@@ -14,5 +19,9 @@ public partial class GuiWindow : Window
     public GuiWindow()
     {
         InitializeComponent();
+        WeakReferenceMessenger.Default.Register<MenuView.SetTabIndexMessage>(this, SetTabIndex);
     }
+
+    private void SetTabIndex(object recipient, MenuView.SetTabIndexMessage message) 
+        => Dispatcher.Invoke(() => Tabs.SelectedIndex = message.Index, DispatcherPriority.Input);
 }

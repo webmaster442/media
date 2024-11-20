@@ -3,88 +3,56 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System.Diagnostics;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Interfaces;
-using Media.Ui.Controls;
+using Media.Interop;
+using Media.Ui.Gui;
 
 namespace Media.Ui;
 
 internal partial class GuiViewModel : ObservableObject, IViewModel
 {
-    [ObservableProperty]
-    private GuiCommand? _selectedCommand;
+    public FilesViewModel FilesViewModel { get; }
 
-    [ObservableProperty]
-    private bool _allwaysOnTop;
+    public RadioStationsViewModel RadioStationsViewModel { get; }
 
-    partial void OnAllwaysOnTopChanged(bool value)
-        => _configAccessor.SetAlwaysOnTop(value);
+    public SystemMenuViewModel System { get; }
 
-    [ObservableProperty]
-    private bool _exitOnLauch;
+    public PlaylistViewModel PlaylistViewModel { get; }
 
-    partial void OnExitOnLauchChanged(bool value)
-        => _configAccessor.SetExitOnLaunch(value);
-
-    private readonly IUiFunctions _uiFunctions;
-    private readonly ConfigAccessor _configAccessor;
-
-    public ObservableRangeCollection<GuiCommand> Commands { get; }
-
-    public ObservableDictionary<string, string> Parameters { get; }
-
-    public GuiViewModel(IUiFunctions uiFunctions, ConfigAccessor configAccessor)
+    public GuiViewModel(IUiFunctions uiFunctions)
     {
-        Commands = new ObservableRangeCollection<GuiCommand>();
-        Parameters = new ObservableDictionary<string, string>();
-        _uiFunctions = uiFunctions;
-        _configAccessor = configAccessor;
+        FilesViewModel = new FilesViewModel(uiFunctions);
+        System = new SystemMenuViewModel();
+        RadioStationsViewModel = new RadioStationsViewModel(new RadioStationsClient(), uiFunctions);
+        PlaylistViewModel = new PlaylistViewModel(uiFunctions);
     }
 
     public void Initialize()
     {
-        AllwaysOnTop = _configAccessor.GetAlwaysOnTop();
-        ExitOnLauch = _configAccessor.GetExitOnLaunch();
-        Commands.AddRange(GuiCommands.Commands.OrderBy(x => x.ButtonText));
-        SelectedCommand = Commands[0];
+        FilesViewModel.RefreshDriveList();
+        RadioStationsViewModel.Initialize();
     }
 
     [RelayCommand]
-    private void Launch()
+    private void MediaCommand(string cli)
     {
-        if (SelectedCommand == null)
-        {
-            _uiFunctions.WarningMessage("No command selected", "No command");
-            return;
-        }
-
-        using var process = new Process
-        {
-            StartInfo = new ProcessStartInfo
-            {
-                FileName = Process.GetCurrentProcess().MainModule?.FileName ?? throw new UnreachableException(),
-                Arguments = FillCommandLine()
-            }
-        };
-        process.Start();
-        if (ExitOnLauch)
-            _uiFunctions.Exit(0);
+        var args = cli.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        SelfInterop.RunMediaCommand(args);
     }
 
-    private string FillCommandLine()
-    {
-        var commandLine = SelectedCommand!.CommandLine;
-        foreach (var param in Parameters)
-        {
-            var replacekey = $"{{{param.Key}}}";
-            commandLine = commandLine.Replace(replacekey, $"\"{param.Value}\"");
-        }
-        return commandLine;
-    }
+    [RelayCommand]
+    private void ImgView(string folder)
+        => SelfInterop.RunMediaCommand("imgview", folder);
+
+    [RelayCommand]
+    private void RandomPlay(string folder)
+        => SelfInterop.RunMediaCommand("play", "random", folder);
+
+    [RelayCommand]
+    private void Serve(string folder)
+        => SelfInterop.RunMediaCommand("serve", folder);
 }

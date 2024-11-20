@@ -3,16 +3,13 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System.Net.Http;
-
 using Media.Dto.Github;
 
 namespace Media.Infrastructure;
 
-internal sealed class GithubClient : IDisposable
+internal sealed class GithubClient : ApiClient
 {
     private readonly JsonSerializerOptions _options;
-    private readonly HttpClient _client;
 
     public GithubClient()
     {
@@ -26,13 +23,11 @@ internal sealed class GithubClient : IDisposable
                 new Json.TimeOnlyConverter()
             }
         };
-        _client = new HttpClient();
-        _client.DefaultRequestHeaders.Add("User-Agent", " Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail appname/appversion Mozilla/5.0 (platform; rv:geckoversion) Gecko/geckotrail Firefox/firefoxversion appname/appversion ");
     }
 
     public async Task<Release[]> GetReleases(string owner, string repo)
     {
-        var url = $"https://api.github.com/repos/{owner}/{repo}/releases";
+        string url = $"{ApiUrls.GithubApi}/repos/{owner}/{repo}/releases";
 
         using var response = await _client.GetAsync(url);
         response.EnsureSuccessStatusCode();
@@ -69,11 +64,5 @@ internal sealed class GithubClient : IDisposable
         while (read > 0);
 
         return path;
-    }
-
-    public void Dispose()
-    {
-        _client.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

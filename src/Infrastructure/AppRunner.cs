@@ -3,7 +3,9 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 using Media.Interfaces;
 
@@ -19,7 +21,7 @@ internal class AppRunner<TWindow> where TWindow : Window, new()
 
     private class DefaultWindowManipulator : IWindowManipulator
     {
-        public Size GetWindowSize(Size xamlDefinedWindowSize)
+        public Size GetWindowSize(Size xamlDefinedWindowSize, Size workArea)
             => xamlDefinedWindowSize;
 
         public Point GetWindowStartupLocation(Size workArea, Size windowSize)
@@ -42,6 +44,10 @@ internal class AppRunner<TWindow> where TWindow : Window, new()
         App.MainWindow.UseLayoutRounding = true;
         App.MainWindow.WindowStartupLocation = WindowStartupLocation.Manual;
         WindowManipulator = new DefaultWindowManipulator();
+
+        //Set WPF async await dispatcher
+        if (SynchronizationContext.Current is not DispatcherSynchronizationContext)
+            SynchronizationContext.SetSynchronizationContext(new DispatcherSynchronizationContext());
     }
 
     public void Run(IViewModel? dataContext)
@@ -52,11 +58,13 @@ internal class AppRunner<TWindow> where TWindow : Window, new()
             dataContext.Initialize();
         }
 
-        Size newSize = WindowManipulator.GetWindowSize(new Size(App.MainWindow.Width, App.MainWindow.Height));
+        Size screen = new Size(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height);
+
+        Size newSize = WindowManipulator.GetWindowSize(new Size(App.MainWindow.Width, App.MainWindow.Height), screen);
         App.MainWindow.Width = newSize.Width;
         App.MainWindow.Height = newSize.Height;
 
-        Point position = WindowManipulator.GetWindowStartupLocation(new Size(SystemParameters.WorkArea.Width, SystemParameters.WorkArea.Height), newSize);
+        Point position = WindowManipulator.GetWindowStartupLocation(screen, newSize);
 
         App.MainWindow.Left = position.X;
         App.MainWindow.Top = position.Y;

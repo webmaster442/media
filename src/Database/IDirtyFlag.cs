@@ -3,12 +3,9 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Dto.Internals;
+namespace Media.Database;
 
-internal sealed class GuiCommand
+internal interface IDirtyFlag
 {
-    public required string Description { get; init; }
-    public required string CommandLine { get; init; }
-    public required string ButtonText { get; init; }
-    public required GuiCommandPart[] Editors { get; init; }
+    bool IsDirty { get; set; }
 }

@@ -7,13 +7,14 @@ using System.Threading;
 
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
+using Media.Interop;
 
 using Spectre.Console;
 
 namespace Media.Commands;
 
 [Example("Copy files from a playlist to a directory", @"media playlist copy -p test.m3u c:\target")]
-internal class PlaylistCopy : BasePlaylistCommand<PlaylistCopy.Settings>
+internal class PlaylistCopy : BaseFileWorkCommand<PlaylistCopy.Settings>
 {
     public class Settings : BasePlalistSettings
     {
@@ -66,7 +67,8 @@ internal class PlaylistCopy : BasePlaylistCommand<PlaylistCopy.Settings>
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        var list = await LoadFromFile(settings.PlaylistName);
+        var list = new List<string>();
+        await list.LoadFromFile(settings.PlaylistName);
 
         int copied = 0;
         int skipped = 0;

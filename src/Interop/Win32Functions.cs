@@ -5,7 +5,8 @@
 
 using System.Runtime.InteropServices;
 
-namespace Media.Interop.CdRip;
+namespace Media.Interop;
+
 internal static class Win32Functions
 {
     //DesiredAccess values
@@ -32,6 +33,8 @@ internal static class Win32Functions
     public const uint IOCTL_STORAGE_MEDIA_REMOVAL = 0x002D4804;
     public const uint IOCTL_STORAGE_EJECT_MEDIA = 0x002D4808;
     public const uint IOCTL_STORAGE_LOAD_MEDIA = 0x002D480C;
+
+    public const int SW_RESTORE = 9;
 
     [StructLayout(LayoutKind.Sequential)]
     public struct TRACK_DATA
@@ -180,5 +183,15 @@ internal static class Win32Functions
                                              uint OutBufferSize,
                                              ref uint BytesReturned,
                                              IntPtr Overlapped);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    public static extern IntPtr FindWindow(string? lpClassName,
+                                            string lpWindowName);
+
+    [DllImport("user32.dll")]
+    public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
 }
