@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Threading;
+﻿using System.Runtime.InteropServices;
 
 using AudioSwitcher.CoreAudio;
 using AudioSwitcher.CoreAudio.Internal;

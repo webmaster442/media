@@ -1,6 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-using AudioSwitcher.CoreAudio.Internal;
 using AudioSwitcher.CoreAudio.Internal.Interfaces;
 
 namespace AudioSwitcher.CoreAudio.Internal.Topology;

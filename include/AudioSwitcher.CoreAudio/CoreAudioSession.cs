@@ -1,8 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 
 using AudioSwitcher.AudioApi;
 using AudioSwitcher.AudioApi.CoreAudio;
@@ -14,7 +11,7 @@ using AudioSwitcher.CoreAudio.Threading;
 
 namespace AudioSwitcher.CoreAudio;
 
-internal sealed class CoreAudioSession : IAudioSession, IAudioSessionEvents
+internal sealed class CoreAudioSession : IAudioSession, IAudioSessionEvents, IDisposable
 {
     private readonly IDisposable _deviceMutedSubscription;
     private readonly ThreadLocal<IAudioMeterInformation> _meterInformation;
@@ -36,7 +33,7 @@ internal sealed class CoreAudioSession : IAudioSession, IAudioSessionEvents
     private bool _isDisposed;
     private bool _isMuted;
     private bool _isSystemSession;
-    private volatile nint _controlPtr;
+    private readonly nint _controlPtr;
     private float _peakValue = -1;
     private int _processId;
     private AudioSessionState _state;
@@ -83,7 +80,7 @@ internal sealed class CoreAudioSession : IAudioSession, IAudioSessionEvents
         Dispose(false);
     }
 
-    internal void Dispose()
+    public void Dispose()
     {
         Dispose(true);
     }

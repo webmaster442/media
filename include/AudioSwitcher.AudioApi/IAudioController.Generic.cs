@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace AudioSwitcher.AudioApi;
+﻿namespace AudioSwitcher.AudioApi;
 
 public interface IAudioController<T> : IAudioController
     where T : IDevice

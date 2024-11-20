@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AudioSwitcher.AudioApi.Observables;
+﻿namespace AudioSwitcher.AudioApi.Observables;
 
 public abstract class BroadcasterBase<T> : IBroadcaster<T>, IDisposable
 {

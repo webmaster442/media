@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-using AudioSwitcher.CoreAudio.Internal;
-
 namespace AudioSwitcher.CoreAudio.Internal.Interfaces;
 
 [Guid(ComInterfaceIds.IMM_ENDPOINT_IID)]

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AudioSwitcher.CoreAudio.Internal;
+﻿namespace AudioSwitcher.CoreAudio.Internal;
 
 [Flags]
 public enum EndpointHardwareSupport

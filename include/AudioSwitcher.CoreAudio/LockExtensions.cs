@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace AudioSwitcher.CoreAudio;
+﻿namespace AudioSwitcher.CoreAudio;
 
 internal static class LockExtensions
 {

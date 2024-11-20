@@ -1,6 +1,4 @@
-﻿using System;
-
-using AudioSwitcher.AudioApi.Observables;
+﻿using AudioSwitcher.AudioApi.Observables;
 using AudioSwitcher.CoreAudio.Internal.Interfaces;
 using AudioSwitcher.CoreAudio.Threading;
 

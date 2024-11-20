@@ -23,7 +23,6 @@
 
  */
 
-using System;
 using System.Runtime.InteropServices;
 
 using AudioSwitcher.CoreAudio.Internal.Interfaces;

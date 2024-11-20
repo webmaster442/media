@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace AudioSwitcher.AudioApi.Observables;
+﻿namespace AudioSwitcher.AudioApi.Observables;
 
 public class Broadcaster<T> : BroadcasterBase<T>
 {
@@ -125,7 +121,7 @@ public class Broadcaster<T> : BroadcasterBase<T>
             _observers.Add(observer);
         }
 
-        return new DelegateDisposable(() => { ObserverDisposal(observer); });
+        return new DelegateDisposable(() => ObserverDisposal(observer));
     }
 
     protected virtual void ObserverDisposal(IObserver<T> observer)

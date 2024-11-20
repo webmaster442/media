@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AudioSwitcher.CoreAudio;
+﻿namespace AudioSwitcher.CoreAudio;
 
 [Serializable]
 public class ComInteropTimeoutException : ApplicationException

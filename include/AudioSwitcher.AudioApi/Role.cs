@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AudioSwitcher.AudioApi;
+﻿namespace AudioSwitcher.AudioApi;
 
 /// <summary>
 ///     The ERole enumeration defines constants that indicate the role

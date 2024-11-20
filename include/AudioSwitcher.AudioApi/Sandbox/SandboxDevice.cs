@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace AudioSwitcher.AudioApi.Sandbox;
+﻿namespace AudioSwitcher.AudioApi.Sandbox;
 
 public class SandboxDevice : Device
 {
@@ -17,7 +12,7 @@ public class SandboxDevice : Device
     public DeviceState state;
     public DeviceType type;
     public double volume;
-    private SandboxAudioController _controller;
+    private readonly SandboxAudioController _controller;
 
     public override Guid Id => id;
 

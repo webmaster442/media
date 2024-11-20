@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AudioSwitcher.AudioApi.Observables;
+﻿namespace AudioSwitcher.AudioApi.Observables;
 
 public static class Disposable
 {

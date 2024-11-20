@@ -21,8 +21,6 @@
 */
 // adapted for use in NAudio
 
-using System;
-using System.IO;
 using System.Runtime.InteropServices;
 
 using AudioSwitcher.CoreAudio.Internal.Interfaces;

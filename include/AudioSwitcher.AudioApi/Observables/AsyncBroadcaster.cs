@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace AudioSwitcher.AudioApi.Observables;
+﻿namespace AudioSwitcher.AudioApi.Observables;
 
 public sealed class AsyncBroadcaster<T> : BroadcasterBase<T>
 {

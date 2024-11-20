@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AudioSwitcher.CoreAudio.Threading;
+﻿namespace AudioSwitcher.CoreAudio.Threading;
 
 [Serializable]
 public sealed class InvalidThreadException : Exception

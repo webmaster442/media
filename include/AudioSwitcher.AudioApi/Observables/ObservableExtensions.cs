@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace AudioSwitcher.AudioApi.Observables;
+﻿namespace AudioSwitcher.AudioApi.Observables;
 
 public static class ObservableExtensions
 {
     private static readonly Action Nop = () => { };
-    private static readonly Action<Exception> Throw = ex => { throw ex; };
+    private static readonly Action<Exception> Throw = ex => throw ex;
 
     public static IDisposable Subscribe<T>(this IObservable<T> observable, Action<T> onNext)
     {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AudioSwitcher.AudioApi.Observables;
+﻿namespace AudioSwitcher.AudioApi.Observables;
 
 public sealed class FilteredBroadcaster<T> : Broadcaster<T>
 {

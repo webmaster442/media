@@ -1,5 +1,3 @@
-using System;
-
 namespace AudioSwitcher.CoreAudio.Internal;
 
 internal interface IPropertyDictionary : IDisposable

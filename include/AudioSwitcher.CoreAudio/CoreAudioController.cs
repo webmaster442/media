@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Threading;
+﻿using System.Runtime.InteropServices;
 
 using AudioSwitcher.AudioApi;
 using AudioSwitcher.AudioApi.CoreAudio;
@@ -21,7 +17,7 @@ public sealed class CoreAudioController : AudioController<CoreAudioDevice>
 {
     private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
     private HashSet<CoreAudioDevice> _deviceCache = new HashSet<CoreAudioDevice>();
-    private volatile nint _innerEnumeratorPtr;
+    private readonly nint _innerEnumeratorPtr;
     private readonly ThreadLocal<IMultimediaDeviceEnumerator> _innerEnumerator;
     private SystemEventNotifcationClient _systemEvents;
 

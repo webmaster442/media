@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-namespace AudioSwitcher.AudioApi.Observables;
+﻿namespace AudioSwitcher.AudioApi.Observables;
 
 internal sealed class DelegateObserver<T> : IObserver<T>, IDisposable
 {

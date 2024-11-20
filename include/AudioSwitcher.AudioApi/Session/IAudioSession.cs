@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace AudioSwitcher.AudioApi.Session;
+﻿namespace AudioSwitcher.AudioApi.Session;
 
 public interface IAudioSession
 {

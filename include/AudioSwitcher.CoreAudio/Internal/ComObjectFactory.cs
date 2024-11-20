@@ -1,6 +1,4 @@
-﻿using System;
-
-using AudioSwitcher.CoreAudio.Internal.Interfaces;
+﻿using AudioSwitcher.CoreAudio.Internal.Interfaces;
 
 namespace AudioSwitcher.CoreAudio.Internal;
 

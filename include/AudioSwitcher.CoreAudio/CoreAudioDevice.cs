@@ -1,15 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
+
 using AudioSwitcher.AudioApi.Observables;
 using AudioSwitcher.AudioApi.Session;
 using AudioSwitcher.CoreAudio;
 using AudioSwitcher.CoreAudio.Internal;
-using AudioSwitcher.CoreAudio.Threading;
 using AudioSwitcher.CoreAudio.Internal.Interfaces;
+using AudioSwitcher.CoreAudio.Threading;
 
 namespace AudioSwitcher.AudioApi.CoreAudio;
 

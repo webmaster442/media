@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AudioSwitcher.CoreAudio.Internal;
+﻿namespace AudioSwitcher.CoreAudio.Internal;
 
 /// <summary>
 ///     The EDataFlow enumeration defines constants that indicate the direction

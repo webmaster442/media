@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AudioSwitcher.AudioApi.Observables;
+﻿using AudioSwitcher.AudioApi.Observables;
 
 namespace AudioSwitcher.AudioApi;
 

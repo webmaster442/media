@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace AudioSwitcher.CoreAudio.Threading;
+﻿namespace AudioSwitcher.CoreAudio.Threading;
 
 internal static class ComThread
 {
