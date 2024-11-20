@@ -47,8 +47,10 @@ namespace AudioSwitcher.AudioApi.CoreAudio
             {"3051", DeviceIcon.Headphones}
         };
 
+#pragma warning disable CA2213 // Disposable fields should be disposed
         private AudioEndpointVolume _audioEndpointVolume;
         private ThreadLocal<IAudioMeterInformation> _audioMeterInformation;
+#pragma warning restore CA2213 // Disposable fields should be disposed
         private IntPtr _audioMeterInformationPtr;
 
         private IPropertyDictionary Properties

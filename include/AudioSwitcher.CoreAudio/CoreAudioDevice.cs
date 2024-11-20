@@ -23,6 +23,7 @@ namespace AudioSwitcher.AudioApi.CoreAudio
             {PropertyKeys.PKEY_DEVICE_ICON, new HashSet<string>{ nameof(Icon), nameof(IconPath) }},
         };
 
+#pragma warning disable CA2213 // Disposable fields should be disposed
         private readonly SemaphoreSlim _setDefaultSemaphore = new SemaphoreSlim(1);
         private readonly SemaphoreSlim _setDefaultCommSemaphore = new SemaphoreSlim(1);
         private readonly AutoResetEvent _muteChangedResetEvent = new AutoResetEvent(false);
@@ -30,9 +31,12 @@ namespace AudioSwitcher.AudioApi.CoreAudio
         private readonly ManualResetEvent _defaultResetEvent = new ManualResetEvent(false);
         private readonly ManualResetEvent _defaultCommResetEvent = new ManualResetEvent(false);
 
+        private ThreadLocal<IMultimediaDevice> _device;
+#pragma warning restore CA2213 // Disposable fields should be disposed
+
         private IDisposable _peakValueTimerSubscription;
         private EDataFlow _dataFlow;
-        private ThreadLocal<IMultimediaDevice> _device;
+
         private readonly CoreAudioController _controller;
         private Guid? _id;
         private double _volume;
@@ -211,11 +215,6 @@ namespace AudioSwitcher.AudioApi.CoreAudio
         ~CoreAudioDevice()
         {
             Dispose(false);
-        }
-
-        internal void Dispose()
-        {
-            Dispose(true);
         }
 
         protected override void Dispose(bool disposing)
