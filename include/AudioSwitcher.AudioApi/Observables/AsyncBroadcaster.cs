@@ -2,7 +2,7 @@
 
 public sealed class AsyncBroadcaster<T> : BroadcasterBase<T>
 {
-    private readonly object _observerLock = new object();
+    private readonly Lock _observerLock = new Lock();
     private readonly HashSet<IObserver<T>> _observers;
     private bool _isComplete;
 

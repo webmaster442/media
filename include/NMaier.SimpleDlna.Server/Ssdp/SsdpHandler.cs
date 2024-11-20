@@ -48,6 +48,8 @@ internal sealed class SsdpHandler : Logging, IDisposable
     private readonly Timer _queueTimer =
       new Timer(1000);
 
+    private readonly Lock _lock = new();
+
     private bool _running = true;
     private bool _disposed;
 
@@ -75,7 +77,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
         get
         {
             UpnpDevice[] devs;
-            lock (_devices)
+            lock (_lock)
             {
                 devs = _devices.Values.SelectMany(i => i).ToArray();
             }
@@ -286,7 +288,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
       IPAddress address)
     {
         List<UpnpDevice>? list;
-        lock (_devices)
+        lock (_lock)
         {
             if (!_devices.TryGetValue(uuid, out list))
             {
@@ -325,7 +327,7 @@ internal sealed class SsdpHandler : Logging, IDisposable
     internal void UnregisterNotification(Guid uuid)
     {
         List<UpnpDevice>? dl;
-        lock (_devices)
+        lock (_lock)
         {
             if (!_devices.TryGetValue(uuid, out dl))
             {

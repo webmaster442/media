@@ -15,9 +15,11 @@ internal static class FileStreamCache
     private static readonly LeastRecentlyUsedDictionary<string, CacheItem> streams =
       new LeastRecentlyUsedDictionary<string, CacheItem>(15);
 
+    private static readonly Lock _lock = new Lock();
+
     private static void Expire()
     {
-        lock (streams)
+        lock (_lock)
         {
             foreach (var item in streams.ToArray())
             {
@@ -33,7 +35,7 @@ internal static class FileStreamCache
 
     internal static void Clear()
     {
-        lock (streams)
+        lock (_lock)
         {
             foreach (var item in streams)
             {
@@ -46,7 +48,7 @@ internal static class FileStreamCache
     internal static FileReadStream Get(FileInfo info, ILogger logger)
     {
         var key = info.FullName;
-        lock (streams)
+        lock (_lock)
         {
             CacheItem? rv;
             if (streams.TryGetValue(key, out rv))
@@ -63,7 +65,7 @@ internal static class FileStreamCache
     internal static void Recycle(FileReadStream stream)
     {
         var key = stream.Name;
-        lock (streams)
+        lock (_lock)
         {
             CacheItem? ignore;
             if (!streams.TryGetValue(key, out ignore) ||
