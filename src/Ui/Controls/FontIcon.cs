@@ -10,6 +10,11 @@ namespace Media.Ui.Controls;
 
 internal sealed class FontIcon : Control
 {
+    public FontIcon()
+    {
+        DefaultStyleKey = typeof(FontIcon);
+    }
+
     public IconGlyph Glyph
     {
         get { return (IconGlyph)GetValue(GlyphProperty); }

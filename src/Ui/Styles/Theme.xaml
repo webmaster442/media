@@ -288,7 +288,7 @@
     <!--#region FontStyle-->
     <Style TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily" Value="Segoe UI" />
-        <Setter Property="Margin" Value="3"/>
+        <Setter Property="Margin" Value="3" />
         <!--<Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>-->
     </Style>
     <Style TargetType="{x:Type Control}">
@@ -3626,25 +3626,26 @@
         <Setter Property="ScrollViewer.PanningMode" Value="Both" />
         <Setter Property="MinHeight" Value="21" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+        <Setter Property="Height" Value="Auto" />
         <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=SubmenuItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
         <Style.Triggers>
             <Trigger Property="Role" Value="TopLevelHeader">
-                <Setter Property="Height" Value="25" />
+                <Setter Property="MinHeight" Value="25" />
                 <Setter Property="Padding" Value="7,6,8,3" />
                 <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=TopLevelHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
             </Trigger>
             <Trigger Property="Role" Value="TopLevelItem">
-                <Setter Property="Height" Value="25" />
+                <Setter Property="MinHeight" Value="25" />
                 <Setter Property="Padding" Value="7,6,8,3" />
                 <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=TopLevelItemTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
             </Trigger>
             <Trigger Property="Role" Value="SubmenuHeader">
-                <Setter Property="Height" Value="21" />
+                <Setter Property="MinHeight" Value="21" />
                 <Setter Property="Padding" Value="2,4,2,2" />
                 <Setter Property="Template" Value="{DynamicResource {ComponentResourceKey ResourceId=SubmenuHeaderTemplateKey, TypeInTargetAssembly={x:Type MenuItem}}}" />
             </Trigger>
             <Trigger Property="Role" Value="SubmenuItem">
-                <Setter Property="Height" Value="21" />
+                <Setter Property="MinHeight" Value="21" />
                 <Setter Property="Padding" Value="2,4,2,2" />
             </Trigger>
         </Style.Triggers>

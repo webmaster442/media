@@ -1,4 +1,9 @@
-﻿using System.Diagnostics;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Diagnostics;
 
 namespace Media.Interop;
 
@@ -28,7 +33,8 @@ internal static class Windows
             FileName = "DisplaySwitch.exe",
             Arguments = Getargument(mode),
             UseShellExecute = false,
-            CreateNoWindow = true,
+            CreateNoWindow = false,
+            
         };
 
         using var process = Process.Start(psi);
@@ -75,4 +81,17 @@ internal static class Windows
     public static void Sleep() => RunDll32Cmd("powrprof.dll,SetSuspendState 0,1,0");
 
     public static void Lock() => RunDll32Cmd("user32.dll,LockWorkStation");
+
+    public static void ShellExecute(string file)
+    {
+        using var p = new Process
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = file,
+                UseShellExecute = true,
+            }
+        };
+        p.Start();
+    }
 }

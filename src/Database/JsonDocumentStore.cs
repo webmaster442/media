@@ -20,7 +20,7 @@ public sealed class JsonDocumentStore
     private const string BlobPrefix = "blob";
     private const int ChunkSize = 25;
 
-    private record class CollectionInfo(int Chunks, int Count);
+    private record class CollectionInfo(int Chunks, int Count, DateTime LastWriteTime);
 
     /// <summary>
     /// Creates a new instance of the JsonDocumentStore class.
@@ -141,6 +141,21 @@ public sealed class JsonDocumentStore
         }
     }
 
+    public async Task<DateTime> GetCollectionLastModification(string key)
+    {
+        if (!FileExists()
+            && _options.ReturnEmptyCollectionOnFileNotFound)
+        {
+            return DateTime.UtcNow;
+        }
+
+        using (var zip = ZipFile.Open(_zipFile, ZipArchiveMode.Read))
+        {
+            var info = await GetCollectionInfo(zip, key);
+            return info.LastWriteTime;
+        }
+    }
+
     /// <summary>
     /// Deserialize a collection of items from the document store.
     /// </summary>
@@ -243,7 +258,7 @@ public sealed class JsonDocumentStore
         var entry = zip.GetEntry(entryKey);
         if (entry == null)
         {
-            return new CollectionInfo(0, 0);
+            return new CollectionInfo(0, 0, DateTime.UtcNow);
         }
         await using var stream = entry.Open();
         return await JsonSerializer.DeserializeAsync<CollectionInfo>(stream, _serializerOptions)
@@ -257,7 +272,7 @@ public sealed class JsonDocumentStore
         entry?.Delete();
         entry = zip.CreateEntry(entryKey);
         await using var stream = entry.Open();
-        await JsonSerializer.SerializeAsync(stream, new CollectionInfo(chunks, count), _serializerOptions);
+        await JsonSerializer.SerializeAsync(stream, new CollectionInfo(chunks, count, DateTime.UtcNow), _serializerOptions);
     }
 
     private async Task CleanupCollectionItems(ZipArchive zip, string key)

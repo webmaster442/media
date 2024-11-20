@@ -3,11 +3,11 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Dto.Internals;
+using System.Text.Json.Serialization;
 
-internal class GuiCommandPart
-{
-    public required string Name { get; init; }
-    public required GuiCommandPartEditor Editor { get; init; }
-    public required string Description { get; init; }
-}
+namespace Media.Dto.Radio;
+
+public record Country(
+    [property: JsonPropertyName("name")] string Name,
+    [property: JsonPropertyName("iso_3166_1")] string Iso31661,
+    [property: JsonPropertyName("stationcount")] int Stationcount);

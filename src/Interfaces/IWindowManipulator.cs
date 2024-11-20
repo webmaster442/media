@@ -9,6 +9,6 @@ namespace Media.Interfaces;
 
 internal interface IWindowManipulator
 {
-    Size GetWindowSize(Size xamlDefinedWindowSize);
+    Size GetWindowSize(Size xamlDefinedWindowSize, Size workArea);
     Point GetWindowStartupLocation(Size workArea, Size windowSize);
 }

@@ -5,29 +5,23 @@
 
 namespace Media.Database;
 
-internal sealed class MediaDocumentStore
+internal sealed class MediaDocumentStoreAdapter : DocumentStoreAdapter
 {
-    private readonly JsonDocumentStore _store;
-
     private const string PlayedKey = "played";
-    public HashSet<string> PlayedFiles { get; private set; }
 
-    public MediaDocumentStore()
+    public DbHashSet<string> PlayedFiles { get; private set; }
+
+    public MediaDocumentStoreAdapter()
     {
-        var file = Path.Combine(AppContext.BaseDirectory, "mediadb.zip");
-        _store = new JsonDocumentStore(file, new JsonDocumentStoreOptions
-        {
-            ReturnEmptyCollectionOnFileNotFound = true,
-        });
-        PlayedFiles = new HashSet<string>();
+        PlayedFiles = new DbHashSet<string>();
     }
 
-    public async Task Init()
+    public override async Task Init()
     {
         PlayedFiles = await _store.DeserializeCollectionAsHashSet<string>(PlayedKey);
     }
 
-    public async Task Save()
+    public override async Task Save()
     {
         await _store.SerializeCollection(PlayedKey, PlayedFiles);
     }

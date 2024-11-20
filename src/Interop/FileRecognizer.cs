@@ -1,4 +1,9 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -65,6 +70,13 @@ internal static class FileRecognizer
             .Concat(VideoFiles)
             .Concat(ImageFiles)
             .Concat(PlaylistFiles);
+    }
+
+    public static bool IsMpvSupportedType(this FileType fileType)
+    {
+        return fileType == FileType.Audio
+            || fileType == FileType.Video
+            || fileType == FileType.Playlist;
     }
 
     public static bool IsDropConvertSupported(string file)
