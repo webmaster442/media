@@ -15,10 +15,14 @@ namespace AudioSwitcher.CoreAudio;
 /// </summary>
 public sealed class CoreAudioController : AudioController<CoreAudioDevice>
 {
+#pragma warning disable CA2213 // Disposable fields should be disposed
     private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+#pragma warning restore CA2213 // Disposable fields should be disposed
     private HashSet<CoreAudioDevice> _deviceCache = new HashSet<CoreAudioDevice>();
     private readonly nint _innerEnumeratorPtr;
+#pragma warning disable CA2213 // Disposable fields should be disposed
     private readonly ThreadLocal<IMultimediaDeviceEnumerator> _innerEnumerator;
+#pragma warning restore CA2213 // Disposable fields should be disposed
     private SystemEventNotifcationClient _systemEvents;
 
     private IMultimediaDeviceEnumerator InnerEnumerator => _innerEnumerator.Value;
@@ -93,11 +97,8 @@ public sealed class CoreAudioController : AudioController<CoreAudioDevice>
             _deviceCache?.Clear();
             _lock?.Dispose();
             _innerEnumerator?.Dispose();
-
             base.Dispose(disposing);
         });
-        _innerEnumerator.Dispose();
-        _lock.Dispose();
     }
 
     public override CoreAudioDevice GetDevice(Guid id, DeviceState state)
