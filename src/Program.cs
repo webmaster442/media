@@ -20,6 +20,9 @@ mainApp.Configure(config =>
     config.PropagateExceptions();
     config.AddAutoCompletion(config => config.AddPowershell());
 
+    config.AddCommand<Audio>("audio")
+          .WithDescription("System audio settings");
+
     config.AddCommand<Cut>("cut")
           .WithDescription("Cut a file without reencoding");
 
@@ -31,9 +34,6 @@ mainApp.Configure(config =>
 
     config.AddCommand<Config>("config")
         .WithDescription("Edit the configuration file");
-
-    config.AddCommand<Volume>("volume")
-        .WithDescription("System volume settings");
 
     config.AddCommand<Website>("website")
         .WithDescription("Open the project website");

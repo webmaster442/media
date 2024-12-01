@@ -1,0 +1,74 @@
+﻿using System.Runtime.InteropServices;
+
+namespace AudioSwitcher.CoreAudio.Internal.Interfaces;
+
+[Guid(ComInterfaceIds.POLICY_CONFIG_X_IID)]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal interface IPolicyConfigX
+{
+    [PreserveSig]
+    int GetMixFormat(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [Out] out WaveFormatExtensible ppFormat);
+
+    [PreserveSig]
+    int GetDeviceFormat(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [In][MarshalAs(UnmanagedType.Bool)] bool bDefault,
+        [Out] out WaveFormatExtensible ppFormat);
+
+    [PreserveSig]
+    int ResetDeviceFormat([In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName);
+
+    [PreserveSig]
+    int SetDeviceFormat(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [In] WaveFormatExtensible pEndpointFormat,
+        [In] WaveFormatExtensible mixFormat);
+
+    [PreserveSig]
+    int GetProcessingPeriod(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [In][MarshalAs(UnmanagedType.Bool)] bool bDefault,
+        [In] nint pmftDefaultPeriod,
+        [In] nint pmftMinimumPeriod);
+
+    [PreserveSig]
+    int SetProcessingPeriod(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [In] nint pmftPeriod);
+
+    [PreserveSig]
+    int GetShareMode(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [Out] out DeviceShareMode pMode);
+
+    [PreserveSig]
+    int SetShareMode(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [In] DeviceShareMode mode);
+
+    [PreserveSig]
+    int GetPropertyValue(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [In][MarshalAs(UnmanagedType.Bool)] bool bFxStore,
+        [In] nint key,
+        [In] nint pv);
+
+    [PreserveSig]
+    int SetPropertyValue(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [In][MarshalAs(UnmanagedType.Bool)] bool bFxStore,
+        [In] nint key,
+        [In] nint pv);
+
+    [PreserveSig]
+    int SetDefaultEndpoint(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [In][MarshalAs(UnmanagedType.U4)] ERole role);
+
+    [PreserveSig]
+    int SetEndpointVisibility(
+        [In][MarshalAs(UnmanagedType.LPWStr)] string pszDeviceName,
+        [In][MarshalAs(UnmanagedType.Bool)] bool bVisible);
+}

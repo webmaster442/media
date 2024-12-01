@@ -38,6 +38,7 @@ public sealed class FileServer
     private readonly DirectoryInfo[] directories;
 
     private readonly Identifiers ids;
+    private readonly Lock _lock = new(); 
 
     private readonly Regex regSanitizeExt =
       new Regex(@"[^\w\d]+", RegexOptions.Compiled);
@@ -183,7 +184,7 @@ public sealed class FileServer
 
     private bool HandleFileAdded(string fullPath)
     {
-        lock (ids)
+        lock (_lock)
         {
             FileInfo info = new FileInfo(fullPath);
             if (ids.GetItemByPath(info.FullName) is IMediaResource item)
@@ -213,7 +214,7 @@ public sealed class FileServer
 
     private bool HandleFileDeleted(string fullPath)
     {
-        lock (ids)
+        lock (_lock)
         {
             var info = new FileInfo(fullPath);
             if (ids.GetItemByPath(info.FullName) is not IMediaResource item
@@ -244,7 +245,7 @@ public sealed class FileServer
             }
             Logger.LogDebug(
               "File System changed ({fullpath}): {changetype}", e.FullPath, e.ChangeType);
-            lock (ids)
+            lock (_lock)
             {
                 var master = ids.GetItemById(Identifiers.GENERAL_ROOT) as VirtualFolder;
                 if (master != null)
@@ -315,7 +316,7 @@ public sealed class FileServer
               "File System changed (rename, {changetype}): {fullpath} from {oldfullpath}", e.FullPath, e.OldFullPath, e.ChangeType);
             if (ids != null)
             {
-                lock (ids)
+                lock (_lock)
                 {
                     var master = ids.GetItemById(Identifiers.GENERAL_ROOT) as VirtualFolder;
                     if (master != null)
@@ -357,7 +358,7 @@ public sealed class FileServer
 
     private void RegisterNewMaster(IMediaFolder newMaster)
     {
-        lock (ids)
+        lock (_lock)
         {
             ids.RegisterFolder(Identifiers.GENERAL_ROOT, newMaster);
             ids.RegisterFolder(
@@ -438,7 +439,7 @@ public sealed class FileServer
 
     internal bool Allowed(IMediaResource item)
     {
-        lock (ids)
+        lock (_lock)
         {
             return ids.Allowed(item);
         }
@@ -485,7 +486,7 @@ public sealed class FileServer
     internal BaseFile GetFile(PlainFolder aParent, FileInfo info)
     {
         BaseFile? item;
-        lock (ids)
+        lock (_lock)
         {
             item = ids.GetItemByPath(info.FullName) as BaseFile;
         }
@@ -512,7 +513,7 @@ public sealed class FileServer
     {
         if (types == DlnaMediaTypes.Audio)
         {
-            lock (ids)
+            lock (_lock)
             {
                 if (!ids.HasViews)
                 {

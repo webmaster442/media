@@ -62,6 +62,8 @@
     <Content Include="..\LICENSE" Link="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <ProjectReference Include="..\include\AudioSwitcher.AudioApi\AudioSwitcher.AudioApi.csproj" />
+    <ProjectReference Include="..\include\AudioSwitcher.CoreAudio\AudioSwitcher.CoreAudio.csproj" />
     <ProjectReference Include="..\include\Media.ShellAutocomplete\Media.ShellAutoComplete.csproj" />
     <ProjectReference Include="..\include\NMaier.SimpleDlna.FileMediaServer\NMaier.SimpleDlna.FileMediaServer.csproj" />
     <ProjectReference Include="..\include\NMaier.SimpleDlna.Server\NMaier.SimpleDlna.Server.csproj" />

@@ -23,18 +23,22 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
 
     public PlaylistViewModel PlaylistViewModel { get; }
 
+    public AudioViewModel AudioViewModel { get; }
+
     public GuiViewModel(IUiFunctions uiFunctions)
     {
         FilesViewModel = new FilesViewModel(uiFunctions);
         System = new SystemMenuViewModel();
         RadioStationsViewModel = new RadioStationsViewModel(new RadioStationsClient(), uiFunctions);
         PlaylistViewModel = new PlaylistViewModel(uiFunctions);
+        AudioViewModel = new AudioViewModel();
     }
 
     public void Initialize()
     {
         FilesViewModel.RefreshDriveList();
         RadioStationsViewModel.Initialize();
+        AudioViewModel.Initialize();
     }
 
     [RelayCommand]

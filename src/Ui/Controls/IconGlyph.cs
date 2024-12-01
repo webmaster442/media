@@ -41,4 +41,6 @@ internal enum IconGlyph
     RestartUpdate = 0xF83E,
     ResetDrive = 0xEBC4,
     Asterisk = 0xEA38,
+    Volume = 0xE767,
+    Speakers = 0xE7F5,
 }

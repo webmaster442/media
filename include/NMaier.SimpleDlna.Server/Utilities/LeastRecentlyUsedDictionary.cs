@@ -14,6 +14,7 @@ public sealed class LeastRecentlyUsedDictionary<TKey, TValue>
       new LinkedList<KeyValuePair<TKey, TValue>>();
 
     private readonly uint toDrop;
+    private readonly Lock _lock = new Lock();
 
     public LeastRecentlyUsedDictionary(uint capacity)
     {
@@ -69,7 +70,7 @@ public sealed class LeastRecentlyUsedDictionary<TKey, TValue>
     public void Clear()
     {
         items.Clear();
-        lock (order)
+        lock (_lock)
         {
             order.Clear();
         }
@@ -100,7 +101,7 @@ public sealed class LeastRecentlyUsedDictionary<TKey, TValue>
     {
         if (items.TryRemove(key, out LinkedListNode<KeyValuePair<TKey, TValue>>? node))
         {
-            lock (order)
+            lock (_lock)
             {
                 order.Remove(node);
             }
@@ -114,7 +115,7 @@ public sealed class LeastRecentlyUsedDictionary<TKey, TValue>
     {
         if (items.TryRemove(item.Key, out LinkedListNode<KeyValuePair<TKey, TValue>>? node))
         {
-            lock (order)
+            lock (_lock)
             {
                 order.Remove(node);
             }
@@ -140,7 +141,7 @@ public sealed class LeastRecentlyUsedDictionary<TKey, TValue>
         {
             return default;
         }
-        lock (order)
+        lock (_lock)
         {
             var rv = default(TValue);
             for (var i = 0; i < toDrop; ++i)
@@ -164,7 +165,7 @@ public sealed class LeastRecentlyUsedDictionary<TKey, TValue>
     public TValue? AddAndPop(KeyValuePair<TKey, TValue> item)
     {
         LinkedListNode<KeyValuePair<TKey, TValue>> node;
-        lock (order)
+        lock (_lock)
         {
             node = order.AddFirst(item);
         }
