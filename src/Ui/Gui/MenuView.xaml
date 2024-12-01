@@ -33,8 +33,7 @@
                 Header="Show hidden files"
                 IsCheckable="True"
                 IsChecked="{Binding FilesViewModel.ShowHidden}"
-                Tag="0">
-            </MenuItem>
+                Tag="0" />
             <Separator />
             <MenuItem
                 Click="SetCorrectTabFromTag"
@@ -234,6 +233,56 @@
             <MenuItem
                 Command="{Binding System.DisplayExernalCommand}"
                 Header="External">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime0" />
+                </MenuItem.Icon>
+            </MenuItem>
+        </MenuItem> 
+        <MenuItem Header="Audio">
+            <MenuItem.Icon>
+                <controls:FontIcon
+                    FontSize="22"
+                    Glyph="Volume" />
+            </MenuItem.Icon>
+            <MenuItem
+                Header="Set Default Device"
+                ItemsSource="{Binding AudioViewModel.Devices}">
+                <MenuItem.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}" />
+                    </DataTemplate>
+                </MenuItem.ItemTemplate>
+                <MenuItem.ItemContainerStyle>
+                    <Style
+                        BasedOn="{StaticResource {x:Type MenuItem}}"
+                        TargetType="MenuItem">
+                        <Setter Property="IsChecked" Value="{Binding IsDefault}" />
+                        <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Menu}, Path=DataContext.AudioViewModel.SetDefaultCommand}" />
+                        <Setter Property="CommandParameter" Value="{Binding}" />
+                    </Style>
+                </MenuItem.ItemContainerStyle>
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime0" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem
+                Command="{Binding AudioViewModel.MuteCommand}"
+                Header="Mute/Unmute default device">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="RightArrowKeyTime0" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem
+                Command="{Binding AudioViewModel.StartVolMixerCommand}"
+                Header="Open volume mixer...">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"

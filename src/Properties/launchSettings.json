@@ -55,10 +55,6 @@
       "commandName": "Project",
       "commandLineArgs": "convert drop"
     },
-    "volume -m": {
-      "commandName": "Project",
-      "commandLineArgs": "volume"
-    },
     "imgview": {
       "commandName": "Project",
       "commandLineArgs": "imgview d:\\0Kepek\\Hátterek\\desktop-fhd\\"

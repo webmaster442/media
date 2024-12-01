@@ -140,6 +140,9 @@ internal partial class FilesViewModel : ObservableObject
     [RelayCommand]
     private void DoubleClick(FolderItem item)
     {
+        if (item == null)
+            return;
+
         if (item.IsDirectory)
         {
             Navigate(item.FullPath);
