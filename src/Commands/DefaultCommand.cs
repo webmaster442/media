@@ -134,7 +134,7 @@ internal class DefaultCommand : Command
         string tree = BuildTree(mdl);
 
         bool shellStarted = WasItStartedByAShell();
-        Powershell powershell = new();
+        Powershell powershell = new(updatePathVar: true);
         if (!shellStarted && !Debugger.IsAttached)
         {
             powershell.RunCommands(new string[]

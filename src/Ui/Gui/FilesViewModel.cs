@@ -81,6 +81,13 @@ internal partial class FilesViewModel : ObservableObject
         Navigate(drive.Letter);
     }
 
+    private bool CanStartShell(string path)
+        => Directory.Exists(path);
+
+    [RelayCommand(CanExecute = nameof(CanStartShell))]
+    private void SartShell(string path)
+        => SelfInterop.StartShell(path);
+
     [RelayCommand]
     private void Navigate(string path)
     {

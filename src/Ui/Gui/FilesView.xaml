@@ -99,8 +99,8 @@
             CanUserAddRows="False"
             CanUserDeleteRows="False"
             ItemsSource="{Binding Items}"
-            SelectedItem="{Binding SelectedItem}"
             RowHeight="50"
+            SelectedItem="{Binding SelectedItem}"
             SelectionMode="Single"
             SelectionUnit="FullRow">
             <behaviours:Interaction.Triggers>
@@ -120,6 +120,11 @@
                         Command="{Binding SendToPlaylistCommand}"
                         CommandParameter="{Binding SelectedItem}"
                         Header="Add to playlist" />
+                    <Separator />
+                    <MenuItem
+                        Command="{Binding SartShellCommand}"
+                        CommandParameter="{Binding Path=CurrentPath}"
+                        Header="Launch Media shell in current folder" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Columns>

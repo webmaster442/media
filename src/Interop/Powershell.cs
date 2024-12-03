@@ -29,12 +29,16 @@ internal sealed class Powershell
         return null;
     }
 
-    public Powershell()
+    public Powershell(bool updatePathVar)
     {
         _powershellExecutable = FindPowershellCore() ?? "powershell.exe";
+        if (updatePathVar)
+        {
+            AddDirectoryToPath(AppContext.BaseDirectory);
+        }
     }
 
-    public void RunCommands(IEnumerable<string> commands)
+    public void RunCommands(IEnumerable<string> commands, bool shellExecute = false)
     {
         string cmd = string.Join(";", commands);
 
@@ -44,7 +48,7 @@ internal sealed class Powershell
             {
                 FileName = _powershellExecutable,
                 Arguments = $"-NoExit -Command \"& {{{cmd}}}",
-                UseShellExecute = false,
+                UseShellExecute = shellExecute,
             }
         };
         process.Start();
@@ -69,5 +73,15 @@ internal sealed class Powershell
             }
         };
         process.Start();
+    }
+
+    private static void AddDirectoryToPath(string baseDirectory)
+    {
+        string pathVar = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        if (!pathVar.Contains(baseDirectory))
+        {
+            pathVar = $"{baseDirectory};{pathVar}";
+            Environment.SetEnvironmentVariable("PATH", pathVar, EnvironmentVariableTarget.Process);
+        }
     }
 }

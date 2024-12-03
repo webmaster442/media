@@ -43,6 +43,16 @@ internal static class SelfInterop
         p.Start();
     }
 
+    public static void StartShell(string path)
+    {
+        Powershell powershell = new(updatePathVar: true);
+        powershell.RunCommands(new string[]
+        {
+            $"\"{AppContext.BaseDirectory}\\Media.exe\" completion powershell | Out-String | Invoke-Expression",
+            $"pushd '{path}'"
+        }, shellExecute: true);
+    }
+
     public static void RunMediaCommand(params string[] cmd)
         => RunMedia(cmd);
 

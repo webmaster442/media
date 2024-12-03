@@ -122,7 +122,7 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
         bool shouldRun = _uiFunctions.QuestionMessage("Do you want to run the generated script?", "Run script?");
         if (shouldRun)
         {
-            var powerShell = new Powershell();
+            var powerShell = new Powershell(updatePathVar: false);
             powerShell.RunScript(scriptFile);
         }
 

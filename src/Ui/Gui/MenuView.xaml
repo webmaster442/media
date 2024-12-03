@@ -29,6 +29,17 @@
             </MenuItem>
             <Separator />
             <MenuItem
+                Command="{Binding FilesViewModel.SartShellCommand}"
+                CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
+                Header="Launch Media shell in current folder">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="CommandPrompt" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator/>
+            <MenuItem
                 Click="SetCorrectTabFromTag"
                 Header="Show hidden files"
                 IsCheckable="True"
@@ -239,7 +250,7 @@
                         Glyph="RightArrowKeyTime0" />
                 </MenuItem.Icon>
             </MenuItem>
-        </MenuItem> 
+        </MenuItem>
         <MenuItem Header="Audio">
             <MenuItem.Icon>
                 <controls:FontIcon
