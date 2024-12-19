@@ -1,4 +1,9 @@
 - [ ] Release on github
 - [ ] Stability tests
-- [ ] Image viewer
+- [x] Image viewer
 - [x] Shell progress bar functions to UIFunctions
+- [ ] Entity framework with SQLite for database
+- [ ] Database saved to User profile
+- [ ] Database migration set up
+- [ ] Settings stored in database table
+- [ ] Played files stored in database table
