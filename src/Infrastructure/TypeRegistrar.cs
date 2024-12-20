@@ -10,6 +10,7 @@ namespace Media.Infrastructure;
 internal sealed class TypeRegistrar : ITypeRegistrar
 {
     private readonly IServiceCollection _builder;
+    private IServiceProvider? _provider;
 
     internal sealed class TypeResolver : ITypeResolver, IDisposable
     {
@@ -44,9 +45,16 @@ internal sealed class TypeRegistrar : ITypeRegistrar
         _builder = builder;
     }
 
+    public IServiceScope CreateScope()
+    {
+        return _provider?.CreateScope()
+            ?? throw new InvalidOperationException("Service provider not initialied");
+    }
+
     public ITypeResolver Build()
     {
-        return new TypeResolver(_builder.BuildServiceProvider());
+        _provider = _builder.BuildServiceProvider();
+        return new TypeResolver(_provider);
     }
 
     public void Register(Type service, Type implementation)

@@ -52,6 +52,6 @@ internal sealed class Mpv : InteropBase
     public void Start(MpvCommandBuilder mpvCommand)
         => Start(mpvCommand.Build());
 
-    protected override string? GetExternalPath()
-        => _configAccessor.GetExternalMpvPath();
+    protected override string GetExternalPath()
+        => _configAccessor.ExternalMpvPath;
 }

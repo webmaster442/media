@@ -56,7 +56,7 @@ internal sealed class Play : BaseFileWorkCommand<Play.Settings>
 
     public Play(ConfigAccessor configAccessor)
     {
-        _remotePort = configAccessor.GetMpvRemotePort() ?? 12345;
+        _remotePort = configAccessor.MpvRemotePort;
         _mpv = new Mpv(configAccessor);
     }
 

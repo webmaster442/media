@@ -42,11 +42,14 @@ internal class UpdateYtdlp : BaseGithubUpdateCommand
     }
 
     protected override DateTimeOffset? GetInstalledVersion()
-        => _configAccessor.GetYtdlpVesion();
+        => _configAccessor.YtdlpVesion;
 
     protected override ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets)
         => assets.First(a => a.Name.Contains("yt-dlp.exe"));
 
     protected override async Task SetInstalledVersion(DateTimeOffset version)
-        => await _configAccessor.SetYtdlpVersion(version);
+    {
+        _configAccessor.YtdlpVesion = version;
+        await _configAccessor.SaveAsync();
+    }
 }

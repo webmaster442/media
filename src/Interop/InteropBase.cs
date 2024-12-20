@@ -19,7 +19,7 @@ public abstract class InteropBase
         _programName = binaryName;
     }
 
-    protected abstract string? GetExternalPath();
+    protected abstract string GetExternalPath();
 
     public virtual bool TryGetInstalledPath([NotNullWhen(true)] out string? toolPath)
     {

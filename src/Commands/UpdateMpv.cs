@@ -68,11 +68,14 @@ internal sealed class UpdateMpv : BaseGithubUpdateCommand
     }
 
     protected override DateTimeOffset? GetInstalledVersion()
-        => _configAccessor.GetMpvVesion();
+        => _configAccessor.MpvVesion;
 
     protected override ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets)
         => assets.First(a => a.Name.Contains("mpv-x86_64-"));
 
     protected override async Task SetInstalledVersion(DateTimeOffset version)
-        => await _configAccessor.SetMpvVersion(version);
+    {
+        _configAccessor.MpvVesion = version;
+        await _configAccessor.SaveAsync();
+    }
 }

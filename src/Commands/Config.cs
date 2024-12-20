@@ -22,7 +22,7 @@ internal sealed class Config : AsyncCommand
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
 
-        await _configAccessor.ForceSave();
+        /*await _configAccessor.ForceSave();
 
         using var process = new Process
         {
@@ -32,7 +32,7 @@ internal sealed class Config : AsyncCommand
                 UseShellExecute = true,
             },
         };
-        process.Start();
+        process.Start();*/
 
         return ExitCodes.Success;
 

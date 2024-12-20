@@ -15,6 +15,8 @@ namespace Media.Commands;
 [Example("Open a window to convert a file by drag and drop", "media convert drop")]
 internal class ConvertDragDrop : GuiCommand<DropConvertWindow>
 {
+    private readonly ConfigAccessor _configAccessor;
+
     internal class DropWindowManipulator : IWindowManipulator
     {
         public Size GetWindowSize(Size xamlDefinedWindowSize, Size workArea)
@@ -30,9 +32,14 @@ internal class ConvertDragDrop : GuiCommand<DropConvertWindow>
         }
     }
 
+    public ConvertDragDrop(ConfigAccessor configAccessor)
+    {
+        _configAccessor = configAccessor;
+    }
+
     protected override IWindowManipulator? CreateWindowManipulator()
         => new DropWindowManipulator();
 
     protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions)
-        => new DropConvertViewModel(uiFunctions, new ConfigAccessor());
+        => new DropConvertViewModel(uiFunctions, _configAccessor);
 }

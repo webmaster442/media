@@ -32,7 +32,7 @@ internal sealed class Sereve : Command<Sereve.Settings>
 
     public Sereve(ConfigAccessor configAccessor)
     {
-        _dlnaServerPort = configAccessor.GetDlnaServerPort() ?? 8085;
+        _dlnaServerPort = configAccessor.DlnaServerPort;
     }
 
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)

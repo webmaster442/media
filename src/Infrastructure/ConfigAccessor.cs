@@ -3,161 +3,109 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using Media.Dto.Config;
+using Media.Database;
 
 namespace Media.Infrastructure;
 
 public sealed class ConfigAccessor
 {
-    private readonly ConfigObject _config;
-    private readonly JsonSerializerOptions _options;
+    private readonly DatabaseContext _databaseContext;
 
-    private T? Read<T>(string key, T? defaultValue = default) where T : IParsable<T>
+    public ConfigAccessor(DatabaseContext databaseContext)
     {
-        if (_config.Settings.TryGetValue(key, out string? value)
-            && T.TryParse(value, CultureInfo.InvariantCulture, out T? parsed))
-        {
-            return parsed;
-        }
-        return defaultValue;
+        _databaseContext = databaseContext;
     }
 
-    public int? Read(string key, int? defaultValue = default)
+    private T? Read<T>(string key) where T : IParsable<T>
     {
-        if (_config.Settings.TryGetValue(key, out string? value)
-            && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed))
-        {
-            return parsed;
-        }
-        return null;
+        var rawValue = _databaseContext.Settings.Single(s => s.Key == key).Value;
+        return T.Parse(rawValue, CultureInfo.InvariantCulture);
     }
 
-    private void Write<T>(string key, T value) where T : IFormattable, IParsable<T>
+    private string ReadString(string key)
+        => _databaseContext.Settings.Single(s => s.Key == key).Value;
+
+    private void WriteString(string key, string value)
     {
-        _config.Settings[key] = value.ToString(null, CultureInfo.InvariantCulture);
+        var setting = _databaseContext.Settings.Single(s => s.Key == key);
+        setting.Value = value;
     }
 
-    private void Write(string key, bool value)
+    public void Write<T>(string key, T value) where T : IFormattable, IParsable<T>
     {
-        _config.Settings[key] = value.ToString(CultureInfo.InvariantCulture);
+        var setting = _databaseContext.Settings.Single(s => s.Key == key);
+        setting.Value = value.ToString(null, CultureInfo.InvariantCulture);
     }
 
-    private ConfigObject LoadConfig()
+    public void WriteBool(string key, bool value)
     {
-        using var stream = File.OpenRead(ConfigPath);
-        var loaded = JsonSerializer.Deserialize<ConfigObject>(stream, _options)
-            ?? throw new InvalidOperationException("Config file deserialization error");
-
-        var migrator = new ConfigMigrations.Migrations();
-        migrator.ApplyMigrations(loaded);
-
-        return loaded;
+        var setting = _databaseContext.Settings.Single(s => s.Key == key);
+        setting.Value = value.ToString(CultureInfo.InvariantCulture);
     }
 
-    private async Task SaveConfigAsync()
+    public DateTimeOffset FFMPegVesion
     {
-        var temp = Path.GetTempFileName();
-        await using (var stream = File.Create(temp))
-        {
-            await JsonSerializer.SerializeAsync(stream, _config, _options);
-        }
-        File.Move(temp, ConfigPath, true);
-        File.Delete(temp);
+        get => Read<DateTimeOffset>(ConfigKeys.FFMpegVersion);
+        set => Write(ConfigKeys.FFMpegVersion, value);
     }
 
-    private void SaveConfig()
+    public DateTimeOffset MpvVesion
     {
-        var temp = Path.GetTempFileName();
-        using (var stream = File.Create(temp))
-        {
-            JsonSerializer.Serialize(stream, _config, _options);
-        }
-        File.Move(temp, ConfigPath, true);
-        File.Delete(temp);
+        get => Read<DateTimeOffset>(ConfigKeys.MpvVersion);
+        set => Write(ConfigKeys.MpvVersion, value);
     }
 
-    public ConfigAccessor()
+    public DateTimeOffset YtdlpVesion
     {
-        ConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "media.config.json");
-        _options = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            ReadCommentHandling = JsonCommentHandling.Skip,
-            AllowTrailingCommas = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        };
-        if (File.Exists(ConfigPath))
-        {
-            _config = LoadConfig();
-        }
-        else
-        {
-            _config = new ConfigObject();
-            _config.FillWithDefaults();
-        }
+        get => Read<DateTimeOffset>(ConfigKeys.YtdlpVersion);
+        set => Write(ConfigKeys.YtdlpVersion, value);
     }
 
-    public string ConfigPath { get; }
-
-    public Task ForceSave() => SaveConfigAsync();
-
-    public DateTimeOffset? GetFFMPegVesion()
-        => Read<DateTimeOffset>(ConfigKeys.FFMpegVersion);
-
-    public async Task SetFFMpegVersion(DateTimeOffset publishedAt)
+    public bool AlwaysOnTop
     {
-        Write(ConfigKeys.FFMpegVersion, publishedAt);
-        await SaveConfigAsync();
+        get => Read<bool>(ConfigKeys.AlwaysOnTop);
+        set => WriteBool(ConfigKeys.AlwaysOnTop, value);
     }
 
-    public DateTimeOffset? GetMpvVesion()
-        => Read<DateTimeOffset>(ConfigKeys.MpvVersion);
-
-    public async Task SetMpvVersion(DateTimeOffset publishedAt)
+    public bool ExitOnLaunch
     {
-        Write(ConfigKeys.MpvVersion, publishedAt);
-        await SaveConfigAsync();
+        get => Read<bool>(ConfigKeys.ExitOnLaunch);
+        set => WriteBool(ConfigKeys.ExitOnLaunch, value);
     }
 
-    public DateTimeOffset? GetYtdlpVesion()
-        => Read<DateTimeOffset>(ConfigKeys.YtdlpVersion);
-
-    public async Task SetYtdlpVersion(DateTimeOffset publishedAt)
+    public string ExternalFFMpegPath
     {
-        Write(ConfigKeys.YtdlpVersion, publishedAt);
-        await SaveConfigAsync();
+        get => ReadString(ConfigKeys.ExternalFfMpegPath);
+        set => WriteString(ConfigKeys.ExternalFfMpegPath, value);
     }
 
-    public void SetAlwaysOnTop(bool value)
+    public string ExternalMpvPath
     {
-        Write(ConfigKeys.AlwaysOnTop, value);
-        SaveConfig();
+        get => ReadString(ConfigKeys.ExternalMpvPath);
+        set => WriteString(ConfigKeys.ExternalMpvPath, value);
     }
 
-    public void SetExitOnLaunch(bool value)
+    public string ExternalYtdlpPath
     {
-        Write(ConfigKeys.ExitOnLaunch, value);
-        SaveConfig();
+        get => ReadString(ConfigKeys.ExternalYtdlpPath);
+        set => WriteString(ConfigKeys.ExternalYtdlpPath, value);
     }
 
-    public bool GetAlwaysOnTop()
-        => Read<bool>(ConfigKeys.AlwaysOnTop, false);
+    public int MpvRemotePort
+    {
+        get => Read<int>(ConfigKeys.MpvRemotePort);
+        set => Write(ConfigKeys.MpvRemotePort, value);
+    }
 
-    public bool GetExitOnLaunch()
-        => Read<bool>(ConfigKeys.ExitOnLaunch, true);
+    public int DlnaServerPort
+    {
+        get => Read<int>(ConfigKeys.DlnaServerPort);
+        set => Write(ConfigKeys.DlnaServerPort, value);
+    }
 
-    public string? GetExternalFFMpegPath()
-        => Read<string>(ConfigKeys.ExternalFfMpegPath);
+    public void Save()
+        => _databaseContext.SaveChanges();
 
-    public string? GetExternalMpvPath()
-        => Read<string>(ConfigKeys.ExternalMpvPath);
-
-    public string? GetExternalYtdlpPath()
-        => Read<string>(ConfigKeys.ExternalYtdlpPath);
-
-    public int? GetMpvRemotePort()
-        => Read(ConfigKeys.MpvRemotePort);
-
-    public int? GetDlnaServerPort()
-        => Read(ConfigKeys.DlnaServerPort);
+    public async Task SaveAsync()
+        => await _databaseContext.SaveChangesAsync();
 }

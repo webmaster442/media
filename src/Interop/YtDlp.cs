@@ -111,5 +111,5 @@ internal sealed class YtDlp : InteropBase
     }
 
     protected override string? GetExternalPath()
-        => _configAccessor.GetExternalYtdlpPath();
+        => _configAccessor.ExternalYtdlpPath;
 }

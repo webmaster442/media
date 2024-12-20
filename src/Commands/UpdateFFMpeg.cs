@@ -53,11 +53,14 @@ internal sealed class UpdateFFMpeg : BaseGithubUpdateCommand
     }
 
     protected override DateTimeOffset? GetInstalledVersion()
-        => _configAccessor.GetFFMPegVesion();
+        => _configAccessor.FFMPegVesion;
 
     protected override ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets)
         => assets.First(a => a.Name.EndsWith("-win64-gpl-shared.zip"));
 
     protected override async Task SetInstalledVersion(DateTimeOffset version)
-        => await _configAccessor.SetFFMpegVersion(version);
+    {
+        _configAccessor.FFMPegVesion = version;
+        await _configAccessor.SaveAsync();
+    }
 }

@@ -39,8 +39,8 @@ internal sealed class FFMpeg : InteropBase
         _configAccessor = configAccessor;
     }
 
-    protected override string? GetExternalPath()
-        => _configAccessor.GetExternalFFMpegPath();
+    protected override string GetExternalPath()
+        => _configAccessor.ExternalFFMpegPath;
 
     public FFMpegEncoderInfo[] GetEncoders()
     {
