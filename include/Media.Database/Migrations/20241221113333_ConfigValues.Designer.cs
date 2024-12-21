@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Media.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241220162425_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241221113333_ConfigValues")]
+    partial class ConfigValues
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,26 @@ namespace Media.Database.Migrations
                     b.HasIndex("Name");
 
                     b.ToTable("Albums");
+                });
+
+            modelBuilder.Entity("Media.Database.Entity.ApiCacheEntry", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("ValidityInSeconds")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("ApiCacheEntry");
                 });
 
             modelBuilder.Entity("Media.Database.Entity.Genre", b =>
@@ -122,6 +142,19 @@ namespace Media.Database.Migrations
                     b.HasIndex("Year");
 
                     b.ToTable("Musics");
+                });
+
+            modelBuilder.Entity("Media.Database.Entity.PlayedEntry", b =>
+                {
+                    b.Property<string>("Path")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastPlayed")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Path");
+
+                    b.ToTable("PlayedEntry");
                 });
 
             modelBuilder.Entity("Media.Database.Entity.Setting", b =>

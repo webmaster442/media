@@ -17,6 +17,9 @@ public class DatabaseContext : DbContext
     public DatabaseContext()
     {
         DbFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "media.cli");
+    }
+    public void RunMigrations()
+    {
         if (Database.GetPendingMigrations().Any())
         {
             Database.Migrate();
@@ -37,6 +40,22 @@ public class DatabaseContext : DbContext
         Configure(modelBuilder.Entity<Genre>());
         Configure(modelBuilder.Entity<Setting>());
         Configure(modelBuilder.Entity<VideoFile>());
+        Configure(modelBuilder.Entity<PlayedEntry>());
+        Configure(modelBuilder.Entity<ApiCacheEntry>());
+    }
+
+    private static void Configure(EntityTypeBuilder<ApiCacheEntry> builder)
+    {
+        builder.HasKey(x => x.Key);
+        builder.Property(x => x.Value).IsRequired();
+        builder.Property(x => x.CreatedAt).IsRequired();
+        builder.Property(x => x.ValidityInSeconds).IsRequired();
+    }
+
+    private static void Configure(EntityTypeBuilder<PlayedEntry> builder)
+    {
+        builder.HasKey(x => x.Path);
+        builder.Property(x => x.LastPlayed).IsRequired();
     }
 
     private static void Configure(EntityTypeBuilder<VideoFile> builder)
@@ -55,7 +74,7 @@ public class DatabaseContext : DbContext
     private static void Configure(EntityTypeBuilder<Setting> builder)
     {
         builder.HasKey(x => x.Key);
-        builder.Property(x => x.Value);
+        builder.Property(x => x.Value).IsRequired();
     }
 
     private static void Configure(EntityTypeBuilder<MusicFile> builder)

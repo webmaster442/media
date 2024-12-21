@@ -43,6 +43,26 @@ namespace Media.Database.Migrations
                     b.ToTable("Albums");
                 });
 
+            modelBuilder.Entity("Media.Database.Entity.ApiCacheEntry", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("ValidityInSeconds")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("ApiCacheEntry");
+                });
+
             modelBuilder.Entity("Media.Database.Entity.Genre", b =>
                 {
                     b.Property<uint>("Id")
@@ -119,6 +139,19 @@ namespace Media.Database.Migrations
                     b.HasIndex("Year");
 
                     b.ToTable("Musics");
+                });
+
+            modelBuilder.Entity("Media.Database.Entity.PlayedEntry", b =>
+                {
+                    b.Property<string>("Path")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastPlayed")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Path");
+
+                    b.ToTable("PlayedEntry");
                 });
 
             modelBuilder.Entity("Media.Database.Entity.Setting", b =>

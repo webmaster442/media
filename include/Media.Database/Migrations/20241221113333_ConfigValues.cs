@@ -12,18 +12,18 @@ namespace Media.Database.Migrations
         public ConfigValues()
         {
             _values = new()
-            {
-                { ConfigKeys.FFMpegVersion, new DateTimeOffset().ToString() },
-                { ConfigKeys.MpvVersion, new DateTimeOffset().ToString() },
-                { ConfigKeys.YtdlpVersion, new DateTimeOffset().ToString() },
-                { ConfigKeys.ExternalFfMpegPath, string.Empty },
-                { ConfigKeys.ExternalMpvPath, string.Empty },
-                { ConfigKeys.ExternalYtdlpPath, string.Empty },
-                { ConfigKeys.MpvRemotePort, 12345.ToString() },
-                { ConfigKeys.DlnaServerPort, 8085.ToString() },
-                { ConfigKeys.ExitOnLaunch, true.ToString() },
-                { ConfigKeys.AlwaysOnTop, false.ToString() },
-            };
+         {
+             { ConfigKeys.FFMpegVersion, new DateTimeOffset().ToString() },
+             { ConfigKeys.MpvVersion, new DateTimeOffset().ToString() },
+             { ConfigKeys.YtdlpVersion, new DateTimeOffset().ToString() },
+             { ConfigKeys.ExternalFfMpegPath, string.Empty },
+             { ConfigKeys.ExternalMpvPath, string.Empty },
+             { ConfigKeys.ExternalYtdlpPath, string.Empty },
+             { ConfigKeys.MpvRemotePort, 12345.ToString() },
+             { ConfigKeys.DlnaServerPort, 8085.ToString() },
+             { ConfigKeys.ExitOnLaunch, true.ToString() },
+             { ConfigKeys.AlwaysOnTop, false.ToString() },
+         };
         }
 
         /// <inheritdoc />

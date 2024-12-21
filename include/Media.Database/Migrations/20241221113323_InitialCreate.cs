@@ -27,6 +27,20 @@ namespace Media.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ApiCacheEntry",
+                columns: table => new
+                {
+                    Key = table.Column<string>(type: "TEXT", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ValidityInSeconds = table.Column<double>(type: "REAL", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApiCacheEntry", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Genres",
                 columns: table => new
                 {
@@ -37,6 +51,18 @@ namespace Media.Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Genres", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlayedEntry",
+                columns: table => new
+                {
+                    Path = table.Column<string>(type: "TEXT", nullable: false),
+                    LastPlayed = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlayedEntry", x => x.Path);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,7 +187,13 @@ namespace Media.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ApiCacheEntry");
+
+            migrationBuilder.DropTable(
                 name: "Musics");
+
+            migrationBuilder.DropTable(
+                name: "PlayedEntry");
 
             migrationBuilder.DropTable(
                 name: "Settings");
