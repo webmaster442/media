@@ -13,6 +13,8 @@ public class DatabaseContext : DbContext
     public DbSet<Genre> Genres { get; set; }
     public DbSet<VideoFile> Videos { get; set; }
     public DbSet<Setting> Settings { get; set; }
+    public DbSet<PlayedEntry> PlayedEntries { get; set; }
+    public DbSet<ApiCacheEntry> ApiCacheEntries { get; set; }
 
     public DatabaseContext()
     {
@@ -20,7 +22,8 @@ public class DatabaseContext : DbContext
     }
     public void RunMigrations()
     {
-        if (Database.GetPendingMigrations().Any())
+        var migrations = Database.GetPendingMigrations();
+        if (migrations.Any())
         {
             Database.Migrate();
         }

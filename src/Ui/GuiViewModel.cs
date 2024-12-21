@@ -25,11 +25,11 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
 
     public AudioViewModel AudioViewModel { get; }
 
-    public GuiViewModel(IUiFunctions uiFunctions)
+    public GuiViewModel(IUiFunctions uiFunctions, RadioStationsClient radioStationsClient)
     {
         FilesViewModel = new FilesViewModel(uiFunctions);
         System = new SystemMenuViewModel();
-        RadioStationsViewModel = new RadioStationsViewModel(new RadioStationsClient(), uiFunctions);
+        RadioStationsViewModel = new RadioStationsViewModel(radioStationsClient, uiFunctions);
         PlaylistViewModel = new PlaylistViewModel(uiFunctions);
         AudioViewModel = new AudioViewModel();
     }

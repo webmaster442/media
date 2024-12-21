@@ -3,26 +3,37 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.Database.Entity;
+
+using Microsoft.EntityFrameworkCore;
+
 namespace Media.Database;
 
-internal sealed class MediaDocumentStoreAdapter : DocumentStoreAdapter
+internal sealed class MediaDocumentStoreAdapter
 {
-    private const string PlayedKey = "played";
+    private readonly DatabaseContext _dbContext;
 
-    public DbHashSet<string> PlayedFiles { get; private set; }
-
-    public MediaDocumentStoreAdapter()
+    public MediaDocumentStoreAdapter(DatabaseContext dbContext)
     {
-        PlayedFiles = new DbHashSet<string>();
+        _dbContext = dbContext;
     }
 
-    public override async Task Init()
+    public async Task<HashSet<string>> GetPlayedFilesAsync()
     {
-        PlayedFiles = await _store.DeserializeCollectionAsHashSet<string>(PlayedKey);
+        return await _dbContext.PlayedEntries
+            .Select(x => x.Path)
+            .ToHashSetAsync();
     }
 
-    public override async Task Save()
+    public async Task AddPlayedFileAsync(IEnumerable<string> files)
     {
-        await _store.SerializeCollection(PlayedKey, PlayedFiles);
+        var entries = files.Select(file => new PlayedEntry
+        {
+            Path = file, 
+            LastPlayed = DateTime.Now
+        });
+        await _dbContext.PlayedEntries.AddRangeAsync(entries);
+        await _dbContext.SaveChangesAsync();
     }
+
 }

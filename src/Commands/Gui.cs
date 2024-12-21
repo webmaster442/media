@@ -5,7 +5,7 @@
 
 using System.Windows;
 
-using Media.Database;
+using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interfaces;
 using Media.Ui;
@@ -13,9 +13,16 @@ using Media.Ui;
 namespace Media.Commands;
 internal sealed class Gui : GuiCommand<GuiWindow>
 {
+    private readonly RadioStationsClient _radioStationsClient;
+
+    public Gui(RadioStationsClient radioStationsClient)
+    {
+        _radioStationsClient = radioStationsClient;
+    }
+
     protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions)
     {
-        return new GuiViewModel(uiFunctions);
+        return new GuiViewModel(uiFunctions, _radioStationsClient);
     }
 
     protected override IWindowManipulator? CreateWindowManipulator()
@@ -25,7 +32,7 @@ internal sealed class Gui : GuiCommand<GuiWindow>
     {
         public Size GetWindowSize(Size xamlDefinedWindowSize, Size workArea)
         {
-            if (workArea.Width > 1920 && workArea.Height > 720)
+            if (workArea.Width > 1280 && workArea.Height > 720)
             {
                 return new Size(1920, 1080);
             }

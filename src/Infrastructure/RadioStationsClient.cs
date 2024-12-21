@@ -12,17 +12,18 @@ internal class RadioStationsClient : ApiClient
 {
     private readonly ApiCacheAdapter _cacheAdapter;
 
-    public RadioStationsClient()
+    public RadioStationsClient(ApiCacheAdapter apiCacheAdapter)
     {
-        _cacheAdapter = new ApiCacheAdapter();
+        _cacheAdapter = apiCacheAdapter;
     }
 
     public async Task<IReadOnlyList<Country>> GetRadioStationCountries()
     {
-        if (_cacheAdapter.RadioCountriesLastFetch.IsYoungerThan(TimeSpan.FromDays(7))
-            && _cacheAdapter.Countries.Count > 0)
+        var cacheEntry = await _cacheAdapter.GetEntry(ApiCacheAdapter.RadioCountries);
+        if (cacheEntry != null
+            && cacheEntry.IsValid(DateTime.Now))
         {
-            return (IReadOnlyList<Country>)_cacheAdapter.Countries;
+            return cacheEntry.Deserialize<List<Country>>();
         }
 
         string url = $"{ApiUrls.RadioBrowserApi}/countries";
@@ -35,9 +36,7 @@ internal class RadioStationsClient : ApiClient
 
         if (deserialized is not null)
         {
-            _cacheAdapter.Countries.Clear();
-            _cacheAdapter.Countries.AddRange(deserialized);
-            await _cacheAdapter.Save();
+            await _cacheAdapter.SetEntry(ApiCacheAdapter.RadioCountries, json, DateTime.Now);
             return deserialized;
         }
 
@@ -46,10 +45,14 @@ internal class RadioStationsClient : ApiClient
 
     public async Task<IReadOnlyList<Station>> GetRadioStations(string countryCode)
     {
-        if (_cacheAdapter.RadioStationsLastFetch.IsYoungerThan(TimeSpan.FromDays(7))
-            && _cacheAdapter.Stations.ContainsKey(countryCode))
+        var key = $"{ApiCacheAdapter.StationBase}{countryCode}";
+
+        var cacheEntry = await _cacheAdapter.GetEntry(key);
+
+        if (cacheEntry != null
+            && cacheEntry.IsValid(DateTime.Now))
         {
-            return _cacheAdapter.Stations[countryCode];
+            return cacheEntry.Deserialize<List<Station>>();
         }
 
         string url = $"{ApiUrls.RadioBrowserApi}/stations/bycountry/{countryCode}";
@@ -62,8 +65,7 @@ internal class RadioStationsClient : ApiClient
 
         if (deserialized is not null)
         {
-            _cacheAdapter.Stations[countryCode] = deserialized;
-            await _cacheAdapter.Save();
+            await _cacheAdapter.SetEntry(key, json, DateTime.Now);
             return deserialized;
         }
         

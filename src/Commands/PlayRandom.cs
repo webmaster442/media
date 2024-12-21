@@ -50,7 +50,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        await _documentStore.Init();
+        var playedFiles = await _documentStore.GetPlayedFilesAsync();
 
         MpvCommandBuilder builder = new();
 
@@ -66,16 +66,14 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
             Item selectedItem = await selector.SelectItemAsync(consoleCancel.Token);
 
             var files = RandomSelectorProvider.ScanSupportedFiles(selectedItem.FullPath)
-                .Except(_documentStore.PlayedFiles)
+                .Except(playedFiles)
                 .OrderBy(_ => Random.Shared.Next())
                 .Take(settings.SelectionCount);
 
 
             if (files.Any())
             {
-                _documentStore.PlayedFiles.AddRange(files);
-                await _documentStore.Save();
-
+                await _documentStore.AddPlayedFileAsync(files);
                 builder.WithInputFiles(files);
                 _mpv.Start(builder);
             }
@@ -83,15 +81,13 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
         else
         {
             var files = RandomSelectorProvider.ScanSupportedFiles(settings.Folder)
-                .Except(_documentStore.PlayedFiles)
+                .Except(playedFiles)
                 .OrderBy(_ => Random.Shared.Next())
                 .Take(settings.SelectionCount);
 
             if (files.Any())
             {
-                _documentStore.PlayedFiles.AddRange(files);
-                await _documentStore.Save();
-
+                await _documentStore.AddPlayedFileAsync(files);
                 builder.WithInputFiles(files);
                 _mpv.Start(builder);
             }

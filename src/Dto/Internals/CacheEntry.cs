@@ -3,9 +3,11 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Database;
+namespace Media.Dto.Internals;
 
-internal interface IDirtyFlag
+internal class CacheEntry
 {
-    bool IsDirty { get; set; }
+    public required string Key { get; set; }
+    public required string Value { get; set; }
+    public required DateTime ValidEndDate { get; set; }
 }

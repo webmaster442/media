@@ -27,7 +27,7 @@ namespace Media.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ApiCacheEntry",
+                name: "ApiCacheEntries",
                 columns: table => new
                 {
                     Key = table.Column<string>(type: "TEXT", nullable: false),
@@ -37,7 +37,7 @@ namespace Media.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApiCacheEntry", x => x.Key);
+                    table.PrimaryKey("PK_ApiCacheEntries", x => x.Key);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,7 +54,7 @@ namespace Media.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlayedEntry",
+                name: "PlayedEntries",
                 columns: table => new
                 {
                     Path = table.Column<string>(type: "TEXT", nullable: false),
@@ -62,7 +62,7 @@ namespace Media.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlayedEntry", x => x.Path);
+                    table.PrimaryKey("PK_PlayedEntries", x => x.Path);
                 });
 
             migrationBuilder.CreateTable(
@@ -187,13 +187,13 @@ namespace Media.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ApiCacheEntry");
+                name: "ApiCacheEntries");
 
             migrationBuilder.DropTable(
                 name: "Musics");
 
             migrationBuilder.DropTable(
-                name: "PlayedEntry");
+                name: "PlayedEntries");
 
             migrationBuilder.DropTable(
                 name: "Settings");

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Media.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20241221113323_InitialCreate")]
+    [Migration("20241221150019_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -63,7 +63,7 @@ namespace Media.Database.Migrations
 
                     b.HasKey("Key");
 
-                    b.ToTable("ApiCacheEntry");
+                    b.ToTable("ApiCacheEntries");
                 });
 
             modelBuilder.Entity("Media.Database.Entity.Genre", b =>
@@ -154,7 +154,7 @@ namespace Media.Database.Migrations
 
                     b.HasKey("Path");
 
-                    b.ToTable("PlayedEntry");
+                    b.ToTable("PlayedEntries");
                 });
 
             modelBuilder.Entity("Media.Database.Entity.Setting", b =>

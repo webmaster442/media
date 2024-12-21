@@ -60,7 +60,7 @@ namespace Media.Database.Migrations
 
                     b.HasKey("Key");
 
-                    b.ToTable("ApiCacheEntry");
+                    b.ToTable("ApiCacheEntries");
                 });
 
             modelBuilder.Entity("Media.Database.Entity.Genre", b =>
@@ -151,7 +151,7 @@ namespace Media.Database.Migrations
 
                     b.HasKey("Path");
 
-                    b.ToTable("PlayedEntry");
+                    b.ToTable("PlayedEntries");
                 });
 
             modelBuilder.Entity("Media.Database.Entity.Setting", b =>

@@ -3,48 +3,84 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using Media.Dto.Radio;
+using Media.Database.Entity;
+using Media.Dto.Internals;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace Media.Database;
 
-internal class ApiCacheAdapter : DocumentStoreAdapter
+internal sealed class ApiCacheAdapter
 {
-    private const string KeyRadioCountries = "radiocountries";
-    private const string KeyRadioStations = "radiostations";
+    private readonly DatabaseContext _dbContext;
 
-    public ApiCacheAdapter()
+    public ApiCacheAdapter(DatabaseContext dbContext)
     {
-        Countries = new DbList<Country>();
-        Stations = new DbDictionary<string, List<Station>>();
+        _dbContext = dbContext;
     }
 
-    public DateTime RadioStationsLastFetch { get; set; }
-    public DateTime RadioCountriesLastFetch { get; set; }
+    public const string RadioCountries = "RadioCountries";
+    public const string StationBase = "RadioStation_";
 
-    public override async Task Init()
+    public const double DefaultValidity = (24.0 * 60 * 60);
+
+    public async Task<CacheEntry?> GetEntry(string key)
     {
-        RadioCountriesLastFetch = await _store.GetCollectionLastModification(KeyRadioCountries);
-        RadioStationsLastFetch = await _store.GetCollectionLastModification(KeyRadioStations);
-        Countries = await _store.DeserializeCollectionAsList<Country>(KeyRadioCountries);
-        Stations = await _store.DeserializeCollectionAsDictionary<string, List<Station>>(KeyRadioStations);
+        var entity = await _dbContext.ApiCacheEntries
+            .Where(x => x.Key == key)
+            .FirstOrDefaultAsync();
+
+        if (entity is not null)
+        {
+            return new CacheEntry
+            {
+                Key = entity.Key,
+                Value = entity.Value,
+                ValidEndDate = entity.CreatedAt.AddSeconds(entity.ValidityInSeconds)
+            };
+        }
+
+        return null;
     }
 
-    public DbList<Country> Countries { get; private set; }
-
-    public DbDictionary<string, List<Station>> Stations { get; private set; }
-
-    public override async Task Save()
+    public async Task SetEntry(string key, string value, DateTime curentDate, double validityInSeconds = DefaultValidity)
     {
-        if (Countries.IsDirty)
-        {
-            await _store.SerializeCollection(KeyRadioCountries, Countries);
-            RadioCountriesLastFetch = DateTime.UtcNow;
-        }
+        var entity = await _dbContext.ApiCacheEntries
+            .Where(x => x.Key == key)
+            .FirstOrDefaultAsync();
 
-        if (Stations.IsDirty)
+        if (entity is null)
         {
-            await _store.SerializeCollection(KeyRadioStations, Stations);
-            RadioStationsLastFetch = DateTime.UtcNow;
+            entity = new ApiCacheEntry
+            {
+                Key = key,
+                CreatedAt = curentDate,
+                ValidityInSeconds = validityInSeconds,
+                Value = value
+            };
+            _dbContext.ApiCacheEntries.Add(entity);
         }
+        else
+        {
+            entity.CreatedAt = curentDate;
+            entity.ValidityInSeconds = validityInSeconds;
+            entity.Value = value;
+        }
+        await _dbContext.SaveChangesAsync();
+    }
+}
+
+internal static class CacheEntryExtensions
+{
+    public static bool IsValid(this CacheEntry entry, DateTime currentTime)
+    {
+        return !string.IsNullOrWhiteSpace(entry.Value)
+            && currentTime <= entry.ValidEndDate;
+    }
+
+    public static T Deserialize<T>(this CacheEntry entry)
+    {
+        return JsonSerializer.Deserialize<T>(entry.Value)
+            ?? throw new InvalidOperationException("Deserialize failed");
     }
 }

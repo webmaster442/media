@@ -26,6 +26,8 @@ internal static class ProgramFactory
         services.AddSingleton<ConfigAccessor>();
         services.AddSingleton<ConfigAccessor>();
         services.AddSingleton<MediaDocumentStoreAdapter>();
+        services.AddSingleton<ApiCacheAdapter>();
+        services.AddSingleton<RadioStationsClient>();
         var registar = new TypeRegistrar(services);
         registar.Build();
         return registar;

@@ -5,7 +5,7 @@
 
 namespace Media.Database.Entity;
 
-internal class PlayedEntry
+public class PlayedEntry
 {
     public required string Path { get; set; }
     public required DateTime LastPlayed { get; set; }
