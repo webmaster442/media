@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Media.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class ConfigValues : Migration
+    [DbContext(typeof(DatabaseContext))]
+    [Migration("20241221113333_ConfigValues")]
+    public class ConfigValues : Migration
     {
         private readonly Dictionary<string, string> _values;
 
@@ -31,10 +34,7 @@ namespace Media.Database.Migrations
         {
             foreach (var value in _values)
             {
-                migrationBuilder.InsertData(
-                    table: "Settings",
-                    columns: ["Key", "Value"],
-                    values: [value.Key, value.Value]);
+                migrationBuilder.Sql($"insert INTO Settings ('Key', 'Value') VALUES ('{value.Key}', '{value.Value}')");
             }
         }
 
@@ -43,10 +43,7 @@ namespace Media.Database.Migrations
         {
             foreach (var value in _values)
             {
-                migrationBuilder.DeleteData(
-                    table: "Settings",
-                    keyColumn: "Key",
-                    keyValue: value.Key);
+                migrationBuilder.Sql($"delete from Settings where Settings.Key = '{value.Key}'");
             }
         }
     }

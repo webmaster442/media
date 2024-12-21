@@ -3,3 +3,5 @@
 Tool: dotnet tool install --global dotnet-ef
 
 dotnet ef migrations add MigrationName
+
+Migration test: dotnet ef database update --versbose

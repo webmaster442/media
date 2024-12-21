@@ -10,7 +10,7 @@ using Media.Interop;
 using Media.ShellAutoComplete.AutoComplete;
 using Media.ShellAutoComplete.Integrations;
 
-var registar = ProgramFactory.CreateTypeRegistar();
+using var registar = ProgramFactory.CreateTypeRegistar();
 var mainApp = new CommandApp<DefaultCommand>(registar);
 
 Terminal.EnableUTF8Output();
@@ -196,10 +196,7 @@ mainApp.Configure(config =>
 
 try
 {
-    using (var scope = registar.CreateScope())
-    {
-        await mainApp.RunAsync(args);
-    }
+    await mainApp.RunAsync(args);
 }
 catch (Exception e)
 {

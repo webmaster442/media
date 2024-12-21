@@ -6,8 +6,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-using Media.Infrastructure;
-
 namespace Media.Interop;
 
 public abstract class InteropBase
@@ -24,7 +22,7 @@ public abstract class InteropBase
     public virtual bool TryGetInstalledPath([NotNullWhen(true)] out string? toolPath)
     {
         var externalPath = GetExternalPath();
-        if (externalPath != null
+        if (!string.IsNullOrWhiteSpace(externalPath)
             && File.Exists(externalPath))
         {
             toolPath = externalPath;

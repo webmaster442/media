@@ -14,11 +14,17 @@ internal static class ProgramFactory
 {
     public static TypeRegistrar CreateTypeRegistar()
     {
-        var services = new ServiceCollection();
+        // TypeRegistar will dispose the db object
+        // Dispose objects before losing scope
+#pragma warning disable CA2000
+        var db = new DatabaseContext();
+#pragma warning restore CA2000
+        db.RunMigrations();
 
-        services.AddScoped<DatabaseContext>();
-        services.AddScoped<ConfigAccessor>();
-        services.AddScoped<ConfigAccessor>();
+        var services = new ServiceCollection();
+        services.AddSingleton(db);
+        services.AddSingleton<ConfigAccessor>();
+        services.AddSingleton<ConfigAccessor>();
         services.AddSingleton<MediaDocumentStoreAdapter>();
         var registar = new TypeRegistrar(services);
         registar.Build();
