@@ -3,12 +3,13 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.Database;
 using Media.Database.Entity;
 using Media.Dto.Internals;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Media.Database;
+namespace Media.DbAdapters;
 
 internal sealed class ApiCacheAdapter
 {
@@ -22,7 +23,7 @@ internal sealed class ApiCacheAdapter
     public const string RadioCountries = "RadioCountries";
     public const string StationBase = "RadioStation_";
 
-    public const double DefaultValidity = (24.0 * 60 * 60);
+    public const double DefaultValidity = 24.0 * 60 * 60;
 
     public async Task<CacheEntry?> GetEntry(string key)
     {

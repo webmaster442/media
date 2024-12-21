@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Database;
+using Media.DbAdapters;
 using Media.Infrastructure;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +26,7 @@ internal static class ProgramFactory
         services.AddSingleton(db);
         services.AddSingleton<ConfigAccessor>();
         services.AddSingleton<ConfigAccessor>();
-        services.AddSingleton<MediaDocumentStoreAdapter>();
+        services.AddSingleton<PlayedFilesAdapter>();
         services.AddSingleton<ApiCacheAdapter>();
         services.AddSingleton<RadioStationsClient>();
         var registar = new TypeRegistrar(services);

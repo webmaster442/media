@@ -3,17 +3,18 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.Database;
 using Media.Database.Entity;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace Media.Database;
+namespace Media.DbAdapters;
 
-internal sealed class MediaDocumentStoreAdapter
+internal sealed class PlayedFilesAdapter
 {
     private readonly DatabaseContext _dbContext;
 
-    public MediaDocumentStoreAdapter(DatabaseContext dbContext)
+    public PlayedFilesAdapter(DatabaseContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -29,7 +30,7 @@ internal sealed class MediaDocumentStoreAdapter
     {
         var entries = files.Select(file => new PlayedEntry
         {
-            Path = file, 
+            Path = file,
             LastPlayed = DateTime.Now
         });
         await _dbContext.PlayedEntries.AddRangeAsync(entries);

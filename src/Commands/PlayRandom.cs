@@ -3,7 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using Media.Database;
+using Media.DbAdapters;
 using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Infrastructure.Selector;
@@ -20,7 +20,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 {
     private readonly Mpv _mpv;
     private readonly RandomSelectorProvider _randomSelectorProvider;
-    private readonly MediaDocumentStoreAdapter _documentStore;
+    private readonly PlayedFilesAdapter _documentStore;
 
     internal class Settings : ValidatedCommandSettings
     {
@@ -41,7 +41,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 
     internal record class DirectoryEntry(string Name, string Path);
 
-    public PlayRandom(ConfigAccessor configAccessor, MediaDocumentStoreAdapter documentStore)
+    public PlayRandom(ConfigAccessor configAccessor, PlayedFilesAdapter documentStore)
     {
         _mpv = new Mpv(configAccessor);
         _randomSelectorProvider = new();
