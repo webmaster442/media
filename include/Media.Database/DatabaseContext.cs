@@ -20,7 +20,7 @@ public class DatabaseContext : DbContext
     {
         DbFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "media.cli");
     }
-    public void RunMigrations()
+    public void RunMigrationsIfNeeded()
     {
         var migrations = Database.GetPendingMigrations();
         if (migrations.Any())

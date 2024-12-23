@@ -15,20 +15,13 @@ internal static class ProgramFactory
 {
     public static TypeRegistrar CreateTypeRegistar()
     {
-        // TypeRegistar will dispose the db object
-        // Dispose objects before losing scope
-#pragma warning disable CA2000
-        var db = new DatabaseContext();
-#pragma warning restore CA2000
-        db.RunMigrations();
-
         var services = new ServiceCollection();
-        services.AddSingleton(db);
         services.AddSingleton<ConfigAdapter>();
         services.AddSingleton<ConfigAdapter>();
         services.AddSingleton<PlayedFilesAdapter>();
         services.AddSingleton<ApiCacheAdapter>();
         services.AddSingleton<RadioStationsClient>();
+        services.AddSingleton<GuiDatabaseAdapter>();
         var registar = new TypeRegistrar(services);
         registar.Build();
         return registar;

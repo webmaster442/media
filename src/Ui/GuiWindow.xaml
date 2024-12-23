@@ -41,7 +41,7 @@
                 <Gui:PlayList DataContext="{Binding PlaylistViewModel}"/>
             </TabItem>
             <TabItem Header="Database">
-                <Gui:DatabaseView/>
+                <Gui:DatabaseView DataContext="{Binding DatabaseViewModel}"/>
             </TabItem>
         </TabControl>
     </Grid>

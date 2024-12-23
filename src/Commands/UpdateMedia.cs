@@ -90,8 +90,8 @@ internal sealed class UpdateMedia : BaseGithubUpdateCommand
         return null;
     }
 
-    protected override Task SetInstalledVersion(DateTimeOffset version)
+    protected override void SetInstalledVersion(DateTimeOffset version)
     {
-        return Task.CompletedTask;
+        // intentionally empty
     }
 }

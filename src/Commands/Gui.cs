@@ -5,6 +5,7 @@
 
 using System.Windows;
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interfaces;
@@ -14,15 +15,17 @@ namespace Media.Commands;
 internal sealed class Gui : GuiCommand<GuiWindow>
 {
     private readonly RadioStationsClient _radioStationsClient;
+    private readonly GuiDatabaseAdapter _guiDatabaseAdapter;
 
-    public Gui(RadioStationsClient radioStationsClient)
+    public Gui(RadioStationsClient radioStationsClient, GuiDatabaseAdapter guiDatabaseAdapter)
     {
         _radioStationsClient = radioStationsClient;
+        _guiDatabaseAdapter = guiDatabaseAdapter;
     }
 
     protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions)
     {
-        return new GuiViewModel(uiFunctions, _radioStationsClient);
+        return new GuiViewModel(uiFunctions, _radioStationsClient, _guiDatabaseAdapter);
     }
 
     protected override IWindowManipulator? CreateWindowManipulator()

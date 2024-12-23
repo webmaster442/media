@@ -7,40 +7,43 @@ using Media.Database;
 
 namespace Media.DbAdapters;
 
-public sealed class ConfigAdapter
+internal sealed class ConfigAdapter : DatabaseAdapterBase
 {
-    private readonly DatabaseContext _databaseContext;
-
-    public ConfigAdapter(DatabaseContext databaseContext)
-    {
-        _databaseContext = databaseContext;
-    }
-
     private T? Read<T>(string key) where T : IParsable<T>
     {
-        var rawValue = _databaseContext.Settings.Single(s => s.Key == key).Value;
+        using var databaseContext = GetContext();
+        var rawValue = databaseContext.Settings.Single(s => s.Key == key).Value;
         return T.Parse(rawValue, CultureInfo.InvariantCulture);
     }
 
     private string ReadString(string key)
-        => _databaseContext.Settings.Single(s => s.Key == key).Value;
+    {
+        using var databaseContext = GetContext();
+        return databaseContext.Settings.Single(s => s.Key == key).Value;
+    }
 
     private void WriteString(string key, string value)
     {
-        var setting = _databaseContext.Settings.Single(s => s.Key == key);
+        using var databaseContext = GetContext();
+        var setting = databaseContext.Settings.Single(s => s.Key == key);
         setting.Value = value;
+        databaseContext.SaveChanges();
     }
 
     public void Write<T>(string key, T value) where T : IFormattable, IParsable<T>
     {
-        var setting = _databaseContext.Settings.Single(s => s.Key == key);
+        using var databaseContext = GetContext();
+        var setting = databaseContext.Settings.Single(s => s.Key == key);
         setting.Value = value.ToString(null, CultureInfo.InvariantCulture);
+        databaseContext.SaveChanges();
     }
 
     public void WriteBool(string key, bool value)
     {
-        var setting = _databaseContext.Settings.Single(s => s.Key == key);
+        using var databaseContext = GetContext();
+        var setting = databaseContext.Settings.Single(s => s.Key == key);
         setting.Value = value.ToString(CultureInfo.InvariantCulture);
+        databaseContext.SaveChanges();
     }
 
     public DateTimeOffset FFMPegVesion
@@ -102,10 +105,4 @@ public sealed class ConfigAdapter
         get => Read<int>(ConfigKeys.DlnaServerPort);
         set => Write(ConfigKeys.DlnaServerPort, value);
     }
-
-    public void Save()
-        => _databaseContext.SaveChanges();
-
-    public async Task SaveAsync()
-        => await _databaseContext.SaveChangesAsync();
 }

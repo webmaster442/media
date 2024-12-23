@@ -3,7 +3,6 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using Media.Database;
 using Media.Database.Entity;
 using Media.Dto.Internals;
 
@@ -11,15 +10,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Media.DbAdapters;
 
-internal sealed class ApiCacheAdapter
+internal sealed class ApiCacheAdapter : DatabaseAdapterBase
 {
-    private readonly DatabaseContext _dbContext;
-
-    public ApiCacheAdapter(DatabaseContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public const string RadioCountries = "RadioCountries";
     public const string StationBase = "RadioStation_";
 
@@ -27,7 +19,9 @@ internal sealed class ApiCacheAdapter
 
     public async Task<CacheEntry?> GetEntry(string key)
     {
-        var entity = await _dbContext.ApiCacheEntries
+        using var dbContext = GetContext();
+
+        var entity = await dbContext.ApiCacheEntries
             .Where(x => x.Key == key)
             .FirstOrDefaultAsync();
 
@@ -46,7 +40,9 @@ internal sealed class ApiCacheAdapter
 
     public async Task SetEntry(string key, string value, DateTime curentDate, double validityInSeconds = DefaultValidity)
     {
-        var entity = await _dbContext.ApiCacheEntries
+        using var dbContext = GetContext();
+
+        var entity = await dbContext.ApiCacheEntries
             .Where(x => x.Key == key)
             .FirstOrDefaultAsync();
 
@@ -59,7 +55,7 @@ internal sealed class ApiCacheAdapter
                 ValidityInSeconds = validityInSeconds,
                 Value = value
             };
-            _dbContext.ApiCacheEntries.Add(entity);
+            dbContext.ApiCacheEntries.Add(entity);
         }
         else
         {
@@ -67,7 +63,7 @@ internal sealed class ApiCacheAdapter
             entity.ValidityInSeconds = validityInSeconds;
             entity.Value = value;
         }
-        await _dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
     }
 }
 

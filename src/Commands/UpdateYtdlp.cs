@@ -48,9 +48,8 @@ internal class UpdateYtdlp : BaseGithubUpdateCommand
     protected override ReleaseAsset SelectAssetToDownload(ReleaseAsset[] assets)
         => assets.First(a => a.Name.Contains("yt-dlp.exe"));
 
-    protected override async Task SetInstalledVersion(DateTimeOffset version)
+    protected override void SetInstalledVersion(DateTimeOffset version)
     {
         _configAccessor.YtdlpVesion = version;
-        await _configAccessor.SaveAsync();
     }
 }

@@ -54,7 +54,7 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
     protected abstract DateTimeOffset? GetInstalledVersion();
 
-    protected abstract Task SetInstalledVersion(DateTimeOffset version);
+    protected abstract void SetInstalledVersion(DateTimeOffset version);
 
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
@@ -109,7 +109,7 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
                 });
 
-                await SetInstalledVersion(latest.PublishedAt);
+                SetInstalledVersion(latest.PublishedAt);
 
                 File.Delete(tempName);
 

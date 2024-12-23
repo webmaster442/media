@@ -22,27 +22,47 @@
                     Header="Last played"
                     IsExpanded="True">
                     <StackPanel>
-                        <Button Style="{StaticResource LinkButton}" Content="Today" />
-                        <Button Style="{StaticResource LinkButton}" Content="Last 3 days" />
-                        <Button Style="{StaticResource LinkButton}" Content="This week" />
-                        <Button Style="{StaticResource LinkButton}" Content="This Month" />
-                        <Button Style="{StaticResource LinkButton}" Content="This year" />
-                        <Button Style="{StaticResource LinkButton}" Content="All time" />
+                        <Button
+                            Command="{Binding GetFromRangeCommand}"
+                            CommandParameter="today"
+                            Content="Today"
+                            Style="{StaticResource LinkButton}" />
+                        <Button
+                            Command="{Binding GetFromRangeCommand}"
+                            CommandParameter="last3days"
+                            Content="Last 3 days"
+                            Style="{StaticResource LinkButton}" />
+                        <Button
+                            Command="{Binding GetFromRangeCommand}"
+                            CommandParameter="week"
+                            Content="This week"
+                            Style="{StaticResource LinkButton}" />
+                        <Button
+                            Command="{Binding GetFromRangeCommand}"
+                            CommandParameter="month"
+                            Content="This Month"
+                            Style="{StaticResource LinkButton}" />
+                        <Button
+                            Command="{Binding GetFromRangeCommand}"
+                            CommandParameter="all"
+                            Content="All time"
+                            Style="{StaticResource LinkButton}" />
                     </StackPanel>
                 </Expander>
             </StackPanel>
         </ScrollViewer>
         <DataGrid
             x:Name="DatabaseGrid"
+            ItemsSource="{Binding Results}"
             Grid.Column="1"
-            SelectionMode="Single"
-            SelectionUnit="FullRow"
+            AutoGenerateColumns="True"
             CanUserAddRows="False"
             CanUserDeleteRows="False"
             CanUserReorderColumns="True"
             CanUserResizeColumns="True"
             CanUserResizeRows="False"
             CanUserSortColumns="True"
-            AutoGenerateColumns="True" />
+            SelectionMode="Single"
+            SelectionUnit="FullRow" />
     </Grid>
 </UserControl>

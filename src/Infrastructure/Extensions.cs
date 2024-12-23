@@ -12,6 +12,36 @@ namespace Media.Infrastructure;
 
 public static class Extensions
 {
+    public static (DateTime start, DateTime end) Day(this DateTime dateTime)
+    {
+        return (dateTime.Date, dateTime.Date.AddDays(1).AddTicks(-1));
+    }
+
+    public static (DateTime start, DateTime end) Last3Days(this DateTime dateTime)
+    {
+        return (dateTime.Date.AddDays(-3).Date, dateTime.Date.AddDays(1).AddTicks(-1));
+    }
+
+    public static (DateTime start, DateTime end) Week(this DateTime dateTime)
+    {
+        var diff = dateTime.DayOfWeek - CultureInfo.CurrentUICulture.DateTimeFormat.FirstDayOfWeek;
+        if (diff < 0)
+        {
+            diff += 7;
+        }
+        var startOfWeek = dateTime.AddDays(-1 * diff).Date;
+        var endOfWeek = startOfWeek.AddDays(7).AddTicks(-1);
+        return (startOfWeek, endOfWeek);
+    }
+
+    public static (DateTime start, DateTime end) Month(this DateTime dateTime)
+    {
+        var startOfMonth = new DateTime(dateTime.Year, dateTime.Month, 1);
+        var endOfMonth = startOfMonth.AddMonths(1).AddTicks(-1);
+        return (startOfMonth, endOfMonth);
+    }
+
+
     public static string? SkipToLine(this StringReader reader, string lineToSkipTo, int maxSkipCount = 100)
     {
         string? line;

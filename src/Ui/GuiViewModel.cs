@@ -6,6 +6,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Interfaces;
 using Media.Interop;
@@ -25,13 +26,16 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
 
     public AudioViewModel AudioViewModel { get; }
 
-    public GuiViewModel(IUiFunctions uiFunctions, RadioStationsClient radioStationsClient)
+    public DatabaseViewModel DatabaseViewModel { get; }
+
+    public GuiViewModel(IUiFunctions uiFunctions, RadioStationsClient radioStationsClient, GuiDatabaseAdapter guiDatabaseAdapter)
     {
         FilesViewModel = new FilesViewModel(uiFunctions);
         System = new SystemMenuViewModel();
         RadioStationsViewModel = new RadioStationsViewModel(radioStationsClient, uiFunctions);
         PlaylistViewModel = new PlaylistViewModel(uiFunctions);
         AudioViewModel = new AudioViewModel();
+        DatabaseViewModel = new DatabaseViewModel(guiDatabaseAdapter);
     }
 
     public void Initialize()
