@@ -40,6 +40,9 @@
             <TabItem Header="Playlist">
                 <Gui:PlayList DataContext="{Binding PlaylistViewModel}"/>
             </TabItem>
+            <TabItem Header="Database">
+                <Gui:DatabaseView/>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
