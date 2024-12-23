@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Dto.Internals;
 using Media.Infrastructure;
 
@@ -32,9 +33,9 @@ internal sealed class FFMpeg : InteropBase
     }
 
     private const string FfmpegBinary = "ffmpeg.exe";
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
-    public FFMpeg(ConfigAccessor configAccessor) : base(FfmpegBinary)
+    public FFMpeg(ConfigAdapter configAccessor) : base(FfmpegBinary)
     {
         _configAccessor = configAccessor;
     }

@@ -5,6 +5,7 @@
 
 using System.Threading;
 
+using Media.DbAdapters;
 using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
@@ -23,6 +24,7 @@ internal sealed class Play : BaseFileWorkCommand<Play.Settings>
 {
     private readonly int _remotePort;
     private readonly Mpv _mpv;
+    private readonly PlayedFilesAdapter _playedFilesAdapter;
 
     public class Settings : ValidatedCommandSettings
     {
@@ -54,10 +56,11 @@ internal sealed class Play : BaseFileWorkCommand<Play.Settings>
         }
     }
 
-    public Play(ConfigAccessor configAccessor)
+    public Play(ConfigAdapter configAccessor, PlayedFilesAdapter playedFilesAdapter)
     {
         _remotePort = configAccessor.MpvRemotePort;
         _mpv = new Mpv(configAccessor);
+        _playedFilesAdapter = playedFilesAdapter;
     }
 
     private async Task RunMpv(bool enableRemote, params string[] files)
@@ -69,6 +72,8 @@ internal sealed class Play : BaseFileWorkCommand<Play.Settings>
             builder.WithIpcServer(pipeName);
 
         builder.WithInputFiles(files);
+
+        await _playedFilesAdapter.AddPlayedFilesAsync(files);
 
         using var process = _mpv.CreateProcess(builder.Build(),
                                                redirectStdIn: false,

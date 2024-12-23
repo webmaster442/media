@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Windows.Xps.Packaging;
+
 using Media.Database;
 using Media.Database.Entity;
 
@@ -26,14 +28,24 @@ internal sealed class PlayedFilesAdapter
             .ToHashSetAsync();
     }
 
-    public async Task AddPlayedFileAsync(IEnumerable<string> files)
+    public async Task AddPlayedFilesAsync(IEnumerable<string> files)
     {
-        var entries = files.Select(file => new PlayedEntry
+        foreach (var file in files)
         {
-            Path = file,
-            LastPlayed = DateTime.Now
-        });
-        await _dbContext.PlayedEntries.AddRangeAsync(entries);
+            var entry = await _dbContext.PlayedEntries.FindAsync(file);
+            if (entry is not null)
+            {
+                entry.LastPlayed = DateTime.Now;
+            }
+            else
+            {
+                await _dbContext.PlayedEntries.AddAsync(new PlayedEntry
+                {
+                    Path = file,
+                    LastPlayed = DateTime.Now
+                });
+            }
+        }
         await _dbContext.SaveChangesAsync();
     }
 

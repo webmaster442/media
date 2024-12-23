@@ -5,8 +5,8 @@
 
 using System.Diagnostics;
 
+using Media.DbAdapters;
 using Media.Dto.Internals;
-using Media.Infrastructure;
 
 namespace Media.Interop;
 
@@ -75,9 +75,9 @@ internal sealed class YtDlp : InteropBase
     }
 
     private const string YtdlpBinary = "yt-dlp.exe";
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
-    public YtDlp(ConfigAccessor configAccessor) : base(YtdlpBinary)
+    public YtDlp(ConfigAdapter configAccessor) : base(YtdlpBinary)
     {
         _configAccessor = configAccessor;
     }

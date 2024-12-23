@@ -5,13 +5,13 @@
 
 using Media.Database;
 
-namespace Media.Infrastructure;
+namespace Media.DbAdapters;
 
-public sealed class ConfigAccessor
+public sealed class ConfigAdapter
 {
     private readonly DatabaseContext _databaseContext;
 
-    public ConfigAccessor(DatabaseContext databaseContext)
+    public ConfigAdapter(DatabaseContext databaseContext)
     {
         _databaseContext = databaseContext;
     }

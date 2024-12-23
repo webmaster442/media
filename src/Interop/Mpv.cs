@@ -5,17 +5,17 @@
 
 using System.IO.Pipes;
 
+using Media.DbAdapters;
 using Media.Dto;
-using Media.Infrastructure;
 
 namespace Media.Interop;
 
 internal sealed class Mpv : InteropBase
 {
     private const string MpvBinary = "mpv.exe";
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
-    public Mpv(ConfigAccessor configAccessor) : base(MpvBinary)
+    public Mpv(ConfigAdapter configAccessor) : base(MpvBinary)
     {
         _configAccessor = configAccessor;
     }

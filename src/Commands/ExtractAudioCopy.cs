@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
@@ -13,7 +14,7 @@ namespace Media.Commands;
 [Example("Extract the 2nd audio stream from a video file without reencoding", "media extract audio input.mkv output.ac3 -a 1")]
 internal sealed class ExtractAudioCopy : BaseFFMpegCommand<ExtractAudioCopy.Settings>
 {
-    public ExtractAudioCopy(ConfigAccessor configAccessor)
+    public ExtractAudioCopy(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

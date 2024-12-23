@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Dto.Github;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
@@ -12,9 +13,9 @@ namespace Media.Commands;
 [Example("Update yt-dlp", "media update ytdlp")]
 internal class UpdateYtdlp : BaseGithubUpdateCommand
 {
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
-    public UpdateYtdlp(ConfigAccessor configAccessor)
+    public UpdateYtdlp(ConfigAdapter configAccessor)
         : base(programName: "yt-dlp",
                exeName: "yt-dlp.exe",
                repoOwner: "yt-dlp",

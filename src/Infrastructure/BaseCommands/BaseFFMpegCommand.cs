@@ -5,6 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
+using Media.DbAdapters;
 using Media.Interop;
 
 namespace Media.Infrastructure.BaseCommands;
@@ -12,10 +13,10 @@ namespace Media.Infrastructure.BaseCommands;
 internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
 : Command<TBaseFFMpegSettings> where TBaseFFMpegSettings : BaseFFMpegSettings
 {
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
     private readonly FFMpeg _ffMpeg;
 
-    protected BaseFFMpegCommand(ConfigAccessor configAccessor)
+    protected BaseFFMpegCommand(ConfigAdapter configAccessor)
     {
         _configAccessor = configAccessor;
         _ffMpeg = new FFMpeg(_configAccessor);

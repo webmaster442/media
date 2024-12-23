@@ -5,6 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
+using Media.DbAdapters;
 using Media.Dto.Internals;
 using Media.Infrastructure;
 using Media.Interop;
@@ -40,7 +41,7 @@ internal class InfoEncoders : Command<InfoEncoders.Settings>
 
     private readonly FFMpeg _ffMpeg;
 
-    public InfoEncoders(ConfigAccessor configAccessor)
+    public InfoEncoders(ConfigAdapter configAccessor)
     {
         _ffMpeg = new FFMpeg(configAccessor);
     }

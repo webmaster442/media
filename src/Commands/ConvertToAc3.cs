@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
@@ -12,7 +13,7 @@ namespace Media.Commands;
 [Example("Convert a file to Dolby Digital AC-3 with 256k bitrate", "media convert ac3 input.wav output.ac3 -b 256k")]
 internal sealed class ConvertToAc3 : BaseFFMpegCommand<ConvertToAc3.Settings>
 {
-    public ConvertToAc3(ConfigAccessor configAccessor)
+    public ConvertToAc3(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

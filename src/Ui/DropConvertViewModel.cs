@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Media.DbAdapters;
 using Media.Dto;
 using Media.Infrastructure;
 using Media.Interfaces;
@@ -34,7 +35,7 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
 
     public ObservableCollection<Preset> PresetCollection { get; }
 
-    public DropConvertViewModel(IUiFunctions uiFunctions, ConfigAccessor configAccessor)
+    public DropConvertViewModel(IUiFunctions uiFunctions, ConfigAdapter configAccessor)
     {
         _uiFunctions = uiFunctions;
         _fFMpeg = new FFMpeg(configAccessor);

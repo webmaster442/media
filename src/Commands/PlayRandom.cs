@@ -41,7 +41,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 
     internal record class DirectoryEntry(string Name, string Path);
 
-    public PlayRandom(ConfigAccessor configAccessor, PlayedFilesAdapter documentStore)
+    public PlayRandom(ConfigAdapter configAccessor, PlayedFilesAdapter documentStore)
     {
         _mpv = new Mpv(configAccessor);
         _randomSelectorProvider = new();
@@ -73,7 +73,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 
             if (files.Any())
             {
-                await _documentStore.AddPlayedFileAsync(files);
+                await _documentStore.AddPlayedFilesAsync(files);
                 builder.WithInputFiles(files);
                 _mpv.Start(builder);
             }
@@ -87,7 +87,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 
             if (files.Any())
             {
-                await _documentStore.AddPlayedFileAsync(files);
+                await _documentStore.AddPlayedFilesAsync(files);
                 builder.WithInputFiles(files);
                 _mpv.Start(builder);
             }

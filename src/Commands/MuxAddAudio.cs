@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Infrastructure.Validation;
@@ -13,7 +14,7 @@ namespace Media.Commands;
 [Example("Add an audio track to an existing file", "media mux add-audio existing.mkv output.mkv -a audio.m4a")]
 internal sealed class MuxAddAudio : BaseFFMpegCommand<MuxAddAudio.Settings>
 {
-    public MuxAddAudio(ConfigAccessor configAccessor)
+    public MuxAddAudio(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

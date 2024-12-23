@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
@@ -14,7 +15,7 @@ namespace Media.Commands;
 
 internal sealed class ConvertNtscDvd : BaseFFMpegCommand<ConvertNtscDvd.Settings>
 {
-    public ConvertNtscDvd(ConfigAccessor configAccessor)
+    public ConvertNtscDvd(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

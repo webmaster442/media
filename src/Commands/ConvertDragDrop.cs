@@ -5,6 +5,7 @@
 
 using System.Windows;
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interfaces;
@@ -15,7 +16,7 @@ namespace Media.Commands;
 [Example("Open a window to convert a file by drag and drop", "media convert drop")]
 internal class ConvertDragDrop : GuiCommand<DropConvertWindow>
 {
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
     internal class DropWindowManipulator : IWindowManipulator
     {
@@ -32,7 +33,7 @@ internal class ConvertDragDrop : GuiCommand<DropConvertWindow>
         }
     }
 
-    public ConvertDragDrop(ConfigAccessor configAccessor)
+    public ConvertDragDrop(ConfigAdapter configAccessor)
     {
         _configAccessor = configAccessor;
     }

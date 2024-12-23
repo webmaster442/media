@@ -5,6 +5,7 @@
 
 using System.Diagnostics;
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 
 namespace Media.Commands;
@@ -12,9 +13,9 @@ namespace Media.Commands;
 [Example("Open the config file in the default editor", "media config")]
 internal sealed class Config : AsyncCommand
 {
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
-    public Config(ConfigAccessor configAccessor)
+    public Config(ConfigAdapter configAccessor)
     {
         _configAccessor = configAccessor;
     }

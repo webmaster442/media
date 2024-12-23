@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Dto.Github;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
@@ -14,9 +15,9 @@ namespace Media.Commands;
 [Example("Update mpv", "media update mpv")]
 internal sealed class UpdateMpv : BaseGithubUpdateCommand
 {
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
-    public UpdateMpv(ConfigAccessor configAccessor)
+    public UpdateMpv(ConfigAdapter configAccessor)
         : base(programName: "mpv",
                exeName: "mpv.exe",
                repoOwner: "shinchiro",

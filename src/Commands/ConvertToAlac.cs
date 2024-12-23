@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
@@ -12,7 +13,7 @@ namespace Media.Commands;
 [Example("Convert a file to Aplle losless", "media convert input.wav output.m4a")]
 internal sealed class ConvertToAlac : BaseFFMpegCommand<ConvertToAlac.Settings>
 {
-    public ConvertToAlac(ConfigAccessor configAccessor)
+    public ConvertToAlac(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

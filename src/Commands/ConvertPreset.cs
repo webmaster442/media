@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Dto;
 using Media.Infrastructure;
 using Media.Infrastructure.Validation;
@@ -42,7 +43,7 @@ internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
         }
     }
 
-    public ConvertPreset(ConfigAccessor configAccessor)
+    public ConvertPreset(ConfigAdapter configAccessor)
     {
         _ffmpeg = new FFMpeg(configAccessor);
     }

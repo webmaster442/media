@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
@@ -13,7 +14,7 @@ namespace Media.Commands;
 [Example("Convert a video file to PAL DVD compatible MPEG2 with letterbox (4:3) aspect", "media convert dvd-pal input.mp4 output.mpg -b 192k -l")]
 internal sealed class ConvertPalDvd : BaseFFMpegCommand<ConvertPalDvd.Settings>
 {
-    public ConvertPalDvd(ConfigAccessor configAccessor)
+    public ConvertPalDvd(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

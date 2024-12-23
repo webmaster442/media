@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Infrastructure.Validation;
@@ -13,7 +14,7 @@ namespace Media.Commands;
 [Example("Add a subtitle track to an existing file", "media mux add-subtitle existing.mkv output.mkv -s subtitle.srt")]
 internal sealed class MuxAddSubtitle : BaseFFMpegCommand<MuxAddSubtitle.Settings>
 {
-    public MuxAddSubtitle(ConfigAccessor configAccessor)
+    public MuxAddSubtitle(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
@@ -12,7 +13,7 @@ namespace Media.Commands;
 [Example("Convert an audio file to CD compatible wav", "media convert cdwav input.mp3 output.wav")]
 internal sealed class ConvertToCdWav : BaseFFMpegCommand<ConvertToCdWav.Settings>
 {
-    public ConvertToCdWav(ConfigAccessor configAccessor)
+    public ConvertToCdWav(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

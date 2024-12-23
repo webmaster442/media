@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
@@ -12,7 +13,7 @@ namespace Media.Commands;
 [Example("Convert a file to mp3 with 320k bitrate", "media convert mp3 input.wav output.mp3 -b 320k")]
 internal sealed class ConvertToMp3 : BaseFFMpegCommand<ConvertToMp3.Settings>
 {
-    public ConvertToMp3(ConfigAccessor configAccessor)
+    public ConvertToMp3(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

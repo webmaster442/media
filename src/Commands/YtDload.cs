@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Interop;
 
@@ -25,7 +26,7 @@ internal class YtDload : AsyncCommand<YtDload.Settings>
         public YtDlpQuality Quality { get; init; }
     }
 
-    public YtDload(ConfigAccessor configAccessor)
+    public YtDload(ConfigAdapter configAccessor)
     {
         _ytdlp = new YtDlp(configAccessor);
     }

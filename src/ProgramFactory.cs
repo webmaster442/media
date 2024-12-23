@@ -24,8 +24,8 @@ internal static class ProgramFactory
 
         var services = new ServiceCollection();
         services.AddSingleton(db);
-        services.AddSingleton<ConfigAccessor>();
-        services.AddSingleton<ConfigAccessor>();
+        services.AddSingleton<ConfigAdapter>();
+        services.AddSingleton<ConfigAdapter>();
         services.AddSingleton<PlayedFilesAdapter>();
         services.AddSingleton<ApiCacheAdapter>();
         services.AddSingleton<RadioStationsClient>();

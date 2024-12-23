@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Embedded;
 using Media.Infrastructure;
 using Media.Interop;
@@ -16,7 +17,7 @@ internal sealed class InfoHwEncoders : AsyncCommand
 {
     private readonly FFMpeg _ffMpeg;
 
-    public InfoHwEncoders(ConfigAccessor configAccessor)
+    public InfoHwEncoders(ConfigAdapter configAccessor)
     {
         _ffMpeg = new FFMpeg(configAccessor);
     }

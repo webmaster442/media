@@ -5,6 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.Validation;
 
@@ -30,7 +31,7 @@ internal sealed class Sereve : Command<Sereve.Settings>
         public string Folder { get; set; } = Environment.CurrentDirectory;
     }
 
-    public Sereve(ConfigAccessor configAccessor)
+    public Sereve(ConfigAdapter configAccessor)
     {
         _dlnaServerPort = configAccessor.DlnaServerPort;
     }

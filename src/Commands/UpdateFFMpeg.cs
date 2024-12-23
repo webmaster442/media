@@ -5,6 +5,7 @@
 
 using System.IO.Compression;
 
+using Media.DbAdapters;
 using Media.Dto.Github;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
@@ -14,9 +15,9 @@ namespace Media.Commands;
 [Example("Update ffmpeg", "media update ffmpeg")]
 internal sealed class UpdateFFMpeg : BaseGithubUpdateCommand
 {
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
-    public UpdateFFMpeg(ConfigAccessor configAccessor)
+    public UpdateFFMpeg(ConfigAdapter configAccessor)
         : base(programName: "FFMpeg",
                exeName: "ffmpeg.exe",
                repoOwner: "BtbN",

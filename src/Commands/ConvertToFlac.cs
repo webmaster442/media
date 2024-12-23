@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
@@ -13,7 +14,7 @@ namespace Media.Commands;
 [Example("Convert a file to flac with maximal compression", "media convert input.wav output.flac -c 12")]
 internal sealed class ConvertToFlac : BaseFFMpegCommand<ConvertToFlac.Settings>
 {
-    public ConvertToFlac(ConfigAccessor configAccessor)
+    public ConvertToFlac(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

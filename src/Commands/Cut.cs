@@ -5,6 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.Validation;
 using Media.Interop;
@@ -55,7 +56,7 @@ internal sealed class Cut : Command<Cut.Settings>
         return false;
     }
 
-    public Cut(ConfigAccessor configAccessor)
+    public Cut(ConfigAdapter configAccessor)
     {
         _ffMpeg = new FFMpeg(configAccessor);
     }

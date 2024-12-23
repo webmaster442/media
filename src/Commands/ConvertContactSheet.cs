@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
@@ -12,7 +13,7 @@ namespace Media.Commands;
 [Example("Convert a video to a contact sheet", "media contactsheet --rows 5 --cols 5 input.mp4 output.jpg")]
 internal sealed class ConvertContactSheet : BaseFFMpegCommand<ConvertContactSheet.Settings>
 {
-    public ConvertContactSheet(ConfigAccessor configAccessor)
+    public ConvertContactSheet(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

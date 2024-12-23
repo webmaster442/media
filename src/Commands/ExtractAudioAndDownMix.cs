@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 using Media.Infrastructure.BaseCommands;
 using Media.Interop;
@@ -13,7 +14,7 @@ namespace Media.Commands;
 [Example("Extract the 2nd audio stream from a video and convert it to a stereo m4a", "media extract stereo-m4a video.mp4 output.m4a -b 256k -a 1")]
 internal class ExtractAudioStereoM4a : BaseFFMpegCommand<ExtractAudioStereoM4a.Settings>
 {
-    public ExtractAudioStereoM4a(ConfigAccessor configAccessor)
+    public ExtractAudioStereoM4a(ConfigAdapter configAccessor)
         : base(configAccessor)
     {
     }

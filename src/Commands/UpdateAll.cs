@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Infrastructure;
 
 namespace Media.Commands;
@@ -10,9 +11,9 @@ namespace Media.Commands;
 [Example("Update all tools", "media update all")]
 internal sealed class UpdateAll : AsyncCommand
 {
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
-    public UpdateAll(ConfigAccessor configAccessor)
+    public UpdateAll(ConfigAdapter configAccessor)
     {
         _configAccessor = configAccessor;
     }
