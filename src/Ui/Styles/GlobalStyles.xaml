@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Media.Ui.Controls"
     xmlns:converters="clr-namespace:Media.Ui.Converters"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="clr-namespace:Media.Ui">
 
     <SolidColorBrush
@@ -23,6 +24,8 @@
     <SolidColorBrush
         x:Key="Yellow"
         Color="#C19C00" />
+
+    <system:Double x:Key="ListFontSize">18</system:Double>
 
     <Style TargetType="controls:ImageDisplayControl">
         <Setter Property="Template">

@@ -18,17 +18,17 @@ internal partial class FilesViewModel : ObservableObject
     private readonly IUiFunctions _uiFunctions;
 
     [ObservableProperty]
-    private string _currentPath;
+    public partial string CurrentPath { get; set; }
 
     public ObservableRangeCollection<DriveModel> Drives { get; }
     public ObservableRangeCollection<PathPartModel> PathParts { get; }
     public ObservableRangeCollection<FolderItem> Items { get; }
 
     [ObservableProperty]
-    private bool _showHidden;
+    public partial bool ShowHidden { get; set; }
 
     [ObservableProperty]
-    private FolderItem? _selectedItem;
+    public partial FolderItem? SelectedItem { get; set; }
 
     partial void OnShowHiddenChanged(bool value)
     {
@@ -37,8 +37,8 @@ internal partial class FilesViewModel : ObservableObject
 
     public FilesViewModel(IUiFunctions uiFunctions)
     {
-        _selectedItem = null;
-        _currentPath = string.Empty;
+        SelectedItem = null;
+        CurrentPath = string.Empty;
         Drives = new ObservableRangeCollection<DriveModel>();
         PathParts = new ObservableRangeCollection<PathPartModel>();
         Items = new ObservableRangeCollection<FolderItem>();

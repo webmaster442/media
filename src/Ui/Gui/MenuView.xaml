@@ -38,7 +38,7 @@
                         Glyph="CommandPrompt" />
                 </MenuItem.Icon>
             </MenuItem>
-            <Separator/>
+            <Separator />
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Header="Show hidden files"
@@ -49,7 +49,7 @@
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding RandomPlayCommand}"
-                CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
+                CommandParameter="1"
                 Header="Play a random file from this folder"
                 Tag="0">
                 <MenuItem.Icon>
@@ -57,11 +57,26 @@
                         FontSize="22"
                         Glyph="Asterisk" />
                 </MenuItem.Icon>
+                <MenuItem
+                    Click="SetCorrectTabFromTag"
+                    Command="{Binding RandomPlayCommand}"
+                    CommandParameter="5"
+                    Header="Launch a playlist of 5 items"
+                    Tag="0" />
+                <MenuItem
+                    Click="SetCorrectTabFromTag"
+                    Command="{Binding RandomPlayCommand}"
+                    CommandParameter="10"
+                    Header="Launch a playlist of 10 items" />
+                <MenuItem
+                    Click="SetCorrectTabFromTag"
+                    Command="{Binding RandomPlayCommand}"
+                    CommandParameter="20"
+                    Header="Launch a playlist of 20 items" />
             </MenuItem>
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding ImgViewCommand}"
-                CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
                 Header="Start image viewer"
                 Tag="0">
                 <MenuItem.Icon>
@@ -188,7 +203,6 @@
             <Separator />
             <MenuItem
                 Command="{Binding ServeCommand}"
-                CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
                 Header="Start dlna serverver is this folder">
                 <MenuItem.Icon>
                     <controls:FontIcon

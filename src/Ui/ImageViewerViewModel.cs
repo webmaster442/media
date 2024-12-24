@@ -22,7 +22,7 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
     public ObservableRangeCollection<string> ImageFiles { get; }
 
     [ObservableProperty]
-    private string _currentImage;
+    public partial string CurrentImage { get; set; }
 
     partial void OnCurrentImageChanged(string value)
     {

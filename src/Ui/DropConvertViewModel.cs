@@ -22,16 +22,16 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
     private readonly FFMpeg _fFMpeg;
 
     [ObservableProperty]
-    private string _selectedPath;
+    public partial string SelectedPath { get; set; }
 
-    partial void OnSelectedPathChanged(string? oldValue, string newValue)
+    partial void OnSelectedPathChanged(string oldValue, string newValue)
         => SelectedPathDisplay = Path.GetFileName(newValue);
 
     [ObservableProperty]
-    private string _selectedPathDisplay;
+    public partial string SelectedPathDisplay { get; set; }
 
     [ObservableProperty]
-    private Preset? _selectedPreset;
+    public partial Preset? SelectedPreset { get; set; }
 
     public ObservableCollection<Preset> PresetCollection { get; }
 
@@ -39,8 +39,8 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
     {
         _uiFunctions = uiFunctions;
         _fFMpeg = new FFMpeg(configAccessor);
-        _selectedPath = Environment.CurrentDirectory;
-        _selectedPathDisplay = Path.GetFileName(_selectedPath);
+        SelectedPath = Environment.CurrentDirectory;
+        SelectedPathDisplay = Path.GetFileName(SelectedPath);
         PresetCollection = new ObservableCollection<Preset>();
     }
 

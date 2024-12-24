@@ -57,6 +57,8 @@
             Grid.Column="1"
             AutoGenerateColumns="True"
             CanUserAddRows="False"
+            IsReadOnly="True"
+            FontSize="{StaticResource ListFontSize}"
             CanUserDeleteRows="False"
             CanUserReorderColumns="True"
             CanUserResizeColumns="True"

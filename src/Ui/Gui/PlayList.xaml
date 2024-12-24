@@ -8,5 +8,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <ListBox ItemsSource="{Binding PlaylistItems}"/>
+    <ListBox
+        FontSize="{StaticResource ListFontSize}"
+        ItemsSource="{Binding PlaylistItems}" />
 </UserControl>
