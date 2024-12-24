@@ -2,6 +2,7 @@
     x:Class="Media.Ui.Gui.DatabaseView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Media.Ui.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Media.Ui.Gui"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -19,6 +20,7 @@
             VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <Expander
+                    controls:AcordionBehaviour.IsAcordionGroup="True"
                     Header="Last played"
                     IsExpanded="True">
                     <StackPanel>
@@ -49,21 +51,30 @@
                             Style="{StaticResource LinkButton}" />
                     </StackPanel>
                 </Expander>
+                <Expander
+                    controls:AcordionBehaviour.IsAcordionGroup="True"
+                    Header="Maintenance">
+                    <StackPanel>
+                        <Button
+                            Content="Delete non existing played..."
+                            Style="{StaticResource LinkButton}" />
+                    </StackPanel>
+                </Expander>
             </StackPanel>
         </ScrollViewer>
         <DataGrid
             x:Name="DatabaseGrid"
-            ItemsSource="{Binding Results}"
             Grid.Column="1"
             AutoGenerateColumns="True"
             CanUserAddRows="False"
-            IsReadOnly="True"
-            FontSize="{StaticResource ListFontSize}"
             CanUserDeleteRows="False"
             CanUserReorderColumns="True"
             CanUserResizeColumns="True"
             CanUserResizeRows="False"
             CanUserSortColumns="True"
+            FontSize="{StaticResource ListFontSize}"
+            IsReadOnly="True"
+            ItemsSource="{Binding Results}"
             SelectionMode="Single"
             SelectionUnit="FullRow" />
     </Grid>
