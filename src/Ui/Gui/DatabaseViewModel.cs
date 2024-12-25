@@ -2,21 +2,28 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
+using Media.Database.Entity;
 using Media.DbAdapters;
 using Media.Infrastructure;
+using Media.Interfaces;
+using Media.Interop;
 
 namespace Media.Ui.Gui;
 
 internal partial class DatabaseViewModel : ObservableObject
 {
+    private readonly IUiFunctions _uiFunctions;
     private readonly GuiDatabaseAdapter _guiDatabaseAdapter;
 
     [ObservableProperty]
     public partial IEnumerable Results { get; set; }
 
-    public DatabaseViewModel(GuiDatabaseAdapter guiDatabaseAdapter)
+    public DatabaseViewModel(IUiFunctions uiFunctions,
+                             GuiDatabaseAdapter guiDatabaseAdapter)
     {
+        _uiFunctions = uiFunctions;
         _guiDatabaseAdapter = guiDatabaseAdapter;
         Results = Enumerable.Empty<object>();
     }
@@ -24,25 +31,73 @@ internal partial class DatabaseViewModel : ObservableObject
     [RelayCommand]
     private async Task GetFromRange(string rangeParam)
     {
+        _uiFunctions.BeginAsyncOperation();
         (DateTime start, DateTime end) range = (DateTime.MinValue, DateTime.MaxValue);
         switch (rangeParam)
         {
             case "today":
                 range = DateTime.Now.Day();
                 break;
+
             case "last3days":
                 range = DateTime.Now.Last3Days();
                 break;
+
             case "week":
                 range = DateTime.Now.Week();
                 break;
+
             case "month":
                 range = DateTime.Now.Month();
                 break;
+
             case "all":
                 range = (DateTime.MinValue, DateTime.MaxValue);
                 break;
         }
         Results = await _guiDatabaseAdapter.GetPlayedEntries(range.start, range.end);
+        _uiFunctions.EndAsyncOperation();
+    }
+
+    [RelayCommand]
+    private async Task Cleanup()
+    {
+        _uiFunctions.BeginAsyncOperation();
+        var paths = await _guiDatabaseAdapter.GetPlayedThatNotExists();
+        _uiFunctions.EndAsyncOperation();
+        if (paths.Count > 0)
+        {
+            var result = _uiFunctions.ConfirmMessage($"Are you sure that you want to delete {0} entries from the database?", "Confirmation");
+            if (result)
+            {
+                _uiFunctions.BeginAsyncOperation();
+                await _guiDatabaseAdapter.RemovePlayedEntries(paths);
+                _uiFunctions.EndAsyncOperation();
+            }
+        }
+    }
+
+    private bool CanPlay(object item)
+        => item is PlayedEntry playedEntry && File.Exists(playedEntry.Path);
+
+    [RelayCommand(CanExecute = nameof(CanPlay))]
+    private void Play(object item)
+    {
+        if (item is PlayedEntry playedEntry)
+        {
+            SelfInterop.Play(playedEntry.Path);
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanPlay))]
+    public void SendToPlaylist(object item)
+    {
+        if (item is PlayedEntry playedEntry)
+        {
+            WeakReferenceMessenger.Default.Send(new PlaylistViewModel.AddToPlaylistMessage
+            {
+                FullPath = playedEntry.Path
+            });
+        }
     }
 }

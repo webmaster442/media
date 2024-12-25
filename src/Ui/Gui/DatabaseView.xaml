@@ -56,6 +56,7 @@
                     Header="Maintenance">
                     <StackPanel>
                         <Button
+                            Command="{Binding CleanupCommand}"
                             Content="Delete non existing played..."
                             Style="{StaticResource LinkButton}" />
                     </StackPanel>
@@ -76,6 +77,19 @@
             IsReadOnly="True"
             ItemsSource="{Binding Results}"
             SelectionMode="Single"
-            SelectionUnit="FullRow" />
+            SelectionUnit="FullRow">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem
+                        Command="{Binding PlayCommand}"
+                        CommandParameter="{Binding ElementName=DatabaseGrid, Path=SelectedItem}"
+                        Header="Play with mpv" />
+                    <MenuItem
+                        Command="{Binding SendToPlaylistCommand}"
+                        CommandParameter="{Binding ElementName=DatabaseGrid, Path=SelectedItem}"
+                        Header="Add to playlist" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
     </Grid>
 </UserControl>

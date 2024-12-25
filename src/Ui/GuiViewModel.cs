@@ -28,14 +28,16 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
 
     public DatabaseViewModel DatabaseViewModel { get; }
 
-    public GuiViewModel(IUiFunctions uiFunctions, RadioStationsClient radioStationsClient, GuiDatabaseAdapter guiDatabaseAdapter)
+    public GuiViewModel(IUiFunctions uiFunctions,
+                        RadioStationsClient radioStationsClient,
+                        GuiDatabaseAdapter guiDatabaseAdapter)
     {
         FilesViewModel = new FilesViewModel(uiFunctions);
         System = new SystemMenuViewModel();
         RadioStationsViewModel = new RadioStationsViewModel(radioStationsClient, uiFunctions);
         PlaylistViewModel = new PlaylistViewModel(uiFunctions);
         AudioViewModel = new AudioViewModel();
-        DatabaseViewModel = new DatabaseViewModel(guiDatabaseAdapter);
+        DatabaseViewModel = new DatabaseViewModel(uiFunctions, guiDatabaseAdapter);
     }
 
     public void Initialize()

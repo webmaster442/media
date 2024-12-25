@@ -21,6 +21,12 @@ internal class UiFunctionsImplementation : IUiFunctions
         MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
     }
 
+    public bool ConfirmMessage(string message, string title)
+    {
+        var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
+        return result == MessageBoxResult.Yes;
+    }
+
     public void Exit(int exitCode)
         => Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown(exitCode));
 
@@ -47,7 +53,6 @@ internal class UiFunctionsImplementation : IUiFunctions
 
     public void Report(double value)
     {
-
         var mainWin = App.Current.MainWindow;
         if (mainWin.TaskbarItemInfo == null)
             mainWin.TaskbarItemInfo = new TaskbarItemInfo();
@@ -76,13 +81,12 @@ internal class UiFunctionsImplementation : IUiFunctions
             mainWin.TaskbarItemInfo = new TaskbarItemInfo();
 
         mainWin.TaskbarItemInfo.ProgressState = Map(state);
-
     }
 
     public void WarningMessage(string message, string title)
         => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
 
-    public void BlockUi()
+    public void BeginAsyncOperation()
     {
         var blocker = FindLogicalChildren<AsyncBlocker>(App.Current.MainWindow).FirstOrDefault();
         if (blocker != null)
@@ -102,7 +106,7 @@ internal class UiFunctionsImplementation : IUiFunctions
         SetProgressState(ProgressState.Indeterminate);
     }
 
-    public void UnblockUi()
+    public void EndAsyncOperation()
     {
         var blocker = FindLogicalChildren<AsyncBlocker>(App.Current.MainWindow).FirstOrDefault();
         blocker?.Hide();

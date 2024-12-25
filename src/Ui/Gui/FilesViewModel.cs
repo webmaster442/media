@@ -181,7 +181,10 @@ internal partial class FilesViewModel : ObservableObject
     {
         if (item.FileType.IsMpvSupportedType())
         {
-            WeakReferenceMessenger.Default.Send(item);
+            WeakReferenceMessenger.Default.Send(new PlaylistViewModel.AddToPlaylistMessage
+            { 
+                FullPath = item.FullPath
+            });
         }
     }
 

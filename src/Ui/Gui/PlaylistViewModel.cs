@@ -15,22 +15,26 @@ namespace Media.Ui.Gui;
 
 internal partial class PlaylistViewModel : ObservableObject
 {
+    public class AddToPlaylistMessage
+    {
+        public required string FullPath { get; init; }
+    }
+
+
     public BindingList<string> PlaylistItems { get; }
 
     private readonly IUiFunctions _uiFunctions;
-    
+
 
     public PlaylistViewModel(IUiFunctions uiFunctions)
     {
         PlaylistItems = new BindingList<string>();
         _uiFunctions = uiFunctions;
-        WeakReferenceMessenger.Default.Register<FolderItem>(this, OnFolderItemRecieved);
+        WeakReferenceMessenger.Default.Register<AddToPlaylistMessage>(this, OnAddToPlaylist);
     }
 
-    private void OnFolderItemRecieved(object recipient, FolderItem message)
-    {
-        PlaylistItems.Add(message.FullPath);
-    }
+    private void OnAddToPlaylist(object recipient, AddToPlaylistMessage message)
+        => PlaylistItems.Add(message.FullPath);
 
     [RelayCommand]
     private async Task Load()

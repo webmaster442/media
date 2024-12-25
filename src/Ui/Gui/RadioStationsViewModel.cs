@@ -33,21 +33,21 @@ internal sealed partial class RadioStationsViewModel : ObservableObject, IViewMo
 
     public async void Initialize()
     {
-        _uiFunctions.BlockUi();
+        _uiFunctions.BeginAsyncOperation();
         var countries = await _radioStationsClient.GetRadioStationCountries();
         Countries.Clear();
         Countries.AddRange(countries);
-        _uiFunctions.UnblockUi();
+        _uiFunctions.EndAsyncOperation();
     }
 
     [RelayCommand]
     private async Task CountrySelect(Country selection)
     {
-        _uiFunctions.BlockUi();
+        _uiFunctions.BeginAsyncOperation();
         var stations = await _radioStationsClient.GetRadioStations(selection.Name);
         Stations.Clear();
         Stations.AddRange(stations);
-        _uiFunctions.UnblockUi();
+        _uiFunctions.EndAsyncOperation();
     }
 
     [RelayCommand]
