@@ -33,9 +33,6 @@ mainApp.Configure(config =>
     config.AddCommand<Sereve>("serve")
         .WithDescription("Start a DLNA server");
 
-    config.AddCommand<Config>("config")
-        .WithDescription("Edit the configuration file");
-
     config.AddCommand<Website>("website")
         .WithDescription("Open the project website");
 
@@ -44,6 +41,17 @@ mainApp.Configure(config =>
 
     config.AddCommand<Gui>("gui")
         .WithDescription("Start the graphical user interface");
+
+    config.AddBranch("config", cfg =>
+    {
+        cfg.SetDescription("Configuration related commands");
+
+        cfg.AddCommand<ConfigList>("list")
+            .WithDescription("List all configuration values");
+
+        cfg.AddCommand<ConfigSet>("set")
+            .WithDescription("Set a configuration value");
+    });
 
     config.AddBranch("play", play =>
     {

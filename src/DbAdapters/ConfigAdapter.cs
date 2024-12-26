@@ -46,18 +46,21 @@ internal sealed class ConfigAdapter : DatabaseAdapterBase
         databaseContext.SaveChanges();
     }
 
+    [Description("Lastly installed FFMpeg Build Date")]
     public DateTimeOffset FFMPegVesion
     {
         get => Read<DateTimeOffset>(ConfigKeys.FFMpegVersion);
         set => Write(ConfigKeys.FFMpegVersion, value);
     }
 
+    [Description("Lastly installed MPV Build Date")]
     public DateTimeOffset MpvVesion
     {
         get => Read<DateTimeOffset>(ConfigKeys.MpvVersion);
         set => Write(ConfigKeys.MpvVersion, value);
     }
 
+    [Description("Lastly installed Yt-dlp Build Date")]
     public DateTimeOffset YtdlpVesion
     {
         get => Read<DateTimeOffset>(ConfigKeys.YtdlpVersion);
@@ -76,30 +79,35 @@ internal sealed class ConfigAdapter : DatabaseAdapterBase
         set => WriteBool(ConfigKeys.ExitOnLaunch, value);
     }
 
+    [Description("Specifies path for FFMpeg to use instead of update installed")]
     public string ExternalFFMpegPath
     {
         get => ReadString(ConfigKeys.ExternalFfMpegPath);
         set => WriteString(ConfigKeys.ExternalFfMpegPath, value);
     }
 
+    [Description("Specifies path for MPV to use instead of update installed")]
     public string ExternalMpvPath
     {
         get => ReadString(ConfigKeys.ExternalMpvPath);
         set => WriteString(ConfigKeys.ExternalMpvPath, value);
     }
 
+    [Description("Specifies path for Yt-dlp to use instead of update installed")]
     public string ExternalYtdlpPath
     {
         get => ReadString(ConfigKeys.ExternalYtdlpPath);
         set => WriteString(ConfigKeys.ExternalYtdlpPath, value);
     }
 
+    [Description("MPV http remote port to use")]
     public int MpvRemotePort
     {
         get => Read<int>(ConfigKeys.MpvRemotePort);
         set => Write(ConfigKeys.MpvRemotePort, value);
     }
 
+    [Description("DLNA Server port to use")]
     public int DlnaServerPort
     {
         get => Read<int>(ConfigKeys.DlnaServerPort);
