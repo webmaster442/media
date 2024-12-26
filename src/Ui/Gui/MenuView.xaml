@@ -222,49 +222,6 @@
             </MenuItem>
         </MenuItem>
         <Separator />
-        <MenuItem Header="Projector">
-            <MenuItem.Icon>
-                <controls:FontIcon
-                    FontSize="22"
-                    Glyph="Projector" />
-            </MenuItem.Icon>
-            <MenuItem
-                Command="{Binding System.DisplayInternalCommand}"
-                Header="Internal">
-                <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem
-                Command="{Binding System.DisplayCloneCommand}"
-                Header="Clone">
-                <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem
-                Command="{Binding System.DisplayExtendCommand}"
-                Header="Extend">
-                <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem
-                Command="{Binding System.DisplayExernalCommand}"
-                Header="External">
-                <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
-                </MenuItem.Icon>
-            </MenuItem>
-        </MenuItem>
         <MenuItem Header="Audio">
             <MenuItem.Icon>
                 <controls:FontIcon
@@ -315,65 +272,167 @@
                 </MenuItem.Icon>
             </MenuItem>
         </MenuItem>
-        <MenuItem Header="Windows">
+        <MenuItem Header="System">
             <MenuItem.Icon>
                 <controls:FontIcon
                     FontSize="22"
                     Glyph="System" />
             </MenuItem.Icon>
-            <MenuItem
-                Command="{Binding System.LockCommand}"
-                Header="Lock">
+            <MenuItem Header="Projector">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
-                        Glyph="Lock" />
+                        Glyph="Projector" />
                 </MenuItem.Icon>
+                <MenuItem
+                    Command="{Binding System.DisplayInternalCommand}"
+                    Header="Internal">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.DisplayCloneCommand}"
+                    Header="Clone">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.DisplayExtendCommand}"
+                    Header="Extend">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.DisplayExernalCommand}"
+                    Header="External">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
-            <MenuItem
-                Command="{Binding System.LogoutCommand}"
-                Header="Logout">
+            <MenuItem Header="Windows">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
-                        Glyph="OtherUser" />
+                        Glyph="System" />
                 </MenuItem.Icon>
+                <MenuItem
+                    Command="{Binding System.LockCommand}"
+                    Header="Lock">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="Lock" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.LogoutCommand}"
+                    Header="Logout">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="OtherUser" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem
+                    Command="{Binding System.SleepCommand}"
+                    Header="Sleep">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.HibernateCommand}"
+                    Header="Hibernate">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.ShutdownCommand}"
+                    Header="Shutdown">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="PowerButton" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.RestartCommand}"
+                    Header="Restart">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RestartUpdate" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
+        </MenuItem>
+        <MenuItem Header="View">
+            <MenuItem.Icon>
+                <controls:FontIcon
+                    FontSize="22"
+                    Glyph="GlobalNavigationButton" />
+            </MenuItem.Icon>
+            <MenuItem
+                Header="Allways on top"
+                IsCheckable="True"
+                IsChecked="{Binding AllwaysOnTop}" />
             <Separator />
             <MenuItem
-                Command="{Binding System.SleepCommand}"
-                Header="Sleep">
+                Click="SetCorrectTabFromTag"
+                Header="Files"
+                Tag="0">
                 <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
+                    <TextBlock
+                        FontSize="16"
+                        Text="1" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem
-                Command="{Binding System.HibernateCommand}"
-                Header="Hibernate">
+                Click="SetCorrectTabFromTag"
+                Header="Radio Satations"
+                Tag="1">
                 <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
+                    <TextBlock
+                        FontSize="16"
+                        Text="2" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem
-                Command="{Binding System.ShutdownCommand}"
-                Header="Shutdown">
+                Click="SetCorrectTabFromTag"
+                Header="Database"
+                Tag="2">
                 <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="PowerButton" />
+                    <TextBlock
+                        FontSize="16"
+                        Text="3" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem
-                Command="{Binding System.RestartCommand}"
-                Header="Restart">
+                Click="SetCorrectTabFromTag"
+                Header="Playlist"
+                Tag="3">
                 <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RestartUpdate" />
+                    <TextBlock
+                        FontSize="16"
+                        Text="4" />
                 </MenuItem.Icon>
             </MenuItem>
         </MenuItem>

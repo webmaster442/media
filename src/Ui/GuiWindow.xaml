@@ -9,6 +9,7 @@
     Title="Media Gui"
     Width="1280"
     Height="720"
+    Topmost="{Binding AllwaysOnTop}"
     Style="{StaticResource {x:Type Window}}"
     mc:Ignorable="d">
     <Grid>

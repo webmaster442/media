@@ -16,6 +16,8 @@ namespace Media.Ui;
 
 internal partial class GuiViewModel : ObservableObject, IViewModel
 {
+    private readonly ConfigAdapter _configAdapter;
+
     public FilesViewModel FilesViewModel { get; }
 
     public RadioStationsViewModel RadioStationsViewModel { get; }
@@ -30,7 +32,8 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
 
     public GuiViewModel(IUiFunctions uiFunctions,
                         RadioStationsClient radioStationsClient,
-                        GuiDatabaseAdapter guiDatabaseAdapter)
+                        GuiDatabaseAdapter guiDatabaseAdapter,
+                        ConfigAdapter configAdapter)
     {
         FilesViewModel = new FilesViewModel(uiFunctions);
         System = new SystemMenuViewModel();
@@ -38,13 +41,21 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
         PlaylistViewModel = new PlaylistViewModel(uiFunctions);
         AudioViewModel = new AudioViewModel();
         DatabaseViewModel = new DatabaseViewModel(uiFunctions, guiDatabaseAdapter);
+        _configAdapter = configAdapter;
     }
+
+    [ObservableProperty]
+    public partial bool AllwaysOnTop { get; set; }
+
+    partial void OnAllwaysOnTopChanged(bool value)
+        => _configAdapter.AlwaysOnTop = value;
 
     public void Initialize()
     {
         FilesViewModel.RefreshDriveList();
         RadioStationsViewModel.Initialize();
         AudioViewModel.Initialize();
+        AllwaysOnTop = _configAdapter.AlwaysOnTop;
     }
 
     [RelayCommand]

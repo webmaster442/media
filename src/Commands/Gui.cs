@@ -16,16 +16,24 @@ internal sealed class Gui : BaseGuiCommand<GuiWindow>
 {
     private readonly RadioStationsClient _radioStationsClient;
     private readonly GuiDatabaseAdapter _guiDatabaseAdapter;
+    private readonly ConfigAdapter _configAdapter;
 
-    public Gui(RadioStationsClient radioStationsClient, GuiDatabaseAdapter guiDatabaseAdapter)
+    public Gui(
+        RadioStationsClient radioStationsClient,
+        GuiDatabaseAdapter guiDatabaseAdapter,
+        ConfigAdapter configAdapter)
     {
         _radioStationsClient = radioStationsClient;
         _guiDatabaseAdapter = guiDatabaseAdapter;
+        _configAdapter = configAdapter;
     }
 
     protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions)
     {
-        return new GuiViewModel(uiFunctions, _radioStationsClient, _guiDatabaseAdapter);
+        return new GuiViewModel(uiFunctions,
+                                _radioStationsClient,
+                                _guiDatabaseAdapter,
+                                _configAdapter);
     }
 
     protected override IWindowManipulator? CreateWindowManipulator()

@@ -43,5 +43,5 @@ internal enum IconGlyph
     RightArrowKeyTime0 = 0xEBE7,
     MusicNote = 0xEC4F,
     ChromeSwitch = 0xF1CB,
-    RestartUpdate = 0xF83E
+    RestartUpdate = 0xF83E,
 }
