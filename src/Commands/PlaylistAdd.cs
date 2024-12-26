@@ -3,8 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.BaseCommands;
 using Media.Infrastructure;
-using Media.Infrastructure.BaseCommands;
 using Media.Interop;
 
 namespace Media.Commands;

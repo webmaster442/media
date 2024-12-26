@@ -6,13 +6,14 @@
 using System.Threading;
 using System.Windows;
 
+using Media.Infrastructure;
 using Media.Interfaces;
 
 using Spectre.Console;
 
-namespace Media.Infrastructure.BaseCommands;
+namespace Media.BaseCommands;
 
-internal abstract class GuiCommand<TWindow> : Command where TWindow : Window, new()
+internal abstract class BaseGuiCommand<TWindow> : Command where TWindow : Window, new()
 {
     protected virtual IViewModel? CreateDataContext(IUiFunctions uiFunctions) => null;
 

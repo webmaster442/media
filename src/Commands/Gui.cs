@@ -5,14 +5,14 @@
 
 using System.Windows;
 
+using Media.BaseCommands;
 using Media.DbAdapters;
 using Media.Infrastructure;
-using Media.Infrastructure.BaseCommands;
 using Media.Interfaces;
 using Media.Ui;
 
 namespace Media.Commands;
-internal sealed class Gui : GuiCommand<GuiWindow>
+internal sealed class Gui : BaseGuiCommand<GuiWindow>
 {
     private readonly RadioStationsClient _radioStationsClient;
     private readonly GuiDatabaseAdapter _guiDatabaseAdapter;

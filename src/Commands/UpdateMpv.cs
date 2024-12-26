@@ -3,10 +3,10 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.BaseCommands;
 using Media.DbAdapters;
 using Media.Dto.Github;
 using Media.Infrastructure;
-using Media.Infrastructure.BaseCommands;
 
 using SharpCompress.Archives.SevenZip;
 

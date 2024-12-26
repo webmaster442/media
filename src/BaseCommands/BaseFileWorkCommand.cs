@@ -3,7 +3,9 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Infrastructure.BaseCommands;
+using Media.Infrastructure;
+
+namespace Media.BaseCommands;
 
 internal abstract class BaseFileWorkCommand<T> : AsyncCommand<T> where T : ValidatedCommandSettings
 {

@@ -5,10 +5,10 @@
 
 using System.IO.Compression;
 
+using Media.BaseCommands;
 using Media.DbAdapters;
 using Media.Dto.Github;
 using Media.Infrastructure;
-using Media.Infrastructure.BaseCommands;
 
 namespace Media.Commands;
 

@@ -6,9 +6,10 @@
 using System.Diagnostics.CodeAnalysis;
 
 using Media.DbAdapters;
+using Media.Infrastructure;
 using Media.Interop;
 
-namespace Media.Infrastructure.BaseCommands;
+namespace Media.BaseCommands;
 
 internal abstract class BaseFFMpegCommand<TBaseFFMpegSettings>
 : Command<TBaseFFMpegSettings> where TBaseFFMpegSettings : BaseFFMpegSettings

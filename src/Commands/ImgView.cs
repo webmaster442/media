@@ -3,15 +3,15 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.BaseCommands;
 using Media.Infrastructure;
-using Media.Infrastructure.BaseCommands;
 using Media.Infrastructure.Validation;
 using Media.Interfaces;
 using Media.Ui;
 
 namespace Media.Commands;
 
-internal class ImgView : GuiCommand<ImageViewerWindow, ImgView.Settings>
+internal class ImgView : BaseGuiCommand<ImageViewerWindow, ImgView.Settings>
 {
     internal class Settings : ValidatedCommandSettings
     {

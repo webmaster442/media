@@ -4,10 +4,11 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.Dto.Github;
+using Media.Infrastructure;
 
 using Spectre.Console;
 
-namespace Media.Infrastructure.BaseCommands;
+namespace Media.BaseCommands;
 
 internal abstract class BaseGithubUpdateCommand : AsyncCommand
 {

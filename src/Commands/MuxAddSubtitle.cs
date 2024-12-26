@@ -3,9 +3,9 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.BaseCommands;
 using Media.DbAdapters;
 using Media.Infrastructure;
-using Media.Infrastructure.BaseCommands;
 using Media.Infrastructure.Validation;
 using Media.Interop;
 

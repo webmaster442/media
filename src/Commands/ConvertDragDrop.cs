@@ -5,16 +5,16 @@
 
 using System.Windows;
 
+using Media.BaseCommands;
 using Media.DbAdapters;
 using Media.Infrastructure;
-using Media.Infrastructure.BaseCommands;
 using Media.Interfaces;
 using Media.Ui;
 
 namespace Media.Commands;
 
 [Example("Open a window to convert a file by drag and drop", "media convert drop")]
-internal class ConvertDragDrop : GuiCommand<DropConvertWindow>
+internal class ConvertDragDrop : BaseGuiCommand<DropConvertWindow>
 {
     private readonly ConfigAdapter _configAccessor;
 
