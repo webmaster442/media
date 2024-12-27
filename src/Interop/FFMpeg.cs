@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Runtime.CompilerServices;
+
 using Media.DbAdapters;
 using Media.Dto.Internals;
 using Media.Infrastructure;
@@ -38,6 +40,19 @@ internal sealed class FFMpeg : InteropBase
     public FFMpeg(ConfigAdapter configAccessor) : base(FfmpegBinary)
     {
         _configAccessor = configAccessor;
+    }
+
+    public void TakeScreenshot(string inputFile, double timeInSeconds, string outputJpeg)
+    {
+        string args = new FFMpegCommandBuilder()
+            .WithInputFile(inputFile)
+            .WithStartTimeInSeconds(timeInSeconds)
+            .WithTotalFrames(1)
+            .WithVideoFilter("scale=w=340:h=240")
+            .WithOutputFile(outputJpeg)
+            .Build();
+
+        Start(args);
     }
 
     protected override string GetExternalPath()

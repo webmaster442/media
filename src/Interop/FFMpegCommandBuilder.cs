@@ -33,7 +33,8 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         { CliSegment.AspectRatio, "-aspect {0}" },
         { CliSegment.VideoFilter, "-vf \"{0}\"" },
         { CliSegment.Vsync, "-vsync {0}" },
-        { CliSegment.Target, "-target {0}" }
+        { CliSegment.Target, "-target {0}" },
+        { CliSegment.Frames, "-vframes {0}" },
     };
 
     public FFMpegCommandBuilder()
@@ -65,6 +66,7 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         Target = 100,
         Vsync = 110,
         AspectRatio = 120,
+        Frames = 130,
         AdditionalsBeforeOutputFile = int.MaxValue - 1,
         OutputFile = int.MaxValue
     }
@@ -217,6 +219,12 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
     public FFMpegCommandBuilder WithVsync(string vsync)
     {
         SetArgument(CliSegment.Vsync, vsync);
+        return this;
+    }
+
+    internal FFMpegCommandBuilder WithTotalFrames(int frame)
+    {
+        SetArgument(CliSegment.Frames, frame);
         return this;
     }
 

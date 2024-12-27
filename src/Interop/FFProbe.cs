@@ -45,6 +45,30 @@ internal static class FFProbe
             ?? throw new InvalidOperationException("FFProbe result can't be parsed");
     }
 
+    public static async Task<double> GetDurationInSeconds(string file)
+    {
+        if (!TryGetFFProbePath(out string ffprobePath))
+        {
+            throw new ToolDependencyException("FFProbe not found.");
+        }
+
+        using var process = new Process()
+        {
+            StartInfo = new ProcessStartInfo
+            {
+                FileName = ffprobePath,
+                Arguments = $"-v quiet -i \"{file}\" -show_entries format=duration -of csv=\"p=0\"",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+            }
+        };
+
+        process.Start();
+        var result = await process.StandardOutput.ReadToEndAsync();
+
+        return double.Parse(result, CultureInfo.InvariantCulture);
+    }
+
     public static FileInformation Transform(FFProbeResult result)
     {
         var info = new FileInformation
