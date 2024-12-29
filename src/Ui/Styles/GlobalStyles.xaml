@@ -68,6 +68,46 @@
         <Setter Property="Margin" Value="3" />
     </Style>
 
+    <Style TargetType="controls:InternalWindow">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:InternalWindow">
+                    <Border
+                        Background="{StaticResource WindowBackgroundBrush}"
+                        BorderBrush="{StaticResource ButtonBorder}"
+                        BorderThickness="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Background="{StaticResource Cyan}">
+                                <TextBlock
+                                    Foreground="Black"
+                                    Text="{TemplateBinding Title}" />
+                            </Border>
+                            <Button
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Content="❌" />
+                            <ContentPresenter
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
+                                Content="{TemplateBinding View}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="controls:AsyncBlocker">
         <Setter Property="Template">
             <Setter.Value>

@@ -15,6 +15,28 @@ namespace Media.Infrastructure;
 
 internal class UiFunctionsImplementation : IUiFunctions
 {
+    private static IEnumerable<T> FindLogicalChildren<T>(DependencyObject depObj) where T : DependencyObject
+    {
+        if (depObj != null)
+        {
+            foreach (object rawChild in LogicalTreeHelper.GetChildren(depObj))
+            {
+                if (rawChild is DependencyObject child)
+                {
+                    if (child is T casted)
+                    {
+                        yield return casted;
+                    }
+
+                    foreach (T childOfChild in FindLogicalChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+    }
+
     public void ErrorMessage(string message, string title)
     {
         Terminal.RedText(message);
@@ -100,6 +122,7 @@ internal class UiFunctionsImplementation : IUiFunctions
             {
                 var ctrl = new AsyncBlocker();
                 grid.Children.Add(ctrl);
+                Panel.SetZIndex(grid, 10000);
                 ctrl.Show();
             }
         }
@@ -113,24 +136,28 @@ internal class UiFunctionsImplementation : IUiFunctions
         SetProgressState(ProgressState.None);
     }
 
-    private static IEnumerable<T> FindLogicalChildren<T>(DependencyObject depObj) where T : DependencyObject
+    public void ShowInternalWindow(string title, IViewModel content)
     {
-        if (depObj != null)
+        var internalWindow = FindLogicalChildren<InternalWindow>(App.Current.MainWindow).FirstOrDefault();
+        if (internalWindow != null)
         {
-            foreach (object rawChild in LogicalTreeHelper.GetChildren(depObj))
+            internalWindow.Title = title;
+            internalWindow.View = content;
+            internalWindow.Show();
+        }
+        else
+        {
+            var grid = FindLogicalChildren<Grid>(App.Current.MainWindow).FirstOrDefault();
+            if (grid != null)
             {
-                if (rawChild is DependencyObject child)
+                var ctrl = new InternalWindow
                 {
-                    if (child is T casted)
-                    {
-                        yield return casted;
-                    }
-
-                    foreach (T childOfChild in FindLogicalChildren<T>(child))
-                    {
-                        yield return childOfChild;
-                    }
-                }
+                    Width = App.Current.MainWindow.ActualWidth * 0.8,
+                    Height = App.Current.MainWindow.ActualHeight * 0.8
+                };
+                Panel.SetZIndex(grid, 9000);
+                grid.Children.Add(ctrl);
+                ctrl.Show();
             }
         }
     }
