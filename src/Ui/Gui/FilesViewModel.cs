@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
+using Media.DbAdapters;
 using Media.Interfaces;
 using Media.Interop;
 using Media.Ui.Controls;
@@ -16,6 +17,7 @@ namespace Media.Ui.Gui;
 internal partial class FilesViewModel : ObservableObject
 {
     private readonly IUiFunctions _uiFunctions;
+    private readonly ConfigAdapter _configAdapter;
 
     [ObservableProperty]
     public partial string CurrentPath { get; set; }
@@ -35,7 +37,7 @@ internal partial class FilesViewModel : ObservableObject
         Navigate(CurrentPath);
     }
 
-    public FilesViewModel(IUiFunctions uiFunctions)
+    public FilesViewModel(IUiFunctions uiFunctions, ConfigAdapter configAdapter)
     {
         SelectedItem = null;
         CurrentPath = string.Empty;
@@ -43,6 +45,7 @@ internal partial class FilesViewModel : ObservableObject
         PathParts = new ObservableRangeCollection<PathPartModel>();
         Items = new ObservableRangeCollection<FolderItem>();
         _uiFunctions = uiFunctions;
+        _configAdapter = configAdapter;
     }
 
     [RelayCommand]
@@ -177,7 +180,7 @@ internal partial class FilesViewModel : ObservableObject
     }
 
     [RelayCommand(CanExecute = nameof(CanPlay))]
-    public void SendToPlaylist(FolderItem item)
+    private void SendToPlaylist(FolderItem item)
     {
         if (item.FileType.IsMpvSupportedType())
         {
@@ -185,6 +188,22 @@ internal partial class FilesViewModel : ObservableObject
             { 
                 FullPath = item.FullPath
             });
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanPlay))]
+    private async Task Preview(FolderItem item)
+    {
+        if (item == null)
+            return;
+
+        if (item.FileType == FileRecognizer.FileType.Video)
+        {
+            _uiFunctions.BeginAsyncOperation();
+            var view = new PreviewViewModel(_configAdapter, item.FullPath);
+            await view.Initialize();
+            _uiFunctions.EndAsyncOperation();
+            _uiFunctions.ShowInternalWindow(item.FullPath, view);
         }
     }
 

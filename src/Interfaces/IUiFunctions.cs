@@ -27,7 +27,7 @@ internal interface IUiFunctions : IProgress<double>
 
     void EndAsyncOperation();
 
-    void ShowInternalWindow(string title, IViewModel content);
+    void ShowInternalWindow(string title, INotifyPropertyChanged content);
 
     string? OpenFileDialog(string filterString);
 

@@ -12,7 +12,6 @@ internal class AsyncBlocker : Control
     public AsyncBlocker()
     {
         Visibility = System.Windows.Visibility.Collapsed;
-        Panel.SetZIndex(this, 1000);
         Grid.SetColumnSpan(this, int.MaxValue);
         Grid.SetRowSpan(this, int.MaxValue);
     }

@@ -122,6 +122,11 @@
                         Header="Add to playlist" />
                     <Separator />
                     <MenuItem
+                        Command="{Binding PreviewCommand}"
+                        CommandParameter="{Binding SelectedItem}"
+                        Header="Preview" />
+                    <Separator />
+                    <MenuItem
                         Command="{Binding SartShellCommand}"
                         CommandParameter="{Binding Path=CurrentPath}"
                         Header="Launch Media shell in current folder" />

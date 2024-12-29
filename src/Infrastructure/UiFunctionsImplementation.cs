@@ -136,29 +136,28 @@ internal class UiFunctionsImplementation : IUiFunctions
         SetProgressState(ProgressState.None);
     }
 
-    public void ShowInternalWindow(string title, IViewModel content)
+    public void ShowInternalWindow(string title, INotifyPropertyChanged content)
     {
         var internalWindow = FindLogicalChildren<InternalWindow>(App.Current.MainWindow).FirstOrDefault();
-        if (internalWindow != null)
-        {
-            internalWindow.Title = title;
-            internalWindow.View = content;
-            internalWindow.Show();
-        }
-        else
+        if (internalWindow == null)
         {
             var grid = FindLogicalChildren<Grid>(App.Current.MainWindow).FirstOrDefault();
             if (grid != null)
             {
-                var ctrl = new InternalWindow
+                internalWindow = new InternalWindow
                 {
                     Width = App.Current.MainWindow.ActualWidth * 0.8,
                     Height = App.Current.MainWindow.ActualHeight * 0.8
                 };
                 Panel.SetZIndex(grid, 9000);
-                grid.Children.Add(ctrl);
-                ctrl.Show();
+                grid.Children.Add(internalWindow);
             }
+        }
+        if (internalWindow != null)
+        {
+            internalWindow.Title = title;
+            internalWindow.View = content;
+            internalWindow.Show();
         }
     }
 

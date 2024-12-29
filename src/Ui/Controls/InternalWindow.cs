@@ -7,14 +7,30 @@ namespace Media.Ui.Controls;
 
 internal sealed class InternalWindow : Control
 {
-    private sealed class EmptyViewModel : IViewModel
+    private sealed class EmptyViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
+    }
 
-        public void Initialize()
+    public InternalWindow()
+    {
+        Visibility = Visibility.Collapsed;
+        Grid.SetColumnSpan(this, int.MaxValue);
+        Grid.SetRowSpan(this, int.MaxValue);
+        HorizontalAlignment = HorizontalAlignment.Center;
+        VerticalAlignment = VerticalAlignment.Center;
+    }
+
+    public override void OnApplyTemplate()
+    {
+        if (GetTemplateChild("PART_Close") is Button closeButton)
         {
+            closeButton.Click += OnClose;
         }
     }
+
+    private void OnClose(object sender, RoutedEventArgs e)
+        => Hide();
 
     public string Title
     {
@@ -25,18 +41,17 @@ internal sealed class InternalWindow : Control
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register("Title", typeof(string), typeof(InternalWindow), new PropertyMetadata(string.Empty));
 
-    public IViewModel View
+    public INotifyPropertyChanged View
     {
-        get { return (IViewModel)GetValue(ViewProperty); }
+        get { return (INotifyPropertyChanged)GetValue(ViewProperty); }
         set { SetValue(ViewProperty, value); }
     }
 
     public static readonly DependencyProperty ViewProperty =
-        DependencyProperty.Register("View", typeof(IViewModel), typeof(InternalWindow), new PropertyMetadata(new EmptyViewModel()));
+        DependencyProperty.Register("View", typeof(INotifyPropertyChanged), typeof(InternalWindow), new PropertyMetadata(new EmptyViewModel()));
 
     public void Show()
     {
-        View?.Initialize();
         Visibility = Visibility.Visible;
     }
 

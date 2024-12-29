@@ -35,7 +35,7 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
                         GuiDatabaseAdapter guiDatabaseAdapter,
                         ConfigAdapter configAdapter)
     {
-        FilesViewModel = new FilesViewModel(uiFunctions);
+        FilesViewModel = new FilesViewModel(uiFunctions, configAdapter);
         System = new SystemMenuViewModel();
         RadioStationsViewModel = new RadioStationsViewModel(radioStationsClient, uiFunctions);
         PlaylistViewModel = new PlaylistViewModel(uiFunctions);

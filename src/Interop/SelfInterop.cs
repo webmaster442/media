@@ -30,7 +30,7 @@ internal static class SelfInterop
     private static void RunMedia(string[] args)
     {
         BringConsoleWindowToFront();
-        AnsiConsole.MarkupLine("[green]Executing[/] {0}...", string.Join(' ', args));
+        AnsiConsole.MarkupLine("[green]Executing[/] {0}...", string.Join(' ', args).EscapeMarkup());
         using var p = new Process
         {
             StartInfo = new ProcessStartInfo

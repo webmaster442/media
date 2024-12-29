@@ -38,6 +38,7 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         { CliSegment.Frames, "-vframes {0}" },
         { CliSegment.VideoPreset, "-preset {0}" },
         { CliSegment.VideoQuality, "-q:v {0}" },
+        { CliSegment.HwAccel, "-hwaccel {0}" }
     };
 
     public FFMpegCommandBuilder()
@@ -47,11 +48,12 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
 
     private enum CliSegment
     {
-        InputFile = int.MinValue,
-        InputFile2 = int.MinValue + 1,
-        InputFile3 = int.MinValue + 2,
-        InputFile4 = int.MinValue + 3,
-        InputFile5 = int.MinValue + 4,
+        HwAccel = int.MinValue,
+        InputFile = int.MinValue + 1,
+        InputFile2 = int.MinValue + 2,
+        InputFile3 = int.MinValue + 3,
+        InputFile4 = int.MinValue + 4,
+        InputFile5 = int.MinValue + 5,
         StartTime = 0,
         IgnoreVideo = 10,
         IgnoreAudio = 15,
@@ -89,6 +91,12 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
             .Select(x => x.Value);
 
         return string.Join(" ", ordered);
+    }
+
+    public FFMpegCommandBuilder WithAcceleration(string acceleration)
+    {
+        SetArgument(CliSegment.HwAccel, acceleration);
+        return this;
     }
 
     public FFMpegCommandBuilder WithIgnoreVideo()

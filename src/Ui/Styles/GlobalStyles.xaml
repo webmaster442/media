@@ -4,6 +4,7 @@
     xmlns:controls="clr-namespace:Media.Ui.Controls"
     xmlns:converters="clr-namespace:Media.Ui.Converters"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:gui="clr-namespace:Media.Ui.Gui"
     xmlns:ui="clr-namespace:Media.Ui">
 
     <SolidColorBrush
@@ -90,10 +91,12 @@
                                 Grid.Column="0"
                                 Background="{StaticResource Cyan}">
                                 <TextBlock
+                                    VerticalAlignment="Center"
                                     Foreground="Black"
                                     Text="{TemplateBinding Title}" />
                             </Border>
                             <Button
+                                x:Name="PART_Close"
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Content="❌" />
@@ -229,6 +232,10 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <DataTemplate DataType="{x:Type gui:PreviewViewModel}">
+        <MediaElement Source="{Binding MediaSource}"/>
+    </DataTemplate>
 
 
 </ResourceDictionary>

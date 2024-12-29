@@ -4,15 +4,16 @@
 // -----------------------------------------------------------------------------------------------
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 
+using Media.DbAdapters;
 using Media.Interop;
 
 namespace Media.Ui.Gui;
 
-internal sealed partial class ThumbnailViewModel : ObservableObject
+internal sealed partial class PreviewViewModel : ObservableObject
 {
     private readonly FFMpeg _ffMpeg;
+    private readonly string _filePath;
     private readonly bool _isFfmpegInstalled;
 
     private string GetThumbNailPath(string path)
@@ -20,8 +21,7 @@ internal sealed partial class ThumbnailViewModel : ObservableObject
         static ulong CalculateFnvHash(string input)
         {
             const ulong fnvPrime = 1099511628211;
-            const ulong fnvOffset = 14695981039346656037;
-            ulong hash = fnvOffset;
+            ulong hash = 14695981039346656037;
             foreach (var c in input)
             {
                 hash ^= c;
@@ -45,46 +45,47 @@ internal sealed partial class ThumbnailViewModel : ObservableObject
 
         var drive = Path.GetPathRoot(path) ?? throw new InvalidOperationException("Drive can't be determined");
         var thumbnailId = Base26Encode(CalculateFnvHash(path));
-        return Path.Combine(drive, ".media", $"{thumbnailId}.mp4");
+        var mediaFolder = Path.Combine(drive, ".media");
+        if (!Directory.Exists(mediaFolder))
+        {
+            Directory.CreateDirectory(mediaFolder);
+        }
+        return Path.Combine(mediaFolder, $"{thumbnailId}.mp4");
     }
 
-    public sealed class DisplayThumbnailMessage
+    public PreviewViewModel(ConfigAdapter configAdapter, string filePath)
     {
-        public required string FullPath { get; init; }
-    }
-
-    public ThumbnailViewModel(FFMpeg ffMpeg)
-    {
-        WeakReferenceMessenger.Default.Register<DisplayThumbnailMessage>(this, OnDisplayThumbNail);
-        ThumbnailPath = string.Empty;
-        _ffMpeg = ffMpeg;
+        MediaSource = new Uri("file://");
+        _ffMpeg = new FFMpeg(configAdapter);
+        _filePath = filePath;
         _isFfmpegInstalled = _ffMpeg.TryGetInstalledPath(out _);
     }
 
     [ObservableProperty]
-    public partial string ThumbnailPath { get; private set; }
+    public partial Uri MediaSource { get; private set; }
 
-    private async void OnDisplayThumbNail(object recipient, DisplayThumbnailMessage message)
+    public async Task Initialize()
     {
-        var thumbnailPath = GetThumbNailPath(message.FullPath);
+        var thumbnailPath = GetThumbNailPath(_filePath);
         if (File.Exists(thumbnailPath))
         {
-            ThumbnailPath = thumbnailPath;
+            MediaSource = new Uri($"file://{thumbnailPath}");
         }
         else if (_isFfmpegInstalled)
         {
-            var totalTime = await FFProbe.GetDurationInSeconds(message.FullPath);
-            
+            var totalTime = await FFProbe.GetDurationInSeconds(_filePath);
+
             int starttime = (int)Math.Ceiling(totalTime * 0.1);
 
             FFMpegCommandBuilder builder = new();
-            var cli = builder.WithInputFile(message.FullPath)
+            var cli = builder.WithInputFile(_filePath)
                 .WithOutputFile(thumbnailPath)
                 .WithStartTimeInSeconds(starttime)
-                .WithDurationInSeconds(60)
+                .WithDurationInSeconds(30)
                 .WithIgnoreAudio()
+                .WithAcceleration("d3d11va")
                 .WithVideoCodec("libx264")
-                .WithVideoQuality(7)
+                .WithVideoQuality(10)
                 .WithVideoPreset("fast")
                 .WithVideoFilter("fps='min(15, source_fps)',scale='min(480,iw)':min'(480,ih)':force_original_aspect_ratio=decrease")
                 .Build();
@@ -93,11 +94,11 @@ internal sealed partial class ThumbnailViewModel : ObservableObject
             ffmpegProcess.Start();
             await ffmpegProcess.WaitForExitAsync();
 
-            ThumbnailPath = thumbnailPath;
+            MediaSource = new Uri($"file://{thumbnailPath}");
         }
         else
         {
-            ThumbnailPath = string.Empty;
+            MediaSource = new Uri($"file://");
         }
     }
 }
