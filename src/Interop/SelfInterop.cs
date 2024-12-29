@@ -39,7 +39,7 @@ internal static class SelfInterop
                 UseShellExecute = false
             }
         };
-        p.StartInfo.ArgumentList.AddRange(args);
+        p.StartInfo.AddArguments(args);
         p.Start();
     }
 

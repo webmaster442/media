@@ -28,7 +28,7 @@ internal sealed class ConvertToDVDWav : BaseFFMpegCommand<ConvertToDVDWav.Settin
         builder
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
-            .IgnoreVideo()
+            .WithIgnoreVideo()
             .WithAudioCodec(FFMpeg.AudioCodecNames.PcmS16Le)
             .WithAudioSampleRate(48000);
     }

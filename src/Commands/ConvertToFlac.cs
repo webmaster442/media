@@ -35,7 +35,7 @@ internal sealed class ConvertToFlac : BaseFFMpegCommand<ConvertToFlac.Settings>
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
             .WithAudioCodec(FFMpeg.AudioCodecNames.Flac)
-            .IgnoreVideo()
+            .WithIgnoreVideo()
             .WithCompressionLevel(settings.CompressionLevel);
     }
 }

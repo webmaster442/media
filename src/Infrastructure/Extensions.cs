@@ -3,7 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 using Media.Dto;
 using Media.Dto.Internals;
@@ -79,34 +79,35 @@ public static class Extensions
             .Replace(Preset.OutputPlaceHolder, $"\"{outputFile}\"");
     }
 
-    public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> items)
+    public static void AddArguments(this ProcessStartInfo startInfo, IEnumerable<string> items)
     {
         foreach (var item in items)
         {
-            collection.Add(item);
+            startInfo.ArgumentList.Add(item);
         }
+    }
+
+    public static void AddRange<T>(this BindingList<T> list, IEnumerable<T> items)
+    {
+        list.RaiseListChangedEvents = false;
+        foreach (var item in items)
+        {
+            list.Add(item);
+        }
+        list.RaiseListChangedEvents = true;
+        list.ResetBindings();
     }
 
     public static string ToHumanReadableSize(this long size)
     {
-        string[] sizes = { "B", "KiB", "MiB", "GiB", "TiB", "PiB" };
+        string[] sizes = ["B", "KiB", "MiB", "GiB", "TiB", "PiB"];
         int order = 0;
         while (size >= 1024 && order < sizes.Length - 1)
         {
             order++;
-            size = size / 1024;
+            size /= 1024;
         }
 
         return $"{size:0.##} {sizes[order]}";
-    }
-
-    public static bool IsYoungerThan(this DateTime cacheTime, TimeSpan maxAge, DateTime? now = null)
-    {
-        if (now == null)
-        {
-            now = DateTime.UtcNow;
-        }
-
-        return (now.Value - cacheTime) < maxAge;
     }
 }

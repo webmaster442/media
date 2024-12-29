@@ -28,7 +28,7 @@ internal sealed class ConvertToCdWav : BaseFFMpegCommand<ConvertToCdWav.Settings
         builder
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
-            .IgnoreVideo()
+            .WithIgnoreVideo()
             .WithAudioCodec(FFMpeg.AudioCodecNames.PcmS16Le)
             .WithAudioSampleRate(44100);
     }

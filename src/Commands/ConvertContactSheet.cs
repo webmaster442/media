@@ -36,7 +36,7 @@ internal sealed class ConvertContactSheet : BaseFFMpegCommand<ConvertContactShee
         builder
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
-            .WithVideoFilter($"select=not(mod(n\\,100)),scale=320:-1,tile={settings.Cols}x{settings.Rows}")
+            .WithVideoFilter($"select=not(mod(n\\,100)),'scale=320:-1,tile={settings.Cols}x{settings.Rows}")
             .WithVideoQuality(10)
             .WithVsync("vfr");
     }

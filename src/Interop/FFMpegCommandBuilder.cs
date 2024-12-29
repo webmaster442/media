@@ -19,6 +19,7 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         { CliSegment.InputFile4, "-i \"{0}\"" },
         { CliSegment.OutputFile, "\"{0}\"" },
         { CliSegment.IgnoreVideo, "-vn" },
+        { CliSegment.IgnoreAudio, "-an" },
         { CliSegment.CompressionLevel, "-compression_level {0}" },
         { CliSegment.AudioBitrate, "-b:a {0}" },
         { CliSegment.AudioCodec, "-c:a {0}" },
@@ -35,6 +36,8 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         { CliSegment.Vsync, "-vsync {0}" },
         { CliSegment.Target, "-target {0}" },
         { CliSegment.Frames, "-vframes {0}" },
+        { CliSegment.VideoPreset, "-preset {0}" },
+        { CliSegment.VideoQuality, "-q:v {0}" },
     };
 
     public FFMpegCommandBuilder()
@@ -51,6 +54,7 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         InputFile5 = int.MinValue + 4,
         StartTime = 0,
         IgnoreVideo = 10,
+        IgnoreAudio = 15,
         CompressionLevel = 20,
         AudioStreamSelect = 30,
         Duration = 35,
@@ -61,8 +65,8 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         VideCodec = 80,
         VideoBitrate = 90,
         VideoQuality = 91,
+        VideoPreset = 92,
         VideoFilter = 95,
-        VideoAspect = 98,
         Target = 100,
         Vsync = 110,
         AspectRatio = 120,
@@ -87,9 +91,15 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         return string.Join(" ", ordered);
     }
 
-    public FFMpegCommandBuilder IgnoreVideo()
+    public FFMpegCommandBuilder WithIgnoreVideo()
     {
         SetArgument(CliSegment.IgnoreVideo, string.Empty);
+        return this;
+    }
+
+    public FFMpegCommandBuilder WithIgnoreAudio()
+    {
+        SetArgument(CliSegment.IgnoreAudio, string.Empty);
         return this;
     }
 
@@ -198,15 +208,15 @@ internal sealed class FFMpegCommandBuilder : IBuilder<string>
         return this;
     }
 
-    public FFMpegCommandBuilder WithVideoFilter(string filterString)
+    public FFMpegCommandBuilder WithVideoPreset(string preset)
     {
-        SetArgument(CliSegment.VideoFilter, filterString);
+        SetArgument(CliSegment.VideoPreset, preset);
         return this;
     }
 
-    public FFMpegCommandBuilder WithVideoAspect(string aspectRatio)
+    public FFMpegCommandBuilder WithVideoFilter(string filterString)
     {
-        SetArgument(CliSegment.VideoAspect, aspectRatio);
+        SetArgument(CliSegment.VideoFilter, filterString);
         return this;
     }
 

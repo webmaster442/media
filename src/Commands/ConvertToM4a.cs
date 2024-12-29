@@ -34,7 +34,7 @@ internal sealed class ConvertToM4a : BaseFFMpegCommand<ConvertToM4a.Settings>
         builder
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
-            .IgnoreVideo()
+            .WithIgnoreVideo()
             .WithAudioCodec(FFMpeg.AudioCodecNames.Aac)
             .WithAudioBitrate(settings.Bitrate);
     }

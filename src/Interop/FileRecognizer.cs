@@ -3,13 +3,6 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-
 namespace Media.Interop;
 
 internal static class FileRecognizer
@@ -17,8 +10,8 @@ internal static class FileRecognizer
     private readonly static HashSet<string> AudioFiles = new(StringComparer.OrdinalIgnoreCase)
     {
         ".aac", ".ac3", ".aiff", ".ape", ".au",
-        ".dts", ".flac", ".m4a", ".m4b", ".mp3", 
-        ".oga", ".ogg", ".opus", ".ra", ".tak", 
+        ".dts", ".flac", ".m4a", ".m4b", ".mp3",
+        ".oga", ".ogg", ".opus", ".ra", ".tak",
         ".tta", ".wav", ".wma", ".wv", ".weba",
         ".alac", ".amr", ".mp2"
     };

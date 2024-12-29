@@ -13,9 +13,9 @@ using Media.Interop;
 
 namespace Media.Ui.Gui;
 
-internal partial class PlaylistViewModel : ObservableObject
+internal sealed partial class PlaylistViewModel : ObservableObject
 {
-    public class AddToPlaylistMessage
+    public sealed class AddToPlaylistMessage
     {
         public required string FullPath { get; init; }
     }
@@ -77,26 +77,16 @@ internal partial class PlaylistViewModel : ObservableObject
     [RelayCommand]
     private void OrderAz()
     {
-        PlaylistItems.RaiseListChangedEvents = false;
-
         var ordered = PlaylistItems.Order().ToList();
         PlaylistItems.Clear();
         PlaylistItems.AddRange(ordered);
-
-        PlaylistItems.RaiseListChangedEvents = true;
-        PlaylistItems.ResetBindings();
     }
 
     [RelayCommand]
     private void OrderZa()
     {
-        PlaylistItems.RaiseListChangedEvents = false;
-
         var ordered = PlaylistItems.OrderDescending().ToList();
         PlaylistItems.Clear();
         PlaylistItems.AddRange(ordered);
-
-        PlaylistItems.RaiseListChangedEvents = true;
-        PlaylistItems.ResetBindings();
     }
 }

@@ -47,7 +47,7 @@ internal class ExtractAudioStereoM4a : BaseFFMpegCommand<ExtractAudioStereoM4a.S
         builder
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
-            .IgnoreVideo()
+            .WithIgnoreVideo()
             .WithAudioCodec(FFMpeg.AudioCodecNames.Aac)
             .WithAudioBitrate(settings.Bitrate)
             .WithAudioStreamSelection(settings.AudioStreamIndex)

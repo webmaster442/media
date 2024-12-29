@@ -34,7 +34,7 @@ internal sealed class ConvertToMp3 : BaseFFMpegCommand<ConvertToMp3.Settings>
         builder
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
-            .IgnoreVideo()
+            .WithIgnoreVideo()
             .WithAudioBitrate(settings.Bitrate);
     }
 }

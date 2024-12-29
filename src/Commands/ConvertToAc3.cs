@@ -34,7 +34,7 @@ internal sealed class ConvertToAc3 : BaseFFMpegCommand<ConvertToAc3.Settings>
         builder
             .WithInputFile(settings.InputFile)
             .WithOutputFile(settings.OutputFile)
-            .IgnoreVideo()
+            .WithIgnoreVideo()
             .WithAudioCodec(FFMpeg.AudioCodecNames.Ac3)
             .WithAudioBitrate(settings.Bitrate);
     }
