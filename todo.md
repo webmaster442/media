@@ -2,8 +2,12 @@
 - [ ] Stability tests
 - [x] Image viewer
 - [x] Shell progress bar functions to UIFunctions
-- [ ] Entity framework with SQLite for database
-- [ ] Database saved to User profile
-- [ ] Database migration set up
-- [ ] Settings stored in database table
-- [ ] Played files stored in database table
+- [x] Entity framework with SQLite for database
+- [x] Database saved to User profile
+- [x] Database migration set up
+- [x] Settings stored in database table
+- [x] Played files stored in database table
+- [ ] https://github.com/einaregilsson/InsertIcons
+- [ ] Multiple icons generated with https://favicon.io/favicon-generator/
+- [ ] Icon settings: Leckerli One Regeular 400 110 #0A0 Background
+- [x] Extend file recognizer
