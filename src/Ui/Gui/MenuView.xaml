@@ -97,7 +97,7 @@
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.LoadCommand}"
                 Header="Load from file..."
-                Tag="2">
+                Tag="3">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
@@ -109,7 +109,7 @@
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.SaveCommand}"
                 Header="Save to file..."
-                Tag="2">
+                Tag="3">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
@@ -121,7 +121,7 @@
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.OrderAzCommand}"
                 Header="Order by Name"
-                Tag="2">
+                Tag="3">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
@@ -143,7 +143,7 @@
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.ShuffleCommand}"
                 Header="Shuffle"
-                Tag="2">
+                Tag="3">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
@@ -155,7 +155,7 @@
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.ClearCommand}"
                 Header="Clear"
-                Tag="2">
+                Tag="3">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"

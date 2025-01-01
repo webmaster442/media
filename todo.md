@@ -13,4 +13,4 @@
 - [x] Extend file recognizer
 - [ ] Install command to create shortcuts
 - [ ] Gui: Playlist playing with MPV
-- [ ] 
+- [ ] Gui: On exit stop IPC server of MPV

@@ -57,5 +57,5 @@ internal static class SelfInterop
         => RunMedia(cmd);
 
     public static void Play(string file)
-        => RunMediaCommand("play", "file", file, "-r");
+        => RunMediaCommand("play", "file", file);
 }

@@ -83,7 +83,10 @@ internal static class PlaylistFunctions
         {
             await WritePls(playlist, writer, relativePaths, relativeBasePath);
         }
-        throw new InvalidOperationException($"Unknown file type: {extension}");
+        else
+        {
+            throw new InvalidOperationException($"Unknown file type: {extension}");
+        }
     }
 
     private static async Task LoadM3u(IList<string> playlist, string playlistFile)
@@ -127,7 +130,10 @@ internal static class PlaylistFunctions
         {
             await LoadPls(playlist, playlistFile);
         }
-        throw new InvalidOperationException($"Unknown file type: {extension}");
+        else
+        {
+            throw new InvalidOperationException($"Unknown file type: {extension}");
+        }
     }
 
     public static void Shuffle(this IList<string> playlist)
