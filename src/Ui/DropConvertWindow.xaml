@@ -79,7 +79,7 @@
         <Image
             Grid.Row="2"
             Grid.ColumnSpan="2"
-            Source="/Embedded/icon-512.png"
+            Source="/Embedded/icon.png"
             StretchDirection="DownOnly" />
         <StackPanel
             Grid.Row="2"

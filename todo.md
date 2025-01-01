@@ -8,6 +8,9 @@
 - [x] Settings stored in database table
 - [x] Played files stored in database table
 - [ ] https://github.com/einaregilsson/InsertIcons
-- [ ] Multiple icons generated with https://favicon.io/favicon-generator/
-- [ ] Icon settings: Leckerli One Regeular 400 110 #0A0 Background
+- [x] Multiple icons generated with https://favicon.io/favicon-generator/
+- [x] Icon settings: Leckerli One Regeular 400 110 #0A0 Background
 - [x] Extend file recognizer
+- [ ] Install command to create shortcuts
+- [ ] Gui: Playlist playing with MPV
+- [ ] 
