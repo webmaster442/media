@@ -48,13 +48,14 @@ internal abstract class BaseGuiCommand<TWindow> : Command where TWindow : Window
 
     public override int Execute(CommandContext context)
     {
-        AnsiConsole.Clear();
+        Terminal.EnterAlternateBuffer();
         Terminal.InfoText($"Starting Ui Thread...");
         Thread uiThread = new(ThreadCode);
         uiThread.SetApartmentState(ApartmentState.STA);
         uiThread.Start();
         Terminal.InfoText($"Ui Thread started. Close window to return to command line");
         uiThread.Join();
+        Terminal.ExitAlternateBuffer();
         return ExitCodes.Success;
     }
 }

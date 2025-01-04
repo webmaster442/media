@@ -49,13 +49,13 @@ internal static class Terminal
     public static void InfoText(string str)
         => AnsiConsole.MarkupLineInterpolated($"[yellow]{str.EscapeMarkup()}[/]");
 
-    internal static void RedText(string str)
+    public static void RedText(string str)
          => AnsiConsole.MarkupLineInterpolated($"[red]{str.EscapeMarkup()}[/]");
 
-    internal static bool Confirm(string message)
+    public static bool Confirm(string message)
         => AnsiConsole.Confirm(message);
 
-    internal static async Task<bool> AbortCountdown(string message, int timeoutSeconds)
+    public static async Task<bool> AbortCountdown(string message, int timeoutSeconds)
     {
         InfoText(message);
         for (int i = timeoutSeconds; i > 0; i--)
@@ -70,5 +70,22 @@ internal static class Terminal
         }
 
         return false;
+    }
+
+    public static void EnterAlternateBuffer()
+    {
+        AnsiConsole.Write("\e[?1049h");
+        AnsiConsole.Clear();
+    }
+
+    public static void ExitAlternateBuffer()
+        => AnsiConsole.Write("\e[?1049l");
+
+    public static void ReportProgessToWinTerminal(int? percent)
+    {
+        if (percent.HasValue)
+            AnsiConsole.Write($"\e]9;4;1;{percent}\x07");
+        else
+            AnsiConsole.Write("\e]9;4;0;0\x07");
     }
 }

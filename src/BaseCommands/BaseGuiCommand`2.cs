@@ -52,13 +52,14 @@ internal abstract class BaseGuiCommand<TWindow, TSettings> : Command<TSettings>
 
     public override int Execute(CommandContext context, TSettings settings)
     {
-        AnsiConsole.Clear();
+        Terminal.EnterAlternateBuffer();
         Terminal.InfoText($"Starting Ui Thread...");
         Thread uiThread = new(ThreadCode);
         uiThread.SetApartmentState(ApartmentState.STA);
         uiThread.Start(settings);
         Terminal.InfoText($"Ui Thread started. Close window to return to command line");
         uiThread.Join();
+        Terminal.ExitAlternateBuffer();
         return ExitCodes.Success;
     }
 }

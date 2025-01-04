@@ -31,6 +31,27 @@ internal class GuiDatabaseAdapter : DatabaseAdapterBase
             .ToListAsync();
     }
 
+    public async Task<List<FolderBookmark>> GetBookmarks()
+    {
+        using var dbContext = GetContext();
+        return await dbContext.FolderBookmarks.ToListAsync();
+    }
+
+    public async Task AddBookmark(string path)
+    {
+        using var dbContext = GetContext();
+        var entry = dbContext.FolderBookmarks.FirstOrDefault(e => e.Path == path);
+        if (entry == null)
+        {
+            dbContext.FolderBookmarks.Add(new FolderBookmark
+            {
+                Name = Path.GetFileName(path),
+                Path = path,
+            });
+            await dbContext.SaveChangesAsync();
+        }
+    }
+
     public async Task<int> AddToLibary(IEnumerable<string> files, ILogger logger)
     {
         using var context = GetContext();

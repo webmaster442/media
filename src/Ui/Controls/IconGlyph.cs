@@ -12,9 +12,13 @@ namespace Media.Ui.Controls;
 internal enum IconGlyph
 {
     GlobalNavigationButton = 0xE700,
+    Add = 0xE710,
+    Setting = 0xE713,
     Video = 0xE714,
     Zoom = 0xE71E,
+    FavoriteList = 0xE728,
     Lock = 0xE72E,
+    Remove = 0xE738,
     Save = 0xE74E,
     CommandPrompt = 0xE756,
     Volume = 0xE767,

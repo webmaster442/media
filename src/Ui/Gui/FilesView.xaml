@@ -77,20 +77,59 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <ItemsControl
+        <Grid
             Grid.Row="0"
-            Grid.Column="1"
-            ItemsSource="{Binding PathParts}"
-            Style="{StaticResource HorizontalItemsControl}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type Gui:PathPartModel}">
-                    <Button
-                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.NavigateCommand}"
-                        CommandParameter="{Binding FullPath}"
-                        Content="{Binding DisplayName}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ItemsControl
+                Grid.Column="0"
+                ItemsSource="{Binding PathParts}"
+                Style="{StaticResource HorizontalItemsControl}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type Gui:PathPartModel}">
+                        <Button
+                            Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.NavigateCommand}"
+                            CommandParameter="{Binding FullPath}"
+                            Content="{Binding DisplayName}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Menu
+                Grid.Column="1"
+                VerticalAlignment="Center">
+                <MenuItem Header="Bookmarks">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="FavoriteList" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Manage">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="Setting" />
+                    </MenuItem.Icon>
+                    <MenuItem Header="Add bookmark">
+                        <MenuItem.Icon>
+                            <controls:FontIcon
+                                FontSize="22"
+                                Glyph="Add" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="Remove bookmark">
+                        <MenuItem.Icon>
+                            <controls:FontIcon
+                                FontSize="22"
+                                Glyph="Remove" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+        </Grid>
         <DataGrid
             x:Name="FolderView"
             Grid.Row="1"
@@ -150,29 +189,34 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="*" Header="Name" IsReadOnly="True">
+                <DataGridTemplateColumn
+                    Width="*"
+                    Header="Name"
+                    IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Name}"  Foreground="{Binding FileType, Converter={converters:FileTypeToColorConverter}}"/>
+                            <TextBlock
+                                Foreground="{Binding FileType, Converter={converters:FileTypeToColorConverter}}"
+                                Text="{Binding Name}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn
+                    MinWidth="100"
                     Binding="{Binding Extension}"
                     Header="Extension"
-                    MinWidth="100"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="Auto"
+                    MinWidth="100"
                     Binding="{Binding Size}"
                     Header="Size"
-                    MinWidth="100"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="Auto"
+                    MinWidth="140"
                     Binding="{Binding LastModified}"
                     Header="Last modified"
-                    MinWidth="140"
                     IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>

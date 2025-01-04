@@ -57,6 +57,24 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
     protected abstract void SetInstalledVersion(DateTimeOffset version);
 
+    private int _lastTerminalProgress = 0;
+
+    public void ReportToTerminal(double progress)
+    {
+        if (double.IsNaN(progress))
+        {
+            Terminal.ReportProgessToWinTerminal(null);
+            return;
+        }
+
+        int currentPercent = (int)progress;
+        if (currentPercent != _lastTerminalProgress)
+        {
+            _lastTerminalProgress = currentPercent;
+            Terminal.ReportProgessToWinTerminal(currentPercent);
+        }
+    }
+
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
         try
@@ -86,27 +104,34 @@ internal abstract class BaseGithubUpdateCommand : AsyncCommand
 
                 await AnsiConsole.Progress().AutoRefresh(false).StartAsync(async ctx =>
                 {
+                    ReportToTerminal(double.NaN);
                     var task1 = ctx.AddTask($"Downloading {ProgramName.EscapeMarkup()}...");
                     tempName = await client.DownloadAsset(asset, (long position, long length) =>
                     {
                         task1.Value = (double)position / length * 100;
                         ctx.Refresh();
+                        ReportToTerminal(task1.Value);
                     });
 
+                    ReportToTerminal(double.NaN);
                     var task2 = ctx.AddTask($"Extracting {ProgramName.EscapeMarkup()}...");
-
                     await ExtractBinariesTo(tempName, TargetFolder, (long pogress, long total) =>
                     {
                         task2.Value = (double)pogress / total * 100;
                         ctx.Refresh();
+                        ReportToTerminal(task2.Value);
                     });
 
+                    ReportToTerminal(double.NaN);
                     var postExtract = ctx.AddTask($"Post install actions...");
                     await PostInstall((long pogress, long total) =>
                     {
                         postExtract.Value = (double)pogress / total * 100;
                         ctx.Refresh();
+                        ReportToTerminal(postExtract.Value);
                     });
+
+                    ReportToTerminal(double.NaN);
 
                 });
 
