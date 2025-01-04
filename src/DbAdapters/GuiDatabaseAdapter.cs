@@ -7,6 +7,7 @@ using Media.Database;
 using Media.Database.Entity;
 using Media.Interop;
 using Media.Ui.Controls;
+using Media.Ui.Gui;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -31,22 +32,37 @@ internal class GuiDatabaseAdapter : DatabaseAdapterBase
             .ToListAsync();
     }
 
-    public async Task<List<FolderBookmark>> GetBookmarks()
+    public async Task<List<BookmarkViewModel>> GetBookmarks()
     {
         using var dbContext = GetContext();
-        return await dbContext.FolderBookmarks.ToListAsync();
+        return await dbContext.FolderBookmarks.Select(e => new BookmarkViewModel
+        {
+            Path = e.Path,
+            Name = e.Name,
+        }).ToListAsync();
     }
 
-    public async Task AddBookmark(string path)
+    public async Task RemoveBookmark(BookmarkViewModel bookmark)
     {
         using var dbContext = GetContext();
-        var entry = dbContext.FolderBookmarks.FirstOrDefault(e => e.Path == path);
+        var entry = dbContext.FolderBookmarks.FirstOrDefault(e => e.Path == bookmark.Path);
+        if (entry != null)
+        {
+            dbContext.FolderBookmarks.Remove(entry);
+            await dbContext.SaveChangesAsync();
+        }
+    }
+
+    public async Task AddBookMark(BookmarkViewModel folderBookmark)
+    {
+        using var dbContext = GetContext();
+        var entry = dbContext.FolderBookmarks.FirstOrDefault(e => e.Path == folderBookmark.Path);
         if (entry == null)
         {
             dbContext.FolderBookmarks.Add(new FolderBookmark
-            {
-                Name = Path.GetFileName(path),
-                Path = path,
+            { 
+                Name = folderBookmark.Name,
+                Path = folderBookmark.Path,
             });
             await dbContext.SaveChangesAsync();
         }

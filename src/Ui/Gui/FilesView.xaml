@@ -97,38 +97,76 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-            <Menu
+            <StackPanel
                 Grid.Column="1"
-                VerticalAlignment="Center">
-                <MenuItem Header="Bookmarks">
-                    <MenuItem.Icon>
-                        <controls:FontIcon
-                            FontSize="22"
-                            Glyph="FavoriteList" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Manage">
-                    <MenuItem.Icon>
-                        <controls:FontIcon
-                            FontSize="22"
-                            Glyph="Setting" />
-                    </MenuItem.Icon>
-                    <MenuItem Header="Add bookmark">
-                        <MenuItem.Icon>
-                            <controls:FontIcon
-                                FontSize="22"
-                                Glyph="Add" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Remove bookmark">
-                        <MenuItem.Icon>
-                            <controls:FontIcon
-                                FontSize="22"
-                                Glyph="Remove" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </MenuItem>
-            </Menu>
+                Orientation="Horizontal">
+                <ToggleButton
+                    x:Name="BookmarksBtn"
+                    ToolTip="Bookmarks">
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="FavoriteList" />
+                </ToggleButton>
+                <Popup
+                    x:Name="BookmarksPopup"
+                    IsOpen="{Binding ElementName=BookmarksBtn, Path=IsChecked}"
+                    Placement="Left"
+                    PlacementTarget="{Binding ElementName=BookmarksBtn}"
+                    StaysOpen="False">
+                    <Border
+                        Width="300"
+                        Padding="2"
+                        Background="{StaticResource WindowBackgroundBrush}"
+                        BorderBrush="{StaticResource CornerBorder}"
+                        BorderThickness="1">
+                        <ItemsControl
+                            ItemsSource="{Binding Bookmarks}"
+                            Style="{StaticResource VerticalItemsControl}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Grid.IsSharedSizeScope="True">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            VerticalAlignment="Center"
+                                            FontWeight="Bold"
+                                            Text="{Binding Name}"
+                                            ToolTip="{Binding Path}" />
+                                        <Button
+                                            Grid.Column="1"
+                                            Command="{Binding ElementName=BookmarksPopup, Path=PlacementTarget.DataContext.NavigateCommand}"
+                                            CommandParameter="{Binding Path}">
+                                            <controls:FontIcon
+                                                FontSize="22"
+                                                Glyph="RightArrowKeyTime0" />
+                                        </Button>
+                                        <Button
+                                            Grid.Column="2"
+                                            Command="{Binding ElementName=BookmarksPopup, Path=PlacementTarget.DataContext.RemoveBookmarkCommand}"
+                                            CommandParameter="{Binding}">
+                                            <controls:FontIcon
+                                                FontSize="22"
+                                                Glyph="Remove" />
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+
+                </Popup>
+                <Button
+                    Command="{Binding AddBookMarkCommand}"
+                    ToolTip="Add current folder to bookmarks">
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Add" />
+                </Button>
+            </StackPanel>
         </Grid>
         <DataGrid
             x:Name="FolderView"

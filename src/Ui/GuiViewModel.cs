@@ -39,7 +39,7 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
                         ILoggerFactory loggerFactory)
     {
         Logger = loggerFactory.CreateLogger<GuiViewModel>();
-        FilesViewModel = new FilesViewModel(uiFunctions, configAdapter);
+        FilesViewModel = new FilesViewModel(uiFunctions, configAdapter, guiDatabaseAdapter, loggerFactory);
         System = new SystemMenuViewModel();
         RadioStationsViewModel = new RadioStationsViewModel(radioStationsClient, uiFunctions, loggerFactory);
         PlaylistViewModel = new PlaylistViewModel(uiFunctions);
@@ -58,7 +58,7 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
 
     public void Initialize()
     {
-        FilesViewModel.RefreshDriveList();
+        FilesViewModel.Initialize();
         RadioStationsViewModel.Initialize();
         AudioViewModel.Initialize();
         AllwaysOnTop = _configAdapter.AlwaysOnTop;

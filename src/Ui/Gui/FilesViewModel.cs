@@ -13,18 +13,25 @@ using Media.Interop;
 using Media.Ui.Controls;
 using Media.Ui.Converters;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Ui.Gui;
-internal partial class FilesViewModel : ObservableObject
+internal partial class FilesViewModel : ObservableObject, IViewModel
 {
     private readonly IUiFunctions _uiFunctions;
     private readonly ConfigAdapter _configAdapter;
+    private readonly GuiDatabaseAdapter _guiDatabaseAdapter;
 
     [ObservableProperty]
     public partial string CurrentPath { get; set; }
 
+    partial void OnCurrentPathChanged(string value)
+        => AddBookMarkCommand.NotifyCanExecuteChanged();
+
     public ObservableRangeCollection<DriveModel> Drives { get; }
     public ObservableRangeCollection<PathPartModel> PathParts { get; }
     public ObservableRangeCollection<FolderItem> Items { get; }
+    public ObservableRangeCollection<BookmarkViewModel> Bookmarks { get; }
 
     [ObservableProperty]
     public partial bool ShowHidden { get; set; }
@@ -32,24 +39,40 @@ internal partial class FilesViewModel : ObservableObject
     [ObservableProperty]
     public partial FolderItem? SelectedItem { get; set; }
 
+    public ILogger Logger { get; }
+
     partial void OnShowHiddenChanged(bool value)
     {
         Navigate(CurrentPath);
     }
 
-    public FilesViewModel(IUiFunctions uiFunctions, ConfigAdapter configAdapter)
+    public FilesViewModel(IUiFunctions uiFunctions,
+                          ConfigAdapter configAdapter,
+                          GuiDatabaseAdapter guiDatabaseAdapter,
+                          ILoggerFactory loggerFactory)
     {
         SelectedItem = null;
         CurrentPath = string.Empty;
         Drives = new ObservableRangeCollection<DriveModel>();
         PathParts = new ObservableRangeCollection<PathPartModel>();
         Items = new ObservableRangeCollection<FolderItem>();
+        Bookmarks = new ObservableRangeCollection<BookmarkViewModel>();
+        Logger = loggerFactory.CreateLogger<FilesViewModel>();
         _uiFunctions = uiFunctions;
         _configAdapter = configAdapter;
+        _guiDatabaseAdapter = guiDatabaseAdapter;
+    }
+
+    public async void Initialize()
+    {
+        Bookmarks.Clear();
+        var bookmarks = await _guiDatabaseAdapter.GetBookmarks();
+        Bookmarks.AddRange(bookmarks);
+        RefreshDriveList();
     }
 
     [RelayCommand]
-    public void RefreshDriveList()
+    private void RefreshDriveList()
     {
         var drives = DriveInfo.GetDrives();
         var models = new List<DriveModel>(drives.Length);
@@ -144,7 +167,32 @@ internal partial class FilesViewModel : ObservableObject
         {
             _uiFunctions.ErrorMessage("Error", e.Message);
         }
+    }
 
+    private bool CanAddbookMark()
+        => Path.Exists(CurrentPath);
+
+    [RelayCommand(CanExecute = nameof(CanAddbookMark))]
+    private async Task AddBookMark()
+    {
+        if (string.IsNullOrEmpty(CurrentPath))
+            return;
+
+        var model = new BookmarkViewModel
+        {
+            Name = Path.GetFileName(Path.GetDirectoryName(CurrentPath)) ?? CurrentPath,
+            Path = CurrentPath
+        };
+
+        await _guiDatabaseAdapter.AddBookMark(model);
+        Bookmarks.Add(model);
+    }
+
+    [RelayCommand]
+    private async Task RemoveBookmark(BookmarkViewModel bookmark)
+    {
+        await _guiDatabaseAdapter.RemoveBookmark(bookmark);
+        Bookmarks.Remove(bookmark);
     }
 
     [RelayCommand]
@@ -185,7 +233,7 @@ internal partial class FilesViewModel : ObservableObject
         if (item.FileType.IsMpvSupportedType())
         {
             WeakReferenceMessenger.Default.Send(new PlaylistViewModel.AddToPlaylistMessage
-            { 
+            {
                 FullPath = item.FullPath
             });
         }
