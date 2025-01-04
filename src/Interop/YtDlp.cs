@@ -110,6 +110,6 @@ internal sealed class YtDlp : InteropBase
             || url.StartsWith("https://youtu.be/");
     }
 
-    protected override string? GetExternalPath()
+    protected override string GetExternalPath()
         => _configAccessor.ExternalYtdlpPath;
 }
