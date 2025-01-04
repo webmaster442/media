@@ -6,6 +6,7 @@
 using Media.Database;
 using Media.Database.Entity;
 using Media.Interop;
+using Media.Ui.Controls;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

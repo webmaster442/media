@@ -20,6 +20,7 @@ public class DatabaseContext : DbContext
     public DbSet<Setting> Settings { get; set; }
     public DbSet<PlayedEntry> PlayedEntries { get; set; }
     public DbSet<ApiCacheEntry> ApiCacheEntries { get; set; }
+    public DbSet<FolderBookmark> FolderBookmarks { get; set; }
 
     public DatabaseContext()
     {
@@ -50,6 +51,13 @@ public class DatabaseContext : DbContext
         Configure(modelBuilder.Entity<VideoFile>());
         Configure(modelBuilder.Entity<PlayedEntry>());
         Configure(modelBuilder.Entity<ApiCacheEntry>());
+        Configure(modelBuilder.Entity<FolderBookmark>());
+    }
+
+    private static void Configure(EntityTypeBuilder<FolderBookmark> builder)
+    {
+        builder.HasKey(x => x.Path);
+        builder.Property(x => x.Name).IsRequired();
     }
 
     private static void Configure(EntityTypeBuilder<ApiCacheEntry> builder)
