@@ -8,6 +8,7 @@ using Media.DbAdapters;
 using Media.Infrastructure;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Media;
 
@@ -25,5 +26,15 @@ internal static class ProgramFactory
         var registar = new TypeRegistrar(services);
         registar.Build();
         return registar;
+    }
+
+    public static ILoggerFactory GetLoggerFactory()
+    {
+        return LoggerFactory.Create(builder =>
+        {
+            builder.ClearProviders();
+            builder.AddConsole();
+            builder.AddFilter(loglevel => loglevel >= LogLevel.Information);
+        });
     }
 }

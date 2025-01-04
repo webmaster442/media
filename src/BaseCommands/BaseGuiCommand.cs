@@ -9,18 +9,22 @@ using System.Windows;
 using Media.Infrastructure;
 using Media.Interfaces;
 
+using Microsoft.Extensions.Logging;
+
 using Spectre.Console;
 
 namespace Media.BaseCommands;
 
 internal abstract class BaseGuiCommand<TWindow> : Command where TWindow : Window, new()
 {
-    protected virtual IViewModel? CreateDataContext(IUiFunctions uiFunctions) => null;
+    protected virtual IViewModel? CreateDataContext(IUiFunctions uiFunctions, ILoggerFactory loggerFactory) => null;
 
     protected virtual IWindowManipulator? CreateWindowManipulator() => null;
 
     protected virtual void ThreadCode()
     {
+        using var loggerFactory = ProgramFactory.GetLoggerFactory();
+
         try
         {
             var runner = new AppRunner<TWindow>();
@@ -32,7 +36,7 @@ internal abstract class BaseGuiCommand<TWindow> : Command where TWindow : Window
                 runner.WindowManipulator = customManipulator;
             }
 
-            runner.Run(CreateDataContext(new UiFunctionsImplementation()));
+            runner.Run(CreateDataContext(new UiFunctionsImplementation(), loggerFactory));
 
         }
         catch (Exception ex)

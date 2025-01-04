@@ -11,6 +11,8 @@ using Media.Infrastructure;
 using Media.Interfaces;
 using Media.Ui;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Commands;
 
 [Example("Open a window to convert a file by drag and drop", "media convert drop")]
@@ -41,6 +43,6 @@ internal class ConvertDragDrop : BaseGuiCommand<DropConvertWindow>
     protected override IWindowManipulator? CreateWindowManipulator()
         => new DropWindowManipulator();
 
-    protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions)
-        => new DropConvertViewModel(uiFunctions, _configAccessor);
+    protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions, ILoggerFactory loggerFactory)
+        => new DropConvertViewModel(uiFunctions, _configAccessor, loggerFactory);
 }

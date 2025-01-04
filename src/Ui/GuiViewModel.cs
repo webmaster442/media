@@ -12,6 +12,8 @@ using Media.Interfaces;
 using Media.Interop;
 using Media.Ui.Gui;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Ui;
 
 internal partial class GuiViewModel : ObservableObject, IViewModel
@@ -33,19 +35,23 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
     public GuiViewModel(IUiFunctions uiFunctions,
                         RadioStationsClient radioStationsClient,
                         GuiDatabaseAdapter guiDatabaseAdapter,
-                        ConfigAdapter configAdapter)
+                        ConfigAdapter configAdapter,
+                        ILoggerFactory loggerFactory)
     {
+        Logger = loggerFactory.CreateLogger<GuiViewModel>();
         FilesViewModel = new FilesViewModel(uiFunctions, configAdapter);
         System = new SystemMenuViewModel();
-        RadioStationsViewModel = new RadioStationsViewModel(radioStationsClient, uiFunctions);
+        RadioStationsViewModel = new RadioStationsViewModel(radioStationsClient, uiFunctions, loggerFactory);
         PlaylistViewModel = new PlaylistViewModel(uiFunctions);
-        AudioViewModel = new AudioViewModel();
+        AudioViewModel = new AudioViewModel(loggerFactory);
         DatabaseViewModel = new DatabaseViewModel(uiFunctions, guiDatabaseAdapter);
         _configAdapter = configAdapter;
     }
 
     [ObservableProperty]
     public partial bool AllwaysOnTop { get; set; }
+
+    public ILogger Logger { get; }
 
     partial void OnAllwaysOnTopChanged(bool value)
         => _configAdapter.AlwaysOnTop = value;

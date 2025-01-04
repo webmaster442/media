@@ -14,6 +14,8 @@ using Media.Infrastructure;
 using Media.Interfaces;
 using Media.Interop;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Ui;
 
 internal sealed partial class DropConvertViewModel : ObservableObject, IViewModel
@@ -35,8 +37,11 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
 
     public ObservableCollection<Preset> PresetCollection { get; }
 
-    public DropConvertViewModel(IUiFunctions uiFunctions, ConfigAdapter configAccessor)
+    public ILogger Logger { get; }
+
+    public DropConvertViewModel(IUiFunctions uiFunctions, ConfigAdapter configAccessor, ILoggerFactory loggerFactory)
     {
+        Logger = loggerFactory.CreateLogger<DropConvertViewModel>();
         _uiFunctions = uiFunctions;
         _fFMpeg = new FFMpeg(configAccessor);
         SelectedPath = Environment.CurrentDirectory;

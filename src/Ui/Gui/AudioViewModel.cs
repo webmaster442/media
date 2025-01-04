@@ -13,6 +13,8 @@ using CommunityToolkit.Mvvm.Input;
 using Media.Interfaces;
 using Media.Ui.Controls;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Ui.Gui;
 
 internal sealed partial class AudioViewModel : ObservableObject, IViewModel
@@ -26,9 +28,12 @@ internal sealed partial class AudioViewModel : ObservableObject, IViewModel
 
     public ObservableRangeCollection<DeviceViewModel> Devices { get; }
 
-    public AudioViewModel()
+    public ILogger Logger { get; }
+
+    public AudioViewModel(ILoggerFactory loggerFactory)
     {
         Devices = new ObservableRangeCollection<DeviceViewModel>();
+        Logger = loggerFactory.CreateLogger<AudioViewModel>();
     }
 
     private void RefreshdevicesCore(CoreAudioController controller)

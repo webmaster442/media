@@ -38,13 +38,7 @@ internal sealed class Sereve : Command<Sereve.Settings>
 
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
-        using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-        {
-            builder.ClearProviders();
-            builder.AddConsole();
-            builder.AddFilter(loglevel => loglevel >= LogLevel.Information);
-        });
-
+        using ILoggerFactory loggerFactory = ProgramFactory.GetLoggerFactory();
 
         using var server = new HttpServer(_dlnaServerPort, loggerFactory);
 

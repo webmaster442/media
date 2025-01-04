@@ -10,6 +10,8 @@ using Media.Interfaces;
 using Media.Interop;
 using Media.Ui.Controls;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Ui;
 
 internal sealed partial class ImageViewerViewModel : ObservableObject, IViewModel
@@ -24,6 +26,8 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
     [ObservableProperty]
     public partial string CurrentImage { get; set; }
 
+    public ILogger Logger { get; }
+
     partial void OnCurrentImageChanged(string value)
     {
         if (ImageFiles.Count < 1) return;
@@ -35,8 +39,9 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
     [ObservableProperty]
     private string _windowTitle;
 
-    public ImageViewerViewModel(string folder, IUiFunctions uiFunctions)
+    public ImageViewerViewModel(string folder, IUiFunctions uiFunctions, ILoggerFactory loggerFactory)
     {
+        Logger = loggerFactory.CreateLogger<ImageViewerViewModel>();
         _folder = folder;
         _uiFunctions = uiFunctions;
         _windowTitle = $"Image Viewer - {Path.GetFileName(_folder)}";

@@ -12,6 +12,8 @@ using Media.Interfaces;
 using Media.Interop;
 using Media.Ui.Controls;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Ui.Gui;
 
 internal sealed partial class RadioStationsViewModel : ObservableObject, IViewModel
@@ -22,13 +24,15 @@ internal sealed partial class RadioStationsViewModel : ObservableObject, IViewMo
     public ObservableRangeCollection<Country> Countries { get; }
     public ObservableRangeCollection<Station> Stations { get; }
 
-    public RadioStationsViewModel(RadioStationsClient radioStationsClient, IUiFunctions uiFunctions)
+    public ILogger Logger { get; }
+
+    public RadioStationsViewModel(RadioStationsClient radioStationsClient, IUiFunctions uiFunctions, ILoggerFactory loggerFactory)
     {
+        Logger = loggerFactory.CreateLogger<RadioStationsViewModel>();
         Countries = new ObservableRangeCollection<Country>();
         Stations = new ObservableRangeCollection<Station>();
         _radioStationsClient = radioStationsClient;
         _uiFunctions = uiFunctions;
-
     }
 
     public async void Initialize()

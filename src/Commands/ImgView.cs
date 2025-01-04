@@ -9,6 +9,8 @@ using Media.Infrastructure.Validation;
 using Media.Interfaces;
 using Media.Ui;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Commands;
 
 internal class ImgView : BaseGuiCommand<ImageViewerWindow, ImgView.Settings>
@@ -21,6 +23,6 @@ internal class ImgView : BaseGuiCommand<ImageViewerWindow, ImgView.Settings>
         public string Folder { get; set; } = Environment.CurrentDirectory;
     }
 
-    protected override IViewModel? CreateDataContext(Settings settings, IUiFunctions uiFunctions)
-        => new ImageViewerViewModel(settings.Folder, uiFunctions);
+    protected override IViewModel? CreateDataContext(Settings settings, IUiFunctions uiFunctions, ILoggerFactory loggerFactory)
+        => new ImageViewerViewModel(settings.Folder, uiFunctions, loggerFactory);
 }

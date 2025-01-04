@@ -11,6 +11,8 @@ using Media.Infrastructure;
 using Media.Interfaces;
 using Media.Ui;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Commands;
 internal sealed class Gui : BaseGuiCommand<GuiWindow>
 {
@@ -28,12 +30,13 @@ internal sealed class Gui : BaseGuiCommand<GuiWindow>
         _configAdapter = configAdapter;
     }
 
-    protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions)
+    protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions, ILoggerFactory loggerFactory)
     {
         return new GuiViewModel(uiFunctions,
                                 _radioStationsClient,
                                 _guiDatabaseAdapter,
-                                _configAdapter);
+                                _configAdapter,
+                                loggerFactory);
     }
 
     protected override IWindowManipulator? CreateWindowManipulator()
