@@ -22,6 +22,10 @@ internal partial class DatabaseViewModel : ObservableObject
     private readonly IUiFunctions _uiFunctions;
     private readonly GuiDatabaseAdapter _guiDatabaseAdapter;
 
+    public delegate Task<IEnumerable> RefreshFunc();
+
+    private RefreshFunc? _refreshTask;
+
     [ObservableProperty]
     public partial IEnumerable Results { get; set; }
 
@@ -60,7 +64,12 @@ internal partial class DatabaseViewModel : ObservableObject
                 range = (DateTime.MinValue, DateTime.MaxValue);
                 break;
         }
-        Results = await _guiDatabaseAdapter.GetPlayedEntries(range.start, range.end);
+
+        _refreshTask = async() => await _guiDatabaseAdapter.GetPlayedEntries(range.start, range.end);
+        if (_refreshTask != null)
+        {
+            Results = await _refreshTask();
+        }
         _uiFunctions.EndAsyncOperation();
     }
 
@@ -72,13 +81,17 @@ internal partial class DatabaseViewModel : ObservableObject
         _uiFunctions.EndAsyncOperation();
         if (paths.Count > 0)
         {
-            var result = _uiFunctions.ConfirmMessage($"Are you sure that you want to delete {0} entries from the database?", "Confirmation");
+            var result = _uiFunctions.ConfirmMessage($"Are you sure that you want to delete {paths.Count} entries from the database?", "Confirmation");
             if (result)
             {
                 _uiFunctions.BeginAsyncOperation();
                 await _guiDatabaseAdapter.RemovePlayedEntries(paths);
                 _uiFunctions.EndAsyncOperation();
             }
+        }
+        if (_refreshTask != null)
+        {
+            Results = await _refreshTask();
         }
     }
 

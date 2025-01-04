@@ -86,9 +86,10 @@ internal sealed class Play : BaseFileWorkCommand<Play.Settings>
         {
             var webapp = new MpvWebControllerApp(process.Id, _remotePort, pipeName);
             await webapp.RunAsync(CancellationToken.None);
+
+            Terminal.InfoText("Press a key to exit...");
+            Console.ReadKey();
         }
-        Terminal.InfoText("Press a key to exit...");
-        Console.ReadKey();
     }
 
     private static int GetRandomId()
