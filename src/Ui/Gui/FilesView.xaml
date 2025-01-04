@@ -135,6 +135,7 @@
             <DataGrid.Columns>
                 <DataGridTemplateColumn
                     Width="Auto"
+                    CanUserResize="False"
                     IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -149,24 +150,29 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn
-                    Width="Auto"
-                    Binding="{Binding Name}"
-                    Header="Name"
-                    IsReadOnly="True" />
+                <DataGridTemplateColumn Width="*" Header="Name" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"  Foreground="{Binding FileType, Converter={converters:FileTypeToColorConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn
                     Binding="{Binding Extension}"
                     Header="Extension"
+                    MinWidth="100"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding Size}"
                     Header="Size"
+                    MinWidth="100"
                     IsReadOnly="True" />
                 <DataGridTextColumn
                     Width="Auto"
                     Binding="{Binding LastModified}"
                     Header="Last modified"
+                    MinWidth="140"
                     IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
