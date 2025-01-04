@@ -11,6 +11,9 @@ using Media.ShellAutoComplete.AutoComplete;
 using Media.ShellAutoComplete.Integrations;
 
 using var registar = ProgramFactory.CreateTypeRegistar();
+
+await ProgramFactory.RunDatabaseJobsIfNeeded();
+
 var mainApp = new CommandApp<DefaultCommand>(registar);
 
 Terminal.EnableUTF8Output();

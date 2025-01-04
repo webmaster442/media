@@ -15,4 +15,14 @@ internal class DatabaseAdapterBase
         db.RunMigrationsIfNeeded();
         return db;
     }
+
+    public async Task ForceDbJobRunning()
+    {
+        await using var context = GetContext();
+        using var logger = ProgramFactory.GetLoggerFactory();
+
+        var jobRunner = new DatabaseJobRunner(context, DateTime.Now, logger.CreateLogger("Database jobs"));
+
+        await jobRunner.RunJobs(true);
+    }
 }

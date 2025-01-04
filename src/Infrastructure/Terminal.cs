@@ -54,4 +54,21 @@ internal static class Terminal
 
     internal static bool Confirm(string message)
         => AnsiConsole.Confirm(message);
+
+    internal static async Task<bool> AbortCountdown(string message, int timeoutSeconds)
+    {
+        InfoText(message);
+        for (int i = timeoutSeconds; i > 0; i--)
+        {
+            AnsiConsole.WriteLine("Press a key to abort in {0} ...\r", i);
+            await Task.Delay(1000);
+            if (Console.KeyAvailable)
+            {
+                Console.ReadKey(true);
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

@@ -17,4 +17,5 @@ public static class ConfigKeys
     public const string DlnaServerPort = "DlnaServerPort";
     public const string ExitOnLaunch = "ExitOnLaunch";
     public const string AlwaysOnTop = "AlwaysOnTop";
+    public const string LastCleanupDate = "LastCleanupDate";
 }

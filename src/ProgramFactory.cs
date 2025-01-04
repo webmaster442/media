@@ -37,4 +37,23 @@ internal static class ProgramFactory
             builder.AddFilter(loglevel => loglevel >= LogLevel.Information);
         });
     }
+
+    public static async Task RunDatabaseJobsIfNeeded()
+    {
+        using var db = new DatabaseContext();
+        db.RunMigrationsIfNeeded();
+
+        using var logger = GetLoggerFactory();
+
+        var jobRunner = new DatabaseJobRunner(db, DateTime.Now, logger.CreateLogger("Database jobs"));
+
+        if (jobRunner.IsAnyJobToRun())
+        {
+            bool isAborted = await Terminal.AbortCountdown("Preparing to run database jobs.", 5);
+            if (!isAborted)
+            {
+                await jobRunner.RunJobs(false);
+            }
+        }
+    }
 }

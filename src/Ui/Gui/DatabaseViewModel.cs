@@ -76,23 +76,7 @@ internal partial class DatabaseViewModel : ObservableObject
     [RelayCommand]
     private async Task Cleanup()
     {
-        _uiFunctions.BeginAsyncOperation();
-        var paths = await _guiDatabaseAdapter.GetPlayedThatNotExists();
-        _uiFunctions.EndAsyncOperation();
-        if (paths.Count > 0)
-        {
-            var result = _uiFunctions.ConfirmMessage($"Are you sure that you want to delete {paths.Count} entries from the database?", "Confirmation");
-            if (result)
-            {
-                _uiFunctions.BeginAsyncOperation();
-                await _guiDatabaseAdapter.RemovePlayedEntries(paths);
-                _uiFunctions.EndAsyncOperation();
-            }
-        }
-        if (_refreshTask != null)
-        {
-            Results = await _refreshTask();
-        }
+        await _guiDatabaseAdapter.ForceDbJobRunning();
     }
 
     private bool CanPlay(object item)
