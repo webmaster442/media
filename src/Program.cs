@@ -45,6 +45,9 @@ mainApp.Configure(config =>
     config.AddCommand<Gui>("gui")
         .WithDescription("Start the graphical user interface");
 
+    config.AddCommand<Install>("install")
+        .WithDescription("Install the program. Create icons and add to path");
+
     config.AddBranch("config", cfg =>
     {
         cfg.SetDescription("Configuration related commands");

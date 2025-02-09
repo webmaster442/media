@@ -37,14 +37,14 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
     }
 
     [ObservableProperty]
-    private string _windowTitle;
+    public partial string WindowTitle { get; set; }
 
     public ImageViewerViewModel(string folder, IUiFunctions uiFunctions, ILoggerFactory loggerFactory)
     {
         Logger = loggerFactory.CreateLogger<ImageViewerViewModel>();
         _folder = folder;
         _uiFunctions = uiFunctions;
-        _windowTitle = $"Image Viewer - {Path.GetFileName(_folder)}";
+        WindowTitle = $"Image Viewer - {Path.GetFileName(_folder)}";
         _currentImageIndex = 0;
         ImageFiles = new ObservableRangeCollection<string>();
         CurrentImage = string.Empty;

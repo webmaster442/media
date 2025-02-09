@@ -18,6 +18,7 @@ namespace Media.Ui;
 
 internal partial class GuiViewModel : ObservableObject, IViewModel
 {
+    private readonly IUiFunctions _uiFunctions;
     private readonly ConfigAdapter _configAdapter;
 
     public FilesViewModel FilesViewModel { get; }
@@ -45,6 +46,7 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
         PlaylistViewModel = new PlaylistViewModel(uiFunctions);
         AudioViewModel = new AudioViewModel(loggerFactory);
         DatabaseViewModel = new DatabaseViewModel(uiFunctions, guiDatabaseAdapter);
+        _uiFunctions = uiFunctions;
         _configAdapter = configAdapter;
     }
 
@@ -68,6 +70,7 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
     private void MediaCommand(string cli)
     {
         var args = cli.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        _uiFunctions.BringConsoleWindowToFront();
         SelfInterop.RunMediaCommand(args);
     }
 
@@ -77,9 +80,15 @@ internal partial class GuiViewModel : ObservableObject, IViewModel
 
     [RelayCommand]
     private void RandomPlay(string count = "1")
-        => SelfInterop.RunMediaCommand("play", "random", FilesViewModel.CurrentPath, count);
+    {
+        _uiFunctions.BringConsoleWindowToFront();
+        SelfInterop.RunMediaCommand("play", "random", FilesViewModel.CurrentPath, count);
+    }
 
     [RelayCommand]
     private void Serve()
-        => SelfInterop.RunMediaCommand("serve", FilesViewModel.CurrentPath);
+    {
+        _uiFunctions.BringConsoleWindowToFront();
+        SelfInterop.RunMediaCommand("serve", FilesViewModel.CurrentPath);
+    }
 }

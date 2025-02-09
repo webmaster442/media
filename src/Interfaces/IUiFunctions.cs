@@ -32,4 +32,5 @@ internal interface IUiFunctions : IProgress<double>
     string? OpenFileDialog(string filterString);
 
     string? SaveFileDialog(string filterString);
+    void BringConsoleWindowToFront();
 }

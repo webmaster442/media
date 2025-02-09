@@ -14,6 +14,7 @@ using Media.Ui;
 using Microsoft.Extensions.Logging;
 
 namespace Media.Commands;
+
 internal sealed class Gui : BaseGuiCommand<GuiWindow>
 {
     private readonly RadioStationsClient _radioStationsClient;

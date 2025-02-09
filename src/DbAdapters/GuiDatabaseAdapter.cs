@@ -6,7 +6,6 @@
 using Media.Database;
 using Media.Database.Entity;
 using Media.Interop;
-using Media.Ui.Controls;
 using Media.Ui.Gui;
 
 using Microsoft.EntityFrameworkCore;

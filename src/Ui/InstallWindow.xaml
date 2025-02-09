@@ -1,0 +1,83 @@
+﻿<Window
+    x:Class="Media.Ui.InstallWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Media.Ui"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Media Install"
+    Width="897"
+    Height="600"
+    mc:Ignorable="d">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="78" />
+        </Grid.RowDefinitions>
+        <Image
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="20"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Source="/Embedded/icon.png" />
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="1">
+            <TextBlock
+                FontSize="48"
+                Text="Media Installer" />
+            <TextBlock
+                Margin="10,0,0,10"
+                FontSize="24"
+                Text="Options" />
+            <CheckBox
+                Margin="20,5,0,0"
+                Content="Create Start menu Icons"
+                IsChecked="{Binding CreateStartMenuIcons}"
+                Style="{StaticResource BigCheckBox}" />
+            <CheckBox
+                Margin="20,5,0,0"
+                Content="Create Desktop Icons"
+                IsChecked="{Binding CreateDesktopIcons}"
+                Style="{StaticResource BigCheckBox}" />
+            <CheckBox
+                Margin="20,5,0,0"
+                Content="Add program to path variable"
+                IsChecked="{Binding AddToPath}"
+                Style="{StaticResource BigCheckBox}" />
+            <Rectangle
+                Height="2"
+                Margin="20,5"
+                Fill="{StaticResource DisabledButtonBackground}" />
+            <CheckBox
+                Margin="20,5,0,0"
+                Content="Update all dependencies"
+                IsChecked="{Binding UpdateDependencies}"
+                Style="{StaticResource BigCheckBox}" />
+        </StackPanel>
+        <Border
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Background="{StaticResource CornerBorder}">
+            <StackPanel
+                HorizontalAlignment="Right"
+                Orientation="Horizontal">
+                <Button
+                    Width="120"
+                    Height="38"
+                    Command="{Binding InstallCommand}"
+                    Content="Install" />
+                <Button
+                    Width="120"
+                    Height="38"
+                    Command="{Binding CancelCommand}"
+                    Content="Cancel" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

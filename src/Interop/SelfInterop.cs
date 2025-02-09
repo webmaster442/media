@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 
 using Media.Infrastructure;
 
@@ -13,29 +14,17 @@ namespace Media.Interop;
 
 internal static class SelfInterop
 {
-    private static void BringConsoleWindowToFront()
-    {
-        IntPtr handle = Win32Functions.FindWindow(null, Console.Title);
-
-        if (handle == IntPtr.Zero)
-        {
-            //Console window not found!
-            return;
-        }
-
-        Win32Functions.ShowWindow(handle, Win32Functions.SW_RESTORE);
-        Win32Functions.SetForegroundWindow(handle);
-    }
+    public static string CurentProgramPath
+        => Path.Combine(AppContext.BaseDirectory, "media.exe");
 
     private static void RunMedia(string[] args)
     {
-        BringConsoleWindowToFront();
         AnsiConsole.MarkupLine("[green]Executing[/] {0}...", string.Join(' ', args).EscapeMarkup());
         using var p = new Process
         {
             StartInfo = new ProcessStartInfo
             {
-                FileName = Path.Combine(AppContext.BaseDirectory, "media.exe"),
+                FileName = CurentProgramPath,
                 UseShellExecute = false
             }
         };

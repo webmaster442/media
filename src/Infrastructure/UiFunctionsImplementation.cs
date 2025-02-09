@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Shell;
 
 using Media.Interfaces;
+using Media.Interop;
 using Media.Ui.Controls;
 
 namespace Media.Infrastructure;
@@ -185,5 +186,19 @@ internal class UiFunctionsImplementation : IUiFunctions
             return sfd.FileName;
         }
         return null;
+    }
+
+    public void BringConsoleWindowToFront()
+    {
+        IntPtr handle = Win32Functions.FindWindow(null, Console.Title);
+
+        if (handle == IntPtr.Zero)
+        {
+            //Console window not found!
+            return;
+        }
+
+        Win32Functions.ShowWindow(handle, Win32Functions.SW_RESTORE);
+        Win32Functions.SetForegroundWindow(handle);
     }
 }
