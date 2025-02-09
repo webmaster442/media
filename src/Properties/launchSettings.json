@@ -67,6 +67,10 @@
       "commandName": "Project",
       "commandLineArgs": "audio"
     },
+    "install": {
+      "commandName": "Project",
+      "commandLineArgs": "install"
+    },
     "xmldoc": {
       "commandName": "Project",
       "commandLineArgs": "cli xmldoc"

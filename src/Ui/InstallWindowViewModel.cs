@@ -45,25 +45,25 @@ internal sealed partial class InstallWindowViewModel : ObservableObject, IViewMo
         new ShortcutBuilder()
             .WithTargetPath(SelfInterop.CurentProgramPath)
             .WithArguments("")
-            .WithIcon(SelfInterop.CurentProgramPath, 1)
+            .WithIcon(Path.Combine(AppContext.BaseDirectory, "branding.dll"), 1)
             .Build(Path.Combine(folder, "Media Cli.lnk"));
 
         new ShortcutBuilder()
             .WithTargetPath(SelfInterop.CurentProgramPath)
             .WithArguments("gui")
-            .WithIcon(SelfInterop.CurentProgramPath, 0)
+            .WithIcon(Path.Combine(AppContext.BaseDirectory, "branding.dll"), 0)
             .Build(Path.Combine(folder, "Media Gui.lnk"));
 
         new ShortcutBuilder()
             .WithTargetPath(SelfInterop.CurentProgramPath)
             .WithArguments("convert drop")
-            .WithIcon(SelfInterop.CurentProgramPath, 2)
+            .WithIcon(Path.Combine(AppContext.BaseDirectory, "branding.dll"), 2)
             .Build(Path.Combine(folder, "Media Drop Convert.lnk"));
 
         new ShortcutBuilder()
             .WithTargetPath(SelfInterop.CurentProgramPath)
             .WithArguments("imgview")
-            .WithIcon(SelfInterop.CurentProgramPath, 3)
+            .WithIcon(Path.Combine(AppContext.BaseDirectory, "branding.dll"), 3)
             .Build(Path.Combine(folder, "Media Image Viewer.lnk"));
     }
 
@@ -95,6 +95,9 @@ internal sealed partial class InstallWindowViewModel : ObservableObject, IViewMo
             _uiFunctions.BringConsoleWindowToFront();
             SelfInterop.RunMediaCommand("update", "all");
         }
+
+        _uiFunctions.InfoMessage("Installation completed.", "Media Installer");
+        _uiFunctions.Exit(0);
     }
 
     [RelayCommand]

@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ApplicationDefinition Remove="App.xaml"/>
+    <ApplicationDefinition Remove="App.xaml" />
     <Page Include="App.xaml" />
   </ItemGroup>
 
@@ -68,6 +68,9 @@
     <Content Include="..\LICENSE" Link="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="..\branding\branding.dll" Link="branding.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <ProjectReference Include="..\include\AudioSwitcher.AudioApi\AudioSwitcher.AudioApi.csproj" />
     <ProjectReference Include="..\include\AudioSwitcher.CoreAudio\AudioSwitcher.CoreAudio.csproj" />
     <ProjectReference Include="..\include\Media.Database\Media.Database.csproj" />

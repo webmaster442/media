@@ -7,12 +7,12 @@ internal static class SystemRegistry
 {
     public static void AddFolderToPath(string folderPath, ILogger logger)
     {
-        const string keyName = "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment";
+        const string keyName = "Environment";
         const string valueName = "Path";
 
         try
         {
-            using (RegistryKey? key = Registry.LocalMachine.OpenSubKey(keyName, true))
+            using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(keyName, true))
             {
                 if (key != null)
                 {
