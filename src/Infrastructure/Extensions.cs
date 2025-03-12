@@ -148,7 +148,7 @@ public static class Extensions
             {
                 filterRegex = WildcardToRegex(pattern.Value);
             }
-            foreach (var file in Filter(files, pattern.Value, pattern.IgnoreCase))
+            foreach (var file in Filter(files, filterRegex, pattern.IgnoreCase))
             {
                 yield return file;
             }

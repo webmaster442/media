@@ -50,10 +50,10 @@ internal sealed class Organize : AsyncCommand<Organize.Settings>
 
         Rule[] rules = LoadFile(settings.GetRuleFile());
 
-        //foreach (var rule in rules)
-        //{
-        //    var matches = rule.GetMathcingFiles(settings.SoruceDirectory);
-        //}
+        foreach (var rule in rules)
+        {
+            var matches = rule.GetMathcingFiles(settings.SoruceDirectory).ToList();
+        }
 
         return 0;
     }

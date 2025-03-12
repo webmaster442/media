@@ -5,7 +5,7 @@ using Media.Infrastructure.Validation;
 namespace Media.Dto.Organizer;
 
 [XmlRoot("Pattern")]
-public class Pattern
+public record class Pattern
 {
     [XmlAttribute]
     [NotEmptyOrWiteSpace]

@@ -12,4 +12,6 @@ public class Rule
     [XmlAttribute]
     [NotEmptyOrWiteSpace]
     public required string Folder { get; set; }
+
+    override public string ToString() => Folder;
 }
