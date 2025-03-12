@@ -19,7 +19,7 @@ internal static class MetadataFactory
                 Path = path,
                 Artist = ToTitleCase(f.Tag.FirstPerformer, "Unknown artitst"),
                 Title = ToTitleCase(f.Tag.Title, Path.GetFileNameWithoutExtension(path)),
-                Size = f.Length,
+                Size = f.FileAbstraction.ReadStream.Length,
                 Year = f.Tag.Year,
                 TrackNumber = f.Tag.Track,
                 DiscNumber = f.Tag.Disc,
