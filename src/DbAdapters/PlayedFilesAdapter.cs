@@ -37,8 +37,13 @@ internal sealed class PlayedFilesAdapter : DatabaseAdapterBase
                     LastPlayed = DateTime.Now
                 });
             }
+
+            Metadata? metadata = await dbContext.Metadata.FindAsync(file);
+            if (metadata is null && MetadataFactory.TryCreateMetaData(file, out Metadata? created))
+            {
+                await dbContext.Metadata.AddAsync(created);
+            }
         }
         await dbContext.SaveChangesAsync();
     }
-
 }

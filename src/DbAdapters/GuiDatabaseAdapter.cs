@@ -15,13 +15,6 @@ namespace Media.DbAdapters;
 
 internal class GuiDatabaseAdapter : DatabaseAdapterBase
 {
-    private readonly TextInfo _textInfo;
-
-    public GuiDatabaseAdapter()
-    {
-        _textInfo = new CultureInfo("en-US", false).TextInfo;
-    }
-
     public async Task<List<PlayedEntry>> GetPlayedEntries(DateTime start, DateTime end)
     {
         using var dbContext = GetContext();
@@ -72,112 +65,15 @@ internal class GuiDatabaseAdapter : DatabaseAdapterBase
         using var context = GetContext();
         foreach (var file in files)
         {
-            var fileType = FileRecognizer.GetFileType(file);
-            if (fileType == FileRecognizer.FileType.Audio)
+            if (MetadataFactory.TryCreateMetaData(file, out Metadata? created))
             {
-                try
-                {
-                    using TagLib.File f = TagLib.File.Create(file);
-                    Album album = await GetOrCreateAlbum(f, context);
-                    Genre genre = await GetOrCreateGenre(f, context);
-                    context.Musics.Add(new MusicFile
-                    {
-                        Id = CalculateId(file),
-                        AddedDate = DateTime.UtcNow,
-                        Artist = ToTitleCase(f.Tag.FirstPerformer, "Unknown artitst"),
-                        Title = ToTitleCase(f.Tag.Title, Path.GetFileNameWithoutExtension(file)),
-                        Size = f.Length,
-                        Year = f.Tag.Year,
-                        TrackNumber = f.Tag.Track,
-                        DiscNumber = f.Tag.Disc,
-                        PlayTimeInSeconds = f.Properties.Duration.TotalSeconds,
-                        Path = file,
-                        Album = album,
-                        Genre = genre,
-                    });
-                }
-                catch (Exception ex)
-                {
-                    logger.LogWarning("Music file read error: {ex}", ex);
-                }
+                context.Metadata.Add(created);
             }
-            else if (fileType == FileRecognizer.FileType.Video)
+            else
             {
-                try
-                {
-                    using TagLib.File f = TagLib.File.Create(file);
-                    context.Videos.Add(new VideoFile
-                    {
-                        Id = CalculateId(file),
-                        Path = file,
-                        AddedDate = DateTime.UtcNow,
-                        Size = f.Length,
-                        PlayTimeInSeconds = f.Properties.Duration.TotalSeconds,
-                        Codecs = string.Join(',', f.Properties.Codecs.Select(x => x.Description)),
-                        Width = f.Properties.VideoWidth,
-                        Height = f.Properties.VideoHeight,
-                    });
-                }
-                catch (Exception ex)
-                {
-                    logger.LogWarning("Video file read error: {ex}", ex);
-                }
+                logger.LogWarning("Failed to add {file} to library", file);
             }
         }
         return await context.SaveChangesAsync();
-    }
-
-    private async Task<Genre> GetOrCreateGenre(TagLib.File f, DatabaseContext context)
-    {
-        var genre = ToTitleCase(f.Tag.FirstGenre, "Unknown");
-        var toAdd = new Genre
-        {
-            Id = CalculateId(genre),
-            Name = genre,
-        };
-        Genre? found = await context.Genres.FirstOrDefaultAsync(g => g.Id == toAdd.Id);
-        if (found != null)
-        {
-            return found;
-        }
-        context.Genres.Add(toAdd);
-        return toAdd;
-    }
-
-    private async Task<Album> GetOrCreateAlbum(TagLib.File f, DatabaseContext context)
-    {
-        Album toAdd = new Album
-        {
-            Artist = ToTitleCase(f.Tag.FirstAlbumArtist, "Unknown artitst"),
-            Name = ToTitleCase(f.Tag.Album, "Unknown album"),
-            Year = f.Tag.Year,
-        };
-        toAdd.Id = CalculateId($"{toAdd.Artist} - {toAdd.Id}");
-        Album? found = await context.Albums.FirstOrDefaultAsync(a => a.Id == toAdd.Id);
-        if (found != null)
-        {
-            return found;
-        }
-        context.Albums.Add(toAdd);
-        return toAdd;
-    }
-
-    private static uint CalculateId(string s)
-    {
-        uint hash = 2166136261u;
-        foreach (var chr in s)
-        {
-            hash ^= chr;
-            hash *= 16777619u;
-        }
-        return hash;
-    }
-
-    private string ToTitleCase(string s, string onEmptyValue)
-    {
-        if (string.IsNullOrEmpty(s))
-            return _textInfo.ToTitleCase(onEmptyValue);
-
-        return _textInfo.ToTitleCase(s.ToLower());
     }
 }

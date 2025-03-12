@@ -9,4 +9,5 @@ public class PlayedEntry
 {
     public required string Path { get; set; }
     public required DateTime LastPlayed { get; set; }
+    public Metadata? Metadata { get; set; }
 }

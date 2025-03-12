@@ -1,8 +1,7 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
-
 
 using Media.Database.Entity;
 
@@ -13,10 +12,7 @@ namespace Media.Database;
 
 public class DatabaseContext : DbContext
 {
-    public DbSet<MusicFile> Musics { get; set; }
-    public DbSet<Album> Albums { get; set; }
-    public DbSet<Genre> Genres { get; set; }
-    public DbSet<VideoFile> Videos { get; set; }
+    public DbSet<Metadata> Metadata { get; set; }
     public DbSet<Setting> Settings { get; set; }
     public DbSet<PlayedEntry> PlayedEntries { get; set; }
     public DbSet<ApiCacheEntry> ApiCacheEntries { get; set; }
@@ -44,14 +40,11 @@ public class DatabaseContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        Configure(modelBuilder.Entity<MusicFile>());
-        Configure(modelBuilder.Entity<Album>());
-        Configure(modelBuilder.Entity<Genre>());
         Configure(modelBuilder.Entity<Setting>());
-        Configure(modelBuilder.Entity<VideoFile>());
         Configure(modelBuilder.Entity<PlayedEntry>());
         Configure(modelBuilder.Entity<ApiCacheEntry>());
         Configure(modelBuilder.Entity<FolderBookmark>());
+        Configure(modelBuilder.Entity<Metadata>());
     }
 
     private static void Configure(EntityTypeBuilder<FolderBookmark> builder)
@@ -74,54 +67,30 @@ public class DatabaseContext : DbContext
         builder.Property(x => x.LastPlayed).IsRequired();
     }
 
-    private static void Configure(EntityTypeBuilder<VideoFile> builder)
-    {
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Path).IsRequired();
-        builder.Property(x => x.Size);
-        builder.Property(x => x.AddedDate);
-        builder.Property(x => x.PlayTimeInSeconds);
-        builder.Property(x => x.Width);
-        builder.Property(x => x.Height);
-        builder.Property(x => x.Codecs);
-        builder.HasIndex(x => x.Path).IsUnique();
-    }
-
     private static void Configure(EntityTypeBuilder<Setting> builder)
     {
         builder.HasKey(x => x.Key);
         builder.Property(x => x.Value).IsRequired();
     }
 
-    private static void Configure(EntityTypeBuilder<MusicFile> builder)
+    private static void Configure(EntityTypeBuilder<Metadata> builder)
     {
-        builder.HasKey(x => x.Id);
+        builder.HasKey(x => x.Path);
         builder.Property(x => x.Title).IsRequired();
         builder.Property(x => x.Artist).IsRequired();
-        builder.Property(x => x.AddedDate);
-        builder.Property(x => x.Year);
-        builder.Property(x => x.Path).IsRequired();
-        builder.Property(x => x.Size);
-        builder.Property(x => x.PlayTimeInSeconds);
-        builder.Property(x => x.DiscNumber);
-        builder.Property(x => x.TrackNumber);
-        builder.HasIndex(x => x.Title);
+        builder.Property(x => x.Year).IsRequired();
+        builder.Property(x => x.Size).IsRequired();
+        builder.Property(x => x.PlayTimeInSeconds).IsRequired();
+        builder.Property(x => x.DiscNumber).IsRequired();
+        builder.Property(x => x.TrackNumber).IsRequired();
+        builder.Property(x => x.Codecs).IsRequired();
+        builder.Property(x => x.VideoWidth).IsRequired();
+        builder.Property(x => x.VideoHeight).IsRequired();
+
         builder.HasIndex(x => x.Artist);
-        builder.HasIndex(x => x.Path).IsUnique();
+        builder.HasIndex(x => x.Album);
+        builder.HasIndex(x => x.Genre);
         builder.HasIndex(x => x.Year);
-    }
-    private static void Configure(EntityTypeBuilder<Album> builder)
-    {
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Artist).IsRequired();
-        builder.Property(x => x.Name).IsRequired();
-        builder.HasIndex(x => x.Artist);
-        builder.HasIndex(x => x.Name);
-    }
-    private static void Configure(EntityTypeBuilder<Genre> builder)
-    {
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Name).IsRequired();
-        builder.HasIndex(x => x.Name).IsUnique();
+        builder.HasIndex(x => x.Size);
     }
 }
