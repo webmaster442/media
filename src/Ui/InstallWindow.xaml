@@ -71,6 +71,11 @@
                 HorizontalAlignment="Right"
                 Orientation="Horizontal">
                 <Button
+                    Content="Visit website..."
+                    VerticalAlignment="Center"
+                    Margin="0,0,540,0"
+                    Style="{StaticResource LinkButton}" />
+                <Button
                     Width="120"
                     Height="38"
                     Command="{Binding InstallCommand}"

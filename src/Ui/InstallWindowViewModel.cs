@@ -31,7 +31,6 @@ internal sealed partial class InstallWindowViewModel : ObservableObject, IViewMo
         Logger = loggerFactory.CreateLogger<InstallWindowViewModel>();
         _uiFunctions = uiFunctions;
         CreateStartMenuIcons = true;
-        AddToPath = true;
         UpdateDependencies = true;
     }
 
