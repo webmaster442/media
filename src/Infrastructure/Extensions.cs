@@ -4,9 +4,11 @@
 // -----------------------------------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 using Media.Dto;
 using Media.Dto.Internals;
+using Media.Dto.Organizer;
 
 namespace Media.Infrastructure;
 
@@ -109,5 +111,47 @@ public static class Extensions
         }
 
         return $"{size:0.##} {sizes[order]}";
+    }
+
+    public static IEnumerable<string> GetMathcingFiles(this Rule rule, string rootFolder)
+    {
+        static IEnumerable<string> Filter(string[] files, string pattern, bool ignoreCase)
+        {
+            RegexOptions options = RegexOptions.Compiled;
+            if (ignoreCase)
+            {
+                options |= RegexOptions.IgnoreCase;
+            }
+            var regex = new Regex(pattern, options);
+            foreach (var file in files)
+            {
+                if (regex.IsMatch(file))
+                {
+                    yield return file;
+                }
+            }
+        }
+
+        static string WildcardToRegex(string pattern)
+        {
+            return "^" + Regex.Escape(pattern).
+            Replace("\\*", ".*").
+            Replace("\\?", ".") + "$";
+        }
+
+        var files = Directory.GetFiles(rootFolder, "*.*", SearchOption.TopDirectoryOnly);
+
+        foreach (var pattern in rule.Patterns)
+        {
+            string filterRegex = pattern.Value;
+            if (!pattern.IsRegex)
+            {
+                filterRegex = WildcardToRegex(pattern.Value);
+            }
+            foreach (var file in Filter(files, pattern.Value, pattern.IgnoreCase))
+            {
+                yield return file;
+            }
+        }
     }
 }

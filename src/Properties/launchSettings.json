@@ -71,6 +71,10 @@
       "commandName": "Project",
       "commandLineArgs": "install"
     },
+    "organize": {
+      "commandName": "Project",
+      "commandLineArgs": "organize d:\\Internet-dl"
+    },
     "xmldoc": {
       "commandName": "Project",
       "commandLineArgs": "cli xmldoc"

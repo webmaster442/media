@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Rules>
+  <Rule Folder="pdfs">
+    <Pattern Value="*.pdf" IsRegex="false" IgnoreCase="true"/>
+  </Rule>
+  <Rule Folder="office">
+    <Pattern Value="*.doc" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.docx" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.ppt" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.pptx" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.xls" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.xlsx" IsRegex="false" IgnoreCase="true"/>
+  </Rule>
+  <Rule Folder="music">
+    <Pattern Value="*.mp3" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.m4a" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.m4b" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.ogg" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.flac" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.wav" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.wv" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.aiff" IsRegex="false" IgnoreCase="true"/>
+  </Rule>
+  <Rule Folder="video">
+    <Pattern Value="*.avi" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.mp4" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.m4v" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.mpeg" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.mpg" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.flv" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.mkv" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.webm" IsRegex="false" IgnoreCase="true"/>
+  </Rule>
+  <Rule Folder="image">
+    <Pattern Value="*.png" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.bmp" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.jpg" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.jpeg" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.gif" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.psd" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.ai" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.svg" IsRegex="false" IgnoreCase="true"/>
+  </Rule>
+  <Rule Folder="archive">
+    <Pattern Value="*.arj" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.zip" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.gz" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.tar" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.bz2" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.rar" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.7z" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.ace" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.lha" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.xz" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.lzma" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.cab" IsRegex="false" IgnoreCase="true"/>
+  </Rule>
+  <Rule Folder="package">
+    <Pattern Value="*.deb" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.rpm" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.nuget" IsRegex="false" IgnoreCase="true"/>
+  </Rule>
+  <Rule Folder="data">
+    <Pattern Value="*.json" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.xml" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.db" IsRegex="false" IgnoreCase="true"/>
+  </Rule>
+</Rules>

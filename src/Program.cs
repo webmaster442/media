@@ -48,6 +48,9 @@ mainApp.Configure(config =>
     config.AddCommand<Install>("install")
         .WithDescription("Install the program. Create icons and add to path");
 
+    config.AddCommand<Organize>("organize")
+        .WithDescription("Organize files into sub directories in a folder based on rules");
+
     config.AddBranch("config", cfg =>
     {
         cfg.SetDescription("Configuration related commands");
