@@ -119,6 +119,18 @@
             <Separator />
             <MenuItem
                 Click="SetCorrectTabFromTag"
+                Command="{Binding PlaylistViewModel.PlayCurrentListCommand}"
+                Header="Play current list..."
+                Tag="3">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Asterisk" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem
+                Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.OrderAzCommand}"
                 Header="Order by Name"
                 Tag="3">

@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
+using Media.Database.Entity;
 using Media.Infrastructure;
 using Media.Interfaces;
 using Media.Interop;
@@ -50,6 +51,19 @@ internal sealed partial class PlaylistViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task PlayCurrentList()
+    {
+        static string CreateTempName() 
+            => $"playlist_{DateTime.Now:yyyyMMddHHmmss}.m3u";
+
+        var tempFile = Path.Combine(Path.GetTempPath(), CreateTempName());
+        await PlaylistItems.SaveToFile(tempFile, relativePaths: false);
+
+        SelfInterop.Play(tempFile);
+
+    }
+
+    [RelayCommand]
     private void Clear()
     {
         PlaylistItems.Clear();
@@ -61,7 +75,7 @@ internal sealed partial class PlaylistViewModel : ObservableObject
         string? selectedFile = _uiFunctions.SaveFileDialog("pls playlist|*.pls|m3u playlist|*.m3u");
         if (selectedFile is not null)
         {
-            await PlaylistItems.SaveToFile(selectedFile, false);
+            await PlaylistItems.SaveToFile(selectedFile, relativePaths: false);
         }
     }
 
@@ -89,4 +103,15 @@ internal sealed partial class PlaylistViewModel : ObservableObject
         PlaylistItems.Clear();
         PlaylistItems.AddRange(ordered);
     }
+
+    private bool CanPlay(string item)
+        => File.Exists(item);
+
+    [RelayCommand(CanExecute = nameof(CanPlay))]
+    private void Play(string item)
+        => SelfInterop.Play(item);
+
+    [RelayCommand]
+    private void Remove(string item)
+        => PlaylistItems.Remove(item);
 }
