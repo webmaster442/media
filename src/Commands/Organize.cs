@@ -6,6 +6,8 @@ using Media.Embedded;
 using Media.Infrastructure;
 using Media.Infrastructure.Validation;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Commands;
 
 internal sealed class Organize : AsyncCommand<Organize.Settings>
@@ -17,10 +19,9 @@ internal sealed class Organize : AsyncCommand<Organize.Settings>
         [CommandArgument(0, "<sorucedirectory>")]
         public string SoruceDirectory { get; set; } = Environment.CurrentDirectory;
 
-        [DirectoryExists]
         [CommandOption("-d|--destination")]
         [Description("Destination directory. Files will be moved here")]
-        public string DestinationDirectory { get; set; } = Environment.CurrentDirectory;
+        public string DestinationDirectory { get; set; } = string.Empty;
 
         [FileExists]
         [Description("Rule file to use")]
@@ -32,7 +33,7 @@ internal sealed class Organize : AsyncCommand<Organize.Settings>
             if (!string.IsNullOrEmpty(RuleFile))
                 return Path.GetFullPath(RuleFile);
 
-            var destinationRules = Path.Combine(Path.GetFullPath(DestinationDirectory), EmbeddedResources.OrganizeRules);
+            var destinationRules = Path.Combine(DestinationDirectory, EmbeddedResources.OrganizeRules);
             if (File.Exists(destinationRules))
                 return destinationRules;
 
@@ -48,11 +49,32 @@ internal sealed class Organize : AsyncCommand<Organize.Settings>
             await EmbeddedResources.ExtractAsync(EmbeddedResources.OrganizeRules);
         }
 
+        using var loggerFactory = ProgramFactory.GetLoggerFactory();
+        var logger = loggerFactory.CreateLogger("Organize");
+
+        if (string.IsNullOrEmpty(settings.DestinationDirectory))
+            settings.DestinationDirectory = Path.GetFullPath(settings.SoruceDirectory);
+
         Rule[] rules = LoadFile(settings.GetRuleFile());
 
-        foreach (var rule in rules)
+        foreach (Rule rule in rules)
         {
             var matches = rule.GetMathcingFiles(settings.SoruceDirectory).ToList();
+            if (matches.Count > 0)
+            {
+                var targetDirectory = Path.Combine(settings.DestinationDirectory, rule.Folder);
+                if (!Directory.Exists(targetDirectory))
+                {
+                    Directory.CreateDirectory(targetDirectory);
+                }
+                logger.LogInformation("Moving {mathches} files to {targetDirectory}", matches.Count, targetDirectory);
+
+                foreach (var file in matches)
+                {
+                    var targetFile = Path.Combine(targetDirectory, Path.GetFileName(file));
+                    File.Move(file, targetFile);
+                }
+            }
         }
 
         return 0;

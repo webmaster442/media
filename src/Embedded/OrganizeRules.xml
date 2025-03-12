@@ -65,4 +65,17 @@
     <Pattern Value="*.xml" IsRegex="false" IgnoreCase="true"/>
     <Pattern Value="*.db" IsRegex="false" IgnoreCase="true"/>
   </Rule>
+  <Rule Folder="disk-images">
+    <Pattern Value="*.iso" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.nrg" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.ima" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.vhd" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.vhdx" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.bin" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.cue" IsRegex="false" IgnoreCase="true"/>
+  </Rule>
+  <Rule Folder="programs">
+    <Pattern Value="*.exe" IsRegex="false" IgnoreCase="true"/>
+    <Pattern Value="*.msi" IsRegex="false" IgnoreCase="true"/>
+  </Rule>
 </Rules>
