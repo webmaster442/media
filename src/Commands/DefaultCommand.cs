@@ -52,7 +52,7 @@ internal class DefaultCommand : Command
 
                 if (results != null)
                 {
-                    int parentId = Convert.ToInt32(results["ParentProcessId"]);
+                    int parentId = System.Convert.ToInt32(results["ParentProcessId"]);
                     return Process.GetProcessById(parentId);
                 }
                 return null;

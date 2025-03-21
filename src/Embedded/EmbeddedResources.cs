@@ -31,7 +31,12 @@ internal static class EmbeddedResources
 
     public static async Task ExtractAsync(string fileName)
     {
-        var targetName = Path.Combine(AppContext.BaseDirectory, fileName);
+        await ExtractAsync(fileName, AppContext.BaseDirectory);
+    }
+
+    public static async Task ExtractAsync(string fileName, string targetDirectory)
+    {
+        var targetName = Path.Combine(targetDirectory, fileName);
         await using var soruce = GetFile(fileName);
         await using var target = File.Create(targetName);
         await soruce.CopyToAsync(target);

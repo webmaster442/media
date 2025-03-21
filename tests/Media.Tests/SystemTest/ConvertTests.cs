@@ -3,7 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using Media.Commands;
+using Media.Commands.Convert;
 
 namespace Media.Tests.SystemTest;
 
