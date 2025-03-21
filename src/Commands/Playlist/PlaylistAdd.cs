@@ -4,6 +4,7 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.BaseCommands;
+using Media.BaseSettings;
 using Media.Infrastructure;
 using Media.Interop;
 

@@ -3,9 +3,10 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.Infrastructure;
 using Media.Infrastructure.Validation;
 
-namespace Media.Infrastructure;
+namespace Media.BaseSettings;
 
 internal class BaseCdSettings : ValidatedCommandSettings
 {

@@ -3,6 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.BaseSettings;
 using Media.Infrastructure;
 using Media.Interop.CdRip;
 
