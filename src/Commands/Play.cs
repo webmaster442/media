@@ -9,6 +9,7 @@ using Media.BaseCommands;
 using Media.DbAdapters;
 using Media.Dto.Internals;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Infrastructure.Selector;
 using Media.Infrastructure.SelectorItemProviders;
 using Media.Infrastructure.Validation;

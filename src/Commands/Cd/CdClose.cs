@@ -4,7 +4,7 @@
 // -----------------------------------------------------------------------------------------------
 
 using Media.BaseSettings;
-using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Interop.CdRip;
 
 namespace Media.Commands.Cd;

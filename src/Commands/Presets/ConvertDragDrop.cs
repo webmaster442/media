@@ -8,6 +8,7 @@ using System.Windows;
 using Media.BaseCommands;
 using Media.DbAdapters;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Interfaces;
 using Media.Ui;
 
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Media.Commands.Presets;
 
+[InstallerData(Arguments = "preset drop", IconIndex = 2, Name = "Media Drag&Drop convert")]
 [Example("Open a window to convert a file by drag and drop", "media preset drop")]
 internal class ConvertDragDrop : BaseGuiCommand<DropConvertWindow>
 {

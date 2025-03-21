@@ -8,6 +8,7 @@ using System.Windows;
 using Media.BaseCommands;
 using Media.DbAdapters;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Interfaces;
 using Media.Ui;
 
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Media.Commands;
 
+[InstallerData(Arguments = "gui", IconIndex = 0, Name = "Media Gui")]
 internal sealed class Gui : BaseGuiCommand<GuiWindow>
 {
     private readonly RadioStationsClient _radioStationsClient;

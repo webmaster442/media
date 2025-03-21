@@ -5,6 +5,7 @@
 
 using Media.Dto.Internals;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 
 namespace Media.Commands.Info;
 

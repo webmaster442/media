@@ -7,6 +7,7 @@ using Media.BaseCommands;
 using Media.BaseSettings;
 using Media.DbAdapters;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Infrastructure.Validation;
 using Media.Interop;
 

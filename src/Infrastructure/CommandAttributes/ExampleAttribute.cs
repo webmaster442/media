@@ -3,7 +3,7 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-namespace Media.Infrastructure;
+namespace Media.Infrastructure.CommandAttributes;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 internal sealed class ExampleAttribute : Attribute

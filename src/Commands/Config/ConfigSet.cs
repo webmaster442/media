@@ -6,6 +6,7 @@
 using Media.BaseCommands;
 using Media.DbAdapters;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Infrastructure.Validation;
 
 using Spectre.Console;

@@ -10,6 +10,7 @@ using Media.BaseCommands;
 using Media.Dto.Github;
 using Media.Embedded;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 
 namespace Media.Commands.Update;
 

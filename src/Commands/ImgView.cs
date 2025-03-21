@@ -5,6 +5,7 @@
 
 using Media.BaseCommands;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Infrastructure.Validation;
 using Media.Interfaces;
 using Media.Ui;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Media.Commands;
 
+[InstallerData(Arguments = "imgview", IconIndex =3, Name = "Media Image Viewer")]
 internal class ImgView : BaseGuiCommand<ImageViewerWindow, ImgView.Settings>
 {
     internal class Settings : ValidatedCommandSettings

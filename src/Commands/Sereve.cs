@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using Media.DbAdapters;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Infrastructure.Validation;
 
 using Microsoft.Extensions.Logging;

@@ -5,6 +5,8 @@
 
 using System.Reflection;
 
+using Media.Infrastructure.CommandAttributes;
+
 using Spectre.Console;
 
 namespace Media.Infrastructure;

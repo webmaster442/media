@@ -9,12 +9,14 @@ using System.Runtime.Versioning;
 
 using Media.Dto.Cli;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Interop;
 
 using Spectre.Console;
 
 namespace Media.Commands;
 
+[InstallerData(Arguments = "", IconIndex = 1, Name = "Media Cli")]
 internal class DefaultCommand : Command
 {
     private static void PrintReleaseNotes(string tree)

@@ -8,6 +8,7 @@ using System.Threading;
 using Media.BaseCommands;
 using Media.BaseSettings;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Interop;
 
 using Spectre.Console;

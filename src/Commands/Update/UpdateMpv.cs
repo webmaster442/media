@@ -7,6 +7,7 @@ using Media.BaseCommands;
 using Media.DbAdapters;
 using Media.Dto.Github;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 
 using SharpCompress.Archives.SevenZip;
 

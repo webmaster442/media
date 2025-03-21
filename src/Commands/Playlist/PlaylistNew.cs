@@ -5,6 +5,7 @@
 
 using Media.BaseCommands;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Interop;
 
 namespace Media.Commands.Playlist;

@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using Media.DbAdapters;
 using Media.Dto.Internals;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Interop;
 
 using Spectre.Console;

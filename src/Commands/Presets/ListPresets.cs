@@ -5,6 +5,7 @@
 
 using Media.Dto;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 
 using Spectre.Console;
 
