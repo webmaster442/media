@@ -15,7 +15,7 @@ using Media.Commands.Info;
 using Media.Commands.Mux;
 using Media.Commands.Organize;
 using Media.Commands.Playlist;
-using Media.Commands.Preset;
+using Media.Commands.Presets;
 using Media.Commands.Update;
 using Media.Infrastructure;
 using Media.Interop;
@@ -117,15 +117,6 @@ mainApp.Configure(config =>
             .WithDescription("Create an PAL DVD compatible MPEG-2 file with AC-3 audio");
     });
 
-    config.AddBranch("preset", presetconvert =>
-    {
-        presetconvert.AddCommand<ConvertDragDrop>("drop")
-            .WithDescription("Convert multiple file using a drag & drop window");
-
-        presetconvert.AddCommand<ConvertPreset>("run")
-            .WithDescription("Convert a file using a preset");
-    });
-
     config.AddBranch("extract", extract =>
     {
         extract.SetDescription("Extract audio/video stream from files");
@@ -149,9 +140,6 @@ mainApp.Configure(config =>
 
         info.AddCommand<InfoHwEncoders>("hw-encoders")
             .WithDescription("List available hardware encoders");
-
-        info.AddCommand<InfoPresets>("presets")
-            .WithDescription("List available presets");
 
         info.AddCommand<InfoDrives>("drives")
             .WithDescription("Print drive informations");
@@ -217,6 +205,18 @@ mainApp.Configure(config =>
 
         playlist.AddCommand<PlaylistCopy>("copy")
             .WithDescription("Copy files from a playlist to a directory");
+    });
+
+    config.AddBranch("preset", presetconvert =>
+    {
+        presetconvert.AddCommand<ConvertDragDrop>("drop")
+            .WithDescription("Convert multiple file using a drag & drop window");
+
+        presetconvert.AddCommand<ListPresets>("list")
+            .WithDescription("List available presets");
+
+        presetconvert.AddCommand<ConvertPreset>("run")
+            .WithDescription("Convert a file using a preset");
     });
 
     config.AddBranch("update", update =>

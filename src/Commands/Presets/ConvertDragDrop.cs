@@ -13,9 +13,9 @@ using Media.Ui;
 
 using Microsoft.Extensions.Logging;
 
-namespace Media.Commands.Convert;
+namespace Media.Commands.Presets;
 
-[Example("Open a window to convert a file by drag and drop", "media convert drop")]
+[Example("Open a window to convert a file by drag and drop", "media preset drop")]
 internal class ConvertDragDrop : BaseGuiCommand<DropConvertWindow>
 {
     private readonly ConfigAdapter _configAccessor;

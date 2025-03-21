@@ -10,7 +10,7 @@ using Media.Embedded;
 
 namespace Media.Infrastructure;
 
-internal static class Presets
+internal static class PresetProvider
 {
     private static async Task<Stream> GetPresetStream()
     {

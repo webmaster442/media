@@ -9,9 +9,9 @@ using Media.Infrastructure;
 using Media.Infrastructure.Validation;
 using Media.Interop;
 
-namespace Media.Commands.Preset;
+namespace Media.Commands.Presets;
 
-[Example("Convert a media file using a preset", "media convert preset presetname input.mp4 output.mkv")]
+[Example("Convert a media file using a preset", "media preset run presetname input.mp4 output.mkv")]
 internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
 {
     private readonly FFMpeg _ffmpeg;
@@ -50,7 +50,7 @@ internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        Dictionary<string, Preset> presets = await Presets.LoadPresetsAsync();
+        Dictionary<string, Preset> presets = await PresetProvider.LoadPresetsAsync();
 
         if (!presets.TryGetValue(settings.PresetName, out Preset? preset))
         {

@@ -51,7 +51,7 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
 
     public async void Initialize()
     {
-        var presets = await Presets.LoadPresetArray();
+        var presets = await PresetProvider.LoadPresetArray();
         foreach (var preset in presets.OrderBy(x => x.Category).ThenBy(x => x.Name))
         {
             PresetCollection.Add(preset);

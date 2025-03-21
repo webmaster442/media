@@ -8,15 +8,15 @@ using Media.Infrastructure;
 
 using Spectre.Console;
 
-namespace Media.Commands.Info;
+namespace Media.Commands.Presets;
 
-[Example("List available presets", "media info presets")]
-public class InfoPresets : AsyncCommand
+[Example("List available presets", "media preset list")]
+public class ListPresets : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
 
-        var loaded = await Presets.LoadPresetsAsync();
+        var loaded = await Media.Infrastructure.PresetProvider.LoadPresetsAsync();
         PrintPresets(loaded);
         return ExitCodes.Success;
     }
