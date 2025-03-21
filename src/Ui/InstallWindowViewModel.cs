@@ -3,9 +3,12 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Reflection;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Media.Infrastructure.CommandAttributes;
 using Media.Interfaces;
 using Media.Interop;
 
@@ -44,31 +47,21 @@ internal sealed partial class InstallWindowViewModel : ObservableObject, IViewMo
         //no initialization needed
     }
 
-    private void CreateIcons(string folder)
+    private static void CreateIcons(string folder)
     {
-        new ShortcutBuilder()
-            .WithTargetPath(SelfInterop.CurentProgramPath)
-            .WithArguments("")
-            .WithIcon(Path.Combine(AppContext.BaseDirectory, "branding.dll"), 1)
-            .Build(Path.Combine(folder, "Media Cli.lnk"));
+        IEnumerable<InstallerDataAttribute> installables =
+            typeof(InstallWindowViewModel).Assembly.GetTypes()
+            .Select(x => x.GetCustomAttribute<InstallerDataAttribute>())
+            .Where(x => x != null)!;
 
-        new ShortcutBuilder()
-            .WithTargetPath(SelfInterop.CurentProgramPath)
-            .WithArguments("gui")
-            .WithIcon(Path.Combine(AppContext.BaseDirectory, "branding.dll"), 0)
-            .Build(Path.Combine(folder, "Media Gui.lnk"));
-
-        new ShortcutBuilder()
-            .WithTargetPath(SelfInterop.CurentProgramPath)
-            .WithArguments("convert drop")
-            .WithIcon(Path.Combine(AppContext.BaseDirectory, "branding.dll"), 2)
-            .Build(Path.Combine(folder, "Media Drop Convert.lnk"));
-
-        new ShortcutBuilder()
-            .WithTargetPath(SelfInterop.CurentProgramPath)
-            .WithArguments("imgview")
-            .WithIcon(Path.Combine(AppContext.BaseDirectory, "branding.dll"), 3)
-            .Build(Path.Combine(folder, "Media Image Viewer.lnk"));
+        foreach (var installable in installables)
+        {
+            new ShortcutBuilder()
+                .WithTargetPath(SelfInterop.CurentProgramPath)
+                .WithArguments(installable.Arguments)
+                .WithIcon(Path.Combine(AppContext.BaseDirectory, "branding.dll"), installable.IconIndex)
+                .Build(Path.Combine(folder, Path.ChangeExtension(installable.Name, ".lnk")));
+        }
     }
 
     [RelayCommand]
