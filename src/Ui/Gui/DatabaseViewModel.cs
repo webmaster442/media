@@ -75,8 +75,15 @@ internal partial class DatabaseViewModel : ObservableObject
 
     [RelayCommand]
     private async Task Cleanup()
+        => await _guiDatabaseAdapter.ForceDbJobRunning();
+
+    [RelayCommand]
+    private async Task DropLastPlayed()
     {
-        await _guiDatabaseAdapter.ForceDbJobRunning();
+        if (_uiFunctions.ConfirmMessage("Do you want to remove all last played items?", "Confirm"))
+        {
+            await _guiDatabaseAdapter.DropLastPlayed();
+        }
     }
 
     private bool CanPlay(object item)

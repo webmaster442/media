@@ -22,19 +22,22 @@ internal sealed class PlayedFilesAdapter : DatabaseAdapterBase
     public async Task AddPlayedFilesAsync(IEnumerable<string> files)
     {
         using var dbContext = GetContext();
+
+        int index = 0;
+
         foreach (var file in files)
         {
             var entry = await dbContext.PlayedEntries.FindAsync(file);
             if (entry is not null)
             {
-                entry.LastPlayed = DateTime.Now;
+                entry.LastPlayed = DateTime.Now.AddMilliseconds(index);
             }
             else
             {
                 await dbContext.PlayedEntries.AddAsync(new PlayedEntry
                 {
                     Path = file,
-                    LastPlayed = DateTime.Now
+                    LastPlayed = DateTime.Now.AddMilliseconds(index)
                 });
             }
 
@@ -43,6 +46,7 @@ internal sealed class PlayedFilesAdapter : DatabaseAdapterBase
             {
                 await dbContext.Metadata.AddAsync(created);
             }
+            index++;
         }
         await dbContext.SaveChangesAsync();
     }

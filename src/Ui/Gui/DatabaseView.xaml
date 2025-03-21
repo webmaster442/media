@@ -59,6 +59,10 @@
                             Command="{Binding CleanupCommand}"
                             Content="Delete non existing played..."
                             Style="{StaticResource LinkButton}" />
+                        <Button
+                            Command="{Binding DropLastPlayedCommand}"
+                            Style="{StaticResource LinkButton}"
+                            Content="Remove all last played..."/>
                     </StackPanel>
                 </Expander>
             </StackPanel>

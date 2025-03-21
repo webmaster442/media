@@ -76,4 +76,10 @@ internal class GuiDatabaseAdapter : DatabaseAdapterBase
         }
         return await context.SaveChangesAsync();
     }
+
+    public async Task DropLastPlayed()
+    {
+        using var dbContext = GetContext();
+        await dbContext.PlayedEntries.ExecuteDeleteAsync();
+    }
 }

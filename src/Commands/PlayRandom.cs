@@ -84,7 +84,8 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
             var files = RandomSelectorProvider.ScanSupportedFiles(settings.Folder)
                 .Except(playedFiles)
                 .OrderBy(_ => Random.Shared.Next())
-                .Take(settings.SelectionCount);
+                .Take(settings.SelectionCount)
+                .ToArray();
 
             if (files.Any())
             {
