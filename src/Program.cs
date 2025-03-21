@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System;
+
 using Media;
 using Media.Commands;
 using Media.Commands.Cd;
@@ -13,6 +15,7 @@ using Media.Commands.Info;
 using Media.Commands.Mux;
 using Media.Commands.Organize;
 using Media.Commands.Playlist;
+using Media.Commands.Preset;
 using Media.Commands.Update;
 using Media.Infrastructure;
 using Media.Interop;
@@ -112,12 +115,15 @@ mainApp.Configure(config =>
 
         convert.AddCommand<ConvertNtscDvd>("dvd-pal")
             .WithDescription("Create an PAL DVD compatible MPEG-2 file with AC-3 audio");
+    });
 
-        convert.AddCommand<ConvertPreset>("preset")
-            .WithDescription("Convert a file using a preset");
-
-        convert.AddCommand<ConvertDragDrop>("drop")
+    config.AddBranch("preset", presetconvert =>
+    {
+        presetconvert.AddCommand<ConvertDragDrop>("drop")
             .WithDescription("Convert multiple file using a drag & drop window");
+
+        presetconvert.AddCommand<ConvertPreset>("run")
+            .WithDescription("Convert a file using a preset");
     });
 
     config.AddBranch("extract", extract =>

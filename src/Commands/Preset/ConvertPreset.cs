@@ -9,7 +9,7 @@ using Media.Infrastructure;
 using Media.Infrastructure.Validation;
 using Media.Interop;
 
-namespace Media.Commands.Convert;
+namespace Media.Commands.Preset;
 
 [Example("Convert a media file using a preset", "media convert preset presetname input.mp4 output.mkv")]
 internal sealed class ConvertPreset : AsyncCommand<ConvertPreset.Settings>
