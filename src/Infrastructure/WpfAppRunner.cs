@@ -10,7 +10,8 @@ using System.Windows.Threading;
 using Media.Interfaces;
 
 namespace Media.Infrastructure;
-internal class AppRunner<TWindow> where TWindow : Window, new()
+
+internal class WpfAppRunner<TWindow> where TWindow : Window, new()
 {
     public App App { get; }
 
@@ -34,7 +35,7 @@ internal class AppRunner<TWindow> where TWindow : Window, new()
         }
     }
 
-    public AppRunner()
+    public WpfAppRunner()
     {
         App = new();
         App.InitializeComponent();

@@ -31,7 +31,7 @@ internal abstract class BaseGuiCommand<TWindow, TSettings> : Command<TSettings>
         {
             TSettings settings = (TSettings)obj!;
 
-            var runner = new AppRunner<TWindow>();
+            var runner = new WpfAppRunner<TWindow>();
 
             var customManipulator = CreateWindowManipulator();
 

@@ -27,7 +27,7 @@ internal abstract class BaseGuiCommand<TWindow> : Command where TWindow : Window
 
         try
         {
-            var runner = new AppRunner<TWindow>();
+            var runner = new WpfAppRunner<TWindow>();
 
             var customManipulator = CreateWindowManipulator();
 
