@@ -3,8 +3,6 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using System;
-
 using Media;
 using Media.Commands;
 using Media.Commands.Cd;
@@ -17,6 +15,7 @@ using Media.Commands.Organize;
 using Media.Commands.Playlist;
 using Media.Commands.Presets;
 using Media.Commands.Update;
+using Media.Embedded;
 using Media.Infrastructure;
 using Media.Interop;
 using Media.ShellAutoComplete.AutoComplete;
@@ -25,6 +24,8 @@ using Media.ShellAutoComplete.Integrations;
 using var registar = ProgramFactory.CreateTypeRegistar();
 
 await ProgramFactory.RunDatabaseJobsIfNeeded();
+await EmbeddedResources.ExpandFilesZip(AppContext.BaseDirectory);
+
 
 var mainApp = new CommandApp<DefaultCommand>(registar);
 

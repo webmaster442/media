@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Embedded\files.zip" />
     <None Remove="Embedded\TransitionEffect.ps" />
   </ItemGroup>
 
@@ -31,6 +32,7 @@
     <EmbeddedResource Include="..\Notes.txt" Link="Notes.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Embedded\files.zip" />
     <EmbeddedResource Include="Embedded\OrganizeRules.xml" />
     <EmbeddedResource Include="Embedded\Presets.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
@@ -75,7 +77,6 @@
     <ProjectReference Include="..\include\AudioSwitcher.AudioApi\AudioSwitcher.AudioApi.csproj" />
     <ProjectReference Include="..\include\AudioSwitcher.CoreAudio\AudioSwitcher.CoreAudio.csproj" />
     <ProjectReference Include="..\include\Media.Database\Media.Database.csproj" />
-    <ProjectReference Include="..\include\Media.Files\Media.Files.csproj" />
     <ProjectReference Include="..\include\Media.ShellAutocomplete\Media.ShellAutoComplete.csproj" />
     <ProjectReference Include="..\include\NMaier.SimpleDlna.FileMediaServer\NMaier.SimpleDlna.FileMediaServer.csproj" />
     <ProjectReference Include="..\include\NMaier.SimpleDlna.Server\NMaier.SimpleDlna.Server.csproj" />

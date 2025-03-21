@@ -3,6 +3,8 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.IO.Compression;
+
 namespace Media.Embedded;
 
 internal static class EmbeddedResources
@@ -16,6 +18,7 @@ internal static class EmbeddedResources
     public const string Icon192Jpg = "icon192.jpg";
     public const string Icon48Jpg = "icon48.jpg";
     public const string RootDescXml = "rootDesc.xml";
+    public const string FilesZip = "files.zip";
 
     public const string StyleCss = "style.css";
     public const string MpvController = "mpvcontroller.html";
@@ -40,5 +43,32 @@ internal static class EmbeddedResources
         await using var soruce = GetFile(fileName);
         await using var target = File.Create(targetName);
         await soruce.CopyToAsync(target);
+    }
+
+    public static async Task ExpandFilesZip(string targetDirectory)
+    {
+        await using var zipStream = GetFile(FilesZip);
+        using ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+
+        foreach (var entry in archive.Entries)
+        {
+            if (entry.Length < 1)
+                continue;
+
+            var targetName = Path.Combine(targetDirectory, entry.FullName);
+
+            if (File.Exists(targetName))
+                continue;
+
+            var targetDir = Path.GetDirectoryName(targetName);
+            if (!string.IsNullOrEmpty(targetDir))
+            {
+                Directory.CreateDirectory(targetDir);
+            }
+            await using var target = File.Create(targetName);
+            await using var source = entry.Open();
+            await source.CopyToAsync(target);
+        }
+
     }
 }
