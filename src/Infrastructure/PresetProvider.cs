@@ -15,10 +15,14 @@ internal static class PresetProvider
     private static async Task<Stream> GetPresetStream()
     {
         var fileName = Path.Combine(AppContext.BaseDirectory, EmbeddedResources.Presets);
+#if DEBUG
+        await EmbeddedResources.ExtractAsync(EmbeddedResources.Presets);
+#else
         if (!File.Exists(fileName))
         {
             await EmbeddedResources.ExtractAsync(EmbeddedResources.Presets);
         }
+#endif
         return File.OpenRead(fileName);
     }
 

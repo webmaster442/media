@@ -75,9 +75,9 @@
       "commandName": "Project",
       "commandLineArgs": "organize d:\\Internet-dl"
     },
-    "createbach": {
+    "createshell": {
       "commandName": "Project",
-      "commandLineArgs": "preset createbach"
+      "commandLineArgs": "preset createshell"
     },
     "xmldoc": {
       "commandName": "Project",

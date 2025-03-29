@@ -8,6 +8,14 @@
 
 <Presets>
   <!-- Lossless audio formatas -->
+  <Preset Name="Cd-wav" Extension=".wav" Category="Wav">
+    <CommandLine>
+      -i {input} -vn -c:a pcm_s16le {output}
+    </CommandLine>
+    <Description>
+      Encodes an input file to a CD audio compatible wave file.
+    </Description>
+  </Preset>
   <Preset Name="Flac" Extension=".flac" Category="Lossless Audio">
     <CommandLine>
       -i {input} -vn -c:a flac {output}
@@ -89,6 +97,23 @@
     <Description>
       Encodes an input file to M4A format with a bitrate of 320k.
       If the input file is a video, the audio stream is extracted only.
+    </Description>
+  </Preset>
+  <!-- Web audio presets -->
+  <Preset Name="weba-opus" Extension=".weba" Category="Web Audio">
+    <CommandLine>
+      -i {input} -vn -c:a libopus -b:a 192k {output}
+    </CommandLine>
+    <Description>
+      Creates a Web Audio compatible file with Opus codec and 192k bitrate.
+    </Description>
+  </Preset>
+  <Preset Name="weba-vorbits" Extension=".weba" Category="Web Audio">
+    <CommandLine>
+      -i {input} -vn -c:a libvorbis -q:a 6 {output}
+    </CommandLine>
+    <Description>
+      Creates a Web Audio compatible file with Vorbis codec and quality level 6.
     </Description>
   </Preset>
   <!-- Video presets -->

@@ -219,8 +219,8 @@ mainApp.Configure(config =>
         presetconvert.AddCommand<ConvertPreset>("run")
             .WithDescription("Convert a file using a preset");
 
-        presetconvert.AddCommand<CreateShellScript>("createbach")
-            .WithDescription("Create a bach script for converting files");
+        presetconvert.AddCommand<CreateShellScript>("createshell")
+            .WithDescription("Create a cmd and powershell script for converting files");
     });
 
     config.AddBranch("update", update =>
