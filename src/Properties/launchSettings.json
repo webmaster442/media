@@ -75,6 +75,10 @@
       "commandName": "Project",
       "commandLineArgs": "organize d:\\Internet-dl"
     },
+    "createbach": {
+      "commandName": "Project",
+      "commandLineArgs": "preset createbach"
+    },
     "xmldoc": {
       "commandName": "Project",
       "commandLineArgs": "cli xmldoc"
