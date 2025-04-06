@@ -41,12 +41,12 @@ internal class UiFunctionsImplementation : IUiFunctions
     public void ErrorMessage(string message, string title)
     {
         Terminal.RedText(message);
-        MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+        MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
     }
 
     public bool ConfirmMessage(string message, string title)
     {
-        var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
+        var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes, MessageBoxOptions.DefaultDesktopOnly);
         return result == MessageBoxResult.Yes;
     }
 
@@ -54,11 +54,11 @@ internal class UiFunctionsImplementation : IUiFunctions
         => Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown(exitCode));
 
     public void InfoMessage(string message, string title)
-        => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
+        => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
 
     public bool QuestionMessage(string message, string title)
     {
-        var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
+        var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes, MessageBoxOptions.DefaultDesktopOnly);
         return result == MessageBoxResult.Yes;
     }
 

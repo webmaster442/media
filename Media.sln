@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioSwitcher.CoreAudio", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Media.Database", "include\Media.Database\Media.Database.csproj", "{BB02B463-EBB7-4306-ABBF-BA1B89F5890A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Media.ShellHelper", "include\Media.ShellHelper\Media.ShellHelper.csproj", "{F4937C25-3DB1-AE14-CF08-BB9C0F53B626}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{BB02B463-EBB7-4306-ABBF-BA1B89F5890A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB02B463-EBB7-4306-ABBF-BA1B89F5890A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB02B463-EBB7-4306-ABBF-BA1B89F5890A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4937C25-3DB1-AE14-CF08-BB9C0F53B626}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4937C25-3DB1-AE14-CF08-BB9C0F53B626}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4937C25-3DB1-AE14-CF08-BB9C0F53B626}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4937C25-3DB1-AE14-CF08-BB9C0F53B626}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

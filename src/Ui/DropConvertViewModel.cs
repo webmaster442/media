@@ -97,18 +97,23 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
 
         List<string> skipped = new();
 
+        var helper = new ShellHelper();
+
         var scriptFile = Path.Combine(SelectedPath, Path.ChangeExtension(Path.GetFileName(SelectedPath), ".ps1"));
         var builder = new PowershellBuilder()
             .WithUtf8Enabled()
             .WithWindowTitle(Path.GetFileNameWithoutExtension(SelectedPath))
             .WithClear();
 
+        int current = 0;
         foreach (var file in files)
         {
             if (File.Exists(file)
                 && FileRecognizer.IsDropConvertSupported(file))
             {
                 builder.WithCommand(CreateCommandLine(file));
+                builder.WithCommand(helper.SetProgress(files.Length, current));
+                ++current;
             }
             else
             {
@@ -117,6 +122,7 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
         }
 
         builder.WithMessage("Finished");
+        builder.WithCommand(helper.HideProgress());
 
         File.WriteAllText(scriptFile, builder.Build());
 
