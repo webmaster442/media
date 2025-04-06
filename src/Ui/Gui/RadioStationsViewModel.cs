@@ -37,21 +37,41 @@ internal sealed partial class RadioStationsViewModel : ObservableObject, IViewMo
 
     public async void Initialize()
     {
-        _uiFunctions.BeginAsyncOperation();
-        var countries = await _radioStationsClient.GetRadioStationCountries();
-        Countries.Clear();
-        Countries.AddRange(countries);
-        _uiFunctions.EndAsyncOperation();
+        try
+        {
+            _uiFunctions.BeginAsyncOperation();
+            var countries = await _radioStationsClient.GetRadioStationCountries();
+            Countries.Clear();
+            Countries.AddRange(countries);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogCritical(ex, "Error loading radio stations");
+        }
+        finally
+        {
+            _uiFunctions.EndAsyncOperation();
+        }
     }
 
     [RelayCommand]
     private async Task CountrySelect(Country selection)
     {
-        _uiFunctions.BeginAsyncOperation();
-        var stations = await _radioStationsClient.GetRadioStations(selection.Name);
-        Stations.Clear();
-        Stations.AddRange(stations);
-        _uiFunctions.EndAsyncOperation();
+        try
+        {
+            _uiFunctions.BeginAsyncOperation();
+            var stations = await _radioStationsClient.GetRadioStations(selection.Name);
+            Stations.Clear();
+            Stations.AddRange(stations);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogCritical(ex, "Error loading radio stations");
+        }
+        finally
+        {
+            _uiFunctions.EndAsyncOperation();
+        }
     }
 
     [RelayCommand]

@@ -3,6 +3,9 @@
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using System.Net.NetworkInformation;
+using System.Net;
+
 using Media.DbAdapters;
 using Media.Dto.Radio;
 
@@ -17,6 +20,33 @@ internal class RadioStationsClient : ApiClient
         _cacheAdapter = apiCacheAdapter;
     }
 
+    private static string GetRadioBrowserApiUrl()
+    {
+        // Get fastest ip of dns
+        var ips = Dns.GetHostAddresses(ApiUrls.RadioBrowserApiHost);
+        long lastRoundTripTime = long.MaxValue;
+        string searchUrl = ApiUrls.RadioBrowserFallbackUrl; // Fallback
+        foreach (IPAddress ipAddress in ips)
+        {
+            using var ping = new Ping();
+            var reply = ping.Send(ipAddress);
+            if (reply != null &&  reply.RoundtripTime < lastRoundTripTime)
+            {
+                lastRoundTripTime = reply.RoundtripTime;
+                searchUrl = ipAddress.ToString();
+            }
+        }
+
+        // Get clean name
+        IPHostEntry hostEntry = Dns.GetHostEntry(searchUrl);
+        if (!string.IsNullOrEmpty(hostEntry.HostName))
+        {
+            searchUrl = hostEntry.HostName;
+        }
+
+        return searchUrl;
+    }
+
     public async Task<IReadOnlyList<Country>> GetRadioStationCountries()
     {
         var cacheEntry = await _cacheAdapter.GetEntry(ApiCacheAdapter.RadioCountries);
@@ -26,7 +56,7 @@ internal class RadioStationsClient : ApiClient
             return cacheEntry.Deserialize<List<Country>>();
         }
 
-        string url = $"{ApiUrls.RadioBrowserApi}/countries";
+        string url = $"http://{GetRadioBrowserApiUrl()}/json/countries";
         using var response = await _client.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
@@ -55,7 +85,7 @@ internal class RadioStationsClient : ApiClient
             return cacheEntry.Deserialize<List<Station>>();
         }
 
-        string url = $"{ApiUrls.RadioBrowserApi}/stations/bycountry/{countryCode}";
+        string url = $"http://{GetRadioBrowserApiUrl()}/json/stations/bycountry/{countryCode}";
         using var response = await _client.GetAsync(url);
         response.EnsureSuccessStatusCode();
 
