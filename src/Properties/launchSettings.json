@@ -51,9 +51,9 @@
     "default": {
       "commandName": "Project"
     },
-    "convert drop": {
+    "preset drop": {
       "commandName": "Project",
-      "commandLineArgs": "convert drop"
+      "commandLineArgs": "preset drop"
     },
     "imgview": {
       "commandName": "Project",

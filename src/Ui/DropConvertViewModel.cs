@@ -105,7 +105,7 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
             .WithWindowTitle(Path.GetFileNameWithoutExtension(SelectedPath))
             .WithClear();
 
-        int current = 0;
+        int current = 1;
         foreach (var file in files)
         {
             if (File.Exists(file)
