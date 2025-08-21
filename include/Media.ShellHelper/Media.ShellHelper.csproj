@@ -10,13 +10,13 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Spectre.Console" Version="0.49.1" />
-        <PackageReference Include="Spectre.Console.Cli" Version="0.49.1" />
+        <PackageReference Include="Spectre.Console" Version="0.50.0" />
+        <PackageReference Include="Spectre.Console.Cli" Version="0.50.0" />
         <PackageReference Include="Spectre.Console.Analyzer" Version="1.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Webmaster442.WindowsTerminal" Version="3.0.1" />
+        <PackageReference Include="Webmaster442.WindowsTerminal" Version="4.0.0" />
     </ItemGroup>
 
 </Project>
