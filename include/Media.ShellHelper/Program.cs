@@ -13,14 +13,14 @@ app.Configure(cfg =>
 
 int OnHideProgress(CommandContext context)
 {
-    WindowsTerminal.SetProgressbar(ProgressbarState.Hidden, 0);
+    Terminal.SetProgressbar(ProgressbarState.Hidden, 0);
     return 0;
 }
 
 int OnProgesss(CommandContext context, ProgressSettings settings)
 {
     int percent = (int)Math.Ceiling(((double)settings.Current / settings.Total) * 100.0d);
-    WindowsTerminal.SetProgressbar(ProgressbarState.Default, percent);
+    Terminal.SetProgressbar(ProgressbarState.Default, percent);
     return 0;
 }
 internal sealed class ProgressSettings : CommandSettings
