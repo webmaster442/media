@@ -99,6 +99,22 @@
       If the input file is a video, the audio stream is extracted only.
     </Description>
   </Preset>
+  <Preset Name="remux-stereo" Extension=".mkv" Category="MKV presets">
+    <CommandLine>
+      -i {input} -map 0 -c:v copy -c:s copy -c:a aac -b:a 256k -af "pan=stereo|c0=0.5*c2+0.707*c0+0.707*c4+0.5*c3|c1=0.5*c2+0.707*c1+0.707*c5+0.5*c3, volume=1.66" {output}
+    </CommandLine>
+    <Description>
+      Copy video without reencoding with subtitles. All audio tracks are recoded to 256k stereo AAC.
+    </Description>
+  </Preset>
+  <Preset Name="remux" Extension=".mkv" Category="MKV presets">
+    <CommandLine>
+      -i {input} -c:v copy -c:s copy -c:a copy {output}
+    </CommandLine>
+    <Description>
+      Copy video, audio and subtitles without reencoding to an MKV format
+    </Description>
+  </Preset>
   <!-- Web audio presets -->
   <Preset Name="weba-opus" Extension=".weba" Category="Web Audio">
     <CommandLine>
