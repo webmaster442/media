@@ -1,9 +1,11 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
 using System.Reflection;
+
+using Media.Infrastructure.CommandAttributes;
 
 using Spectre.Console;
 

@@ -1,13 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--
 ***********************************************************************************************
- Copyright (c) 2024 Ruzsinszki Gábor
+ Copyright (c) 2024-2025 Ruzsinszki Gábor
  This code is licensed under MIT license (see LICENSE for details)
 ***********************************************************************************************
 -->
 
 <Presets>
   <!-- Lossless audio formatas -->
+  <Preset Name="Cd-wav" Extension=".wav" Category="Wav">
+    <CommandLine>
+      -i {input} -vn -c:a pcm_s16le {output}
+    </CommandLine>
+    <Description>
+      Encodes an input file to a CD audio compatible wave file.
+    </Description>
+  </Preset>
   <Preset Name="Flac" Extension=".flac" Category="Lossless Audio">
     <CommandLine>
       -i {input} -vn -c:a flac {output}
@@ -64,7 +72,7 @@
     </Description>
   </Preset>
   <!-- Audio M4A Presets -->
-  <Preset Name="mp4-192k" Extension=".m4a" Category="Audio">
+  <Preset Name="m4a-192k" Extension=".m4a" Category="Audio">
     <CommandLine>
       -i {input} -vn -c:a aac -b:a 192k {output}
     </CommandLine>
@@ -73,7 +81,7 @@
       If the input file is a video, the audio stream is extracted only.
     </Description>
   </Preset>
-  <Preset Name="mp4-256k" Extension=".m4a" Category="Audio">
+  <Preset Name="m4a-256k" Extension=".m4a" Category="Audio">
     <CommandLine>
       -i {input} -vn -c:a aac -b:a 256k {output}
     </CommandLine>
@@ -82,13 +90,46 @@
       If the input file is a video, the audio stream is extracted only.
     </Description>
   </Preset>
-  <Preset Name="mp4-320k" Extension=".m4a" Category="Audio">
+  <Preset Name="m4a-320k" Extension=".m4a" Category="Audio">
     <CommandLine>
-      -i {input} -vn -c:a aac -b:a 192k {output}
+      -i {input} -vn -c:a aac -b:a 320k {output}
     </CommandLine>
     <Description>
       Encodes an input file to M4A format with a bitrate of 320k.
       If the input file is a video, the audio stream is extracted only.
+    </Description>
+  </Preset>
+  <Preset Name="remux-stereo" Extension=".mkv" Category="MKV presets">
+    <CommandLine>
+      -i {input} -map 0 -c:v copy -c:s copy -c:a aac -b:a 256k -af "pan=stereo|c0=0.5*c2+0.707*c0+0.707*c4+0.5*c3|c1=0.5*c2+0.707*c1+0.707*c5+0.5*c3, volume=1.66" {output}
+    </CommandLine>
+    <Description>
+      Copy video without reencoding with subtitles. All audio tracks are recoded to 256k stereo AAC.
+    </Description>
+  </Preset>
+  <Preset Name="remux" Extension=".mkv" Category="MKV presets">
+    <CommandLine>
+      -i {input} -c:v copy -c:s copy -c:a copy {output}
+    </CommandLine>
+    <Description>
+      Copy video, audio and subtitles without reencoding to an MKV format
+    </Description>
+  </Preset>
+  <!-- Web audio presets -->
+  <Preset Name="weba-opus" Extension=".weba" Category="Web Audio">
+    <CommandLine>
+      -i {input} -vn -c:a libopus -b:a 192k {output}
+    </CommandLine>
+    <Description>
+      Creates a Web Audio compatible file with Opus codec and 192k bitrate.
+    </Description>
+  </Preset>
+  <Preset Name="weba-vorbits" Extension=".weba" Category="Web Audio">
+    <CommandLine>
+      -i {input} -vn -c:a libvorbis -q:a 6 {output}
+    </CommandLine>
+    <Description>
+      Creates a Web Audio compatible file with Vorbis codec and quality level 6.
     </Description>
   </Preset>
   <!-- Video presets -->

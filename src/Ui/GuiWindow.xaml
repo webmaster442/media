@@ -9,6 +9,7 @@
     Title="Media Gui"
     Width="1280"
     Height="720"
+    Topmost="{Binding AllwaysOnTop}"
     Style="{StaticResource {x:Type Window}}"
     mc:Ignorable="d">
     <Grid>
@@ -17,7 +18,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition  />
+            <ColumnDefinition />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Menu
@@ -37,8 +38,11 @@
             <TabItem Header="Radio Stations">
                 <Gui:RadioStations DataContext="{Binding RadioStationsViewModel}" />
             </TabItem>
+            <TabItem Header="Database">
+                <Gui:DatabaseView DataContext="{Binding DatabaseViewModel}" />
+            </TabItem>
             <TabItem Header="Playlist">
-                <Gui:PlayList DataContext="{Binding PlaylistViewModel}"/>
+                <Gui:PlayList DataContext="{Binding PlaylistViewModel}" />
             </TabItem>
         </TabControl>
     </Grid>

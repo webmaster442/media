@@ -51,9 +51,9 @@
     "default": {
       "commandName": "Project"
     },
-    "convert drop": {
+    "preset drop": {
       "commandName": "Project",
-      "commandLineArgs": "convert drop"
+      "commandLineArgs": "preset drop"
     },
     "imgview": {
       "commandName": "Project",
@@ -66,6 +66,18 @@
     "audio": {
       "commandName": "Project",
       "commandLineArgs": "audio"
+    },
+    "install": {
+      "commandName": "Project",
+      "commandLineArgs": "install"
+    },
+    "organize": {
+      "commandName": "Project",
+      "commandLineArgs": "organize d:\\Internet-dl"
+    },
+    "createshell": {
+      "commandName": "Project",
+      "commandLineArgs": "preset createshell"
     },
     "xmldoc": {
       "commandName": "Project",

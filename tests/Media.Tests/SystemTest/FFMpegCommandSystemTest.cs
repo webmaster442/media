@@ -10,12 +10,14 @@ public abstract class FFMpegCommandSystemTest
 {
     private CommandApp _testApp;
     private List<string> _mockedFiles;
+    private TypeRegistrar _registar;
 
     [SetUp]
     public void SetupBase()
     {
+        _registar = ProgramFactory.CreateTypeRegistar();
         _mockedFiles = new List<string>();
-        _testApp = new CommandApp(ProgramFactory.CreateTypeRegistar());
+        _testApp = new CommandApp();
 
         Setup();
     }
@@ -31,6 +33,7 @@ public abstract class FFMpegCommandSystemTest
             }
         }
         TearDown();
+        _registar.Dispose();
     }
 
     protected virtual void TearDown()

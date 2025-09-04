@@ -1,7 +1,9 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
+
+using System.IO.Compression;
 
 namespace Media.Embedded;
 
@@ -10,11 +12,13 @@ internal static class EmbeddedResources
     public const string UpdatePS1 = "Update.ps1";
     public const string TestImage = "testimg.png";
     public const string Presets = "Presets.xml";
+    public const string OrganizeRules = "OrganizeRules.xml";
     public const string Icon192Png = "icon192.png";
     public const string Icon48Png = "icon48.png";
     public const string Icon192Jpg = "icon192.jpg";
     public const string Icon48Jpg = "icon48.jpg";
     public const string RootDescXml = "rootDesc.xml";
+    public const string FilesZip = "files.zip";
 
     public const string StyleCss = "style.css";
     public const string MpvController = "mpvcontroller.html";
@@ -30,9 +34,41 @@ internal static class EmbeddedResources
 
     public static async Task ExtractAsync(string fileName)
     {
-        var targetName = Path.Combine(AppContext.BaseDirectory, fileName);
+        await ExtractAsync(fileName, AppContext.BaseDirectory);
+    }
+
+    public static async Task ExtractAsync(string fileName, string targetDirectory)
+    {
+        var targetName = Path.Combine(targetDirectory, fileName);
         await using var soruce = GetFile(fileName);
         await using var target = File.Create(targetName);
         await soruce.CopyToAsync(target);
+    }
+
+    public static async Task ExpandFilesZip(string targetDirectory)
+    {
+        await using var zipStream = GetFile(FilesZip);
+        using ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
+
+        foreach (var entry in archive.Entries)
+        {
+            if (entry.Length < 1)
+                continue;
+
+            var targetName = Path.Combine(targetDirectory, entry.FullName);
+
+            if (File.Exists(targetName))
+                continue;
+
+            var targetDir = Path.GetDirectoryName(targetName);
+            if (!string.IsNullOrEmpty(targetDir))
+            {
+                Directory.CreateDirectory(targetDir);
+            }
+            await using var target = File.Create(targetName);
+            await using var source = entry.Open();
+            await source.CopyToAsync(target);
+        }
+
     }
 }

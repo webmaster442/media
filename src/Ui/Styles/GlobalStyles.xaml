@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Media.Ui.Controls"
     xmlns:converters="clr-namespace:Media.Ui.Converters"
+    xmlns:gui="clr-namespace:Media.Ui.Gui"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="clr-namespace:Media.Ui">
 
     <SolidColorBrush
@@ -23,6 +25,67 @@
     <SolidColorBrush
         x:Key="Yellow"
         Color="#C19C00" />
+
+    <system:Double x:Key="ListFontSize">18</system:Double>
+
+    <Style
+        x:Key="BigCheckBox"
+        TargetType="{x:Type CheckBox}">
+        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+        <Setter Property="Background" Value="{StaticResource CheckBoxFillNormal}" />
+        <Setter Property="BorderBrush" Value="{StaticResource CheckBoxStroke}" />
+        <Setter Property="FocusVisualStyle" Value="{StaticResource EmptyCheckBoxFocusVisual}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <BulletDecorator
+                        Background="Transparent"
+                        SnapsToDevicePixels="true">
+                        <BulletDecorator.Bullet>
+                            <Border
+                                x:Name="CheckBoxBorder"
+                                Width="24"
+                                Height="24"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1">
+                                <Path
+                                    x:Name="CheckMark"
+                                    Width="Auto"
+                                    Height="Auto"
+                                    Margin="1,1.007,1,1"
+                                    Data="{StaticResource CheckBoxCheckmark}"
+                                    Fill="{StaticResource ButtonForeground}"
+                                    Stretch="Fill" />
+                            </Border>
+                        </BulletDecorator.Bullet>
+                        <ContentPresenter
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            RecognizesAccessKey="True"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </BulletDecorator>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasContent" Value="true">
+                            <Setter Property="FocusVisualStyle" Value="{StaticResource CheckRadioFocusVisual}" />
+                            <Setter Property="Padding" Value="4,0,0,0" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{StaticResource CheckBoxDisabledForeground}" />
+                            <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{StaticResource CheckBoxDisabledStroke}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="CheckBoxBorder" Property="BorderBrush" Value="{StaticResource CheckBoxMouseOverStroke}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="false">
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
     <Style TargetType="controls:ImageDisplayControl">
         <Setter Property="Template">
@@ -65,13 +128,55 @@
         <Setter Property="Margin" Value="3" />
     </Style>
 
+    <Style TargetType="controls:InternalWindow">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:InternalWindow">
+                    <Border
+                        Background="{StaticResource WindowBackgroundBrush}"
+                        BorderBrush="{StaticResource ButtonBorder}"
+                        BorderThickness="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Background="{StaticResource Cyan}">
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Foreground="Black"
+                                    Text="{TemplateBinding Title}" />
+                            </Border>
+                            <Button
+                                x:Name="PART_Close"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Content="❌" />
+                            <ContentPresenter
+                                Grid.Row="1"
+                                Grid.ColumnSpan="2"
+                                Content="{TemplateBinding View}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="controls:AsyncBlocker">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:AsyncBlocker}">
                     <Grid
-                        Opacity="0.9"
-                        Background="{StaticResource WindowBackgroundBrush}">
+                        Background="{StaticResource WindowBackgroundBrush}"
+                        Opacity="0.9">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
@@ -163,5 +268,33 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style
+        x:Key="LinkButton"
+        TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <TextBlock
+                        Foreground="{TemplateBinding Foreground}"
+                        TextDecorations="Underline">
+                        <ContentPresenter />
+                    </TextBlock>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground" Value="{StaticResource Cyan}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Foreground" Value="{StaticResource Purple}" />
+                <Setter Property="Cursor" Value="Hand" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <DataTemplate DataType="{x:Type gui:PreviewViewModel}">
+        <MediaElement Source="{Binding MediaSource}" />
+    </DataTemplate>
+
 
 </ResourceDictionary>

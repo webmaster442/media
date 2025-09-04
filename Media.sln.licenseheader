@@ -1,13 +1,13 @@
 ﻿extensions: .cs
 // -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
 extensions: .xml
 <!--
 ***********************************************************************************************
- Copyright (c) 2024 Ruzsinszki Gábor
+ Copyright (c) 2024-2025 Ruzsinszki Gábor
  This code is licensed under MIT license (see LICENSE for details)
 ***********************************************************************************************
 -->

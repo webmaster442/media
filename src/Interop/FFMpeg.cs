@@ -1,8 +1,9 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
+using Media.DbAdapters;
 using Media.Dto.Internals;
 using Media.Infrastructure;
 
@@ -32,15 +33,28 @@ internal sealed class FFMpeg : InteropBase
     }
 
     private const string FfmpegBinary = "ffmpeg.exe";
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
-    public FFMpeg(ConfigAccessor configAccessor) : base(FfmpegBinary)
+    public FFMpeg(ConfigAdapter configAccessor) : base(FfmpegBinary)
     {
         _configAccessor = configAccessor;
     }
 
-    protected override string? GetExternalPath()
-        => _configAccessor.GetExternalFFMpegPath();
+    public void TakeScreenshot(string inputFile, double timeInSeconds, string outputJpeg)
+    {
+        string args = new FFMpegCommandBuilder()
+            .WithInputFile(inputFile)
+            .WithStartTimeInSeconds(timeInSeconds)
+            .WithTotalFrames(1)
+            .WithVideoFilter("scale=w=340:h=240")
+            .WithOutputFile(outputJpeg)
+            .Build();
+
+        Start(args);
+    }
+
+    protected override string GetExternalPath()
+        => _configAccessor.ExternalFFMpegPath;
 
     public FFMpegEncoderInfo[] GetEncoders()
     {

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
@@ -12,17 +12,23 @@ namespace Media.Ui.Controls;
 internal enum IconGlyph
 {
     GlobalNavigationButton = 0xE700,
+    Add = 0xE710,
+    Setting = 0xE713,
     Video = 0xE714,
     Zoom = 0xE71E,
+    FavoriteList = 0xE728,
     Lock = 0xE72E,
+    Remove = 0xE738,
     Save = 0xE74E,
     CommandPrompt = 0xE756,
+    Volume = 0xE767,
     System = 0xE770,
     Error = 0xE783,
     Warning = 0xE7BA,
     ReadingList = 0xE7BC,
     PowerButton = 0xE7E8,
     OtherUser = 0xE7EE,
+    Speakers = 0xE7F5,
     FolderOpen = 0xE838,
     RightArrowKeyTime1 = 0xE846,
     Previous = 0xE892,
@@ -35,12 +41,11 @@ internal enum IconGlyph
     BulletedList = 0xE8FD,
     Info = 0xE946,
     Projector = 0xE95D,
+    Asterisk = 0xEA38,
     Photo2 = 0xEB9F,
+    ResetDrive = 0xEBC4,
     RightArrowKeyTime0 = 0xEBE7,
     MusicNote = 0xEC4F,
+    ChromeSwitch = 0xF1CB,
     RestartUpdate = 0xF83E,
-    ResetDrive = 0xEBC4,
-    Asterisk = 0xEA38,
-    Volume = 0xE767,
-    Speakers = 0xE7F5,
 }

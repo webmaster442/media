@@ -12,9 +12,16 @@
     <AssemblyVersion>$([System.DateTime]::UtcNow.ToString("yyyy")).$([System.DateTime]::UtcNow.ToString("MM")).$([System.DateTime]::UtcNow.ToString("dd")).0</AssemblyVersion>
     <FileVersion>$([System.DateTime]::UtcNow.ToString("yyyy")).$([System.DateTime]::UtcNow.ToString("MM")).$([System.DateTime]::UtcNow.ToString("dd")).0</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Embedded\files.zip" />
     <None Remove="Embedded\TransitionEffect.ps" />
   </ItemGroup>
 
@@ -25,6 +32,8 @@
     <EmbeddedResource Include="..\Notes.txt" Link="Notes.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Embedded\files.zip" />
+    <EmbeddedResource Include="Embedded\OrganizeRules.xml" />
     <EmbeddedResource Include="Embedded\Presets.xml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -42,28 +51,32 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.8" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageReference Include="SharpCompress" Version="0.38.0" />
-    <PackageReference Include="Spectre.Console" Version="0.49.1" />
-    <PackageReference Include="Spectre.Console.Cli" Version="0.49.1" />
+    <PackageReference Include="SharpCompress" Version="0.40.0" />
+    <PackageReference Include="Spectre.Console" Version="0.50.0" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.50.0" />
     <PackageReference Include="Spectre.Console.Analyzer" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Spectre.Console.Json" Version="0.49.1" />
-    <PackageReference Include="System.Management" Version="9.0.0" />
+    <PackageReference Include="Spectre.Console.Json" Version="0.50.0" />
+    <PackageReference Include="System.Management" Version="9.0.8" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="..\branding\icon-512.png" Link="Embedded\icon-512.png" />
+    <Resource Include="..\branding\icon.png" Link="Embedded\icon.png" />
     <Content Include="..\LICENSE" Link="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="..\branding\branding.dll" Link="branding.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <ProjectReference Include="..\include\AudioSwitcher.AudioApi\AudioSwitcher.AudioApi.csproj" />
     <ProjectReference Include="..\include\AudioSwitcher.CoreAudio\AudioSwitcher.CoreAudio.csproj" />
+    <ProjectReference Include="..\include\Media.Database\Media.Database.csproj" />
     <ProjectReference Include="..\include\Media.ShellAutocomplete\Media.ShellAutoComplete.csproj" />
     <ProjectReference Include="..\include\NMaier.SimpleDlna.FileMediaServer\NMaier.SimpleDlna.FileMediaServer.csproj" />
     <ProjectReference Include="..\include\NMaier.SimpleDlna.Server\NMaier.SimpleDlna.Server.csproj" />

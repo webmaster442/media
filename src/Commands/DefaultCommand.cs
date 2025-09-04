@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
@@ -9,12 +9,14 @@ using System.Runtime.Versioning;
 
 using Media.Dto.Cli;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Interop;
 
 using Spectre.Console;
 
 namespace Media.Commands;
 
+[InstallerData(Arguments = "", IconIndex = 1, Name = "Media Cli")]
 internal class DefaultCommand : Command
 {
     private static void PrintReleaseNotes(string tree)
@@ -52,7 +54,7 @@ internal class DefaultCommand : Command
 
                 if (results != null)
                 {
-                    int parentId = Convert.ToInt32(results["ParentProcessId"]);
+                    int parentId = System.Convert.ToInt32(results["ParentProcessId"]);
                     return Process.GetProcessById(parentId);
                 }
                 return null;

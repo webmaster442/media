@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
@@ -49,9 +49,43 @@ internal static class Terminal
     public static void InfoText(string str)
         => AnsiConsole.MarkupLineInterpolated($"[yellow]{str.EscapeMarkup()}[/]");
 
-    internal static void RedText(string str)
+    public static void RedText(string str)
          => AnsiConsole.MarkupLineInterpolated($"[red]{str.EscapeMarkup()}[/]");
 
-    internal static bool Confirm(string message)
+    public static bool Confirm(string message)
         => AnsiConsole.Confirm(message);
+
+    public static async Task<bool> AbortCountdown(string message, int timeoutSeconds)
+    {
+        InfoText(message);
+        for (int i = timeoutSeconds; i > 0; i--)
+        {
+            AnsiConsole.WriteLine("Press a key to abort in {0} ...\r", i);
+            await Task.Delay(1000);
+            if (Console.KeyAvailable)
+            {
+                Console.ReadKey(true);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void EnterAlternateBuffer()
+    {
+        AnsiConsole.Write("\e[?1049h");
+        AnsiConsole.Clear();
+    }
+
+    public static void ExitAlternateBuffer()
+        => AnsiConsole.Write("\e[?1049l");
+
+    public static void ReportProgessToWinTerminal(int? percent)
+    {
+        if (percent.HasValue)
+            AnsiConsole.Write($"\e]9;4;1;{percent}\x07");
+        else
+            AnsiConsole.Write("\e]9;4;0;0\x07");
+    }
 }

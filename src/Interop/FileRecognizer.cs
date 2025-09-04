@@ -1,14 +1,7 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace Media.Interop;
 
@@ -16,19 +9,25 @@ internal static class FileRecognizer
 {
     private readonly static HashSet<string> AudioFiles = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".aac", ".ac3", ".aiff", ".ape", ".au",
-        ".dts", ".flac", ".m4a", ".m4b", ".mp3", 
-        ".oga", ".ogg", ".opus", ".ra", ".tak", 
-        ".tta", ".wav", ".wma", ".wv", ".weba",
-        ".alac", ".amr", ".mp2"
+        ".aac", ".ac3", ".aiff", ".alac",
+        ".amr", ".ape", ".atrac", ".au",
+        ".caf", ".dts", ".flac", ".gsm",
+        ".m4a", ".m4b", ".mka", ".mlp",
+        ".mp2", ".mp3", ".oga", ".opus",
+        ".ra", ".raw", ".shn", ".tak",
+        ".tta", ".voc", ".wav", ".wma",
+        ".wv"
     };
 
     private readonly static HashSet<string> VideoFiles = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".3gp", ".avi", ".flv", ".mkv", ".mov",
-        ".mp4", ".mpeg", ".mpg", ".ogv", ".ts",
-        ".webm", ".wmv", ".m2ts", ".mts", ".m4v",
-        ".vob", ".ts",
+        ".3gp", ".asf", ".avi", ".bfi",
+        ".f4v", ".flv", ".gxf", ".m4v",
+        ".matroska", ".mkv", ".mov", ".mp4",
+        ".mpeg", ".mpg", ".mts", ".mxf",
+        ".nut", ".ogg", ".ogv", ".rm",
+        ".ts", ".vob", ".webm", ".wm", 
+        ".wmv", ".yuv"
     };
 
     private readonly static HashSet<string> ImageFiles = new(StringComparer.OrdinalIgnoreCase)

@@ -38,7 +38,7 @@
                         Glyph="CommandPrompt" />
                 </MenuItem.Icon>
             </MenuItem>
-            <Separator/>
+            <Separator />
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Header="Show hidden files"
@@ -49,7 +49,7 @@
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding RandomPlayCommand}"
-                CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
+                CommandParameter="1"
                 Header="Play a random file from this folder"
                 Tag="0">
                 <MenuItem.Icon>
@@ -57,11 +57,26 @@
                         FontSize="22"
                         Glyph="Asterisk" />
                 </MenuItem.Icon>
+                <MenuItem
+                    Click="SetCorrectTabFromTag"
+                    Command="{Binding RandomPlayCommand}"
+                    CommandParameter="5"
+                    Header="Launch a playlist of 5 items"
+                    Tag="0" />
+                <MenuItem
+                    Click="SetCorrectTabFromTag"
+                    Command="{Binding RandomPlayCommand}"
+                    CommandParameter="10"
+                    Header="Launch a playlist of 10 items" />
+                <MenuItem
+                    Click="SetCorrectTabFromTag"
+                    Command="{Binding RandomPlayCommand}"
+                    CommandParameter="20"
+                    Header="Launch a playlist of 20 items" />
             </MenuItem>
             <MenuItem
                 Click="SetCorrectTabFromTag"
                 Command="{Binding ImgViewCommand}"
-                CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
                 Header="Start image viewer"
                 Tag="0">
                 <MenuItem.Icon>
@@ -82,7 +97,7 @@
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.LoadCommand}"
                 Header="Load from file..."
-                Tag="2">
+                Tag="3">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
@@ -94,7 +109,7 @@
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.SaveCommand}"
                 Header="Save to file..."
-                Tag="2">
+                Tag="3">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
@@ -104,9 +119,21 @@
             <Separator />
             <MenuItem
                 Click="SetCorrectTabFromTag"
+                Command="{Binding PlaylistViewModel.PlayCurrentListCommand}"
+                Header="Play current list..."
+                Tag="3">
+                <MenuItem.Icon>
+                    <controls:FontIcon
+                        FontSize="22"
+                        Glyph="Asterisk" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem
+                Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.OrderAzCommand}"
                 Header="Order by Name"
-                Tag="2">
+                Tag="3">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
@@ -128,7 +155,7 @@
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.ShuffleCommand}"
                 Header="Shuffle"
-                Tag="2">
+                Tag="3">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
@@ -140,7 +167,7 @@
                 Click="SetCorrectTabFromTag"
                 Command="{Binding PlaylistViewModel.ClearCommand}"
                 Header="Clear"
-                Tag="2">
+                Tag="3">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
@@ -188,7 +215,6 @@
             <Separator />
             <MenuItem
                 Command="{Binding ServeCommand}"
-                CommandParameter="{Binding Path=FilesViewModel.CurrentPath}"
                 Header="Start dlna serverver is this folder">
                 <MenuItem.Icon>
                     <controls:FontIcon
@@ -208,49 +234,6 @@
             </MenuItem>
         </MenuItem>
         <Separator />
-        <MenuItem Header="Projector">
-            <MenuItem.Icon>
-                <controls:FontIcon
-                    FontSize="22"
-                    Glyph="Projector" />
-            </MenuItem.Icon>
-            <MenuItem
-                Command="{Binding System.DisplayInternalCommand}"
-                Header="Internal">
-                <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem
-                Command="{Binding System.DisplayCloneCommand}"
-                Header="Clone">
-                <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem
-                Command="{Binding System.DisplayExtendCommand}"
-                Header="Extend">
-                <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
-                </MenuItem.Icon>
-            </MenuItem>
-            <MenuItem
-                Command="{Binding System.DisplayExernalCommand}"
-                Header="External">
-                <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
-                </MenuItem.Icon>
-            </MenuItem>
-        </MenuItem>
         <MenuItem Header="Audio">
             <MenuItem.Icon>
                 <controls:FontIcon
@@ -301,65 +284,167 @@
                 </MenuItem.Icon>
             </MenuItem>
         </MenuItem>
-        <MenuItem Header="Windows">
+        <MenuItem Header="System">
             <MenuItem.Icon>
                 <controls:FontIcon
                     FontSize="22"
                     Glyph="System" />
             </MenuItem.Icon>
-            <MenuItem
-                Command="{Binding System.LockCommand}"
-                Header="Lock">
+            <MenuItem Header="Projector">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
-                        Glyph="Lock" />
+                        Glyph="Projector" />
                 </MenuItem.Icon>
+                <MenuItem
+                    Command="{Binding System.DisplayInternalCommand}"
+                    Header="Internal">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.DisplayCloneCommand}"
+                    Header="Clone">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.DisplayExtendCommand}"
+                    Header="Extend">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.DisplayExernalCommand}"
+                    Header="External">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
-            <MenuItem
-                Command="{Binding System.LogoutCommand}"
-                Header="Logout">
+            <MenuItem Header="Windows">
                 <MenuItem.Icon>
                     <controls:FontIcon
                         FontSize="22"
-                        Glyph="OtherUser" />
+                        Glyph="System" />
                 </MenuItem.Icon>
+                <MenuItem
+                    Command="{Binding System.LockCommand}"
+                    Header="Lock">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="Lock" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.LogoutCommand}"
+                    Header="Logout">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="OtherUser" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem
+                    Command="{Binding System.SleepCommand}"
+                    Header="Sleep">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.HibernateCommand}"
+                    Header="Hibernate">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RightArrowKeyTime0" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.ShutdownCommand}"
+                    Header="Shutdown">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="PowerButton" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem
+                    Command="{Binding System.RestartCommand}"
+                    Header="Restart">
+                    <MenuItem.Icon>
+                        <controls:FontIcon
+                            FontSize="22"
+                            Glyph="RestartUpdate" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
+        </MenuItem>
+        <MenuItem Header="View">
+            <MenuItem.Icon>
+                <controls:FontIcon
+                    FontSize="22"
+                    Glyph="GlobalNavigationButton" />
+            </MenuItem.Icon>
+            <MenuItem
+                Header="Allways on top"
+                IsCheckable="True"
+                IsChecked="{Binding AllwaysOnTop}" />
             <Separator />
             <MenuItem
-                Command="{Binding System.SleepCommand}"
-                Header="Sleep">
+                Click="SetCorrectTabFromTag"
+                Header="Files"
+                Tag="0">
                 <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
+                    <TextBlock
+                        FontSize="16"
+                        Text="1" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem
-                Command="{Binding System.HibernateCommand}"
-                Header="Hibernate">
+                Click="SetCorrectTabFromTag"
+                Header="Radio Satations"
+                Tag="1">
                 <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RightArrowKeyTime0" />
+                    <TextBlock
+                        FontSize="16"
+                        Text="2" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem
-                Command="{Binding System.ShutdownCommand}"
-                Header="Shutdown">
+                Click="SetCorrectTabFromTag"
+                Header="Database"
+                Tag="2">
                 <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="PowerButton" />
+                    <TextBlock
+                        FontSize="16"
+                        Text="3" />
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem
-                Command="{Binding System.RestartCommand}"
-                Header="Restart">
+                Click="SetCorrectTabFromTag"
+                Header="Playlist"
+                Tag="3">
                 <MenuItem.Icon>
-                    <controls:FontIcon
-                        FontSize="22"
-                        Glyph="RestartUpdate" />
+                    <TextBlock
+                        FontSize="16"
+                        Text="4" />
                 </MenuItem.Icon>
             </MenuItem>
         </MenuItem>

@@ -8,5 +8,20 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <ListBox ItemsSource="{Binding PlaylistItems}"/>
+    <ListBox
+        FontSize="{StaticResource ListFontSize}"
+        ItemsSource="{Binding PlaylistItems}">
+        <ListBox.ContextMenu>
+            <ContextMenu>
+                <MenuItem
+                    Command="{Binding PlayCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
+                    Header="Play with mpv" />
+                <MenuItem
+                    Command="{Binding RemoveCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
+                    Header="Remove item" />
+            </ContextMenu>
+        </ListBox.ContextMenu>
+    </ListBox>
 </UserControl>

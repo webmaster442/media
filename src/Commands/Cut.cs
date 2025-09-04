@@ -1,11 +1,13 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
 
+using Media.DbAdapters;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Infrastructure.Validation;
 using Media.Interop;
 
@@ -55,7 +57,7 @@ internal sealed class Cut : Command<Cut.Settings>
         return false;
     }
 
-    public Cut(ConfigAccessor configAccessor)
+    public Cut(ConfigAdapter configAccessor)
     {
         _ffMpeg = new FFMpeg(configAccessor);
     }

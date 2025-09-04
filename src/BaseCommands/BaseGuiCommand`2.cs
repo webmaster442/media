@@ -1,0 +1,65 @@
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Threading;
+using System.Windows;
+
+using Media.Infrastructure;
+using Media.Interfaces;
+
+using Microsoft.Extensions.Logging;
+
+using Spectre.Console;
+
+namespace Media.BaseCommands;
+
+internal abstract class BaseGuiCommand<TWindow, TSettings> : Command<TSettings>
+    where TWindow : Window, new()
+    where TSettings : CommandSettings
+{
+    protected virtual IViewModel? CreateDataContext(TSettings settings, IUiFunctions uiFunctions, ILoggerFactory loggerFactory) => null;
+
+    protected virtual IWindowManipulator? CreateWindowManipulator() => null;
+
+    private void ThreadCode(object? obj)
+    {
+        using var loggerFactory = ProgramFactory.GetLoggerFactory();
+
+        try
+        {
+            TSettings settings = (TSettings)obj!;
+
+            var runner = new WpfAppRunner<TWindow>();
+
+            var customManipulator = CreateWindowManipulator();
+
+            if (customManipulator != null)
+            {
+                runner.WindowManipulator = customManipulator;
+            }
+
+            runner.Run(CreateDataContext(settings, new UiFunctionsImplementation(), loggerFactory));
+
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Unhandled exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            GlobalExceptionHandler.HandleExcpetion(ex);
+        }
+    }
+
+    public override int Execute(CommandContext context, TSettings settings)
+    {
+        Terminal.EnterAlternateBuffer();
+        Terminal.InfoText($"Starting Ui Thread...");
+        Thread uiThread = new(ThreadCode);
+        uiThread.SetApartmentState(ApartmentState.STA);
+        uiThread.Start(settings);
+        Terminal.InfoText($"Ui Thread started. Close window to return to command line");
+        uiThread.Join();
+        Terminal.ExitAlternateBuffer();
+        return ExitCodes.Success;
+    }
+}

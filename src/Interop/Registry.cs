@@ -1,0 +1,47 @@
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
+
+namespace Media.Interop;
+
+internal static class SystemRegistry
+{
+    public static void AddFolderToPath(string folderPath, ILogger logger)
+    {
+        const string keyName = "Environment";
+        const string valueName = "Path";
+
+        try
+        {
+            using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(keyName, true))
+            {
+                if (key != null)
+                {
+                    string currentPath = key.GetValue(valueName, string.Empty).ToString() ?? string.Empty;
+                    if (!currentPath.Split(';').Contains(folderPath, StringComparer.OrdinalIgnoreCase))
+                    {
+                        string newPath = currentPath + ";" + folderPath;
+                        key.SetValue(valueName, newPath, RegistryValueKind.ExpandString);
+                        logger.LogInformation("Folder added to system PATH.");
+                    }
+                    else
+                    {
+                        logger.LogInformation("Folder is already in the system PATH.");
+                    }
+                }
+                else
+                {
+                    logger.LogInformation("Failed to open registry key.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error: {message}", ex.Message);
+        }
+    }
+}

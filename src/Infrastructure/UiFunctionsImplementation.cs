@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
@@ -9,27 +9,56 @@ using System.Windows.Controls;
 using System.Windows.Shell;
 
 using Media.Interfaces;
+using Media.Interop;
 using Media.Ui.Controls;
 
 namespace Media.Infrastructure;
 
 internal class UiFunctionsImplementation : IUiFunctions
 {
+    private static IEnumerable<T> FindLogicalChildren<T>(DependencyObject depObj) where T : DependencyObject
+    {
+        if (depObj != null)
+        {
+            foreach (object rawChild in LogicalTreeHelper.GetChildren(depObj))
+            {
+                if (rawChild is DependencyObject child)
+                {
+                    if (child is T casted)
+                    {
+                        yield return casted;
+                    }
+
+                    foreach (T childOfChild in FindLogicalChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }
+    }
+
     public void ErrorMessage(string message, string title)
     {
         Terminal.RedText(message);
-        MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+        MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
+    }
+
+    public bool ConfirmMessage(string message, string title)
+    {
+        var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes, MessageBoxOptions.DefaultDesktopOnly);
+        return result == MessageBoxResult.Yes;
     }
 
     public void Exit(int exitCode)
         => Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown(exitCode));
 
     public void InfoMessage(string message, string title)
-        => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
+        => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly);
 
     public bool QuestionMessage(string message, string title)
     {
-        var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
+        var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes, MessageBoxOptions.DefaultDesktopOnly);
         return result == MessageBoxResult.Yes;
     }
 
@@ -47,7 +76,6 @@ internal class UiFunctionsImplementation : IUiFunctions
 
     public void Report(double value)
     {
-
         var mainWin = App.Current.MainWindow;
         if (mainWin.TaskbarItemInfo == null)
             mainWin.TaskbarItemInfo = new TaskbarItemInfo();
@@ -76,13 +104,12 @@ internal class UiFunctionsImplementation : IUiFunctions
             mainWin.TaskbarItemInfo = new TaskbarItemInfo();
 
         mainWin.TaskbarItemInfo.ProgressState = Map(state);
-
     }
 
     public void WarningMessage(string message, string title)
         => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
 
-    public void BlockUi()
+    public void BeginAsyncOperation()
     {
         var blocker = FindLogicalChildren<AsyncBlocker>(App.Current.MainWindow).FirstOrDefault();
         if (blocker != null)
@@ -96,38 +123,42 @@ internal class UiFunctionsImplementation : IUiFunctions
             {
                 var ctrl = new AsyncBlocker();
                 grid.Children.Add(ctrl);
+                Panel.SetZIndex(grid, 10000);
                 ctrl.Show();
             }
         }
         SetProgressState(ProgressState.Indeterminate);
     }
 
-    public void UnblockUi()
+    public void EndAsyncOperation()
     {
         var blocker = FindLogicalChildren<AsyncBlocker>(App.Current.MainWindow).FirstOrDefault();
         blocker?.Hide();
         SetProgressState(ProgressState.None);
     }
 
-    private static IEnumerable<T> FindLogicalChildren<T>(DependencyObject depObj) where T : DependencyObject
+    public void ShowInternalWindow(string title, INotifyPropertyChanged content)
     {
-        if (depObj != null)
+        var internalWindow = FindLogicalChildren<InternalWindow>(App.Current.MainWindow).FirstOrDefault();
+        if (internalWindow == null)
         {
-            foreach (object rawChild in LogicalTreeHelper.GetChildren(depObj))
+            var grid = FindLogicalChildren<Grid>(App.Current.MainWindow).FirstOrDefault();
+            if (grid != null)
             {
-                if (rawChild is DependencyObject child)
+                internalWindow = new InternalWindow
                 {
-                    if (child is T casted)
-                    {
-                        yield return casted;
-                    }
-
-                    foreach (T childOfChild in FindLogicalChildren<T>(child))
-                    {
-                        yield return childOfChild;
-                    }
-                }
+                    Width = App.Current.MainWindow.ActualWidth * 0.8,
+                    Height = App.Current.MainWindow.ActualHeight * 0.8
+                };
+                Panel.SetZIndex(grid, 9000);
+                grid.Children.Add(internalWindow);
             }
+        }
+        if (internalWindow != null)
+        {
+            internalWindow.Title = title;
+            internalWindow.View = content;
+            internalWindow.Show();
         }
     }
 
@@ -155,5 +186,19 @@ internal class UiFunctionsImplementation : IUiFunctions
             return sfd.FileName;
         }
         return null;
+    }
+
+    public void BringConsoleWindowToFront()
+    {
+        IntPtr handle = Win32Functions.FindWindow(null, Console.Title);
+
+        if (handle == IntPtr.Zero)
+        {
+            //Console window not found!
+            return;
+        }
+
+        Win32Functions.ShowWindow(handle, Win32Functions.SW_RESTORE);
+        Win32Functions.SetForegroundWindow(handle);
     }
 }

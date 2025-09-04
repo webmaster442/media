@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
@@ -32,6 +32,7 @@ internal abstract class ApiClient : IDisposable
     public static class ApiUrls
     {
         public const string GithubApi = "https://api.github.com";
-        public const string RadioBrowserApi = "http://nl1.api.radio-browser.info/json";
+        public const string RadioBrowserApiHost = "all.api.radio-browser.info";
+        public const string RadioBrowserFallbackUrl = "de2.api.radio-browser.info";
     }
 }

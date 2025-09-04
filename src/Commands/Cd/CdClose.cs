@@ -1,0 +1,26 @@
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using Media.BaseSettings;
+using Media.Infrastructure.CommandAttributes;
+using Media.Interop.CdRip;
+
+namespace Media.Commands.Cd;
+
+[Example("Close cd drive d:", @"media cdclose D:\")]
+internal sealed class CdClose : AsyncCommand<BaseCdSettings>
+{
+    public override async Task<int> ExecuteAsync(CommandContext context, BaseCdSettings settings)
+    {
+        using var drive = CdDrive.Create(settings.DriveLetter);
+        var discInDrive = await drive.IsCdInDriveAsync();
+        if (discInDrive)
+        {
+            return ExitCodes.Success;
+        }
+        await drive.CloseAsync();
+        return ExitCodes.Success;
+    }
+}

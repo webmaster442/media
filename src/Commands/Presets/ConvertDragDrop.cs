@@ -1,0 +1,50 @@
+﻿// -----------------------------------------------------------------------------------------------
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
+// This code is licensed under MIT license (see LICENSE for details)
+// -----------------------------------------------------------------------------------------------
+
+using System.Windows;
+
+using Media.BaseCommands;
+using Media.DbAdapters;
+using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
+using Media.Interfaces;
+using Media.Ui;
+
+using Microsoft.Extensions.Logging;
+
+namespace Media.Commands.Presets;
+
+[InstallerData(Arguments = "preset drop", IconIndex = 2, Name = "Media Drag&Drop convert")]
+[Example("Open a window to convert a file by drag and drop", "media preset drop")]
+internal class ConvertDragDrop : BaseGuiCommand<DropConvertWindow>
+{
+    private readonly ConfigAdapter _configAccessor;
+
+    internal class DropWindowManipulator : IWindowManipulator
+    {
+        public Size GetWindowSize(Size xamlDefinedWindowSize, Size workArea)
+            => xamlDefinedWindowSize;
+
+        public Point GetWindowStartupLocation(Size workArea, Size windowSize)
+        {
+            return new Point
+            {
+                X = workArea.Width - windowSize.Width - 10,
+                Y = workArea.Height - windowSize.Height - 10
+            };
+        }
+    }
+
+    public ConvertDragDrop(ConfigAdapter configAccessor)
+    {
+        _configAccessor = configAccessor;
+    }
+
+    protected override IWindowManipulator? CreateWindowManipulator()
+        => new DropWindowManipulator();
+
+    protected override IViewModel? CreateDataContext(IUiFunctions uiFunctions, ILoggerFactory loggerFactory)
+        => new DropConvertViewModel(uiFunctions, _configAccessor, loggerFactory);
+}

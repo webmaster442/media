@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
@@ -12,6 +12,8 @@ using Media.Interfaces;
 using Media.Interop;
 using Media.Ui.Controls;
 
+using Microsoft.Extensions.Logging;
+
 namespace Media.Ui.Gui;
 
 internal sealed partial class RadioStationsViewModel : ObservableObject, IViewModel
@@ -22,32 +24,54 @@ internal sealed partial class RadioStationsViewModel : ObservableObject, IViewMo
     public ObservableRangeCollection<Country> Countries { get; }
     public ObservableRangeCollection<Station> Stations { get; }
 
-    public RadioStationsViewModel(RadioStationsClient radioStationsClient, IUiFunctions uiFunctions)
+    public ILogger Logger { get; }
+
+    public RadioStationsViewModel(RadioStationsClient radioStationsClient, IUiFunctions uiFunctions, ILoggerFactory loggerFactory)
     {
+        Logger = loggerFactory.CreateLogger<RadioStationsViewModel>();
         Countries = new ObservableRangeCollection<Country>();
         Stations = new ObservableRangeCollection<Station>();
         _radioStationsClient = radioStationsClient;
         _uiFunctions = uiFunctions;
-
     }
 
     public async void Initialize()
     {
-        _uiFunctions.BlockUi();
-        var countries = await _radioStationsClient.GetRadioStationCountries();
-        Countries.Clear();
-        Countries.AddRange(countries);
-        _uiFunctions.UnblockUi();
+        try
+        {
+            _uiFunctions.BeginAsyncOperation();
+            var countries = await _radioStationsClient.GetRadioStationCountries();
+            Countries.Clear();
+            Countries.AddRange(countries);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogCritical(ex, "Error loading radio stations");
+        }
+        finally
+        {
+            _uiFunctions.EndAsyncOperation();
+        }
     }
 
     [RelayCommand]
     private async Task CountrySelect(Country selection)
     {
-        _uiFunctions.BlockUi();
-        var stations = await _radioStationsClient.GetRadioStations(selection.Name);
-        Stations.Clear();
-        Stations.AddRange(stations);
-        _uiFunctions.UnblockUi();
+        try
+        {
+            _uiFunctions.BeginAsyncOperation();
+            var stations = await _radioStationsClient.GetRadioStations(selection.Name);
+            Stations.Clear();
+            Stations.AddRange(stations);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogCritical(ex, "Error loading radio stations");
+        }
+        finally
+        {
+            _uiFunctions.EndAsyncOperation();
+        }
     }
 
     [RelayCommand]

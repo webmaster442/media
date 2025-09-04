@@ -1,16 +1,33 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
 using Media;
 using Media.Commands;
+using Media.Commands.Cd;
+using Media.Commands.Config;
+using Media.Commands.Convert;
+using Media.Commands.Extract;
+using Media.Commands.Info;
+using Media.Commands.Mux;
+using Media.Commands.Organize;
+using Media.Commands.Playlist;
+using Media.Commands.Presets;
+using Media.Commands.Update;
+using Media.Embedded;
 using Media.Infrastructure;
 using Media.Interop;
 using Media.ShellAutoComplete.AutoComplete;
 using Media.ShellAutoComplete.Integrations;
 
-var mainApp = new CommandApp<DefaultCommand>(ProgramFactory.CreateTypeRegistar());
+using var registar = ProgramFactory.CreateTypeRegistar();
+
+await ProgramFactory.RunDatabaseJobsIfNeeded();
+await EmbeddedResources.ExpandFilesZip(AppContext.BaseDirectory);
+
+
+var mainApp = new CommandApp<DefaultCommand>(registar);
 
 Terminal.EnableUTF8Output();
 
@@ -26,17 +43,8 @@ mainApp.Configure(config =>
     config.AddCommand<Cut>("cut")
           .WithDescription("Cut a file without reencoding");
 
-    config.AddCommand<Media.Commands.Version>("version")
-            .WithDescription("Print program version");
-
     config.AddCommand<Sereve>("serve")
         .WithDescription("Start a DLNA server");
-
-    config.AddCommand<Config>("config")
-        .WithDescription("Edit the configuration file");
-
-    config.AddCommand<Website>("website")
-        .WithDescription("Open the project website");
 
     config.AddCommand<ImgView>("imgview")
         .WithDescription("View images in a folder");
@@ -44,56 +52,8 @@ mainApp.Configure(config =>
     config.AddCommand<Gui>("gui")
         .WithDescription("Start the graphical user interface");
 
-    config.AddBranch("play", play =>
-    {
-        play.SetDescription("Play related commands");
-
-        play.AddCommand<Play>("file")
-            .WithDescription("Play a media file with mpv");
-
-        play.AddCommand<PlayRandom>("random")
-            .WithDescription("Play a random media file with mpv");
-    });
-
-    config.AddBranch("playlist", playlist =>
-    {
-        playlist.SetDescription("Playlist related commands");
-
-        playlist.AddCommand<PlaylistNew>("new")
-            .WithDescription("Create a new playlist");
-
-        playlist.AddCommand<PlaylistAdd>("add")
-            .WithDescription("Add a file to a playlist");
-
-        playlist.AddCommand<PlaylistRemove>("remove")
-            .WithDescription("Remove a file from a playlist");
-
-        playlist.AddCommand<PlaylistClear>("clear")
-            .WithDescription("Clear a playlist");
-
-        playlist.AddCommand<PlaylistCopy>("copy")
-            .WithDescription("Copy files from a playlist to a directory");
-    });
-
-    config.AddBranch("info", info =>
-    {
-        info.SetDescription("Information related commands");
-
-        info.AddCommand<InfoFile>("file")
-            .WithDescription("Get information about a media file");
-
-        info.AddCommand<InfoEncoders>("encoders")
-            .WithDescription("List available encoders");
-
-        info.AddCommand<InfoHwEncoders>("hw-encoders")
-            .WithDescription("List available hardware encoders");
-
-        info.AddCommand<InfoPresets>("presets")
-            .WithDescription("List available presets");
-
-        info.AddCommand<InfoDrives>("drives")
-            .WithDescription("Print drive informations");
-    });
+    config.AddCommand<Install>("install")
+        .WithDescription("Install the program. Create icons and add to path");
 
     config.AddBranch("cd", cd =>
     {
@@ -110,6 +70,17 @@ mainApp.Configure(config =>
 
         cd.AddCommand<CdClose>("close")
             .WithDescription("Close the CD drive");
+    });
+
+    config.AddBranch("config", cfg =>
+    {
+        cfg.SetDescription("Configuration related commands");
+
+        cfg.AddCommand<ConfigList>("list")
+            .WithDescription("List all configuration values");
+
+        cfg.AddCommand<ConfigSet>("set")
+            .WithDescription("Set a configuration value");
     });
 
     config.AddBranch("convert", convert =>
@@ -145,13 +116,8 @@ mainApp.Configure(config =>
 
         convert.AddCommand<ConvertNtscDvd>("dvd-pal")
             .WithDescription("Create an PAL DVD compatible MPEG-2 file with AC-3 audio");
-
-        convert.AddCommand<ConvertPreset>("preset")
-            .WithDescription("Convert a file using a preset");
-
-        convert.AddCommand<ConvertDragDrop>("drop")
-            .WithDescription("Convert multiple file using a drag & drop window");
     });
+
     config.AddBranch("extract", extract =>
     {
         extract.SetDescription("Extract audio/video stream from files");
@@ -162,6 +128,101 @@ mainApp.Configure(config =>
         extract.AddCommand<ExtractAudioCopy>("audio")
                .WithDescription("Extract audio stream without reencoding");
     });
+
+    config.AddBranch("info", info =>
+    {
+        info.SetDescription("Information related commands");
+
+        info.AddCommand<InfoFile>("file")
+            .WithDescription("Get information about a media file");
+
+        info.AddCommand<InfoEncoders>("encoders")
+            .WithDescription("List available encoders");
+
+        info.AddCommand<InfoHwEncoders>("hw-encoders")
+            .WithDescription("List available hardware encoders");
+
+        info.AddCommand<InfoDrives>("drives")
+            .WithDescription("Print drive informations");
+
+        info.AddCommand<Media.Commands.Info.Version>("version")
+            .WithDescription("Print program version");
+
+        info.AddCommand<Website>("website")
+            .WithDescription("Open the project website");
+    });
+
+    config.AddBranch("mux", mux =>
+    {
+        mux.SetDescription("mux releated commands");
+
+        mux.AddCommand<MuxAddAudio>("add-audio")
+           .WithDescription("Add audio stream to a video file");
+
+        mux.AddCommand<MuxAddSubtitle>("add-subtitle")
+           .WithDescription("Add subtitle stream to a video file");
+    });
+
+    config.AddBranch("organize", org =>
+    {
+        org.SetDescription("File organization commands");
+
+        org.AddCommand<CreateRules>("create")
+            .WithDescription("Create an organization rule in a given folder");
+
+        org.AddCommand<OrganizeByAbc>("abc")
+            .WithDescription("Organize files to subdirs by alphabet");
+
+        org.AddCommand<OrganizeByRule>("rule")
+            .WithDescription("Organize files to subdirs by a rule file");
+    });
+
+    config.AddBranch("play", play =>
+    {
+        play.SetDescription("Play related commands");
+
+        play.AddCommand<Play>("file")
+            .WithDescription("Play a media file with mpv");
+
+        play.AddCommand<PlayRandom>("random")
+            .WithDescription("Play a random media file with mpv");
+    });
+
+    config.AddBranch("playlist", playlist =>
+    {
+        playlist.SetDescription("Playlist related commands");
+
+        playlist.AddCommand<PlaylistNew>("new")
+            .WithDescription("Create a new playlist");
+
+        playlist.AddCommand<PlaylistAdd>("add")
+            .WithDescription("Add a file to a playlist");
+
+        playlist.AddCommand<PlaylistRemove>("remove")
+            .WithDescription("Remove a file from a playlist");
+
+        playlist.AddCommand<PlaylistClear>("clear")
+            .WithDescription("Clear a playlist");
+
+        playlist.AddCommand<PlaylistCopy>("copy")
+            .WithDescription("Copy files from a playlist to a directory");
+    });
+
+    config.AddBranch("preset", presetconvert =>
+    {
+        presetconvert.AddCommand<ConvertDragDrop>("drop")
+            .WithDescription("Convert multiple file using a drag & drop window");
+
+        presetconvert.AddCommand<ListPresets>("list")
+            .WithDescription("List available presets");
+
+        presetconvert.AddCommand<ConvertPreset>("run")
+            .WithDescription("Convert a file using a preset");
+
+        presetconvert.AddCommand<CreateShellScript>("createshell")
+            .WithDescription("Create a cmd and powershell script for converting files");
+    });
+
     config.AddBranch("update", update =>
     {
         update.SetDescription("Update related commands");
@@ -180,16 +241,6 @@ mainApp.Configure(config =>
 
         update.AddCommand<UpdateAll>("all")
               .WithDescription("Update all tools");
-    });
-    config.AddBranch("mux", mux =>
-    {
-        mux.SetDescription("mux releated commands");
-
-        mux.AddCommand<MuxAddAudio>("add-audio")
-           .WithDescription("Add audio stream to a video file");
-
-        mux.AddCommand<MuxAddSubtitle>("add-subtitle")
-           .WithDescription("Add subtitle stream to a video file");
     });
 });
 

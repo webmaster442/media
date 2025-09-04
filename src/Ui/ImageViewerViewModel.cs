@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
@@ -9,6 +9,8 @@ using CommunityToolkit.Mvvm.Input;
 using Media.Interfaces;
 using Media.Interop;
 using Media.Ui.Controls;
+
+using Microsoft.Extensions.Logging;
 
 namespace Media.Ui;
 
@@ -22,7 +24,9 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
     public ObservableRangeCollection<string> ImageFiles { get; }
 
     [ObservableProperty]
-    private string _currentImage;
+    public partial string CurrentImage { get; set; }
+
+    public ILogger Logger { get; }
 
     partial void OnCurrentImageChanged(string value)
     {
@@ -33,13 +37,14 @@ internal sealed partial class ImageViewerViewModel : ObservableObject, IViewMode
     }
 
     [ObservableProperty]
-    private string _windowTitle;
+    public partial string WindowTitle { get; set; }
 
-    public ImageViewerViewModel(string folder, IUiFunctions uiFunctions)
+    public ImageViewerViewModel(string folder, IUiFunctions uiFunctions, ILoggerFactory loggerFactory)
     {
+        Logger = loggerFactory.CreateLogger<ImageViewerViewModel>();
         _folder = folder;
         _uiFunctions = uiFunctions;
-        _windowTitle = $"Image Viewer - {Path.GetFileName(_folder)}";
+        WindowTitle = $"Image Viewer - {Path.GetFileName(_folder)}";
         _currentImageIndex = 0;
         ImageFiles = new ObservableRangeCollection<string>();
         CurrentImage = string.Empty;

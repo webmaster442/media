@@ -2,8 +2,15 @@
 - [ ] Stability tests
 - [x] Image viewer
 - [x] Shell progress bar functions to UIFunctions
-- [ ] Entity framework with SQLite for database
-- [ ] Database saved to User profile
-- [ ] Database migration set up
-- [ ] Settings stored in database table
-- [ ] Played files stored in database table
+- [x] Entity framework with SQLite for database
+- [x] Database saved to User profile
+- [x] Database migration set up
+- [x] Settings stored in database table
+- [x] Played files stored in database table
+- [ ] https://github.com/einaregilsson/InsertIcons
+- [x] Multiple icons generated with https://favicon.io/favicon-generator/
+- [x] Icon settings: Leckerli One Regeular 400 110 #0A0 Background
+- [x] Extend file recognizer
+- [ ] Install command to create shortcuts
+- [ ] Gui: Playlist playing with MPV
+- [ ] Gui: On exit stop IPC server of MPV

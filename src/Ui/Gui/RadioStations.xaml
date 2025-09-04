@@ -31,7 +31,7 @@
                 </behaviours:Interaction.Triggers>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock FontSize="18">
+                        <TextBlock FontSize="{StaticResource ListFontSize}">
                             <TextBlock.Text>
                                 <MultiBinding
                                     Converter="{converters:StringFormatConverter}"

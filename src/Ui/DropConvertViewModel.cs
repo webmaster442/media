@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
@@ -8,10 +8,13 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Media.DbAdapters;
 using Media.Dto;
 using Media.Infrastructure;
 using Media.Interfaces;
 using Media.Interop;
+
+using Microsoft.Extensions.Logging;
 
 namespace Media.Ui;
 
@@ -21,31 +24,34 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
     private readonly FFMpeg _fFMpeg;
 
     [ObservableProperty]
-    private string _selectedPath;
+    public partial string SelectedPath { get; set; }
 
-    partial void OnSelectedPathChanged(string? oldValue, string newValue)
+    partial void OnSelectedPathChanged(string oldValue, string newValue)
         => SelectedPathDisplay = Path.GetFileName(newValue);
 
     [ObservableProperty]
-    private string _selectedPathDisplay;
+    public partial string SelectedPathDisplay { get; set; }
 
     [ObservableProperty]
-    private Preset? _selectedPreset;
+    public partial Preset? SelectedPreset { get; set; }
 
     public ObservableCollection<Preset> PresetCollection { get; }
 
-    public DropConvertViewModel(IUiFunctions uiFunctions, ConfigAccessor configAccessor)
+    public ILogger Logger { get; }
+
+    public DropConvertViewModel(IUiFunctions uiFunctions, ConfigAdapter configAccessor, ILoggerFactory loggerFactory)
     {
+        Logger = loggerFactory.CreateLogger<DropConvertViewModel>();
         _uiFunctions = uiFunctions;
         _fFMpeg = new FFMpeg(configAccessor);
-        _selectedPath = Environment.CurrentDirectory;
-        _selectedPathDisplay = Path.GetFileName(_selectedPath);
+        SelectedPath = Environment.CurrentDirectory;
+        SelectedPathDisplay = Path.GetFileName(SelectedPath);
         PresetCollection = new ObservableCollection<Preset>();
     }
 
     public async void Initialize()
     {
-        var presets = await Presets.LoadPresetArray();
+        var presets = await PresetProvider.LoadPresetArray();
         foreach (var preset in presets.OrderBy(x => x.Category).ThenBy(x => x.Name))
         {
             PresetCollection.Add(preset);
@@ -91,18 +97,23 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
 
         List<string> skipped = new();
 
+        var helper = new ShellHelper();
+
         var scriptFile = Path.Combine(SelectedPath, Path.ChangeExtension(Path.GetFileName(SelectedPath), ".ps1"));
         var builder = new PowershellBuilder()
             .WithUtf8Enabled()
             .WithWindowTitle(Path.GetFileNameWithoutExtension(SelectedPath))
             .WithClear();
 
+        int current = 1;
         foreach (var file in files)
         {
             if (File.Exists(file)
                 && FileRecognizer.IsDropConvertSupported(file))
             {
                 builder.WithCommand(CreateCommandLine(file));
+                builder.WithCommand(helper.SetProgress(files.Length, current));
+                ++current;
             }
             else
             {
@@ -111,6 +122,7 @@ internal sealed partial class DropConvertViewModel : ObservableObject, IViewMode
         }
 
         builder.WithMessage("Finished");
+        builder.WithCommand(helper.HideProgress());
 
         File.WriteAllText(scriptFile, builder.Build());
 

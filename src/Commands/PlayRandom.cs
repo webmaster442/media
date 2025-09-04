@@ -1,11 +1,12 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
-using Media.Database;
+using Media.DbAdapters;
 using Media.Dto.Internals;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Infrastructure.Selector;
 using Media.Infrastructure.SelectorItemProviders;
 using Media.Infrastructure.Validation;
@@ -20,7 +21,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 {
     private readonly Mpv _mpv;
     private readonly RandomSelectorProvider _randomSelectorProvider;
-    private readonly MediaDocumentStoreAdapter _documentStore;
+    private readonly PlayedFilesAdapter _documentStore;
 
     internal class Settings : ValidatedCommandSettings
     {
@@ -41,7 +42,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 
     internal record class DirectoryEntry(string Name, string Path);
 
-    public PlayRandom(ConfigAccessor configAccessor, MediaDocumentStoreAdapter documentStore)
+    public PlayRandom(ConfigAdapter configAccessor, PlayedFilesAdapter documentStore)
     {
         _mpv = new Mpv(configAccessor);
         _randomSelectorProvider = new();
@@ -50,7 +51,7 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
 
     public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
-        await _documentStore.Init();
+        var playedFiles = await _documentStore.GetPlayedFilesAsync();
 
         MpvCommandBuilder builder = new();
 
@@ -66,16 +67,14 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
             Item selectedItem = await selector.SelectItemAsync(consoleCancel.Token);
 
             var files = RandomSelectorProvider.ScanSupportedFiles(selectedItem.FullPath)
-                .Except(_documentStore.PlayedFiles)
+                .Except(playedFiles)
                 .OrderBy(_ => Random.Shared.Next())
                 .Take(settings.SelectionCount);
 
 
             if (files.Any())
             {
-                _documentStore.PlayedFiles.AddRange(files);
-                await _documentStore.Save();
-
+                await _documentStore.AddPlayedFilesAsync(files);
                 builder.WithInputFiles(files);
                 _mpv.Start(builder);
             }
@@ -83,15 +82,14 @@ internal sealed class PlayRandom : AsyncCommand<PlayRandom.Settings>
         else
         {
             var files = RandomSelectorProvider.ScanSupportedFiles(settings.Folder)
-                .Except(_documentStore.PlayedFiles)
+                .Except(playedFiles)
                 .OrderBy(_ => Random.Shared.Next())
-                .Take(settings.SelectionCount);
+                .Take(settings.SelectionCount)
+                .ToArray();
 
             if (files.Any())
             {
-                _documentStore.PlayedFiles.AddRange(files);
-                await _documentStore.Save();
-
+                await _documentStore.AddPlayedFilesAsync(files);
                 builder.WithInputFiles(files);
                 _mpv.Start(builder);
             }

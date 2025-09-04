@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
@@ -12,7 +12,6 @@ internal class AsyncBlocker : Control
     public AsyncBlocker()
     {
         Visibility = System.Windows.Visibility.Collapsed;
-        Panel.SetZIndex(this, 1000);
         Grid.SetColumnSpan(this, int.MaxValue);
         Grid.SetRowSpan(this, int.MaxValue);
     }

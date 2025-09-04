@@ -1,12 +1,10 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-
-using Media.Infrastructure;
 
 namespace Media.Interop;
 
@@ -19,12 +17,12 @@ public abstract class InteropBase
         _programName = binaryName;
     }
 
-    protected abstract string? GetExternalPath();
+    protected abstract string GetExternalPath();
 
     public virtual bool TryGetInstalledPath([NotNullWhen(true)] out string? toolPath)
     {
         var externalPath = GetExternalPath();
-        if (externalPath != null
+        if (!string.IsNullOrWhiteSpace(externalPath)
             && File.Exists(externalPath))
         {
             toolPath = externalPath;

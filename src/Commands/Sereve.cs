@@ -1,11 +1,13 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
 
+using Media.DbAdapters;
 using Media.Infrastructure;
+using Media.Infrastructure.CommandAttributes;
 using Media.Infrastructure.Validation;
 
 using Microsoft.Extensions.Logging;
@@ -30,20 +32,14 @@ internal sealed class Sereve : Command<Sereve.Settings>
         public string Folder { get; set; } = Environment.CurrentDirectory;
     }
 
-    public Sereve(ConfigAccessor configAccessor)
+    public Sereve(ConfigAdapter configAccessor)
     {
-        _dlnaServerPort = configAccessor.GetDlnaServerPort() ?? 8085;
+        _dlnaServerPort = configAccessor.DlnaServerPort;
     }
 
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
-        using ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-        {
-            builder.ClearProviders();
-            builder.AddConsole();
-            builder.AddFilter(loglevel => loglevel >= LogLevel.Information);
-        });
-
+        using ILoggerFactory loggerFactory = ProgramFactory.GetLoggerFactory();
 
         using var server = new HttpServer(_dlnaServerPort, loggerFactory);
 

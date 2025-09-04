@@ -1,12 +1,12 @@
 ﻿// -----------------------------------------------------------------------------------------------
-// Copyright (c) 2024 Ruzsinszki Gábor
+// Copyright (c) 2024-2025 Ruzsinszki Gábor
 // This code is licensed under MIT license (see LICENSE for details)
 // -----------------------------------------------------------------------------------------------
 
 using System.Diagnostics;
 
+using Media.DbAdapters;
 using Media.Dto.Internals;
-using Media.Infrastructure;
 
 namespace Media.Interop;
 
@@ -75,9 +75,9 @@ internal sealed class YtDlp : InteropBase
     }
 
     private const string YtdlpBinary = "yt-dlp.exe";
-    private readonly ConfigAccessor _configAccessor;
+    private readonly ConfigAdapter _configAccessor;
 
-    public YtDlp(ConfigAccessor configAccessor) : base(YtdlpBinary)
+    public YtDlp(ConfigAdapter configAccessor) : base(YtdlpBinary)
     {
         _configAccessor = configAccessor;
     }
@@ -110,6 +110,6 @@ internal sealed class YtDlp : InteropBase
             || url.StartsWith("https://youtu.be/");
     }
 
-    protected override string? GetExternalPath()
-        => _configAccessor.GetExternalYtdlpPath();
+    protected override string GetExternalPath()
+        => _configAccessor.ExternalYtdlpPath;
 }
